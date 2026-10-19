@@ -8,45 +8,51 @@ import org.bson.Document;
 
 public class DAO {
 
-    private final String URI = "mongodb://localhost:27017";
-    private final String BBDD = "Tel-ONDA";
+    private static final String URI = "mongodb://localhost:27017";
+    private static final String BBDD = "Tel-ONDA";
 
-    public Document autenticar(String usuario, String contrasena) {
+    public static Document comprobarUsuarios(String usuario, String contrasena) {
         try (MongoClient client = MongoClients.create(URI)) {
             MongoDatabase db = client.getDatabase(BBDD);
 
-            // Creamos la consulta con el nombre y contrasena
-            Document query = new Document("nombreUsuario", usuario).append("contrasena", contrasena);
+            Document query = new Document("nombreUsuario", usuario)
+                    .append("contrasena", contrasena);
 
             // Buscar en administradores
-            //Uso de Document:
-            //En vez de crear una clase Usuario con sus getters y setters, usas Document porque es 
-            //la estructura nativa de MongoDB que te permite leer y consultar datos en formato JSON de forma directa y rápida.
             MongoCollection<Document> coleccionAdmin = db.getCollection("administradores");
             Document admin = coleccionAdmin.find(query).first();
             if (admin != null) {
+                if (!admin.containsKey("rol")) {
+                    admin.append("rol", "Administrador");
+                }
                 return admin;
             }
 
             // Buscar en empleados
+            // Document: Estructura nativa en formato JSON de MongoDB para leer/modificar campos de forma directa.
             MongoCollection<Document> coleccionEmpleado = db.getCollection("empleados");
             Document empleado = coleccionEmpleado.find(query).first();
             if (empleado != null) {
-                return empleado; // Devuelve el documento de la colección empleados
+                if (!empleado.containsKey("rol")) {
+                    empleado.append("rol", "Empleado");
+                }
+                return empleado;
             }
 
-            // Buscar en clientes (por si un cliente intenta entrar)
+            //Buscar en clientes
             MongoCollection<Document> coleccionCliente = db.getCollection("clientes");
             Document cliente = coleccionCliente.find(query).first();
             if (cliente != null) {
-            // Devuelve el documento de la colección clientes
-                return cliente; 
+                if (!cliente.containsKey("rol")) {
+                    cliente.append("rol", "Cliente");
+                }
+                return cliente;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Devuelve null si no existe en ninguna colección
+
         return null; 
     }
 }
