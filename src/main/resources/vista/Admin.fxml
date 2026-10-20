@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.IniciarSesionController">
-   <children>
-      <Pane prefHeight="406.0" prefWidth="600.0">
-         <children>
-            <Button layoutX="149.0" layoutY="269.0" mnemonicParsing="false" onAction="#btnIniciarSesion" text="Iniciar Sesion" />
-            <Button layoutX="389.0" layoutY="269.0" mnemonicParsing="false" text="Registrarse" />
-            <Label layoutX="286.0" layoutY="82.0" text="Usuario" />
-            <TextField fx:id="txtUsuario" layoutX="235.0" layoutY="111.0" />
-            <Label layoutX="276.0" layoutY="157.0" text="Contraseña" />
-            <Label fx:id="lblMensajeError" layoutX="157.0" layoutY="239.0" prefHeight="17.0" prefWidth="286.0" />
-            <PasswordField fx:id="txtContrasena" layoutX="232.0" layoutY="203.0" />
-         </children>
-      </Pane>
-   </children>
+<AnchorPane id="AnchorPane" prefHeight="717.0" prefWidth="798.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.AdministradorController">
+    <children>
+        <Pane prefHeight="717.0" prefWidth="798.0">
+            <children>
+                <Button layoutX="61.0" layoutY="44.0" mnemonicParsing="false" text="Mi Perfil" />
+                <MenuButton layoutX="670.0" layoutY="44.0" mnemonicParsing="false" text="Menú">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#altaEmpleado" text="Alta empleado" />
+                        <MenuItem mnemonicParsing="false" onAction="#cambiarPuesto" text="Cambiar puesto" />
+                        <MenuItem mnemonicParsing="false" onAction="#borrarEmpleado" text="Borrar cuenta empleado" />
+                        <MenuItem mnemonicParsing="false" onAction="#gestionSucursal" text="Gestion Sucursal" />
+                        <MenuItem mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar sesión" />
+                    </items>
+                </MenuButton>
+                <AnchorPane fx:id="panelContenido" layoutY="100.0" prefHeight="617.0" prefWidth="798.0" />
+            </children>
+        </Pane>
+    </children>
 </AnchorPane>
