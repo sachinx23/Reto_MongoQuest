@@ -110,6 +110,7 @@ public class RegistrarseController implements Initializable {
         }
     }
 
+    //Metodo ipara que vuelva a iniciar sesion
     private void volverAIniciarSesion(ActionEvent event) {
         try {
             // Revisa que la ruta apunte al nombre y directorio exacto de tu FXML de login
