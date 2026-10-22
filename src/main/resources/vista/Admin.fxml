@@ -1,27 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="717.0" prefWidth="798.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.AdministradorController">
-    <children>
-        <Pane prefHeight="717.0" prefWidth="798.0">
-            <children>
-                <Button layoutX="61.0" layoutY="44.0" mnemonicParsing="false" text="Mi Perfil" />
-                <MenuButton layoutX="670.0" layoutY="44.0" mnemonicParsing="false" text="Menú">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#altaEmpleado" text="Alta empleado" />
-                        <MenuItem mnemonicParsing="false" onAction="#cambiarPuesto" text="Cambiar puesto" />
-                        <MenuItem mnemonicParsing="false" onAction="#borrarEmpleado" text="Borrar cuenta empleado" />
-                        <MenuItem mnemonicParsing="false" onAction="#gestionSucursal" text="Gestion Sucursal" />
-                        <MenuItem mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar sesión" />
-                    </items>
-                </MenuButton>
-                <AnchorPane fx:id="panelContenido" layoutY="100.0" prefHeight="617.0" prefWidth="798.0" />
-            </children>
-        </Pane>
-    </children>
+<AnchorPane prefHeight="600.0" prefWidth="950.0" style="-fx-background-color: #1e293b;" 
+            xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="controlador.AdministradorController">
+   <children>
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <children>
+            
+            <!-- BARRA SUPERIOR: COMBOBOX DE OPCIONES -->
+            <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: #0f172a; -fx-padding: 10 15 10 15; -fx-background-radius: 8;">
+               <children>
+                  <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Panel Administrador:" textFill="WHITE" />
+                  
+                  <!-- ComboBox que dispara cambiarSubVista en AdministradorController -->
+                  <ComboBox fx:id="cbOpcionesAdmin" onAction="#cambiarSubVista" prefWidth="280.0" promptText="Elegir opción..." />
+               </children>
+            </HBox>
+
+            <!-- CONTENEDOR DINÁMICO: AQUÍ SE CARGARÁ Sucursal.fxml Y LAS DEMÁS SUBVISTAS -->
+            <StackPane fx:id="contenidoDinamico" VBox.vgrow="ALWAYS" />
+
+         </children>
+      </VBox>
+   </children>
 </AnchorPane>

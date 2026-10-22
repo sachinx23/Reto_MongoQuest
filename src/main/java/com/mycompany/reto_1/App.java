@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-public class Reto_1 extends Application {
+public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -22,11 +22,11 @@ public class Reto_1 extends Application {
         if (imagen != null) {
             primaryStage.getIcons().add(new Image(imagen));
         } else {
-            System.out.println("OJO: No se ha encontrado la imagen en src/main/resources/img/icono.png");
+            System.err.println("No se ha encontrado la imagen en src/main/resources/img/icono.png");
         }
 
         //Configuras la ventana 
-        primaryStage.setTitle("Tel-ONDA - Iniciar Sesión");
+        primaryStage.setTitle("Tel-ONDA");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }

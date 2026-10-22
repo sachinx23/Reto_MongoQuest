@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
 /**
@@ -9,5 +5,86 @@ package modelo;
  * @author eneko
  */
 public class TicketSoporte {
-    
+    private String id;          
+    private String asunto;
+    private String descripcion;
+    private String fechaCreacion;
+    private String estado;       // "pendiente", "en proceso", "resuelto"
+    private String idCliente;  
+    private String idEmpleado;   
+
+    public TicketSoporte() {}
+
+    public TicketSoporte(String id, String asunto, String descripcion, String fechaCreacion, 
+                         String estado, String idCliente, String idEmpleado) {
+        this.id = id;
+        this.asunto = asunto;
+        this.descripcion = descripcion;
+        this.fechaCreacion = fechaCreacion;
+        this.estado = estado;
+        this.idCliente = idCliente;
+        this.idEmpleado = idEmpleado;
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getAsunto() {
+        return asunto;
+    }
+
+    public void setAsunto(String asunto) {
+        this.asunto = asunto;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(String fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(String idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public String getIdEmpleado() {
+        return idEmpleado;
+    }
+
+    public void setIdEmpleado(String idEmpleado) {
+        this.idEmpleado = idEmpleado;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + estado.toUpperCase() + "] " + asunto;
+    }
 }

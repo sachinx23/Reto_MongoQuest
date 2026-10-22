@@ -59,11 +59,10 @@ public class IniciarSesionController implements Initializable {
 
         lblMensajeError.setText("");
 
-        // Llamada al método estático del DAO
+        // Llamada al método estático del DAO comprobar login
         Document usuarioObtenido = DAO.comprobarUsuarios(usuario, contrasena);
 
         if (usuarioObtenido != null) {
-            // Se comprueba "nombre" o "nombreUsuario"
             String nombre = usuarioObtenido.getString("nombre");
             if (nombre == null) {
                 nombre = usuarioObtenido.getString("nombreUsuario");
@@ -90,19 +89,21 @@ public class IniciarSesionController implements Initializable {
         }
     }
     
+    //metodo cambiar pantalla
     @FXML
     public void cambiarPantalla(String ruta) {
     try {
-        Parent root = FXMLLoader.load(getClass().getResource("/vista/Admin.fxml"));
-        Stage stage = (Stage) txtUsuario.getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
+       Parent root = FXMLLoader.load(getClass().getResource(ruta));
+            Stage stage = (Stage) txtUsuario.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
     } catch (IOException e) {
         e.printStackTrace();
         lblMensajeError.setText("Error al cargar la pantalla.");
     }
 }
 
+    // metodo para registrarse
     @FXML
     public void btnRegistrarse(ActionEvent event) {
         try {

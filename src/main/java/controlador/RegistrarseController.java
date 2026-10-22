@@ -96,7 +96,7 @@ public class RegistrarseController implements Initializable {
 
         lblMensajeError.setText("");
 
-        boolean registrado = DAO.insertarCliente(usuario, nombre, contrasena, correo, dni, telefono, direccion);
+        boolean registrado = DAO.registarCliente(usuario, nombre, contrasena, correo, dni, telefono, direccion);
 
         if (registrado) {
             Alert alert = new Alert(AlertType.INFORMATION);
