@@ -11,21 +11,23 @@ package modelo;
 public class Empleado {
     
     int id;
-    String nombre;
     String nombreUsuario;
-    String rol;
+    String nombre;
+    String apellidos;
     String contrasena;
     String correo;
+    String rol;
     String cuentaBancaria;
     int idSucursal;
 
-    public Empleado(int id, String nombre, String nombreUsuario, String rol, String contrasena, String correo, String cuentaBancaria, int idSucursal) {
+    public Empleado(int id, String nombreUsuario,String nombre,String apellidos,String rol, String contrasena, String correo, String cuentaBancaria, int idSucursal) {
         this.id = id;
-        this.nombre = nombre;
         this.nombreUsuario = nombreUsuario;
-        this.rol = rol;
-        this.contrasena = contrasena;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
         this.correo = correo;
+        this.contrasena = contrasena;
+        this.rol = rol;
         this.cuentaBancaria = cuentaBancaria;
         this.idSucursal = idSucursal;
     }
@@ -38,14 +40,6 @@ public class Empleado {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public String getNombreUsuario() {
         return nombreUsuario;
     }
@@ -54,12 +48,20 @@ public class Empleado {
         this.nombreUsuario = nombreUsuario;
     }
 
-    public String getRol() {
-        return rol;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
     }
 
     public String getContrasena() {
@@ -76,6 +78,14 @@ public class Empleado {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 
     public String getCuentaBancaria() {
@@ -96,9 +106,9 @@ public class Empleado {
 
     @Override
     public String toString() {
-        return "Empleado{" + "id=" + id + ", nombre=" + nombre + ", nombreUsuario=" + nombreUsuario + ", rol=" + rol + ", contrasena=" + contrasena + ", correo=" + correo + ", cuentaBancaria=" + cuentaBancaria + ", idSucursal=" + idSucursal + '}';
+        return "Empleado{" + "id=" + id + ", nombreUsuario=" + nombreUsuario + ", nombre=" + nombre + ", apellidos=" + apellidos + ", contrasena=" + contrasena + ", correo=" + correo + ", rol=" + rol + ", cuentaBancaria=" + cuentaBancaria + ", idSucursal=" + idSucursal + '}';
     }
-    
+
     
     
 }

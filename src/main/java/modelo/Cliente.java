@@ -10,13 +10,14 @@ import java.util.List;
  */
 public class Cliente {
     int id;
-    String cuentaBancaria;
-    String nombre;
     String nombreUsuario;
+    String nombre;
+    String apellidos;
+    String correo;
     String contrasena;
     String dni;
-    String correo;
     int telefono;
+    String cuentaBancaria;
     String direccion;
     List<String> ticketSoporte;
     List<Contrato> contrato;

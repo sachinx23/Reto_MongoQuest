@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -15,17 +16,23 @@
       <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
          <children>
             
-            <!-- BARRA SUPERIOR: COMBOBOX DE OPCIONES -->
+            <!-- BARRA SUPERIOR: DESPLEGABLE DE OPCIONES + NOMBRE ADMIN -->
             <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: #0f172a; -fx-padding: 10 15 10 15; -fx-background-radius: 8;">
                <children>
                   <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Panel Administrador:" textFill="WHITE" />
                   
-                  <!-- ComboBox que dispara cambiarSubVista en AdministradorController -->
+                  <!-- COMBOBOX CON LAS OPCIONES DE NAVEGACIÓN -->
                   <ComboBox fx:id="cbOpcionesAdmin" onAction="#cambiarSubVista" prefWidth="280.0" promptText="Elegir opción..." />
+                  
+                  <!-- REGION FLEXIBLE PARA MOVER EL NOMBRE A LA DERECHA -->
+                  <Region HBox.hgrow="ALWAYS" />
+                  
+                  <!-- NOMBRE DEL ADMINISTRADOR CONECTADO -->
+                  <Label fx:id="lblNombreAdmin" text="Admin: Usuario" textFill="#38bdf8" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
                </children>
             </HBox>
 
-            <!-- CONTENEDOR DINÁMICO: AQUÍ SE CARGARÁ Sucursal.fxml Y LAS DEMÁS SUBVISTAS -->
+            <!-- CONTENEDOR DINÁMICO DE SUBVISTAS -->
             <StackPane fx:id="contenidoDinamico" VBox.vgrow="ALWAYS" />
 
          </children>

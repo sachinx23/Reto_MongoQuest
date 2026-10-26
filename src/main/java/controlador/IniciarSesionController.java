@@ -77,7 +77,7 @@ public class IniciarSesionController implements Initializable {
             alert.setContentText("¡Bienvenido/a " + nombre + "!\nRol: " + rol);
             alert.showAndWait();
             if ("Admin".equals(rol)) {
-                cambiarPantalla("/vista/Admin.fxml");
+                abrirPanelAdmin(nombre);
             } else if ("Empleado".equals(rol)) {
                 // cambiarPantalla("/vista/Empleado.fxml");
             } else if ("Cliente".equals(rol)) {
@@ -102,7 +102,23 @@ public class IniciarSesionController implements Initializable {
         lblMensajeError.setText("Error al cargar la pantalla.");
     }
 }
+    private void abrirPanelAdmin(String nombreUsuario) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/Admin.fxml"));
+            Parent root = loader.load();
 
+            // Obtenemos la instancia del AdministradorController e inyectamos el nombre
+            AdministradorController adminController = loader.getController();
+           adminController.setNombreUsuario(nombreUsuario);
+
+            Stage stage = (Stage) txtUsuario.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            lblMensajeError.setText("Error al cargar la pantalla de administración.");
+        }
+    }
     // metodo para registrarse
     @FXML
     public void btnRegistrarse(ActionEvent event) {

@@ -14,52 +14,51 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.scene.control.Label;
 
 /**
  * Controlador de Administrador basado en los casos de uso del diagrama BPMN.
+ *
  * @author eneko
  */
 public class AdministradorController implements Initializable {
 
-    @FXML private ComboBox<String> cbOpcionesAdmin;
-    @FXML private StackPane contenidoDinamico;
+    @FXML
+    private ComboBox<String> cbOpcionesAdmin;
+    @FXML
+    private StackPane contenidoDinamico;
+    @FXML 
+    private Label lblNombreAdmin;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // 1. Rellenar el ComboBox con las opciones del diagrama BPMN
+        // 1. Opciones agrupadas y limpias
         cbOpcionesAdmin.setItems(FXCollections.observableArrayList(
-            "Crear Empleado",
-            "Ascender Empleado a Admin",
-            "Eliminar Cuenta Empleado",
-            "Crear / Gestionar Sucursal",
-            "Gestionar Tarifas / Plantilla",
-            "Cerrar Sesión"
+                "Gestionar Plantilla",
+                "Gestionar Sucursal",
+                "Gestionar Tarifas",
+                "Cerrar Sesión"
         ));
-
         // 2. Seleccionar por defecto la vista de sucursales e inyectarla en el StackPane
-        cbOpcionesAdmin.getSelectionModel().select("Crear / Gestionar Sucursal");
+        cbOpcionesAdmin.getSelectionModel().select("Gestionar Sucursal");
         cargarSubvista("/vista/Sucursal.fxml");
     }
 
     @FXML
     public void cambiarSubVista(ActionEvent event) {
         String seleccion = cbOpcionesAdmin.getValue();
-        if (seleccion == null) return;
+        if (seleccion == null) {
+            return;
+        }
 
         switch (seleccion) {
-            case "Crear Empleado":
-                cargarSubvista("/vista/AltaEmpleado.fxml");
+            case "Gestionar Plantilla":
+                cargarSubvista("/vista/GestionarPlantilla.fxml");
                 break;
-            case "Ascender Empleado a Admin":
-                cargarSubvista("/vista/AscenderEmpleado.fxml");
-                break;
-            case "Eliminar Cuenta Empleado":
-                cargarSubvista("/vista/EliminarEmpleado.fxml");
-                break;
-            case "Crear / Gestionar Sucursal":
+            case "Gestionar Sucursal":
                 cargarSubvista("/vista/Sucursal.fxml");
                 break;
-            case "Gestionar Tarifas / Plantilla":
+            case "Gestionar Tarifas":
                 cargarSubvista("/vista/GestionTarifas.fxml");
                 break;
             case "Cerrar Sesión":
@@ -67,6 +66,14 @@ public class AdministradorController implements Initializable {
                 break;
         }
     }
+    
+    
+    @FXML
+    public void setNombreUsuario(String nombre) {
+    if (lblNombreAdmin != null && nombre != null) {
+        lblNombreAdmin.setText("Admin: " + nombre);
+    }
+}
 
     private void cerrarSesion(ActionEvent event) {
         try {
