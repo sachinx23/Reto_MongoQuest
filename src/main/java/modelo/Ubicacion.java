@@ -11,9 +11,9 @@ package modelo;
 public class Ubicacion {
     private String direccion;
     private String localidad;
-    private String codigoPostal;
+    private int codigoPostal;
 
-    public Ubicacion(String direccion, String localidad, String codigoPostal) {
+    public Ubicacion(String direccion, String localidad, int codigoPostal) {
         this.direccion = direccion;
         this.localidad = localidad;
         this.codigoPostal = codigoPostal;
@@ -35,11 +35,11 @@ public class Ubicacion {
         this.localidad = localidad;
     }
 
-    public String getCodigoPostal() {
+    public int getCodigoPostal() {
         return codigoPostal;
     }
 
-    public void setCodigoPostal(String codigoPostal) {
+    public void setCodigoPostal(int codigoPostal) {
         this.codigoPostal = codigoPostal;
     }
 

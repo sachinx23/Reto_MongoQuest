@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="550.0" prefWidth="900.0" style="-fx-background-color: #1e293b;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.GestionarPlantillaController">
+<AnchorPane prefHeight="550.0" prefWidth="950.0" style="-fx-background-color: #1e293b;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.GestionarPlantillaController">
    <children>
       <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
          <children>
@@ -20,7 +20,6 @@
                      <children>
                         <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Plantilla de Empleados" textFill="WHITE" />
                         <HBox HBox.hgrow="ALWAYS" />
-                        <!-- BOTÓN CREAR EMPLEADO AÑADIDO -->
                         <Button onAction="#crearEmpleado" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="+ Crear Empleado" />
                         <Button onAction="#ascenderAAdmin" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="Ascender a Admin" />
                         <Button onAction="#eliminarEmpleado" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="Dar de Baja Empleado" />
@@ -29,10 +28,12 @@
 
                   <TableView fx:id="tablaEmpleados" VBox.vgrow="ALWAYS">
                      <columns>
-                        <TableColumn fx:id="colEmpNombre" prefWidth="150.0" text="Nombre" />
-                        <TableColumn fx:id="colEmpUsuario" prefWidth="150.0" text="Usuario" />
-                        <TableColumn fx:id="colEmpRol" prefWidth="120.0" text="Rol" />
-                        <TableColumn fx:id="colEmpEmail" prefWidth="200.0" text="Email" />
+                        <TableColumn fx:id="colEmpNombre" prefWidth="110.0" text="Nombre" />
+                        <TableColumn fx:id="colEmpApellidos" prefWidth="130.0" text="Apellidos" />
+                        <TableColumn fx:id="colEmpUsuario" prefWidth="110.0" text="Usuario" />
+                        <TableColumn fx:id="colEmpRol" prefWidth="90.0" text="Rol" />
+                        <TableColumn fx:id="colEmpEmail" prefWidth="160.0" text="Email" />
+                        <TableColumn fx:id="colEmpIBAN" prefWidth="180.0" text="Cuenta Bancaria (IBAN)" /> <!-- NUEVA COLUMNA -->
                      </columns>
                   </TableView>
                </children>
@@ -51,10 +52,11 @@
                   
                   <TableView fx:id="tablaClientes" VBox.vgrow="ALWAYS">
                      <columns>
-                        <TableColumn fx:id="colCliNombre" prefWidth="150.0" text="Nombre" />
-                        <TableColumn fx:id="colCliUsuario" prefWidth="150.0" text="Usuario" />
-                        <TableColumn fx:id="colCliEmail" prefWidth="200.0" text="Email" />
-                        <TableColumn fx:id="colCliTelefono" prefWidth="130.0" text="Teléfono" />
+                        <TableColumn fx:id="colCliNombre" prefWidth="130.0" text="Nombre" />
+                        <TableColumn fx:id="colCliApellidos" prefWidth="160.0" text="Apellidos" />
+                        <TableColumn fx:id="colCliUsuario" prefWidth="130.0" text="Usuario" />
+                        <TableColumn fx:id="colCliEmail" prefWidth="180.0" text="Email" />
+                        <TableColumn fx:id="colCliTelefono" prefWidth="120.0" text="Teléfono" />
                      </columns>
                   </TableView>
                </children>

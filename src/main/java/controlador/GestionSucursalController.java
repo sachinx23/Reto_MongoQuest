@@ -33,7 +33,7 @@ public class GestionSucursalController implements Initializable {
     private TextField txtTelefono;
     @FXML
     private TextField txtUbicacion;
-    @FXML 
+    @FXML
     private TextField txtCodigoPostal;
     @FXML
     private ListView<Sucursal> listSucursales;
@@ -150,7 +150,7 @@ public class GestionSucursalController implements Initializable {
             int id = Integer.parseInt(idTexto);
 
             // Objeto embebido Ubicacion con datos por defecto si solo meten la dirección
-            Ubicacion ubicacion = new Ubicacion(direccion, "Bilbao", "48480");
+            Ubicacion ubicacion = new Ubicacion(direccion, "Bilbao", 48480);
             Sucursal nueva = new Sucursal(id, horario, telefono, ubicacion);
 
             if (DAO.insertarSucursal(nueva)) {
@@ -165,30 +165,37 @@ public class GestionSucursalController implements Initializable {
         }
     }
 
- @FXML
-public void gestionarSucursal(ActionEvent event) {
-    Sucursal seleccionada = listSucursales.getSelectionModel().getSelectedItem();
-    if (seleccionada == null) {
-        mostrarAlerta("Atención", "Selecciona una sucursal de la lista.", Alert.AlertType.WARNING);
-        return;
+    @FXML
+    public void gestionarSucursal(ActionEvent event) {
+        Sucursal seleccionada = listSucursales.getSelectionModel().getSelectedItem();
+        if (seleccionada == null) {
+            mostrarAlerta("Atención", "Selecciona una sucursal de la lista.", Alert.AlertType.WARNING);
+            return;
+        }
+
+        seleccionada.setHorario(txtHorario.getText().trim());
+        seleccionada.setTelefono(txtTelefono.getText().trim());
+
+        if (seleccionada.getUbicacion() != null) {
+            seleccionada.getUbicacion().setDireccion(txtUbicacion.getText().trim());
+            try {
+                int codigoPostal = Integer.parseInt(txtCodigoPostal.getText().trim());
+                seleccionada.getUbicacion().setCodigoPostal(codigoPostal);
+            } catch (NumberFormatException e) {
+                // Manejo de error: el usuario ingresó letras o caracteres inválidos
+                System.out.println("Por favor, introduce un código postal válido (solo números).");
+            }
+        }
+
+        if (DAO.actualizarSucursal(seleccionada)) {
+            cargarSucursalesBD();
+            limpiar();
+            mostrarAlerta("Éxito", "Sucursal actualizada correctamente.", Alert.AlertType.INFORMATION);
+        } else {
+            mostrarAlerta("Error", "No se pudo actualizar la sucursal.", Alert.AlertType.ERROR);
+        }
     }
 
-    seleccionada.setHorario(txtHorario.getText().trim());
-    seleccionada.setTelefono(txtTelefono.getText().trim());
-    
-    if (seleccionada.getUbicacion() != null) {
-        seleccionada.getUbicacion().setDireccion(txtUbicacion.getText().trim());
-        seleccionada.getUbicacion().setCodigoPostal(txtCodigoPostal.getText().trim());
-    }
-
-    if (DAO.actualizarSucursal(seleccionada)) {
-        cargarSucursalesBD();
-        limpiar();
-        mostrarAlerta("Éxito", "Sucursal actualizada correctamente.", Alert.AlertType.INFORMATION);
-    } else {
-        mostrarAlerta("Error", "No se pudo actualizar la sucursal.", Alert.AlertType.ERROR);
-    }
-}
     @FXML
     public void eliminarSucursal(ActionEvent event) {
         Sucursal seleccionada = listSucursales.getSelectionModel().getSelectedItem();

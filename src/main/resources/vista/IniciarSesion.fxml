@@ -14,16 +14,14 @@
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="controlador.IniciarSesionController">
    <children>
-      <!-- TARJETA CENTRAL USANDO LA CLASE .card DE ESTILOS.CSS -->
       <VBox alignment="CENTER" prefWidth="380.0" spacing="15.0" styleClass="card" 
             AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="135.0" AnchorPane.rightAnchor="135.0" AnchorPane.topAnchor="40.0">
          <children>
             
-            <!-- TÍTULO Y SUBTÍTULO -->
             <Label styleClass="titulo-principal" style="-fx-font-size: 24px;" text="Tel-ONDA" />
-            <Label text="Bienvenido, introduce tus credenciales" textFill="#64748b" />
+            
+            <Label text="Bienvenido, espero que disfrutes de una experiencia inolvidable" textFill="#64748b" />
 
-            <!-- CAMPO USUARIO -->
             <VBox alignment="CENTER_LEFT" spacing="5.0" style="-fx-padding: 10 0 0 0;">
                <children>
                   <Label styleClass="label-bold" text="Usuario:" />
@@ -31,7 +29,6 @@
                </children>
             </VBox>
 
-            <!-- CAMPO CONTRASEÑA -->
             <VBox alignment="CENTER_LEFT" spacing="5.0">
                <children>
                   <Label styleClass="label-bold" text="Contraseña:" />
@@ -39,11 +36,11 @@
                </children>
             </VBox>
 
-            <!-- MENSAJE DE ERROR -->
+  
             <Label fx:id="lblMensajeError" alignment="CENTER" maxWidth="1.7976931348623157E308" 
                    style="-fx-font-size: 12px; -fx-font-weight: bold;" textFill="#e11d48" />
 
-            <!-- BOTONERA CON CLASES CSS -->
+          
             <HBox alignment="CENTER" spacing="12.0" style="-fx-padding: 10 0 0 0;">
                <children>
                   <Button maxWidth="1.7976931348623157E308" minWidth="120.0" onAction="#btnIniciarSesion" 

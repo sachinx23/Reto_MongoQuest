@@ -55,19 +55,26 @@ public class DAO {
     }
 
     //REGISTRAR CLIENTE
-    public static boolean registarCliente(String usuario, String nombre, String contrasena,
+    public static boolean registarCliente(String usuario, String nombre, String apellidos, String contrasena,
             String correo, String dni, String telefono, String direccion) {
+
+        System.out.println("DEBUG: Entrando a registarCliente con usuario = " + usuario);
+
         try (MongoClient client = MongoClients.create(URI)) {
             MongoDatabase db = client.getDatabase(BBDD);
             MongoCollection<Document> col = db.getCollection("Clientes");
 
+            // Comprobar si existe
             Document existe = col.find(new Document("nombreUsuario", usuario)).first();
             if (existe != null) {
+                System.out.println("DEBUG: ¡El usuario ya existe en la base de datos!");
                 return false;
             }
 
+            // Crear documento
             Document nuevo = new Document("nombreUsuario", usuario)
                     .append("nombre", nombre)
+                    .append("apellidos", apellidos)
                     .append("contrasena", contrasena)
                     .append("correo", correo)
                     .append("dni", dni)
@@ -75,15 +82,19 @@ public class DAO {
                     .append("direccion", direccion)
                     .append("rol", "Cliente");
 
+            // 3Insertar
             col.insertOne(nuevo);
+            System.out.println("DEBUG: ¡Cliente insertado con éxito en MongoDB!");
             return true;
+
         } catch (Exception e) {
+            System.out.println("DEBUG: ¡Ha ocurrido un error en el catch!");
             e.printStackTrace();
             return false;
         }
     }
-
 // ELIMINAR DATOS SENSIBLES DEL CLIENTE (Administrador)
+
     public static boolean eliminarDatosSensiblesCliente(String nombreUsuario) {
         try (MongoClient client = MongoClients.create(URI)) {
             MongoDatabase db = client.getDatabase(BBDD);
@@ -156,7 +167,7 @@ public class DAO {
     }
     // CREAR EMPLEADO (Administrador)
 
-    public static boolean crearEmpleado(String usuario, String nombre,String apellidos, String contrasena, String correo, String cuentaBancaria) {
+    public static boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria) {
         try (MongoClient client = MongoClients.create(URI)) {
             MongoDatabase db = client.getDatabase(BBDD);
             MongoCollection<Document> colEmp = db.getCollection("Empleados");
@@ -289,8 +300,15 @@ public class DAO {
                 Document u = d.get("ubicacion", Document.class);
                 String dir = (u != null && u.getString("direccion") != null) ? u.getString("direccion") : "";
                 String loc = (u != null && u.getString("localidad") != null) ? u.getString("localidad") : "";
-                String cp = (u != null && u.get("codigoPostal") != null) ? String.valueOf(u.get("codigoPostal")) : "";
-
+                
+                try {
+                    int cp = Integer.parseInt(txtCodigoPostal.getText().trim());
+                    seleccionada.getUbicacion().setCodigoPostal(cp);
+                } catch (NumberFormatException e) {
+                    // Esto se ejecuta si el usuario mete letras o deja el campo con símbolos raros
+                    System.out.println("Error: El código postal tiene que ser un número.");
+                    // Aquí podrías poner un JOptionPane.showMessageDialog si estás haciendo Swing (Escritorio)
+                }
                 Ubicacion ubicacion = new Ubicacion(dir, loc, cp);
                 Sucursal s = new Sucursal(id, d.getString("horario"), d.getString("telefono"), ubicacion);
 

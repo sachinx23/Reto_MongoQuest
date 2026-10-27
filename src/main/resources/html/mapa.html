@@ -32,7 +32,7 @@
             // Capa para almacenar todos los marcadores
             var marcadoresGroup = L.layerGroup().addTo(mapa);
 
-            // 1. Corregir el recuadro gris cuando se redimensiona el componente en Java
+            //Corregir el recuadro gris cuando se redimensiona el componente en Java
             function refrescarMapa() {
             setTimeout(function() {
             mapa.invalidateSize();
@@ -44,12 +44,12 @@
             refrescarMapa();
             };
 
-            // 2. Limpiar todos los marcadores del mapa
+            //Limpiar todos los marcadores del mapa
             function limpiarMapa() {
             marcadoresGroup.clearLayers();
             }
 
-            // 3. Añadir una sucursal al mapa por dirección
+            // Añadir una sucursal al mapa por dirección
             // Función para añadir marcador haciendo geocodificación de la dirección
             function agregarSucursal(id, direccion, localidad) {
             var direccionCompleta = direccion + ", " + localidad + ", España";
@@ -75,7 +75,7 @@
             .catch(error => console.error("Error al geocodificar dirección:", error));
             }
 
-            // 4. Enfocar una sucursal específica (al hacer clic en la lista)
+            // Enfocar una sucursal específica (al hacer clic en la lista)
             function enfocarUbicacion(direccion, localidad) {
             var busqueda = direccion + ', ' + localidad;
             var url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' 

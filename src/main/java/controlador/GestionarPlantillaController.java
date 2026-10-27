@@ -32,17 +32,23 @@ public class GestionarPlantillaController implements Initializable {
     @FXML
     private TableColumn<Document, String> colEmpNombre;
     @FXML
+    private TableColumn<Document, String> colEmpApellidos;
+    @FXML
     private TableColumn<Document, String> colEmpUsuario;
     @FXML
     private TableColumn<Document, String> colEmpRol;
     @FXML
     private TableColumn<Document, String> colEmpEmail;
+    @FXML
+    private TableColumn<Document, String> colEmpIBAN;
 
     // TABLA CLIENTES
     @FXML
     private TableView<Document> tablaClientes;
     @FXML
     private TableColumn<Document, String> colCliNombre;
+    @FXML
+    private TableColumn<Document, String> colCliApellidos;
     @FXML
     private TableColumn<Document, String> colCliUsuario;
     @FXML
@@ -57,8 +63,10 @@ public class GestionarPlantillaController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // Configuración de las columnas con los campos del Document
         colEmpNombre.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("nombre")));
+        colEmpApellidos.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("apellidos")));
         colEmpUsuario.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("nombreUsuario")));
         colEmpRol.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("rol")));
+        colEmpIBAN.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("cuentaBancaria")));
 
         colEmpEmail.setCellValueFactory(fila -> {
             String mail = fila.getValue().getString("correo");
@@ -69,6 +77,7 @@ public class GestionarPlantillaController implements Initializable {
         });
 
         colCliNombre.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("nombre")));
+        colCliApellidos.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("apellidos")));
         colCliUsuario.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("nombreUsuario")));
 
         colCliEmail.setCellValueFactory(fila -> {
@@ -108,6 +117,7 @@ public class GestionarPlantillaController implements Initializable {
         tablaClientes.setItems(listaClientes);
     }
 
+    // Ascender empleado a admin
     @FXML
     public void ascenderAAdmin(ActionEvent event) {
         Document seleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
@@ -128,10 +138,10 @@ public class GestionarPlantillaController implements Initializable {
             mostrarAlerta("Atención", "Selecciona primero un empleado en la tabla.");
         }
     }
-// CASO DE USO: Crear Empleado (Coincide exacto con tu DAO de 6 parámetros)
+// Crear Empleado 
     @FXML
     public void crearEmpleado(ActionEvent event) {
-        // 1. Pedir Nombre
+        // Pedir Nombre
         TextInputDialog dNombre = new TextInputDialog();
         dNombre.setTitle("Nuevo Empleado");
         dNombre.setContentText("Introduce el Nombre:");
@@ -139,7 +149,7 @@ public class GestionarPlantillaController implements Initializable {
         if (!resNombre.isPresent() || resNombre.get().trim().isEmpty()) return;
         String nombre = resNombre.get().trim();
 
-        // 2. Pedir Apellidos
+        //  Pedir Apellidos
         TextInputDialog dApellidos = new TextInputDialog();
         dApellidos.setTitle("Nuevo Empleado");
         dApellidos.setContentText("Introduce los Apellidos:");
@@ -147,7 +157,7 @@ public class GestionarPlantillaController implements Initializable {
         if (!resApellidos.isPresent() || resApellidos.get().trim().isEmpty()) return;
         String apellidos = resApellidos.get().trim();
 
-        // 3. Pedir Cuenta Bancaria
+        // Pedir Cuenta Bancaria
         TextInputDialog nIBAN = new TextInputDialog();
         nIBAN.setTitle("Nuevo Empleado");
         nIBAN.setContentText("Introduce la Cuenta Bancaria (IBAN):");
