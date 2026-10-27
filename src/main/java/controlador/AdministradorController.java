@@ -32,14 +32,14 @@ public class AdministradorController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // 1. Opciones agrupadas y limpias
+        // Opciones agrupadas y limpias
         cbOpcionesAdmin.setItems(FXCollections.observableArrayList(
                 "Gestionar Plantilla",
                 "Gestionar Sucursal",
                 "Gestionar Tarifas",
                 "Cerrar Sesión"
         ));
-        // 2. Seleccionar por defecto la vista de sucursales e inyectarla en el StackPane
+        // Seleccionar por defecto la vista de sucursales e inyectarla en el StackPane
         cbOpcionesAdmin.getSelectionModel().select("Gestionar Sucursal");
         cargarSubvista("/vista/Sucursal.fxml");
     }

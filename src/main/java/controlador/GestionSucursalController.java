@@ -128,10 +128,15 @@ public class GestionSucursalController implements Initializable {
     private void cargarCampos(Sucursal sucursal) {
         txtId.setText(String.valueOf(sucursal.getId()));
         txtHorario.setText(sucursal.getHorario());
-        txtTelefono.setText(sucursal.getTelefono());
+        txtTelefono.setText(String.valueOf(sucursal.getTelefono()));
         if (sucursal.getUbicacion() != null) {
             txtUbicacion.setText(sucursal.getUbicacion().getDireccion());
+            txtCodigoPostal.setText(String.valueOf(sucursal.getUbicacion().getCodigoPostal()));
+        } else {
+            txtUbicacion.setText("");
+            txtCodigoPostal.setText("");
         }
+
     }
 
     @FXML
@@ -151,7 +156,7 @@ public class GestionSucursalController implements Initializable {
 
             // Objeto embebido Ubicacion con datos por defecto si solo meten la dirección
             Ubicacion ubicacion = new Ubicacion(direccion, "Bilbao", 48480);
-            Sucursal nueva = new Sucursal(id, horario, telefono, ubicacion);
+            Sucursal nueva = new Sucursal(id, horario, Integer.parseInt(telefono.trim()), ubicacion);
 
             if (DAO.insertarSucursal(nueva)) {
                 cargarSucursalesBD();
@@ -174,8 +179,7 @@ public class GestionSucursalController implements Initializable {
         }
 
         seleccionada.setHorario(txtHorario.getText().trim());
-        seleccionada.setTelefono(txtTelefono.getText().trim());
-
+        seleccionada.setTelefono(Integer.parseInt(txtTelefono.getText().trim()));
         if (seleccionada.getUbicacion() != null) {
             seleccionada.getUbicacion().setDireccion(txtUbicacion.getText().trim());
             try {
@@ -218,6 +222,7 @@ public class GestionSucursalController implements Initializable {
         txtHorario.setText("");
         txtTelefono.setText("");
         txtUbicacion.setText("");
+      
         listSucursales.getSelectionModel().clearSelection();
     }
 

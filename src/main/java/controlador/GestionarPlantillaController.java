@@ -165,7 +165,7 @@ public class GestionarPlantillaController implements Initializable {
         if (!resIBAN.isPresent() || resIBAN.get().trim().isEmpty()) return;
         String cuentaBancaria = resIBAN.get().trim();
 
-        // Generamos el nombreUsuario automático (ej: pablodiaz)
+        // Generamos el nombreUsuario automático 
         String usuario = (nombre + apellidos.split(" ")[0]).toLowerCase().replaceAll("\\s+", "");
 
         //Llamada al DAO con los 6 parámetros exactos

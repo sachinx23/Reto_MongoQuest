@@ -12,11 +12,11 @@ public class Sucursal {
 
     private int id;
     private String horario;
-    private String telefono;
+    private int telefono;
 
     private Ubicacion ubicacion;
 
-    public Sucursal(int id, String horario, String telefono, Ubicacion ubicacion) {
+    public Sucursal(int id, String horario, int telefono, Ubicacion ubicacion) {
         this.id = id;
         this.horario = horario;
         this.telefono = telefono;
@@ -39,11 +39,11 @@ public class Sucursal {
         this.horario = horario;
     }
 
-    public String getTelefono() {
+    public int getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(String telefono) {
+    public void setTelefono(int telefono) {
         this.telefono = telefono;
     }
 

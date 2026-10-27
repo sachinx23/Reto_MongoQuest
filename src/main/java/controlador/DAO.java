@@ -54,7 +54,7 @@ public class DAO {
         return null;
     }
 
-    //REGISTRAR CLIENTE
+    // REGISTRAR CLIENTE
     public static boolean registarCliente(String usuario, String nombre, String apellidos, String contrasena,
             String correo, String dni, String telefono, String direccion) {
 
@@ -67,7 +67,7 @@ public class DAO {
             // Comprobar si existe
             Document existe = col.find(new Document("nombreUsuario", usuario)).first();
             if (existe != null) {
-                System.out.println("DEBUG: ¡El usuario ya existe en la base de datos!");
+                System.out.println("¡El usuario ya existe en la base de datos!");
                 return false;
             }
 
@@ -84,7 +84,7 @@ public class DAO {
 
             // 3Insertar
             col.insertOne(nuevo);
-            System.out.println("DEBUG: ¡Cliente insertado con éxito en MongoDB!");
+            System.err.println("¡Cliente insertado con éxito en MongoDB!");
             return true;
 
         } catch (Exception e) {
@@ -93,6 +93,7 @@ public class DAO {
             return false;
         }
     }
+    
 // ELIMINAR DATOS SENSIBLES DEL CLIENTE (Administrador)
 
     public static boolean eliminarDatosSensiblesCliente(String nombreUsuario) {
@@ -115,21 +116,21 @@ public class DAO {
         try (MongoClient client = MongoClients.create(URI)) {
             MongoDatabase db = client.getDatabase(BBDD);
 
-            // 1. Cargar Administradores
+            // Cargar Administradores
             List<Document> admins = db.getCollection("Administradores").find().into(new ArrayList<>());
             for (Document doc : admins) {
                 doc.append("rol", "Admin");
                 todos.add(doc);
             }
 
-            // 2. Cargar Empleados
+            // Cargar Empleados
             List<Document> emps = db.getCollection("Empleados").find().into(new ArrayList<>());
             for (Document doc : emps) {
                 doc.append("rol", "Empleado");
                 todos.add(doc);
             }
 
-            // 3. Cargar Clientes
+            // Cargar Clientes
             List<Document> clis = db.getCollection("Clientes").find().into(new ArrayList<>());
             for (Document doc : clis) {
                 doc.append("rol", "Cliente");
@@ -283,40 +284,33 @@ public class DAO {
         }
     }
 
-    public static List<Sucursal> listarSucursales() {
-        List<Sucursal> resultado = new ArrayList<>();
+  public static List<Sucursal> listarSucursales() {
+    List<Sucursal> resultado = new ArrayList<>();
 
-        try (MongoClient client = MongoClients.create(URI)) {
-            MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Sucursales");
+    try (MongoClient client = MongoClients.create(URI)) {
+        MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Sucursales");
+        List<Document> lista = col.find().into(new ArrayList<>());
 
-            // Pasamos todos los documentos a una lista de Java normal
-            List<Document> documentos = col.find().into(new ArrayList<>());
+        for (Document d : lista) {
+            // ID y Teléfono como enteros si son nulos, pone un 0 como valor por defecto
+            int id = d.getInteger("id") != null ? d.getInteger("id") : 0;
+            int telefono = d.getInteger("telefono") != null ? d.getInteger("telefono") : 0;
 
-            // Recorremos la lista paso a paso
-            for (Document d : documentos) {
-                Integer idObj = d.getInteger("id");
-                int id = (idObj != null) ? idObj : 0;
+            // Objeto Ubicacion dentro de la sucursal
+            Document u = d.get("ubicacion", Document.class);
+            String dir = (u != null && u.getString("direccion") != null) ? u.getString("direccion") : "";
+            String loc = (u != null && u.getString("localidad") != null) ? u.getString("localidad") : "";
+            int cp = (u != null && u.getInteger("codigoPostal") != null) ? u.getInteger("codigoPostal") : 0;
 
-                Document u = d.get("ubicacion", Document.class);
-                String dir = (u != null && u.getString("direccion") != null) ? u.getString("direccion") : "";
-                String loc = (u != null && u.getString("localidad") != null) ? u.getString("localidad") : "";
-                
-                try {
-                    int cp = Integer.parseInt(txtCodigoPostal.getText().trim());
-                    seleccionada.getUbicacion().setCodigoPostal(cp);
-                } catch (NumberFormatException e) {
-                    // Esto se ejecuta si el usuario mete letras o deja el campo con símbolos raros
-                    System.out.println("Error: El código postal tiene que ser un número.");
-                    // Aquí podrías poner un JOptionPane.showMessageDialog si estás haciendo Swing (Escritorio)
-                }
-                Ubicacion ubicacion = new Ubicacion(dir, loc, cp);
-                Sucursal s = new Sucursal(id, d.getString("horario"), d.getString("telefono"), ubicacion);
+            // Creamos los objetos y los añadimos a la lista
+            Ubicacion ubicacion = new Ubicacion(dir, loc, cp);
+            Sucursal s = new Sucursal(id, d.getString("horario"), telefono, ubicacion);
 
-                resultado.add(s);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            resultado.add(s);
         }
-        return resultado;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return resultado;
+}
 }

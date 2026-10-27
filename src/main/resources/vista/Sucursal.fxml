@@ -68,7 +68,7 @@
                   </HBox>
 
                   <Label styleClass="label-bold" text="Lista de Sucursales:" />
-                  <ListView fx:id="listSucursales" VBox.vgrow="ALWAYS" />
+                      <ListView fx:id="listSucursales" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
 
