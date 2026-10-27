@@ -19,15 +19,12 @@ import modelo.Empleado;
 import modelo.Sucursal;
 import modelo.Tarifa;
 import modelo.TicketSoporte;
+import modelo.Usuario;
 import modelo.Valoracion;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
-/**
- * Implementación del DAO contra MongoDB. Es la única clase que trabaja con
- * Documents; hacia fuera solo devuelve objetos del modelo.
- */
 public class DAOImplementacion implements DAO {
 
     private static final String COL_ADMINISTRADORES = "Administradores";
@@ -39,7 +36,6 @@ public class DAOImplementacion implements DAO {
     private static final String COL_SUCURSALES = "Sucursales";
     private static final String COL_VALORACIONES = "Valoraciones";
 
-    /** Estados de un contrato. */
     public static final String ESTADO_PENDIENTE = "pendiente";
     public static final String ESTADO_ACTIVO = "activo";
     public static final String ESTADO_BAJA_PENDIENTE = "baja pendiente";
@@ -49,66 +45,39 @@ public class DAOImplementacion implements DAO {
         return MongoConnection.getDatabase().getCollection(nombre);
     }
 
-    // ------------------------------------------------------------ LOGIN
-
     @Override
-    public Administrador loginAdministrador(String usuario, String contrasena) throws OurException {
+    public Usuario login(String nombreUsuario, String contrasena) throws OurException {
         try {
-            Document d = coleccion(COL_ADMINISTRADORES).find(filtroLogin(usuario, contrasena)).first();
-            if (d == null) {
-                return null;
+            Bson filtro = Filters.and(Filters.eq("nombreUsuario", nombreUsuario), Filters.eq("contrasena", contrasena));
+
+            Document d = coleccion(COL_ADMINISTRADORES).find(filtro).first();
+            if (d != null) {
+                LogApp.info("Login de administrador: " + nombreUsuario);
+                return new Administrador(id(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"),
+                        texto(d, "contrasena"), texto(d, "correo"), texto(d, "cuentaBancaria"));
             }
-            LogApp.info("Login de administrador: " + usuario);
-            return new Administrador(id(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"),
-                    texto(d, "contrasena"), texto(d, "correo"), texto(d, "cuentaBancaria"));
+
+            d = coleccion(COL_EMPLEADOS).find(filtro).first();
+            if (d != null) {
+                LogApp.info("Login de empleado: " + nombreUsuario);
+                return documentoAEmpleado(d);
+            }
+
+            d = coleccion(COL_CLIENTES).find(filtro).first();
+            if (d != null) {
+                LogApp.info("Login de cliente: " + nombreUsuario);
+                return documentoACliente(d);
+            }
+
+            LogApp.info("Login fallido: " + nombreUsuario);
+            return null;
         } catch (MongoException e) {
-            LogApp.error("Error en login de administrador " + usuario, e);
+            LogApp.error("Error en el login de " + nombreUsuario, e);
             throw new OurException(ErrorMessages.LOGIN);
         }
     }
 
-    @Override
-    public Empleado loginEmpleado(String usuario, String contrasena) throws OurException {
-        try {
-            Document d = coleccion(COL_EMPLEADOS).find(filtroLogin(usuario, contrasena)).first();
-            if (d == null) {
-                return null;
-            }
-            LogApp.info("Login de empleado: " + usuario);
-            return new Empleado(id(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"), texto(d, "rol"),
-                    texto(d, "contrasena"), texto(d, "correo"), texto(d, "cuentaBancaria"), id(d, "idSucursal"));
-        } catch (MongoException e) {
-            LogApp.error("Error en login de empleado " + usuario, e);
-            throw new OurException(ErrorMessages.LOGIN);
-        }
-    }
-
-    @Override
-    public Cliente loginCliente(String usuario, String contrasena) throws OurException {
-        try {
-            Document d = coleccion(COL_CLIENTES).find(filtroLogin(usuario, contrasena)).first();
-            if (d == null) {
-                LogApp.info("Login fallido: " + usuario);
-                return null;
-            }
-            LogApp.info("Login de cliente: " + usuario);
-            return documentoACliente(d);
-        } catch (MongoException e) {
-            LogApp.error("Error en login de cliente " + usuario, e);
-            throw new OurException(ErrorMessages.LOGIN);
-        }
-    }
-
-    private Bson filtroLogin(String usuario, String contrasena) {
-        return Filters.and(Filters.eq("nombreUsuario", usuario), Filters.eq("contrasena", contrasena));
-    }
-
-    /**
-     * Comprueba si un nombre de usuario ya lo usa otra persona (cliente, empleado
-     * o administrador), para que el login no pueda confundir a dos usuarios.
-     *
-     * @param idExcluir id de la propia persona al modificar sus datos, o null al dar de alta
-     */
+    // El nombre de usuario no puede repetirse entre clientes, empleados y administradores
     private boolean nombreUsuarioOcupado(String usuario, String idExcluir) throws OurException {
         Bson filtro = Filters.eq("nombreUsuario", usuario);
         if (idExcluir != null) {
@@ -118,8 +87,6 @@ public class DAOImplementacion implements DAO {
                 || coleccion(COL_EMPLEADOS).countDocuments(filtro) > 0
                 || coleccion(COL_CLIENTES).countDocuments(filtro) > 0;
     }
-
-    // ------------------------------------------------------------ CLIENTES
 
     @Override
     public void insertarCliente(Cliente cliente) throws OurException {
@@ -182,19 +149,15 @@ public class DAOImplementacion implements DAO {
     }
 
     private Cliente documentoACliente(Document d) {
-        Cliente c = new Cliente(id(d, "_id"), texto(d, "cuentaBancaria"), texto(d, "nombre"), texto(d, "nombreUsuario"),
-                texto(d, "contrasena"), texto(d, "DNI"), texto(d, "correo"), texto(d, "telefono"),
-                texto(d, "direccion"), new ArrayList<String>(), new ArrayList<Contrato>(), new ArrayList<Valoracion>());
+        Cliente c = new Cliente(id(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"), texto(d, "contrasena"),
+                texto(d, "correo"), texto(d, "cuentaBancaria"), texto(d, "DNI"), texto(d, "telefono"), texto(d, "direccion"));
         c.setDadoDeBaja(d.getBoolean("dadoDeBaja", false));
         return c;
     }
 
-    // ------------------------------------------------------------ TARIFAS
-
     @Override
     public List<Tarifa> obtenerTarifas() throws OurException {
         List<Tarifa> tarifas = new ArrayList<>();
-        // Las tarifas sin el campo "activa" también se muestran
         Bson filtro = Filters.ne("activa", false);
         try (MongoCursor<Document> cursor = coleccion(COL_TARIFAS).find(filtro).iterator()) {
             while (cursor.hasNext()) {
@@ -211,8 +174,6 @@ public class DAOImplementacion implements DAO {
             throw new OurException(ErrorMessages.GET_TARIFAS);
         }
     }
-
-    // ------------------------------------------------------------ CONTRATOS
 
     @Override
     public List<Contrato> obtenerContratosCliente(String idCliente) throws OurException {
@@ -238,10 +199,7 @@ public class DAOImplementacion implements DAO {
         }
     }
 
-    /**
-     * Busca contratos y, con $lookup, les une los datos de su tarifa y de su
-     * cliente en una sola consulta (en vez de una consulta por contrato).
-     */
+    // Con $lookup se traen la tarifa y el cliente de cada contrato en una sola consulta
     private List<Contrato> buscarContratos(Bson filtro) throws OurException {
         List<Bson> pipeline = Arrays.asList(
                 Aggregates.match(filtro),
@@ -355,7 +313,6 @@ public class DAOImplementacion implements DAO {
         }
     }
 
-    /** Cambia el estado de un contrato y, si se indica, el empleado que lo ha gestionado. */
     private void cambiarEstadoContrato(String idContrato, String estado, String idEmpleado, String mensajeError) throws OurException {
         try {
             Bson cambios = Updates.set("estado", estado);
@@ -373,8 +330,6 @@ public class DAOImplementacion implements DAO {
             throw new OurException(mensajeError);
         }
     }
-
-    // ------------------------------------------------------------ TICKETS
 
     @Override
     public List<TicketSoporte> obtenerTicketsCliente(String idCliente) throws OurException {
@@ -458,8 +413,6 @@ public class DAOImplementacion implements DAO {
         }
     }
 
-    // ------------------------------------------------------------ EMPLEADOS Y ADMINISTRADORES
-
     @Override
     public void actualizarEmpleado(Empleado empleado) throws OurException {
         String nombreColeccion = empleado instanceof Administrador ? COL_ADMINISTRADORES : COL_EMPLEADOS;
@@ -492,9 +445,7 @@ public class DAOImplementacion implements DAO {
         List<Empleado> empleados = new ArrayList<>();
         try (MongoCursor<Document> cursor = coleccion(COL_EMPLEADOS).find().iterator()) {
             while (cursor.hasNext()) {
-                Document d = cursor.next();
-                empleados.add(new Empleado(id(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"), texto(d, "rol"),
-                        texto(d, "contrasena"), texto(d, "correo"), texto(d, "cuentaBancaria"), id(d, "idSucursal")));
+                empleados.add(documentoAEmpleado(cursor.next()));
             }
             LogApp.info("Consultados " + empleados.size() + " empleados");
             return empleados;
@@ -563,6 +514,11 @@ public class DAOImplementacion implements DAO {
         }
     }
 
+    private Empleado documentoAEmpleado(Document d) {
+        return new Empleado(id(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"), texto(d, "contrasena"),
+                texto(d, "correo"), texto(d, "cuentaBancaria"), id(d, "idSucursal"));
+    }
+
     private Document documentoEmpleado(ObjectId id, Empleado empleado, String rol) {
         return new Document("_id", id)
                 .append("nombre", empleado.getNombre())
@@ -572,8 +528,6 @@ public class DAOImplementacion implements DAO {
                 .append("correo", empleado.getCorreo())
                 .append("cuentaBancaria", empleado.getCuentaBancaria());
     }
-
-    // ------------------------------------------------------------ SUCURSALES
 
     @Override
     public List<Sucursal> obtenerSucursales() throws OurException {
@@ -670,8 +624,6 @@ public class DAOImplementacion implements DAO {
                 .append("CodigoPostal", sucursal.getCodigoPostal());
     }
 
-    // ------------------------------------------------------------ VALORACIONES
-
     @Override
     public List<Valoracion> obtenerValoracionesCliente(String idCliente) throws OurException {
         List<Valoracion> valoraciones = new ArrayList<>();
@@ -744,21 +696,19 @@ public class DAOImplementacion implements DAO {
         }
     }
 
-    // ------------------------------------------------------------ AYUDANTES
-
-    /** Devuelve el campo como texto (vale para String y números), o "" si no existe. */
+    // Devuelve el campo como texto, o "" si no existe
     private String texto(Document d, String campo) {
         Object valor = d.get(campo);
         return valor != null ? String.valueOf(valor) : "";
     }
 
-    /** Devuelve el primer documento del array que crea un $lookup, o null si está vacío. */
+    // $lookup devuelve una lista: se coge el primer documento
     private Document primero(Document d, String campo) {
         List<Document> lista = d.getList(campo, Document.class);
         return lista != null && !lista.isEmpty() ? lista.get(0) : null;
     }
 
-    /** Devuelve un ObjectId como String hexadecimal, o null si no existe. */
+    // Devuelve el ObjectId como texto, o null si no existe
     private String id(Document d, String campo) {
         Object valor = d.get(campo);
         if (valor instanceof ObjectId) {

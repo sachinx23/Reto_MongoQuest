@@ -1,21 +1,11 @@
 package modelo;
 
-/**
- * Representa una valoración de la colección <b>Valoraciones</b>.
- *
- * @author eneko
- */
 public class Valoracion {
 
-    /** Identificador (ObjectId en hexadecimal). */
     private String id;
-    /** Puntuación de 1 a 5. */
     private int puntuacion;
-    /** Opinión escrita por el cliente. */
     private String texto;
-    /** Id del cliente que valora. */
     private String idCliente;
-    /** Id de la tarifa valorada. */
     private String idTarifa;
 
     public Valoracion(String id, int puntuacion, String texto, String idCliente, String idTarifa) {
@@ -64,10 +54,5 @@ public class Valoracion {
 
     public void setIdTarifa(String idTarifa) {
         this.idTarifa = idTarifa;
-    }
-
-    @Override
-    public String toString() {
-        return "Valoracion{" + "id=" + id + ", puntuacion=" + puntuacion + ", texto=" + texto + ", idCliente=" + idCliente + ", idTarifa=" + idTarifa + '}';
     }
 }

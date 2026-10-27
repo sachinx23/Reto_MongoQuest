@@ -1,31 +1,15 @@
 package controlador;
 
-import dao.DAO;
-import dao.DAOImplementacion;
 import exception.OurException;
-import java.util.ArrayList;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import exception.ShowAlert;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import modelo.Cliente;
-import modelo.Contrato;
-import modelo.Valoracion;
 
-public class RegistrarseController implements Initializable {
+public class RegistrarseController {
 
     @FXML private TextField txtUsuario;
     @FXML private TextField txtNombre;
@@ -35,15 +19,6 @@ public class RegistrarseController implements Initializable {
     @FXML private TextField txtTelefono;
     @FXML private TextField txtDireccion;
     @FXML private Label lblMensajeError;
-    @FXML private Button btnRegistrarse;
-    @FXML private Button btnVolver;
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        if (lblMensajeError != null) {
-            lblMensajeError.setText("");
-        }
-    }
 
     @FXML
     public void btnRegistrarse(ActionEvent event) {
@@ -51,13 +26,13 @@ public class RegistrarseController implements Initializable {
         String nombre = txtNombre.getText().trim();
         String contrasena = txtContrasena.getText().trim();
         String correo = txtCorreo.getText().trim();
-        String dni = txtDni.getText().trim();
+        String dni = txtDni.getText().trim().toUpperCase();
         String telefono = txtTelefono.getText().trim();
         String direccion = txtDireccion.getText().trim();
 
-        if (usuario.isEmpty() || nombre.isEmpty() || contrasena.isEmpty()
-                || correo.isEmpty() || dni.isEmpty() || telefono.isEmpty() || direccion.isEmpty()) {
-            lblMensajeError.setText("Rellena todos los campos.");
+        if (usuario.isEmpty() || nombre.isEmpty() || contrasena.isEmpty() || correo.isEmpty()
+                || dni.isEmpty() || telefono.isEmpty() || direccion.isEmpty()) {
+            lblMensajeError.setText("Por favor, rellena todos los campos.");
             return;
         }
         if (!correo.contains("@") || !correo.contains(".")) {
@@ -68,38 +43,30 @@ public class RegistrarseController implements Initializable {
             lblMensajeError.setText("DNI introducido incorrectamente.");
             return;
         }
-        if (contrasena.length() < 6) {
-            lblMensajeError.setText("La contraseña debe tener mínimo 6 caracteres.");
+        if (!telefono.matches("[0-9 ]{9,15}")) {
+            lblMensajeError.setText("El teléfono no es válido.");
             return;
         }
-
+        if (contrasena.length() < 4) {
+            lblMensajeError.setText("La contraseña debe tener mínimo 4 caracteres.");
+            return;
+        }
         lblMensajeError.setText("");
 
-        Cliente cliente = new Cliente(null, "", nombre, usuario, contrasena, dni, correo, telefono, direccion,
-                new ArrayList<String>(), new ArrayList<Contrato>(), new ArrayList<Valoracion>());
-
+        Cliente cliente = new Cliente(null, nombre, usuario, contrasena, correo, "", dni, telefono, direccion);
         try {
-            DAO dao = new DAOImplementacion();
-            dao.insertarCliente(cliente);
-
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setContentText("¡Usuario registrado correctamente!");
-            alert.showAndWait();
-            volverAIniciarSesion(event);
+            Sesion.getDao().insertarCliente(cliente);
+            ShowAlert.info("Usuario registrado", "Tu cuenta ha sido creada correctamente.");
+            Ventana.cambiar(txtUsuario, "/vista/IniciarSesion.fxml");
         } catch (OurException e) {
             lblMensajeError.setText(e.getMessage());
         }
     }
 
-    private void volverAIniciarSesion(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/vista/IniciarSesion.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            lblMensajeError.setText("Error al cargar la pantalla de inicio de sesión.");
+    @FXML
+    public void btnSalir(ActionEvent event) {
+        if (ShowAlert.confirmar("Cancelar registro", "¿Seguro que deseas cancelar el registro?")) {
+            Ventana.cambiar(txtUsuario, "/vista/IniciarSesion.fxml");
         }
     }
 }

@@ -1,37 +1,20 @@
 package modelo;
 
-/**
- * Representa un contrato de la colección <b>Contratos</b>.
- *
- * @author eneko
- */
 public class Contrato {
 
-    /** Identificador (ObjectId en hexadecimal). */
     private String id;
-    /** Teléfono asociado a la línea contratada. */
     private String telefono;
-    /** Estado del contrato (activo, rescindido...). */
     private String estado;
-    /** Id del cliente que firma el contrato. */
     private String idCliente;
-    /** Id de la tarifa contratada. */
     private String idTarifa;
-    /** Id del empleado que gestiona el contrato (puede ser null). */
     private String idEmpleado;
-    /** Fecha de inicio (yyyy-MM-dd). */
     private String fechaComienzo;
-    /** Fecha de fin (yyyy-MM-dd). */
     private String fechaFinalizacion;
 
-    // Datos de otras colecciones (se rellenan con $lookup, no se guardan en Contratos)
-    /** Nombre de la tarifa contratada. */
+    // No se guardan en Contratos: se rellenan al consultar con $lookup
     private String nombreTarifa;
-    /** Precio de la tarifa contratada. */
     private double precio;
-    /** Nombre del cliente. */
     private String nombreCliente;
-    /** DNI del cliente. */
     private String dniCliente;
 
     public Contrato(String id, String telefono, String estado, String idCliente, String idTarifa, String idEmpleado, String fechaComienzo, String fechaFinalizacion) {
@@ -139,10 +122,5 @@ public class Contrato {
 
     public void setDniCliente(String dniCliente) {
         this.dniCliente = dniCliente;
-    }
-
-    @Override
-    public String toString() {
-        return "Contrato{" + "id=" + id + ", telefono=" + telefono + ", estado=" + estado + ", idCliente=" + idCliente + ", idTarifa=" + idTarifa + ", idEmpleado=" + idEmpleado + ", fechaComienzo=" + fechaComienzo + ", fechaFinalizacion=" + fechaFinalizacion + '}';
     }
 }

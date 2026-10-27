@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -10,8 +11,9 @@
     <children>
         <Pane prefHeight="717.0" prefWidth="798.0">
             <children>
-                <Button layoutX="61.0" layoutY="44.0" mnemonicParsing="false" onAction="#miPerfil" text="Mi Perfil" />
-                <MenuButton layoutX="670.0" layoutY="44.0" mnemonicParsing="false" text="Menú">
+                <Label layoutX="200.0" layoutY="40.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Panel de administrador" />
+                <Button fx:id="btnMiPerfil" layoutX="61.0" layoutY="44.0" mnemonicParsing="false" onAction="#miPerfil" text="Mi Perfil" />
+                <MenuButton fx:id="menu" layoutX="670.0" layoutY="44.0" mnemonicParsing="false" text="Menú">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#altaEmpleado" text="Alta empleado" />
                         <MenuItem mnemonicParsing="false" onAction="#cambiarPuesto" text="Cambiar puesto" />

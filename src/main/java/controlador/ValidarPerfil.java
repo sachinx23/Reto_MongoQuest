@@ -1,16 +1,11 @@
 package controlador;
 
 /**
- * Validaciones comunes de los formularios de empleados y administradores
- * (perfil, alta de empleado).
+ * Comprobaciones de los formularios de empleados y administradores.
  */
 public class ValidarPerfil {
 
-    /**
-     * Comprueba los datos de un formulario.
-     *
-     * @return el mensaje de error a mostrar, o null si los datos son válidos
-     */
+    // Devuelve el mensaje de error, o null si los datos son correctos
     public static String comprobar(String nombre, String nombreUsuario, String contrasena, String correo) {
         if (nombre.trim().isEmpty() || nombreUsuario.trim().isEmpty()
                 || contrasena.trim().isEmpty() || correo.trim().isEmpty()) {

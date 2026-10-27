@@ -34,7 +34,8 @@
 
             <Label fx:id="lblMensajeError" alignment="CENTER" layoutX="150.0" layoutY="345.0" prefWidth="300.0" textFill="RED" />
 
-            <Button fx:id="btnRegistrarse" layoutX="264.0" layoutY="369.0" mnemonicParsing="false" onAction="#btnRegistrarse" text="Registrarse" />
+            <Button fx:id="btnRegistrarse" defaultButton="true" layoutX="200.0" layoutY="375.0" mnemonicParsing="false" onAction="#btnRegistrarse" prefWidth="95.0" text="Registrarse" />
+            <Button fx:id="btnSalir" cancelButton="true" layoutX="305.0" layoutY="375.0" mnemonicParsing="false" onAction="#btnSalir" prefWidth="95.0" text="Salir" />
          </children>
       </Pane>
    </children>

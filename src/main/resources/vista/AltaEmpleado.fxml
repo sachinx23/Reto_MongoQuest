@@ -2,6 +2,8 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TableColumn?>
@@ -27,6 +29,6 @@
         <TextField fx:id="txtCuentaBancaria" layoutX="160.0" layoutY="226.0" prefWidth="300.0" />
         <Label layoutX="40.0" layoutY="270.0" text="Sucursal:" />
         <ComboBox fx:id="cmbSucursal" layoutX="160.0" layoutY="266.0" prefWidth="300.0" promptText="(opcional)" />
-        <Button layoutX="340.0" layoutY="320.0" mnemonicParsing="false" onAction="#btnDarDeAlta" prefWidth="120.0" text="Dar de alta" />
+        <Button fx:id="btnDarDeAlta" layoutX="340.0" layoutY="320.0" mnemonicParsing="false" onAction="#btnDarDeAlta" prefWidth="120.0" text="Dar de alta" />
     </children>
 </AnchorPane>

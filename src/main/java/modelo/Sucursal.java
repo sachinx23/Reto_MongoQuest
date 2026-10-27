@@ -2,30 +2,15 @@ package modelo;
 
 import java.util.List;
 
-/**
- * Representa una tienda física de la colección <b>Sucursales</b>.
- * Los datos de la ubicación (dirección, localidad y código postal) se guardan
- * en MongoDB dentro del subdocumento "Ubicacion".
- *
- * @author eneko
- */
 public class Sucursal {
 
-    /** Identificador (ObjectId en hexadecimal). */
     private String id;
-    /** Nombre o código de la sucursal. */
     private String nombre;
-    /** Horario de atención, p. ej. "Lunes a viernes: 09:00-20:00". */
     private String horario;
-    /** Teléfono de la tienda. */
     private String telefono;
-    /** Calle y número. */
     private String direccion;
-    /** Localidad. */
     private String localidad;
-    /** Código postal. */
     private int codigoPostal;
-    /** Ids de los empleados asignados a la sucursal. */
     private List<String> empleados;
 
     public Sucursal(String id, String nombre, String horario, String telefono, String direccion, String localidad, int codigoPostal, List<String> empleados) {
@@ -103,9 +88,7 @@ public class Sucursal {
         this.empleados = empleados;
     }
 
-    /**
-     * Devuelve solo el nombre, que es lo que se ve al elegir una sucursal en un ComboBox.
-     */
+    // El ComboBox de alta de empleado muestra lo que devuelve toString()
     @Override
     public String toString() {
         return nombre;

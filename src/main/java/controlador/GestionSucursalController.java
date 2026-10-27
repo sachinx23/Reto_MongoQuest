@@ -1,17 +1,12 @@
 package controlador;
 
 import dao.DAO;
-import dao.DAOImplementacion;
 import exception.OurException;
 import exception.ShowAlert;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -19,11 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import modelo.Sucursal;
 
-/**
- * Pantalla "Gestión sucursal": crear, modificar y eliminar sucursales.
- * Al pulsar una fila de la tabla sus datos pasan al formulario.
- */
-public class GestionSucursalController implements Initializable {
+public class GestionSucursalController {
 
     @FXML private TableView<Sucursal> tablaSucursales;
     @FXML private TableColumn<Sucursal, String> colNombre;
@@ -39,10 +30,10 @@ public class GestionSucursalController implements Initializable {
     @FXML private TextField txtCodigoPostal;
     @FXML private TextField txtHorario;
 
-    private final DAO dao = new DAOImplementacion();
+    private final DAO dao = Sesion.getDao();
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    @FXML
+    public void initialize() {
         colNombre.setCellValueFactory(new PropertyValueFactory<Sucursal, String>("nombre"));
         colDireccion.setCellValueFactory(new PropertyValueFactory<Sucursal, String>("direccion"));
         colLocalidad.setCellValueFactory(new PropertyValueFactory<Sucursal, String>("localidad"));
@@ -55,7 +46,7 @@ public class GestionSucursalController implements Initializable {
         try {
             tablaSucursales.setItems(FXCollections.observableArrayList(dao.obtenerSucursales()));
         } catch (OurException e) {
-            ShowAlert.showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
+            ShowAlert.error(e.getMessage());
         }
     }
 
@@ -72,7 +63,7 @@ public class GestionSucursalController implements Initializable {
         }
     }
 
-    /** Comprueba el formulario. Devuelve el mensaje de error o null si es correcto. */
+    // Devuelve el mensaje de error, o null si el formulario es correcto
     private String validar() {
         if (txtNombre.getText().trim().isEmpty() || txtDireccion.getText().trim().isEmpty()
                 || txtTelefono.getText().trim().isEmpty()) {
@@ -84,7 +75,6 @@ public class GestionSucursalController implements Initializable {
         return null;
     }
 
-    /** Copia los datos del formulario a la sucursal. */
     private void leerFormulario(Sucursal s) {
         s.setNombre(txtNombre.getText().trim());
         s.setTelefono(txtTelefono.getText().trim());
@@ -99,7 +89,7 @@ public class GestionSucursalController implements Initializable {
     public void btnCrear(ActionEvent event) {
         String error = validar();
         if (error != null) {
-            ShowAlert.showAlert("Campos incompletos", error, Alert.AlertType.WARNING);
+            ShowAlert.info("Campos incompletos", error);
             return;
         }
         if (ShowAlert.confirmar("Confirmar creación", "¿Seguro que deseas crear la sucursal " + txtNombre.getText().trim() + "?")) {
@@ -107,11 +97,11 @@ public class GestionSucursalController implements Initializable {
             leerFormulario(s);
             try {
                 dao.insertarSucursal(s);
-                ShowAlert.showAlert("Sucursal registrada", "La nueva sucursal ha sido dada de alta.", Alert.AlertType.INFORMATION);
+                ShowAlert.info("Sucursal registrada", "La nueva sucursal ha sido dada de alta.");
                 btnLimpiar(event);
                 cargarSucursales();
             } catch (OurException e) {
-                ShowAlert.showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
+                ShowAlert.error(e.getMessage());
             }
         }
     }
@@ -120,22 +110,22 @@ public class GestionSucursalController implements Initializable {
     public void btnModificar(ActionEvent event) {
         Sucursal s = tablaSucursales.getSelectionModel().getSelectedItem();
         if (s == null) {
-            ShowAlert.showAlert("Aviso", "Selecciona una sucursal de la tabla primero.", Alert.AlertType.WARNING);
+            ShowAlert.info("Aviso", "Selecciona una sucursal de la tabla primero.");
             return;
         }
         String error = validar();
         if (error != null) {
-            ShowAlert.showAlert("Datos inválidos", error, Alert.AlertType.WARNING);
+            ShowAlert.info("Datos inválidos", error);
             return;
         }
         if (ShowAlert.confirmar("Confirmar modificación", "¿Seguro que deseas guardar los cambios de " + s.getNombre() + "?")) {
             leerFormulario(s);
             try {
                 dao.actualizarSucursal(s);
-                ShowAlert.showAlert("Modificación exitosa", "La sucursal se ha actualizado.", Alert.AlertType.INFORMATION);
+                ShowAlert.info("Modificación exitosa", "La sucursal se ha actualizado.");
                 cargarSucursales();
             } catch (OurException e) {
-                ShowAlert.showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
+                ShowAlert.error(e.getMessage());
                 cargarSucursales();
             }
         }
@@ -145,17 +135,17 @@ public class GestionSucursalController implements Initializable {
     public void btnEliminar(ActionEvent event) {
         Sucursal s = tablaSucursales.getSelectionModel().getSelectedItem();
         if (s == null) {
-            ShowAlert.showAlert("Aviso", "Selecciona una sucursal de la tabla primero.", Alert.AlertType.WARNING);
+            ShowAlert.info("Aviso", "Selecciona una sucursal de la tabla primero.");
             return;
         }
         if (ShowAlert.confirmar("Confirmar eliminación", "¿Seguro que deseas eliminar la sucursal " + s.getNombre() + "?")) {
             try {
                 dao.borrarSucursal(s.getId());
-                ShowAlert.showAlert("Sucursal eliminada", "La sucursal ha sido eliminada.", Alert.AlertType.INFORMATION);
+                ShowAlert.info("Sucursal eliminada", "La sucursal ha sido eliminada.");
                 btnLimpiar(event);
                 cargarSucursales();
             } catch (OurException e) {
-                ShowAlert.showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
+                ShowAlert.error(e.getMessage());
             }
         }
     }

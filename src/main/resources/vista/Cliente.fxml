@@ -2,6 +2,8 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -16,7 +18,7 @@
             <children>
                 <Label layoutX="14.0" layoutY="14.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Panel de cliente" />
                 <Label fx:id="lblBienvenida" layoutX="150.0" layoutY="65.0" prefHeight="17.0" prefWidth="300.0" />
-                <Button layoutX="14.0" layoutY="98.0" mnemonicParsing="false" onAction="#btnMiPerfil" prefWidth="130.0" text="Mi Perfil" />
+                <Button fx:id="btnMiPerfil" layoutX="14.0" layoutY="98.0" mnemonicParsing="false" onAction="#btnMiPerfil" prefWidth="130.0" text="Mi Perfil" />
                 <ComboBox fx:id="cmbOpciones" layoutX="418.0" layoutY="98.0" onAction="#cmbOpcionSeleccionada" prefWidth="150.0" promptText="Opciones" />
                 
                 <Pane layoutX="14.5" layoutY="140.0" prefHeight="265.0" prefWidth="570.0">
@@ -46,7 +48,7 @@
                                 <Label layoutX="280.0" layoutY="145.0" text="Cuenta:" />
                                 <TextField fx:id="txtCuentaBancaria" layoutX="350.0" layoutY="141.0" prefWidth="200.0" />
 
-                                <Button layoutX="430.0" layoutY="190.0" mnemonicParsing="false" onAction="#btnModificar" prefWidth="120.0" text="Modificar" />
+                                <Button fx:id="btnModificar" layoutX="430.0" layoutY="190.0" mnemonicParsing="false" onAction="#btnModificar" prefWidth="120.0" text="Modificar" />
                             </children>
                         </AnchorPane>
 
@@ -54,6 +56,13 @@
                         <AnchorPane fx:id="panelTarifas" prefHeight="265.0" prefWidth="570.0" visible="false">
                             <children>
                                 <TableView fx:id="tablaTarifas" prefHeight="210.0" prefWidth="430.0">
+                                  <contextMenu>
+                                    <ContextMenu>
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#btnCambiarTarifa" text="Contratar esta tarifa" />
+                                      </items>
+                                    </ContextMenu>
+                                  </contextMenu>
                                   <columns>
                                     <TableColumn fx:id="colTarifaNombre" prefWidth="110.0" text="nombreTarifa" />
                                     <TableColumn fx:id="colTarifaPrecio" prefWidth="80.0" text="precio" />
@@ -61,8 +70,8 @@
                                     <TableColumn fx:id="colTarifaTipo" prefWidth="100.0" text="tipotarifa" />
                                   </columns>
                                 </TableView>
-                                <Button layoutX="445.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnCambiarTarifa" prefWidth="115.0" text="Cambiar tarifa" />
-                                <Button layoutX="445.0" layoutY="65.0" mnemonicParsing="false" onAction="#btnEliminarTarifa" prefWidth="115.0" text="Eliminar tarifa" />
+                                <Button fx:id="btnCambiarTarifa" layoutX="445.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnCambiarTarifa" prefWidth="115.0" text="Cambiar tarifa" />
+                                <Button fx:id="btnEliminarTarifa" layoutX="445.0" layoutY="65.0" mnemonicParsing="false" onAction="#btnEliminarTarifa" prefWidth="115.0" text="Eliminar tarifa" />
                             </children>
                         </AnchorPane>
 
@@ -70,6 +79,14 @@
                         <AnchorPane fx:id="panelContratos" prefHeight="265.0" prefWidth="570.0" visible="false">
                             <children>
                                 <TableView fx:id="tablaContratos" prefHeight="210.0" prefWidth="430.0">
+                                  <contextMenu>
+                                    <ContextMenu>
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#btnFirmarContrato" text="Firmar contrato" />
+                                        <MenuItem mnemonicParsing="false" onAction="#btnRescindirContrato" text="Rescindir contrato" />
+                                      </items>
+                                    </ContextMenu>
+                                  </contextMenu>
                                   <columns>
                                     <TableColumn fx:id="colContratoTelefono" prefWidth="100.0" text="telefono" />
                                     <TableColumn fx:id="colContratoEstado" prefWidth="100.0" text="estado" />
@@ -77,8 +94,8 @@
                                     <TableColumn fx:id="colContratoIdTarifa" prefWidth="100.0" text="Tarifa" />
                                   </columns>
                                 </TableView>
-                                <Button layoutX="445.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnFirmarContrato" prefWidth="115.0" text="Firmar contrato" />
-                                <Button layoutX="445.0" layoutY="65.0" mnemonicParsing="false" onAction="#btnRescindirContrato" prefWidth="115.0" text="Rescindir contrato" />
+                                <Button fx:id="btnFirmarContrato" layoutX="445.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnFirmarContrato" prefWidth="115.0" text="Firmar contrato" />
+                                <Button fx:id="btnRescindirContrato" layoutX="445.0" layoutY="65.0" mnemonicParsing="false" onAction="#btnRescindirContrato" prefWidth="115.0" text="Rescindir contrato" />
                             </children>
                         </AnchorPane>
 
@@ -96,26 +113,34 @@
                                     <TableColumn fx:id="colSoporteFecha" prefWidth="180.0" text="fechaCreacion" />
                                   </columns>
                                 </TableView>
-                                <Button layoutX="450.0" layoutY="85.0" mnemonicParsing="false" onAction="#btnEnviarTicket" prefWidth="110.0" text="Enviar ticket" />
+                                <Button fx:id="btnEnviarTicket" layoutX="450.0" layoutY="85.0" mnemonicParsing="false" onAction="#btnEnviarTicket" prefWidth="110.0" text="Enviar ticket" />
                             </children>
                         </AnchorPane>
 
                         <!-- PANEL VALORACIONES -->
                         <AnchorPane fx:id="panelValoraciones" prefHeight="265.0" prefWidth="570.0" visible="false">
                             <children>
-                                <TableView fx:id="tablaValoraciones" onMouseClicked="#seleccionarValoracion" prefHeight="150.0" prefWidth="430.0">
+                                <TableView fx:id="tablaValoraciones" editable="true" onMouseClicked="#seleccionarValoracion" prefHeight="150.0" prefWidth="430.0">
+                                  <contextMenu>
+                                    <ContextMenu>
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#btnEditarValoracion" text="Editar" />
+                                        <MenuItem mnemonicParsing="false" onAction="#btnEliminarValoracion" text="Eliminar" />
+                                      </items>
+                                    </ContextMenu>
+                                  </contextMenu>
                                   <columns>
-                                    <TableColumn fx:id="colValoracionPuntuacion" prefWidth="90.0" text="puntuacion" />
-                                    <TableColumn fx:id="colValoracionTexto" prefWidth="340.0" text="texto" />
+                                    <TableColumn fx:id="colValoracionPuntuacion" editable="false" prefWidth="90.0" text="puntuacion" />
+                                    <TableColumn fx:id="colValoracionTexto" onEditCommit="#editarTextoValoracion" prefWidth="340.0" text="texto (doble clic para editar)" />
                                   </columns>
                                 </TableView>
                                 <Label layoutX="0.0" layoutY="170.0" text="Puntuación:" />
                                 <ComboBox fx:id="cmbPuntuacion" layoutX="80.0" layoutY="166.0" prefWidth="80.0" />
                                 <Label layoutX="0.0" layoutY="210.0" text="Opinión:" />
                                 <TextField fx:id="txtValoracion" layoutX="80.0" layoutY="206.0" prefWidth="350.0" />
-                                <Button layoutX="445.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnValorar" prefWidth="115.0" text="Valorar" />
-                                <Button layoutX="445.0" layoutY="65.0" mnemonicParsing="false" onAction="#btnEditarValoracion" prefWidth="115.0" text="Editar" />
-                                <Button layoutX="445.0" layoutY="110.0" mnemonicParsing="false" onAction="#btnEliminarValoracion" prefWidth="115.0" text="Eliminar" />
+                                <Button fx:id="btnValorar" layoutX="445.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnValorar" prefWidth="115.0" text="Valorar" />
+                                <Button fx:id="btnEditarValoracion" layoutX="445.0" layoutY="65.0" mnemonicParsing="false" onAction="#btnEditarValoracion" prefWidth="115.0" text="Editar" />
+                                <Button fx:id="btnEliminarValoracion" layoutX="445.0" layoutY="110.0" mnemonicParsing="false" onAction="#btnEliminarValoracion" prefWidth="115.0" text="Eliminar" />
                             </children>
                         </AnchorPane>
 

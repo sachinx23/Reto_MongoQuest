@@ -13,20 +13,13 @@ import log.LogApp;
 import org.bson.Document;
 
 /**
- * Gestiona la única conexión (MongoClient) de toda la aplicación.
- * Los datos de conexión se leen de {@code src/main/resources/config.properties}.
+ * Única conexión a MongoDB de la aplicación. Los datos se leen de config.properties.
  */
 public class MongoConnection {
 
     private static MongoClient client;
     private static MongoDatabase database;
 
-    /**
-     * Abre la conexión leyendo la URI y el nombre de la base de datos de
-     * config.properties. Se llama una sola vez al arrancar la aplicación.
-     *
-     * @throws OurException si no se puede leer la configuración o el servidor no responde
-     */
     public static void connect() throws OurException {
         if (client != null) {
             return;
@@ -44,13 +37,6 @@ public class MongoConnection {
         connect(config.getProperty("mongo.uri"), config.getProperty("mongo.database"));
     }
 
-    /**
-     * Abre la conexión con una URI y base de datos concretas.
-     *
-     * @param uri cadena de conexión de MongoDB
-     * @param dbName nombre de la base de datos
-     * @throws OurException si el servidor no responde
-     */
     public static void connect(String uri, String dbName) throws OurException {
         try {
             if (client == null) {
@@ -67,12 +53,6 @@ public class MongoConnection {
         }
     }
 
-    /**
-     * Devuelve la base de datos ya conectada.
-     *
-     * @return base de datos
-     * @throws OurException si todavía no se ha llamado a connect()
-     */
     public static MongoDatabase getDatabase() throws OurException {
         if (database == null) {
             throw new OurException(ErrorMessages.DATABASE);
@@ -80,9 +60,6 @@ public class MongoConnection {
         return database;
     }
 
-    /**
-     * Cierra la conexión. Se llama al cerrar la aplicación.
-     */
     public static void close() {
         if (client != null) {
             client.close();

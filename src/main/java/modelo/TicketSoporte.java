@@ -1,28 +1,16 @@
 package modelo;
 
-/**
- * Representa un ticket de la colección <b>TicketsSoportes</b>.
- *
- * @author eneko
- */
 public class TicketSoporte {
 
-    /** Identificador (ObjectId en hexadecimal). */
     private String id;
-    /** Asunto de la incidencia. */
     private String asunto;
-    /** Descripción detallada de la incidencia. */
     private String descripcion;
-    /** Fecha de creación (yyyy-MM-dd). */
     private String fechaCreacion;
-    /** Estado: pendiente, en proceso, resuelto o cerrado. */
     private String estado;
-    /** Id del cliente que abre el ticket. */
     private String idCliente;
-    /** Id del empleado que lo gestiona (puede ser null). */
     private String idEmpleado;
 
-    /** Nombre del cliente (se rellena con $lookup, no se guarda en TicketsSoportes). */
+    // No se guarda en TicketsSoportes: se rellena al consultar con $lookup
     private String nombreCliente;
 
     public TicketSoporte(String id, String asunto, String descripcion, String fechaCreacion, String estado, String idCliente, String idEmpleado) {
@@ -97,10 +85,5 @@ public class TicketSoporte {
 
     public void setNombreCliente(String nombreCliente) {
         this.nombreCliente = nombreCliente;
-    }
-
-    @Override
-    public String toString() {
-        return "TicketSoporte{" + "id=" + id + ", asunto=" + asunto + ", descripcion=" + descripcion + ", fechaCreacion=" + fechaCreacion + ", estado=" + estado + ", idCliente=" + idCliente + ", idEmpleado=" + idEmpleado + '}';
     }
 }

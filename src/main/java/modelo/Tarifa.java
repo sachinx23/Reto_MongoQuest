@@ -1,23 +1,12 @@
 package modelo;
 
-/**
- * Representa una tarifa de la colección <b>Tarifas</b>.
- *
- * @author eneko
- */
 public class Tarifa {
 
-    /** Identificador (ObjectId en hexadecimal). */
     private String id;
-    /** Nombre comercial de la tarifa. */
     private String nombreTarifa;
-    /** Precio mensual en euros. */
     private double precio;
-    /** Descripción de lo que incluye. */
     private String detalles;
-    /** Tipo de tarifa (Fibra, Móvil, Fibra + Móvil...). */
     private String tipoTarifa;
-    /** Indica si la tarifa se puede contratar. */
     private boolean activa;
 
     public Tarifa(String id, String nombreTarifa, double precio, String detalles, String tipoTarifa, boolean activa) {
@@ -75,10 +64,5 @@ public class Tarifa {
 
     public void setActiva(boolean activa) {
         this.activa = activa;
-    }
-
-    @Override
-    public String toString() {
-        return "Tarifa{" + "id=" + id + ", nombreTarifa=" + nombreTarifa + ", precio=" + precio + ", detalles=" + detalles + ", tipoTarifa=" + tipoTarifa + ", activa=" + activa + '}';
     }
 }

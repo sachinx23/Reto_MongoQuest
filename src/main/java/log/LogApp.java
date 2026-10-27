@@ -11,13 +11,10 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 /**
- * Bitácora (log) de la aplicación. Todas las operaciones contra la base de
- * datos se registran en el fichero {@link #FICHERO_LOG}, que el administrador
- * puede consultar desde la aplicación.
+ * Fichero de log (telonda.log) donde se apuntan todas las operaciones con la base de datos.
  */
 public class LogApp {
 
-    /** Ruta del fichero de log (se crea en la carpeta desde la que se ejecuta la app). */
     public static final String FICHERO_LOG = "telonda.log";
 
     private static final Logger LOGGER = Logger.getLogger("TelOnda");
@@ -35,31 +32,14 @@ public class LogApp {
         }
     }
 
-    /**
-     * Registra una operación que ha terminado correctamente.
-     *
-     * @param mensaje descripción de la operación
-     */
     public static void info(String mensaje) {
         LOGGER.info(mensaje);
     }
 
-    /**
-     * Registra un error junto con la excepción que lo ha provocado.
-     *
-     * @param mensaje descripción del error
-     * @param e excepción original
-     */
     public static void error(String mensaje, Exception e) {
         LOGGER.log(Level.SEVERE, mensaje, e);
     }
 
-    /**
-     * Devuelve todo el contenido del fichero de log.
-     *
-     * @return texto del log, o cadena vacía si todavía no existe
-     * @throws IOException si el fichero no se puede leer
-     */
     public static String leerLog() throws IOException {
         Path ruta = Paths.get(FICHERO_LOG);
         if (!Files.exists(ruta)) {
