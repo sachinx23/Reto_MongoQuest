@@ -1,5 +1,7 @@
 package controlador;
 
+import dao.DAO;
+import dao.DAOImplementacion;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -21,11 +23,6 @@ import javafx.stage.Stage;
 
 import org.bson.Document;
 
-/**
- * FXML Controller class
- *
- * @author Eneko.Plaza
- */
 public class IniciarSesionController implements Initializable {
 
     @FXML
@@ -59,11 +56,10 @@ public class IniciarSesionController implements Initializable {
 
         lblMensajeError.setText("");
 
-        // Llamada al método estático del DAO
-        Document usuarioObtenido = DAO.comprobarUsuarios(usuario, contrasena);
+        DAO dao = new DAOImplementacion();
+        Document usuarioObtenido = dao.comprobarUsuarios(usuario, contrasena);
 
         if (usuarioObtenido != null) {
-            // Se comprueba "nombre" o "nombreUsuario"
             String nombre = usuarioObtenido.getString("nombre");
             if (nombre == null) {
                 nombre = usuarioObtenido.getString("nombreUsuario");
@@ -71,37 +67,38 @@ public class IniciarSesionController implements Initializable {
 
             String rol = usuarioObtenido.getString("rol");
 
-            // Alerta de bienvenida
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Inicio de Sesión Correcto");
             alert.setHeaderText(null);
             alert.setContentText("¡Bienvenido/a " + nombre + "!\nRol: " + rol);
             alert.showAndWait();
-            if ("Admin".equals(rol)) {
+
+            if ("Administradores".equals(rol) || "Admin".equals(rol)) {
                 cambiarPantalla("/vista/Admin.fxml");
-            } else if ("Empleado".equals(rol)) {
-                // cambiarPantalla("/vista/Empleado.fxml");
+            } else if ("Empleados".equals(rol) || "Empleado".equals(rol)) {
+                cambiarPantalla("/vista/Empleado.fxml");
             } else if ("Cliente".equals(rol)) {
-                // cambiarPantalla("/vista/Cliente.fxml");
+                ClienteController.setUsuario(usuarioObtenido);
+                cambiarPantalla("/vista/Cliente.fxml");
             }
 
         } else {
             lblMensajeError.setText("Usuario o contraseña incorrectos.");
         }
     }
-    
+
     @FXML
     public void cambiarPantalla(String ruta) {
-    try {
-        Parent root = FXMLLoader.load(getClass().getResource("/vista/Admin.fxml"));
-        Stage stage = (Stage) txtUsuario.getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-    } catch (IOException e) {
-        e.printStackTrace();
-        lblMensajeError.setText("Error al cargar la pantalla.");
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource(ruta));
+            Stage stage = (Stage) txtUsuario.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            lblMensajeError.setText("Error al cargar la pantalla.");
+        }
     }
-}
 
     @FXML
     public void btnRegistrarse(ActionEvent event) {

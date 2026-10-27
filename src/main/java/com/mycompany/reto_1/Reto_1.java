@@ -12,21 +12,16 @@ public class Reto_1 extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Cargas la ventana de Login
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("vista/IniciarSesion.fxml"));
+        // Carga el FXML desde src/main/resources/vista/IniciarSesion.fxml
+        Parent root = FXMLLoader.load(getClass().getResource("/vista/IniciarSesion.fxml"));
         
-        // Buscas la imagen en la carpeta de recursos
-        InputStream imagen = getClass().getClassLoader().getResourceAsStream("img/logo.png");
-        
-        // Si existe la imagen, la pones como icono
+        // Carga la imagen desde src/main/resources/img/logo.png
+        InputStream imagen = getClass().getResourceAsStream("/img/logo.png");
         if (imagen != null) {
             primaryStage.getIcons().add(new Image(imagen));
-        } else {
-            System.out.println("OJO: No se ha encontrado la imagen en src/main/resources/img/icono.png");
         }
 
-        //Configuras la ventana 
-        primaryStage.setTitle("Tel-ONDA - Iniciar Sesión");
+        primaryStage.setTitle("Tel--ONDA - Iniciar Sesión");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
