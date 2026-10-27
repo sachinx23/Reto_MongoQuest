@@ -1,6 +1,8 @@
 package exception;
 
+import java.util.Optional;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 /**
  * Utility class for displaying alert dialogs in the JavaFX application. This class provides a centralized and simplified way to show various types of alert messages to users, including information, warning, error, and confirmation dialogs.
@@ -24,5 +26,22 @@ public class ShowAlert
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    /**
+     * Muestra un diálogo de confirmación con los botones Aceptar y Cancelar.
+     *
+     * @param title título del diálogo
+     * @param message pregunta que se hace al usuario
+     * @return true si el usuario pulsa Aceptar
+     */
+    public static boolean confirmar(String title, String message)
+    {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        Optional<ButtonType> respuesta = alert.showAndWait();
+        return respuesta.isPresent() && respuesta.get() == ButtonType.OK;
     }
 }

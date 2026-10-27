@@ -6,8 +6,10 @@ import modelo.Administrador;
 import modelo.Cliente;
 import modelo.Contrato;
 import modelo.Empleado;
+import modelo.Sucursal;
 import modelo.Tarifa;
 import modelo.TicketSoporte;
+import modelo.Valoracion;
 
 /**
  * Operaciones de acceso a datos de la aplicación. Los controladores solo
@@ -67,11 +69,14 @@ public interface DAO {
     /** El empleado valida una petición de tarifa: el contrato pasa a "activo". */
     void validarContrato(String idContrato, String idEmpleado) throws OurException;
 
+    /** Devuelve los clientes que tienen algún contrato en "baja pendiente". */
+    List<Cliente> obtenerClientesConBajaPendiente() throws OurException;
+
     /**
-     * El empleado aprueba una baja: el contrato pasa a "cancelado" y, si el
-     * cliente ya no tiene más contratos, se marca como dadoDeBaja.
+     * El empleado aprueba la baja de un cliente: sus contratos en "baja pendiente"
+     * pasan a "cancelado" y, si ya no le queda ninguno en vigor, se marca como dadoDeBaja.
      */
-    void aprobarBaja(Contrato contrato, String idEmpleado) throws OurException;
+    void aprobarBaja(String idCliente, String idEmpleado) throws OurException;
 
     /** Devuelve los tickets de soporte de un cliente. */
     List<TicketSoporte> obtenerTicketsCliente(String idCliente) throws OurException;
@@ -84,4 +89,58 @@ public interface DAO {
 
     /** El empleado marca un ticket como "resuelto". */
     void resolverTicket(String idTicket, String idEmpleado) throws OurException;
+
+    // ------------------------------------------------------------ EMPLEADOS Y ADMINISTRADORES
+
+    /**
+     * Guarda los datos modificados de un empleado. Si es un {@link Administrador}
+     * se guarda en la colección de administradores.
+     *
+     * @throws OurException si el nombre de usuario ya lo usa otra persona o falla la actualización
+     */
+    void actualizarEmpleado(Empleado empleado) throws OurException;
+
+    /** Devuelve todos los empleados. */
+    List<Empleado> obtenerEmpleados() throws OurException;
+
+    /** Da de alta un empleado nuevo. Al volver, el empleado tiene su id asignado. */
+    void insertarEmpleado(Empleado empleado) throws OurException;
+
+    /** Asciende un empleado a administrador: pasa de la colección Empleados a Administradores. */
+    void ascenderEmpleado(Empleado empleado) throws OurException;
+
+    /** Borra un empleado y lo quita de la plantilla de su sucursal. */
+    void borrarEmpleado(String idEmpleado) throws OurException;
+
+    // ------------------------------------------------------------ SUCURSALES
+
+    /** Devuelve todas las sucursales. */
+    List<Sucursal> obtenerSucursales() throws OurException;
+
+    /** Crea una sucursal nueva. Al volver, la sucursal tiene su id asignado. */
+    void insertarSucursal(Sucursal sucursal) throws OurException;
+
+    /** Guarda los datos modificados de una sucursal. */
+    void actualizarSucursal(Sucursal sucursal) throws OurException;
+
+    /**
+     * Borra una sucursal.
+     *
+     * @throws OurException si todavía tiene empleados asignados
+     */
+    void borrarSucursal(String idSucursal) throws OurException;
+
+    // ------------------------------------------------------------ VALORACIONES
+
+    /** Devuelve las valoraciones de un cliente. */
+    List<Valoracion> obtenerValoracionesCliente(String idCliente) throws OurException;
+
+    /** Publica una valoración nueva. Al volver, la valoración tiene su id asignado. */
+    void insertarValoracion(Valoracion valoracion) throws OurException;
+
+    /** Guarda la puntuación y el texto modificados de una valoración. */
+    void actualizarValoracion(Valoracion valoracion) throws OurException;
+
+    /** Borra una valoración. */
+    void borrarValoracion(String idValoracion) throws OurException;
 }

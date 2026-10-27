@@ -20,11 +20,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import modelo.Cliente;
 import modelo.Contrato;
 import modelo.Empleado;
 import modelo.TicketSoporte;
@@ -57,10 +60,11 @@ public class EmpleadoController implements Initializable {
     @FXML private AnchorPane panelValidar;
 
     // Perfil
-    @FXML private Label lblNombre;
-    @FXML private Label lblNombreUsuario;
-    @FXML private Label lblCorreo;
-    @FXML private Label lblCuentaBancaria;
+    @FXML private TextField txtNombre;
+    @FXML private TextField txtNombreUsuario;
+    @FXML private PasswordField txtContrasena;
+    @FXML private TextField txtCorreo;
+    @FXML private TextField txtCuentaBancaria;
 
     // Tickets pendientes
     @FXML private TableView<TicketSoporte> tablaTickets;
@@ -70,11 +74,9 @@ public class EmpleadoController implements Initializable {
     @FXML private TableColumn<TicketSoporte, String> colTicketFecha;
 
     // Solicitudes de baja
-    @FXML private TableView<Contrato> tablaBajas;
-    @FXML private TableColumn<Contrato, String> colBajaCliente;
-    @FXML private TableColumn<Contrato, String> colBajaDni;
-    @FXML private TableColumn<Contrato, String> colBajaTelefono;
-    @FXML private TableColumn<Contrato, String> colBajaTarifa;
+    @FXML private TableView<Cliente> tablaBajas;
+    @FXML private TableColumn<Cliente, String> colBajaCliente;
+    @FXML private TableColumn<Cliente, String> colBajaDni;
 
     // Validar tarifas
     @FXML private TableView<Contrato> tablaPeticiones;
@@ -106,10 +108,8 @@ public class EmpleadoController implements Initializable {
         colTicketDescripcion.setCellValueFactory(new PropertyValueFactory<TicketSoporte, String>("descripcion"));
         colTicketFecha.setCellValueFactory(new PropertyValueFactory<TicketSoporte, String>("fechaCreacion"));
 
-        colBajaCliente.setCellValueFactory(new PropertyValueFactory<Contrato, String>("nombreCliente"));
-        colBajaDni.setCellValueFactory(new PropertyValueFactory<Contrato, String>("dniCliente"));
-        colBajaTelefono.setCellValueFactory(new PropertyValueFactory<Contrato, String>("telefono"));
-        colBajaTarifa.setCellValueFactory(new PropertyValueFactory<Contrato, String>("nombreTarifa"));
+        colBajaCliente.setCellValueFactory(new PropertyValueFactory<Cliente, String>("nombre"));
+        colBajaDni.setCellValueFactory(new PropertyValueFactory<Cliente, String>("dni"));
 
         colPeticionCliente.setCellValueFactory(new PropertyValueFactory<Contrato, String>("nombreCliente"));
         colPeticionTarifa.setCellValueFactory(new PropertyValueFactory<Contrato, String>("nombreTarifa"));
@@ -125,10 +125,11 @@ public class EmpleadoController implements Initializable {
 
     private void cargarDatosPerfil() {
         if (usuarioActual != null) {
-            lblNombre.setText(usuarioActual.getNombre());
-            lblNombreUsuario.setText(usuarioActual.getNombreUsuario());
-            lblCorreo.setText(usuarioActual.getCorreo());
-            lblCuentaBancaria.setText(usuarioActual.getCuentaBancaria());
+            txtNombre.setText(usuarioActual.getNombre());
+            txtNombreUsuario.setText(usuarioActual.getNombreUsuario());
+            txtContrasena.setText(usuarioActual.getContrasena());
+            txtCorreo.setText(usuarioActual.getCorreo());
+            txtCuentaBancaria.setText(usuarioActual.getCuentaBancaria());
         }
     }
 
@@ -142,8 +143,7 @@ public class EmpleadoController implements Initializable {
 
     private void cargarBajas() {
         try {
-            tablaBajas.setItems(FXCollections.observableArrayList(
-                    dao.obtenerContratosPorEstado(DAOImplementacion.ESTADO_BAJA_PENDIENTE)));
+            tablaBajas.setItems(FXCollections.observableArrayList(dao.obtenerClientesConBajaPendiente()));
         } catch (OurException e) {
             mostrarError(e.getMessage());
         }
@@ -193,6 +193,29 @@ public class EmpleadoController implements Initializable {
     }
 
     @FXML
+    public void btnModificar(ActionEvent event) {
+        String error = ValidarPerfil.comprobar(txtNombre.getText(), txtNombreUsuario.getText(),
+                txtContrasena.getText(), txtCorreo.getText());
+        if (error != null) {
+            mostrarInfo("Datos inválidos", error);
+            return;
+        }
+        if (mostrarConfirmacion("Confirmar cambios", "¿Seguro que deseas guardar los cambios?")) {
+            usuarioActual.setNombre(txtNombre.getText().trim());
+            usuarioActual.setNombreUsuario(txtNombreUsuario.getText().trim());
+            usuarioActual.setContrasena(txtContrasena.getText().trim());
+            usuarioActual.setCorreo(txtCorreo.getText().trim());
+            usuarioActual.setCuentaBancaria(txtCuentaBancaria.getText().trim());
+            try {
+                dao.actualizarEmpleado(usuarioActual);
+                mostrarInfo("Modificación exitosa", "Tus datos se han actualizado correctamente.");
+            } catch (OurException e) {
+                mostrarError(e.getMessage());
+            }
+        }
+    }
+
+    @FXML
     public void btnResolverTicket(ActionEvent event) {
         TicketSoporte ticketSel = tablaTickets.getSelectionModel().getSelectedItem();
         if (ticketSel == null) {
@@ -212,14 +235,14 @@ public class EmpleadoController implements Initializable {
 
     @FXML
     public void btnAprobarBaja(ActionEvent event) {
-        Contrato contratoSel = tablaBajas.getSelectionModel().getSelectedItem();
-        if (contratoSel == null) {
+        Cliente clienteSel = tablaBajas.getSelectionModel().getSelectedItem();
+        if (clienteSel == null) {
             mostrarInfo("Aviso", "Selecciona una solicitud de la tabla primero.");
             return;
         }
         if (mostrarConfirmacion("Tramitar baja", "¿Confirmas la rescisión de contrato y la baja definitiva de este cliente?")) {
             try {
-                dao.aprobarBaja(contratoSel, usuarioActual.getId());
+                dao.aprobarBaja(clienteSel.getId(), usuarioActual.getId());
                 mostrarInfo("Gestión completada", "La operación sobre la cuenta del cliente se ha procesado con éxito.");
                 cargarBajas();
             } catch (OurException e) {

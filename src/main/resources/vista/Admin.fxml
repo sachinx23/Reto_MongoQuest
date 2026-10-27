@@ -10,7 +10,7 @@
     <children>
         <Pane prefHeight="717.0" prefWidth="798.0">
             <children>
-                <Button layoutX="61.0" layoutY="44.0" mnemonicParsing="false" text="Mi Perfil" />
+                <Button layoutX="61.0" layoutY="44.0" mnemonicParsing="false" onAction="#miPerfil" text="Mi Perfil" />
                 <MenuButton layoutX="670.0" layoutY="44.0" mnemonicParsing="false" text="Menú">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#altaEmpleado" text="Alta empleado" />

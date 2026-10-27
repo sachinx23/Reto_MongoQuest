@@ -64,6 +64,7 @@ public class IniciarSesionController implements Initializable {
             Administrador admin = dao.loginAdministrador(usuario, contrasena);
             if (admin != null) {
                 ShowAlert.showAlert("Inicio de Sesión Correcto", "¡Bienvenido/a " + admin.getNombre() + "!\nRol: Administrador", AlertType.INFORMATION);
+                AdministradorController.setUsuario(admin);
                 cambiarPantalla("/vista/Admin.fxml");
                 return;
             }

@@ -66,7 +66,19 @@ db.createCollection("Empleados");
 db.createCollection("Administradores");
 db.createCollection("TicketSoportes");
 db.createCollection("Sucursales");
-db.createCollection("Valoraciones");
+db.createCollection("Valoraciones", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["puntuacion", "texto", "idCliente"],
+      properties: {
+        puntuacion: { bsonType: "int", minimum: 1, maximum: 5 },
+        texto:      { bsonType: "string", minLength: 1 },
+        idCliente:  { bsonType: "objectId" }
+      }
+    }
+  }
+});
 
 // ---------------------------------------------------------------- Datos de ejemplo
 db.Tarifas.insertMany([
@@ -80,9 +92,19 @@ db.Administradores.insertOne({
   contrasena: "abcd", correo: "aitorfernandez@gmail.com", cuentaBancaria: "ES7921000813610123456789"
 });
 
+const idSucursal = ObjectId();
+const idPablo = ObjectId();
+
+db.Sucursales.insertOne({
+  _id: idSucursal, nombre: "Tel-ONDA Bilbao", horario: "Lunes a viernes: 09:00-20:00",
+  telefono: "987 687 654", empleado: [idPablo],
+  Ubicacion: { Direccion: "Lonbo Kalea", Localidad: "Bilbao", CodigoPostal: 48480 }
+});
+
 db.Empleados.insertOne({
-  nombre: "Pablo diaz", nombreUsuario: "Pablodiaz0", rol: "Empleado",
-  contrasena: "abcd", correo: "pablodiaz@gmail.com", cuentaBancaria: "ES7921000813610123456789"
+  _id: idPablo, nombre: "Pablo diaz", nombreUsuario: "Pablodiaz0", rol: "Empleado",
+  contrasena: "abcd", correo: "pablodiaz@gmail.com", cuentaBancaria: "ES7921000813610123456789",
+  idSucursal: idSucursal
 });
 
 db.Clientes.insertOne({

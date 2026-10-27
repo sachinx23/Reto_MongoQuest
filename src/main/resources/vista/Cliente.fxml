@@ -100,6 +100,25 @@
                             </children>
                         </AnchorPane>
 
+                        <!-- PANEL VALORACIONES -->
+                        <AnchorPane fx:id="panelValoraciones" prefHeight="265.0" prefWidth="570.0" visible="false">
+                            <children>
+                                <TableView fx:id="tablaValoraciones" onMouseClicked="#seleccionarValoracion" prefHeight="150.0" prefWidth="430.0">
+                                  <columns>
+                                    <TableColumn fx:id="colValoracionPuntuacion" prefWidth="90.0" text="puntuacion" />
+                                    <TableColumn fx:id="colValoracionTexto" prefWidth="340.0" text="texto" />
+                                  </columns>
+                                </TableView>
+                                <Label layoutX="0.0" layoutY="170.0" text="Puntuación:" />
+                                <ComboBox fx:id="cmbPuntuacion" layoutX="80.0" layoutY="166.0" prefWidth="80.0" />
+                                <Label layoutX="0.0" layoutY="210.0" text="Opinión:" />
+                                <TextField fx:id="txtValoracion" layoutX="80.0" layoutY="206.0" prefWidth="350.0" />
+                                <Button layoutX="445.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnValorar" prefWidth="115.0" text="Valorar" />
+                                <Button layoutX="445.0" layoutY="65.0" mnemonicParsing="false" onAction="#btnEditarValoracion" prefWidth="115.0" text="Editar" />
+                                <Button layoutX="445.0" layoutY="110.0" mnemonicParsing="false" onAction="#btnEliminarValoracion" prefWidth="115.0" text="Eliminar" />
+                            </children>
+                        </AnchorPane>
+
                     </children>
                 </Pane>
             </children>

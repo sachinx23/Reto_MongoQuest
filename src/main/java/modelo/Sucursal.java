@@ -103,8 +103,11 @@ public class Sucursal {
         this.empleados = empleados;
     }
 
+    /**
+     * Devuelve solo el nombre, que es lo que se ve al elegir una sucursal en un ComboBox.
+     */
     @Override
     public String toString() {
-        return "Sucursal{" + "id=" + id + ", nombre=" + nombre + ", horario=" + horario + ", telefono=" + telefono + ", direccion=" + direccion + ", localidad=" + localidad + ", codigoPostal=" + codigoPostal + ", empleados=" + empleados + '}';
+        return nombre;
     }
 }

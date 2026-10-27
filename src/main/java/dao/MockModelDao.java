@@ -7,6 +7,7 @@ import modelo.Administrador;
 import modelo.Cliente;
 import modelo.Contrato;
 import modelo.Empleado;
+import modelo.Sucursal;
 import modelo.Tarifa;
 import modelo.TicketSoporte;
 import modelo.Valoracion;
@@ -22,6 +23,9 @@ public class MockModelDao implements DAO {
     private final Cliente clientePrueba;
     private final List<Contrato> contratos = new ArrayList<>();
     private final List<TicketSoporte> tickets = new ArrayList<>();
+    private final List<Empleado> empleados = new ArrayList<>();
+    private final List<Sucursal> sucursales = new ArrayList<>();
+    private final List<Valoracion> valoraciones = new ArrayList<>();
 
     public MockModelDao() {
         clientePrueba = new Cliente(new ObjectId().toHexString(), "", "Sachin", "sachinx23", "sachin",
@@ -115,8 +119,23 @@ public class MockModelDao implements DAO {
     }
 
     @Override
-    public void aprobarBaja(Contrato contrato, String idEmpleado) throws OurException {
-        cambiarEstado(contrato.getId(), DAOImplementacion.ESTADO_CANCELADO);
+    public List<Cliente> obtenerClientesConBajaPendiente() throws OurException {
+        comprobarError();
+        List<Cliente> resultado = new ArrayList<>();
+        if (!obtenerContratosPorEstado(DAOImplementacion.ESTADO_BAJA_PENDIENTE).isEmpty()) {
+            resultado.add(clientePrueba);
+        }
+        return resultado;
+    }
+
+    @Override
+    public void aprobarBaja(String idCliente, String idEmpleado) throws OurException {
+        comprobarError();
+        for (Contrato c : contratos) {
+            if (c.getIdCliente().equals(idCliente) && DAOImplementacion.ESTADO_BAJA_PENDIENTE.equals(c.getEstado())) {
+                c.setEstado(DAOImplementacion.ESTADO_CANCELADO);
+            }
+        }
     }
 
     private void cambiarEstado(String idContrato, String estado) throws OurException {
@@ -159,6 +178,96 @@ public class MockModelDao implements DAO {
         for (TicketSoporte t : tickets) {
             if (t.getId().equals(idTicket)) {
                 t.setEstado("resuelto");
+            }
+        }
+    }
+
+    @Override
+    public void actualizarEmpleado(Empleado empleado) throws OurException {
+        comprobarError();
+    }
+
+    @Override
+    public List<Empleado> obtenerEmpleados() throws OurException {
+        comprobarError();
+        return empleados;
+    }
+
+    @Override
+    public void insertarEmpleado(Empleado empleado) throws OurException {
+        comprobarError();
+        empleado.setId(new ObjectId().toHexString());
+        empleados.add(empleado);
+    }
+
+    @Override
+    public void ascenderEmpleado(Empleado empleado) throws OurException {
+        comprobarError();
+        empleados.remove(empleado);
+    }
+
+    @Override
+    public void borrarEmpleado(String idEmpleado) throws OurException {
+        comprobarError();
+        for (int i = empleados.size() - 1; i >= 0; i--) {
+            if (empleados.get(i).getId().equals(idEmpleado)) {
+                empleados.remove(i);
+            }
+        }
+    }
+
+    @Override
+    public List<Sucursal> obtenerSucursales() throws OurException {
+        comprobarError();
+        return sucursales;
+    }
+
+    @Override
+    public void insertarSucursal(Sucursal sucursal) throws OurException {
+        comprobarError();
+        sucursal.setId(new ObjectId().toHexString());
+        sucursales.add(sucursal);
+    }
+
+    @Override
+    public void actualizarSucursal(Sucursal sucursal) throws OurException {
+        comprobarError();
+    }
+
+    @Override
+    public void borrarSucursal(String idSucursal) throws OurException {
+        comprobarError();
+        for (int i = sucursales.size() - 1; i >= 0; i--) {
+            if (sucursales.get(i).getId().equals(idSucursal)) {
+                sucursales.remove(i);
+            }
+        }
+    }
+
+    @Override
+    public List<Valoracion> obtenerValoracionesCliente(String idCliente) throws OurException {
+        comprobarError();
+        return valoraciones;
+    }
+
+    @Override
+    public void insertarValoracion(Valoracion valoracion) throws OurException {
+        comprobarError();
+        valoracion.setId(new ObjectId().toHexString());
+        valoraciones.add(valoracion);
+    }
+
+    @Override
+    public void actualizarValoracion(Valoracion valoracion) throws OurException {
+        comprobarError();
+    }
+
+    @Override
+    public void borrarValoracion(String idValoracion) throws OurException {
+        comprobarError();
+        for (int i = valoraciones.size() - 1; i >= 0; i--) {
+            if (valoraciones.get(i).getId().equals(idValoracion)) {
+                valoraciones.remove(i);
             }
         }
     }

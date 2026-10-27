@@ -51,4 +51,31 @@ public class ErrorMessages
 
     /** Fallo al leer el fichero de log. */
     public static final String READ_LOG = "No se pudo leer el fichero de log.";
+
+    /** Fallo al leer los empleados. */
+    public static final String GET_EMPLEADOS = "No se pudieron cargar los empleados.";
+
+    /** Fallo al dar de alta un empleado. */
+    public static final String INSERT_EMPLEADO = "No se pudo dar de alta el empleado.";
+
+    /** Fallo al ascender un empleado. */
+    public static final String ASCENDER_EMPLEADO = "No se pudo ascender al empleado.";
+
+    /** Fallo al borrar un empleado. */
+    public static final String DELETE_EMPLEADO = "No se pudo borrar el empleado.";
+
+    /** Fallo al leer las sucursales. */
+    public static final String GET_SUCURSALES = "No se pudieron cargar las sucursales.";
+
+    /** Fallo al crear, modificar o borrar una sucursal. */
+    public static final String SAVE_SUCURSAL = "No se pudo guardar la sucursal.";
+
+    /** La sucursal tiene empleados y no se puede borrar. */
+    public static final String SUCURSAL_CON_EMPLEADOS = "La sucursal tiene empleados, no se puede eliminar.";
+
+    /** Fallo al leer las valoraciones. */
+    public static final String GET_VALORACIONES = "No se pudieron cargar las valoraciones.";
+
+    /** Fallo al publicar, editar o borrar una valoración. */
+    public static final String SAVE_VALORACION = "No se pudo guardar la valoración.";
 }
