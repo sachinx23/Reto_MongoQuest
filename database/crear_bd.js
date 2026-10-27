@@ -1,8 +1,8 @@
-// Script para crear la base de datos TelOnda con esquemas de validación.
+// Script para crear la base de datos Tel--ONDA con esquemas de validación.
 // Ejecutar con:  mongosh "mongodb://localhost:27017" database/crear_bd.js
 // (o copiar y pegar en la consola mongosh de Compass)
 
-db = db.getSiblingDB("TelOnda");
+db = db.getSiblingDB("Tel--ONDA");
 
 // ---------------------------------------------------------------- Clientes
 db.createCollection("Clientes", {
@@ -87,4 +87,4 @@ db.Clientes.insertOne({
   cuentaBancaria: "ES7921000813610123456789"
 });
 
-print("Base de datos TelOnda creada");
+print("Base de datos Tel--ONDA creada");
