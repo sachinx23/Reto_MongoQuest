@@ -1,11 +1,14 @@
 package controlador;
 
-import dao.MongoConnection;
+import dao.DAO;
 import dao.DAOImplementacion;
+import exception.OurException;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,28 +23,19 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.bson.Document;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.util.Callback;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.model.Filters;
-import dao.DAO;
+import modelo.Cliente;
+import modelo.Contrato;
+import modelo.Tarifa;
+import modelo.TicketSoporte;
 
 public class ClienteController implements Initializable {
 
-    private static Document usuarioActual;
+    private static Cliente usuarioActual;
 
-    public static void setUsuario(Document u) {
+    public static void setUsuario(Cliente u) {
         usuarioActual = u;
     }
 
@@ -49,6 +43,8 @@ public class ClienteController implements Initializable {
     private static final String OP_CONTRATOS = "Mis Contratos";
     private static final String OP_SOPORTE = "Soporte";
     private static final String OP_CERRAR = "Cerrar Sesion";
+
+    private final DAO dao = new DAOImplementacion();
 
     @FXML private Label lblBienvenida;
     @FXML private ComboBox<String> cmbOpciones;
@@ -66,216 +62,116 @@ public class ClienteController implements Initializable {
     @FXML private TextField txtDireccion;
     @FXML private TextField txtTelefono;
     @FXML private TextField txtCuentaBancaria;
-    
+
     // Soporte
     @FXML private TextField txtSoporteAsunto;
     @FXML private TextField txtSoporteMensaje;
 
     // Tablas
-    @FXML private TableView<Document> tablaTarifas;
-    @FXML private TableColumn<Document, String> colTarifaNombre;
-    @FXML private TableColumn<Document, String> colTarifaPrecio;
-    @FXML private TableColumn<Document, String> colTarifaDetalles;
-    @FXML private TableColumn<Document, String> colTarifaTipo;
+    @FXML private TableView<Tarifa> tablaTarifas;
+    @FXML private TableColumn<Tarifa, String> colTarifaNombre;
+    @FXML private TableColumn<Tarifa, Double> colTarifaPrecio;
+    @FXML private TableColumn<Tarifa, String> colTarifaDetalles;
+    @FXML private TableColumn<Tarifa, String> colTarifaTipo;
 
-    @FXML private TableView<Document> tablaContratos;
-    @FXML private TableColumn<Document, String> colContratoTelefono;
-    @FXML private TableColumn<Document, String> colContratoEstado;
-    @FXML private TableColumn<Document, String> colContratoFecha;
-    @FXML private TableColumn<Document, String> colContratoIdTarifa;
+    @FXML private TableView<Contrato> tablaContratos;
+    @FXML private TableColumn<Contrato, String> colContratoTelefono;
+    @FXML private TableColumn<Contrato, String> colContratoEstado;
+    @FXML private TableColumn<Contrato, String> colContratoFecha;
+    @FXML private TableColumn<Contrato, String> colContratoIdTarifa;
 
-    @FXML private TableView<Document> tablaSoporte;
-    @FXML private TableColumn<Document, String> colSoporteAsunto;
-    @FXML private TableColumn<Document, String> colSoporteFecha;
+    @FXML private TableView<TicketSoporte> tablaSoporte;
+    @FXML private TableColumn<TicketSoporte, String> colSoporteAsunto;
+    @FXML private TableColumn<TicketSoporte, String> colSoporteFecha;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        if (cmbOpciones != null) {
-            cmbOpciones.getItems().addAll(OP_TARIFAS, OP_CONTRATOS, OP_SOPORTE, OP_CERRAR);
-        }
+        cmbOpciones.getItems().addAll(OP_TARIFAS, OP_CONTRATOS, OP_SOPORTE, OP_CERRAR);
 
         if (usuarioActual != null) {
-            String nombre = usuarioActual.getString("nombre");
-            if (nombre == null) {
-                nombre = usuarioActual.getString("nombreUsuario");
-            }
-            if (lblBienvenida != null) {
-                lblBienvenida.setText("Bienvenido/a " + (nombre != null ? nombre : ""));
-            }
+            lblBienvenida.setText("Bienvenido/a " + usuarioActual.getNombre());
         }
 
-        configurarColumnasSinLambdas();
+        configurarColumnas();
         ocultarTodo();
-        if (panelPerfil != null) panelPerfil.setVisible(true);
+        panelPerfil.setVisible(true);
         cargarDatosPerfil();
     }
 
-    private void configurarColumnasSinLambdas() {
-        if(colTarifaNombre != null) {
-            colTarifaNombre.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Document, String>, ObservableValue<String>>() {
-                @Override
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<Document, String> param) {
-                    return new SimpleStringProperty(String.valueOf(param.getValue().get("nombreTarifa")));
-                }
-            });
-        }
-        if(colTarifaPrecio != null) {
-            colTarifaPrecio.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Document, String>, ObservableValue<String>>() {
-                @Override
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<Document, String> param) {
-                    return new SimpleStringProperty(String.valueOf(param.getValue().get("precio")));
-                }
-            });
-        }
-        if(colTarifaDetalles != null) {
-            colTarifaDetalles.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Document, String>, ObservableValue<String>>() {
-                @Override
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<Document, String> param) {
-                    return new SimpleStringProperty(String.valueOf(param.getValue().get("detalles")));
-                }
-            });
-        }
-        if(colTarifaTipo != null) {
-            colTarifaTipo.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Document, String>, ObservableValue<String>>() {
-                @Override
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<Document, String> param) {
-                    return new SimpleStringProperty(String.valueOf(param.getValue().get("tipotarifa")));
-                }
-            });
-        }
+    /**
+     * Enlaza cada columna con el atributo del modelo que muestra.
+     * PropertyValueFactory llama al getter: "nombreTarifa" -> getNombreTarifa().
+     */
+    private void configurarColumnas() {
+        colTarifaNombre.setCellValueFactory(new PropertyValueFactory<Tarifa, String>("nombreTarifa"));
+        colTarifaPrecio.setCellValueFactory(new PropertyValueFactory<Tarifa, Double>("precio"));
+        colTarifaDetalles.setCellValueFactory(new PropertyValueFactory<Tarifa, String>("detalles"));
+        colTarifaTipo.setCellValueFactory(new PropertyValueFactory<Tarifa, String>("tipoTarifa"));
 
-        if(colContratoTelefono != null) {
-            colContratoTelefono.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Document, String>, ObservableValue<String>>() {
-                @Override
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<Document, String> param) {
-                    return new SimpleStringProperty(String.valueOf(param.getValue().get("telefono")));
-                }
-            });
-        }
-        if(colContratoEstado != null) {
-            colContratoEstado.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Document, String>, ObservableValue<String>>() {
-                @Override
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<Document, String> param) {
-                    return new SimpleStringProperty(String.valueOf(param.getValue().get("estado")));
-                }
-            });
-        }
-        if(colContratoFecha != null) {
-            colContratoFecha.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Document, String>, ObservableValue<String>>() {
-                @Override
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<Document, String> param) {
-                    return new SimpleStringProperty(String.valueOf(param.getValue().get("fechaFinalizacion")));
-                }
-            });
-        }
-        if(colContratoIdTarifa != null) {
-            colContratoIdTarifa.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Document, String>, ObservableValue<String>>() {
-                @Override
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<Document, String> param) {
-                    return new SimpleStringProperty(String.valueOf(param.getValue().get("idTarifa")));
-                }
-            });
-        }
+        colContratoTelefono.setCellValueFactory(new PropertyValueFactory<Contrato, String>("telefono"));
+        colContratoEstado.setCellValueFactory(new PropertyValueFactory<Contrato, String>("estado"));
+        colContratoFecha.setCellValueFactory(new PropertyValueFactory<Contrato, String>("fechaFinalizacion"));
+        colContratoIdTarifa.setCellValueFactory(new PropertyValueFactory<Contrato, String>("idTarifa"));
 
-        if(colSoporteAsunto != null) {
-            colSoporteAsunto.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Document, String>, ObservableValue<String>>() {
-                @Override
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<Document, String> param) {
-                    return new SimpleStringProperty(String.valueOf(param.getValue().get("asunto")));
-                }
-            });
-        }
-        if(colSoporteFecha != null) {
-            colSoporteFecha.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Document, String>, ObservableValue<String>>() {
-                @Override
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<Document, String> param) {
-                    return new SimpleStringProperty(String.valueOf(param.getValue().get("fechaCreacion")));
-                }
-            });
-        }
+        colSoporteAsunto.setCellValueFactory(new PropertyValueFactory<TicketSoporte, String>("asunto"));
+        colSoporteFecha.setCellValueFactory(new PropertyValueFactory<TicketSoporte, String>("fechaCreacion"));
     }
 
     private void ocultarTodo() {
-        if (panelPerfil != null) panelPerfil.setVisible(false);
-        if (panelTarifas != null) panelTarifas.setVisible(false);
-        if (panelContratos != null) panelContratos.setVisible(false);
-        if (panelSoporte != null) panelSoporte.setVisible(false);
+        panelPerfil.setVisible(false);
+        panelTarifas.setVisible(false);
+        panelContratos.setVisible(false);
+        panelSoporte.setVisible(false);
     }
 
     private void cargarDatosPerfil() {
         if (usuarioActual != null) {
-            if (txtNombre != null) txtNombre.setText(usuarioActual.getString("nombre") != null ? usuarioActual.getString("nombre") : "");
-            if (txtNombreUsuario != null) txtNombreUsuario.setText(usuarioActual.getString("nombreUsuario") != null ? usuarioActual.getString("nombreUsuario") : "");
-            if (txtDni != null) txtDni.setText(usuarioActual.getString("dni") != null ? usuarioActual.getString("dni") : "");
-            if (txtCorreo != null) txtCorreo.setText(usuarioActual.getString("correo") != null ? usuarioActual.getString("correo") : "");
-            if (txtDireccion != null) txtDireccion.setText(usuarioActual.getString("direccion") != null ? usuarioActual.getString("direccion") : "");
-            
-            Object tel = usuarioActual.get("telefono");
-            if (txtTelefono != null) txtTelefono.setText(tel != null ? String.valueOf(tel) : "");
-            
-            Object cuenta = usuarioActual.get("cuentaBancaria");
-            if (txtCuentaBancaria != null) txtCuentaBancaria.setText(cuenta != null ? String.valueOf(cuenta) : "");
+            txtNombre.setText(usuarioActual.getNombre());
+            txtNombreUsuario.setText(usuarioActual.getNombreUsuario());
+            txtDni.setText(usuarioActual.getDni());
+            txtCorreo.setText(usuarioActual.getCorreo());
+            txtDireccion.setText(usuarioActual.getDireccion());
+            txtTelefono.setText(usuarioActual.getTelefono());
+            txtCuentaBancaria.setText(usuarioActual.getCuentaBancaria());
         }
     }
 
     private void cargarTarifasDesdeBD() {
-        ObservableList<Document> listaTarifas = FXCollections.observableArrayList();
         try {
-            MongoDatabase db = MongoConnection.getDatabase();
-            MongoCollection<Document> col = db.getCollection("Tarifas");
-            try (MongoCursor<Document> cursor = col.find().iterator()) {
-                while (cursor.hasNext()) {
-                    listaTarifas.add(cursor.next());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            tablaTarifas.setItems(FXCollections.observableArrayList(dao.obtenerTarifas()));
+        } catch (OurException e) {
+            mostrarError(e.getMessage());
         }
-        if (tablaTarifas != null) tablaTarifas.setItems(listaTarifas);
     }
 
     private void cargarContratosDesdeBD() {
-        ObservableList<Document> listaContratos = FXCollections.observableArrayList();
-        if (usuarioActual != null) {
-            try {
-                MongoDatabase db = MongoConnection.getDatabase();
-                MongoCollection<Document> col = db.getCollection("Contratos");
-                try (MongoCursor<Document> cursor = col.find(Filters.eq("idCliente", usuarioActual.getObjectId("_id"))).iterator()) {
-                    while (cursor.hasNext()) {
-                        listaContratos.add(cursor.next());
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (usuarioActual == null) {
+            return;
         }
-        if (tablaContratos != null) tablaContratos.setItems(listaContratos);
+        try {
+            tablaContratos.setItems(FXCollections.observableArrayList(dao.obtenerContratosCliente(usuarioActual.getId())));
+        } catch (OurException e) {
+            mostrarError(e.getMessage());
+        }
     }
 
     private void cargarTicketsDesdeBD() {
-        ObservableList<Document> listaTickets = FXCollections.observableArrayList();
-        if (usuarioActual != null) {
-            try {
-                MongoDatabase db = MongoConnection.getDatabase();
-                MongoCollection<Document> col = db.getCollection("TicketsSoportes");
-                try (MongoCursor<Document> cursor = col.find(Filters.eq("idCliente", usuarioActual.getObjectId("_id"))).iterator()) {
-                    while (cursor.hasNext()) {
-                        listaTickets.add(cursor.next());
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (usuarioActual == null) {
+            return;
         }
-        if (tablaSoporte != null) tablaSoporte.setItems(listaTickets);
+        try {
+            tablaSoporte.setItems(FXCollections.observableArrayList(dao.obtenerTicketsCliente(usuarioActual.getId())));
+        } catch (OurException e) {
+            mostrarError(e.getMessage());
+        }
     }
 
     @FXML
     private void btnMiPerfil(ActionEvent event) {
         ocultarTodo();
-        if (panelPerfil != null) panelPerfil.setVisible(true);
+        panelPerfil.setVisible(true);
         cargarDatosPerfil();
-        if (cmbOpciones != null) cmbOpciones.getSelectionModel().clearSelection();
+        cmbOpciones.getSelectionModel().clearSelection();
     }
 
     @FXML
@@ -285,15 +181,15 @@ public class ClienteController implements Initializable {
             ocultarTodo();
             switch (seleccion) {
                 case OP_TARIFAS:
-                    if (panelTarifas != null) panelTarifas.setVisible(true);
+                    panelTarifas.setVisible(true);
                     cargarTarifasDesdeBD();
                     break;
                 case OP_CONTRATOS:
-                    if (panelContratos != null) panelContratos.setVisible(true);
+                    panelContratos.setVisible(true);
                     cargarContratosDesdeBD();
                     break;
                 case OP_SOPORTE:
-                    if (panelSoporte != null) panelSoporte.setVisible(true);
+                    panelSoporte.setVisible(true);
                     cargarTicketsDesdeBD();
                     break;
                 case OP_CERRAR:
@@ -325,65 +221,61 @@ public class ClienteController implements Initializable {
             return;
         }
 
+        String dni = txtDni.getText().trim();
+        String correo = txtCorreo.getText().trim();
+        if (txtNombre.getText().trim().isEmpty() || txtNombreUsuario.getText().trim().isEmpty()) {
+            mostrarInfo("Aviso", "El nombre y el nombre de usuario son obligatorios.");
+            return;
+        }
+        if (!dni.matches("[0-9]{8}[A-Z]")) {
+            mostrarInfo("Aviso", "DNI introducido incorrectamente.");
+            return;
+        }
+        if (!correo.contains("@") || !correo.contains(".")) {
+            mostrarInfo("Aviso", "El correo no es válido.");
+            return;
+        }
+
         if (mostrarConfirmacion("Confirmar cambios", "¿Seguro que deseas guardar los cambios?")) {
+            usuarioActual.setNombre(txtNombre.getText().trim());
+            usuarioActual.setNombreUsuario(txtNombreUsuario.getText().trim());
+            usuarioActual.setDni(dni);
+            usuarioActual.setCorreo(correo);
+            usuarioActual.setDireccion(txtDireccion.getText().trim());
+            usuarioActual.setTelefono(txtTelefono.getText().trim());
+            usuarioActual.setCuentaBancaria(txtCuentaBancaria.getText().trim());
+
             try {
-                usuarioActual.put("nombre", txtNombre.getText().trim());
-                usuarioActual.put("nombreUsuario", txtNombreUsuario.getText().trim());
-                usuarioActual.put("dni", txtDni.getText().trim());
-                usuarioActual.put("correo", txtCorreo.getText().trim());
-                usuarioActual.put("direccion", txtDireccion.getText().trim());
-                usuarioActual.put("telefono", txtTelefono.getText().trim());
-                usuarioActual.put("cuentaBancaria", txtCuentaBancaria.getText().trim());
-
-                DAO dao = new DAOImplementacion();
-                boolean actualizado = dao.actualizarCliente(usuarioActual);
-
-                if (actualizado) {
-                    mostrarInfo("Modificación exitosa", "Los datos se han actualizado correctamente en la base de datos.");
-                } else {
-                    mostrarInfo("Error", "No se pudo actualizar en la base de datos.");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                mostrarInfo("Error", "Ocurrió un error al actualizar.");
+                dao.actualizarCliente(usuarioActual);
+                mostrarInfo("Modificación exitosa", "Los datos se han actualizado correctamente en la base de datos.");
+            } catch (OurException e) {
+                mostrarError(e.getMessage());
             }
         }
     }
 
-    @FXML 
+    @FXML
     public void btnCambiarTarifa(ActionEvent event) {
         if (usuarioActual == null) {
             mostrarInfo("Error", "No hay un usuario en sesión.");
             return;
         }
 
-        Document tarifaSel = tablaTarifas.getSelectionModel().getSelectedItem();
-        
+        Tarifa tarifaSel = tablaTarifas.getSelectionModel().getSelectedItem();
         if (tarifaSel == null) {
             mostrarInfo("Aviso", "Por favor, selecciona una tarifa de la tabla primero.");
             return;
         }
 
-        String nombreTarifa = tarifaSel.getString("nombreTarifa");
-
-        if (mostrarConfirmacion("Confirmar contratación", "¿Seguro que deseas contratar la tarifa: " + nombreTarifa + "?")) {
+        if (mostrarConfirmacion("Confirmar contratación", "¿Seguro que deseas contratar la tarifa: " + tarifaSel.getNombreTarifa() + "?")) {
+            LocalDate hoy = LocalDate.now();
+            Contrato contrato = new Contrato(null, usuarioActual.getTelefono(), "activo", usuarioActual.getId(),
+                    tarifaSel.getId(), null, hoy.toString(), hoy.plusYears(1).toString());
             try {
-                org.bson.types.ObjectId idTarifa = tarifaSel.getObjectId("_id");
-                org.bson.types.ObjectId idCliente = usuarioActual.getObjectId("_id");
-                String telefonoCliente = String.valueOf(usuarioActual.get("telefono"));
-
-                DAO dao = new DAOImplementacion();
-                boolean exito = dao.insertarContrato(telefonoCliente, idTarifa, idCliente);
-
-                if (exito) {
-                    mostrarInfo("Éxito", "La tarifa " + nombreTarifa + " se ha añadido a tu cuenta correctamente.");
-                    cargarContratosDesdeBD(); 
-                } else {
-                    mostrarInfo("Error", "No se pudo añadir la tarifa en la base de datos.");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                mostrarInfo("Error", "Ocurrió un error al procesar la contratación.");
+                dao.insertarContrato(contrato);
+                mostrarInfo("Éxito", "La tarifa " + tarifaSel.getNombreTarifa() + " se ha añadido a tu cuenta correctamente.");
+            } catch (OurException e) {
+                mostrarError(e.getMessage());
             }
         }
     }
@@ -401,12 +293,27 @@ public class ClienteController implements Initializable {
     }
 
     @FXML public void btnRescindirContrato(ActionEvent event) {
+        Contrato contratoSel = tablaContratos.getSelectionModel().getSelectedItem();
+        if (contratoSel == null) {
+            mostrarInfo("Aviso", "Selecciona un contrato de la tabla primero.");
+            return;
+        }
+        if ("rescindido".equals(contratoSel.getEstado())) {
+            mostrarInfo("Aviso", "Ese contrato ya está rescindido.");
+            return;
+        }
         if (mostrarConfirmacion("Confirmar rescisión", "¿Seguro que deseas rescindir este contrato?")) {
-            mostrarInfo("Solicitud enviada", "La solicitud de baja ha sido enviada.");
+            try {
+                dao.rescindirContrato(contratoSel.getId());
+                mostrarInfo("Contrato rescindido", "El contrato se ha rescindido correctamente.");
+                cargarContratosDesdeBD();
+            } catch (OurException e) {
+                mostrarError(e.getMessage());
+            }
         }
     }
 
-    @FXML 
+    @FXML
     public void btnEnviarTicket(ActionEvent event) {
         if (usuarioActual == null) {
             mostrarInfo("Error", "No hay un usuario en sesión.");
@@ -416,30 +323,32 @@ public class ClienteController implements Initializable {
         String asunto = txtSoporteAsunto.getText().trim();
         String descripcion = txtSoporteMensaje.getText().trim();
 
-        if(asunto.isEmpty() || descripcion.isEmpty()) {
+        if (asunto.isEmpty() || descripcion.isEmpty()) {
             mostrarInfo("Aviso", "Rellena el asunto y la descripción del ticket.");
             return;
         }
 
         if (mostrarConfirmacion("Confirmar envío", "¿Seguro que deseas enviar este ticket?")) {
+            TicketSoporte ticket = new TicketSoporte(null, asunto, descripcion, LocalDate.now().toString(),
+                    "pendiente", usuarioActual.getId(), null);
             try {
-                org.bson.types.ObjectId idCliente = usuarioActual.getObjectId("_id");
-                DAO dao = new DAOImplementacion();
-                boolean exito = dao.insertarTicket(asunto, descripcion, idCliente);
-                
-                if(exito) {
-                    mostrarInfo("Ticket enviado", "Tu ticket de soporte ha sido guardado.");
-                    txtSoporteAsunto.setText("");
-                    txtSoporteMensaje.setText("");
-                    cargarTicketsDesdeBD();
-                } else {
-                    mostrarInfo("Error", "No se pudo guardar el ticket.");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                mostrarInfo("Error", "Ocurrió un error al procesar el ticket.");
+                dao.insertarTicket(ticket);
+                mostrarInfo("Ticket enviado", "Tu ticket de soporte ha sido guardado.");
+                txtSoporteAsunto.setText("");
+                txtSoporteMensaje.setText("");
+                cargarTicketsDesdeBD();
+            } catch (OurException e) {
+                mostrarError(e.getMessage());
             }
         }
+    }
+
+    private void mostrarError(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     private boolean mostrarConfirmacion(String titulo, String mensaje) {

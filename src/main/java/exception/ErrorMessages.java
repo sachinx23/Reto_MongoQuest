@@ -1,62 +1,45 @@
 package exception;
 
 /**
- * Utility class containing predefined error messages for the application. This class serves as a centralized repository for all user-facing and system error messages, ensuring consistency in error reporting throughout the application.
- *
- * All messages are defined as public static final constants to facilitate easy maintenance and internationalization of error texts.
- *
- * @author Kevin, Alex, Victor, Ekaitz
+ * Mensajes de error que se muestran al usuario. Están todos juntos para que
+ * los textos sean iguales en toda la aplicación.
  */
 public class ErrorMessages
 {
 
-    /**
-     * Error message displayed when user registration fails. This typically occurs due to database constraints, connection issues, or system errors during the registration process.
-     */
-    public static final String REGISTER_USER = "User could not be registered. Please try again later.";
+    /** No se ha podido conectar con la base de datos. */
+    public static final String DATABASE = "No se pudo conectar con la base de datos. Comprueba que MongoDB está arrancado.";
 
-    /**
-     * Error message displayed when retrieving the list of users fails. This typically occurs due to database connection issues, query errors, or data access problems.
-     */
-    public static final String GET_USERS = "Failed to retrieve users.";
+    /** Fallo al iniciar sesión. */
+    public static final String LOGIN = "Error al iniciar sesión. Inténtalo de nuevo.";
 
-    /**
-     * Error message displayed when user profile update fails. This typically occurs due to database constraints, validation errors, or system errors during the update process.
-     */
-    public static final String UPDATE_USER = "User could not be updated.";
+    /** Fallo al registrar un cliente. */
+    public static final String REGISTER_USER = "No se pudo registrar el usuario. Comprueba los datos.";
 
-    /**
-     * Error message displayed when user deletion fails. This typically occurs due to database constraints, foreign key violations, or system errors during the deletion process.
-     */
-    public static final String DELETE_USER = "User could not be deleted.";
+    /** El nombre de usuario ya existe. */
+    public static final String USER_EXISTS = "Ese nombre de usuario ya está en uso.";
 
-    /**
-     * Error message displayed when user authentication fails. This typically occurs due to invalid credentials, user not found, or system errors during the login process.
-     */
-    public static final String LOGIN = "Login failed. Please check your credentials.";
+    /** Fallo al modificar los datos del cliente. */
+    public static final String UPDATE_USER = "No se pudieron guardar los cambios del usuario.";
 
-    /**
-     * Error message displayed when credential verification fails. This typically occurs during registration when checking for duplicate emails or usernames, and the verification process encounters errors.
-     */
-    public static final String VERIFY_CREDENTIALS = "Could not verify existing credentials.";
+    /** Fallo al leer las tarifas. */
+    public static final String GET_TARIFAS = "No se pudieron cargar las tarifas.";
 
-    /**
-     * Error message displayed when a database transaction rollback fails. This typically occurs during atomic operations when one part fails and the system cannot properly revert the transaction.
-     */
-    public static final String ROLLBACK = "Transaction rollback failed.";
+    /** Fallo al leer los contratos. */
+    public static final String GET_CONTRATOS = "No se pudieron cargar los contratos.";
 
-    /**
-     * Error message displayed when resetting database connection auto-commit fails. This typically occurs after transaction operations when the system cannot restore the connection to its default auto-commit state.
-     */
-    public static final String RESET_AUTOCOMMIT = "Failed to reset connection settings.";
+    /** Fallo al crear un contrato. */
+    public static final String INSERT_CONTRATO = "No se pudo crear el contrato.";
 
-    /**
-     * Error message displayed when database connection timeout occurs. This typically occurs when the connection pool cannot provide a connection within the expected time frame due to high load or resource constraints.
-     */
-    public static final String TIMEOUT = "Timeout retrieving a connection.";
+    /** Fallo al rescindir un contrato. */
+    public static final String RESCINDIR_CONTRATO = "No se pudo rescindir el contrato.";
 
-    /**
-     * Error message displayed when database initialization fails. This typically occurs during application startup when the system cannot establish initial connection to the database or initialize the data source.
-     */
-    public static final String DATABASE = "Error initializing database connection.";
+    /** Fallo al leer los tickets. */
+    public static final String GET_TICKETS = "No se pudieron cargar los tickets.";
+
+    /** Fallo al crear un ticket. */
+    public static final String INSERT_TICKET = "No se pudo guardar el ticket.";
+
+    /** Fallo al leer el fichero de log. */
+    public static final String READ_LOG = "No se pudo leer el fichero de log.";
 }

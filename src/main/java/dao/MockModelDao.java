@@ -1,6 +1,15 @@
 package dao;
 
-import org.bson.Document;
+import exception.OurException;
+import java.util.ArrayList;
+import java.util.List;
+import modelo.Administrador;
+import modelo.Cliente;
+import modelo.Contrato;
+import modelo.Empleado;
+import modelo.Tarifa;
+import modelo.TicketSoporte;
+import modelo.Valoracion;
 import org.bson.types.ObjectId;
 
 /**
@@ -10,72 +19,99 @@ import org.bson.types.ObjectId;
 public class MockModelDao implements DAO {
 
     private boolean shouldThrowException = false;
-    private Document mockUserResponse;
+    private final Cliente clientePrueba;
+    private final List<Contrato> contratos = new ArrayList<>();
+    private final List<TicketSoporte> tickets = new ArrayList<>();
 
     public MockModelDao() {
-        // Datos de usuario simulados por defecto (coinciden con tus pruebas de login)
-        this.mockUserResponse = new Document("_id", new ObjectId())
-                .append("nombreUsuario", "sachinx23")
-                .append("nombre", "Sachin")
-                .append("contrasena", "sachin")
-                .append("correo", "sachin@gmail.com")
-                .append("dni", "12345678F")
-                .append("telefono", "123444555")
-                .append("direccion", "calle miribilla 12 2 izq")
-                .append("rol", "Cliente");
+        clientePrueba = new Cliente(new ObjectId().toHexString(), "", "Sachin", "sachinx23", "sachin",
+                "12345678F", "sachin@gmail.com", "123444555", "calle miribilla 12 2 izq",
+                new ArrayList<String>(), new ArrayList<Contrato>(), new ArrayList<Valoracion>());
     }
 
     public void setShouldThrowException(boolean shouldThrow) {
         this.shouldThrowException = shouldThrow;
     }
 
-    public void setMockUserResponse(Document mockUserResponse) {
-        this.mockUserResponse = mockUserResponse;
+    private void comprobarError() throws OurException {
+        if (shouldThrowException) {
+            throw new OurException("Error simulado en la base de datos");
+        }
     }
 
     @Override
-    public Document comprobarUsuarios(String usuario, String contrasena) {
-        if (shouldThrowException) {
-            throw new RuntimeException("Error simulado en la base de datos");
-        }
-        if (mockUserResponse != null && 
-            mockUserResponse.getString("nombreUsuario").equals(usuario) && 
-            mockUserResponse.getString("contrasena").equals(contrasena)) {
-            return mockUserResponse;
+    public Administrador loginAdministrador(String usuario, String contrasena) throws OurException {
+        comprobarError();
+        return null;
+    }
+
+    @Override
+    public Empleado loginEmpleado(String usuario, String contrasena) throws OurException {
+        comprobarError();
+        return null;
+    }
+
+    @Override
+    public Cliente loginCliente(String usuario, String contrasena) throws OurException {
+        comprobarError();
+        if (clientePrueba.getNombreUsuario().equals(usuario) && clientePrueba.getContrasena().equals(contrasena)) {
+            return clientePrueba;
         }
         return null;
     }
 
     @Override
-    public boolean actualizarCliente(Document cliente) {
-        if (shouldThrowException) {
-            throw new RuntimeException("Error simulado en la base de datos");
-        }
-        return cliente != null && cliente.containsKey("_id");
+    public void insertarCliente(Cliente cliente) throws OurException {
+        comprobarError();
+        cliente.setId(new ObjectId().toHexString());
     }
 
     @Override
-    public boolean insertarCliente(String usuario, String nombre, String contrasena, 
-                                 String correo, String dni, String telefono, String direccion) {
-        if (shouldThrowException) {
-            throw new RuntimeException("Error simulado en la base de datos");
-        }
-        return usuario != null && !usuario.trim().isEmpty();
+    public void actualizarCliente(Cliente cliente) throws OurException {
+        comprobarError();
     }
 
     @Override
-    public boolean insertarContrato(String telefono, ObjectId idTarifa, ObjectId idCliente) {
-        if (shouldThrowException) {
-            throw new RuntimeException("Error simulado en la base de datos");
-        }
-        return telefono != null && idTarifa != null && idCliente != null;
+    public List<Tarifa> obtenerTarifas() throws OurException {
+        comprobarError();
+        List<Tarifa> tarifas = new ArrayList<>();
+        tarifas.add(new Tarifa(new ObjectId().toHexString(), "Onda Fibra+Móvil 600", 40, "600 MB simétricos + 50 GB móvil", "Fibra + Móvil", true));
+        return tarifas;
     }
 
     @Override
-    public boolean insertarTicket(String asunto, String descripcion, ObjectId idCliente) {
-        if (shouldThrowException) {
-            throw new RuntimeException("Error simulado en la base de datos");
+    public List<Contrato> obtenerContratosCliente(String idCliente) throws OurException {
+        comprobarError();
+        return contratos;
+    }
+
+    @Override
+    public void insertarContrato(Contrato contrato) throws OurException {
+        comprobarError();
+        contrato.setId(new ObjectId().toHexString());
+        contratos.add(contrato);
+    }
+
+    @Override
+    public void rescindirContrato(String idContrato) throws OurException {
+        comprobarError();
+        for (Contrato c : contratos) {
+            if (c.getId().equals(idContrato)) {
+                c.setEstado("rescindido");
+            }
         }
-        return asunto != null && !asunto.trim().isEmpty() && idCliente != null;
+    }
+
+    @Override
+    public List<TicketSoporte> obtenerTicketsCliente(String idCliente) throws OurException {
+        comprobarError();
+        return tickets;
+    }
+
+    @Override
+    public void insertarTicket(TicketSoporte ticket) throws OurException {
+        comprobarError();
+        ticket.setId(new ObjectId().toHexString());
+        tickets.add(ticket);
     }
 }

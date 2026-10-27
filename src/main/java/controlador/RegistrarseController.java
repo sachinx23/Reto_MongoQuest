@@ -2,6 +2,8 @@ package controlador;
 
 import dao.DAO;
 import dao.DAOImplementacion;
+import exception.OurException;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,6 +21,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import modelo.Cliente;
+import modelo.Contrato;
+import modelo.Valoracion;
 
 public class RegistrarseController implements Initializable {
 
@@ -70,16 +75,19 @@ public class RegistrarseController implements Initializable {
 
         lblMensajeError.setText("");
 
-        DAO dao = new DAOImplementacion();
-        boolean registrado = dao.insertarCliente(usuario, nombre, contrasena, correo, dni, telefono, direccion);
+        Cliente cliente = new Cliente(null, "", nombre, usuario, contrasena, dni, correo, telefono, direccion,
+                new ArrayList<String>(), new ArrayList<Contrato>(), new ArrayList<Valoracion>());
 
-        if (registrado) {
+        try {
+            DAO dao = new DAOImplementacion();
+            dao.insertarCliente(cliente);
+
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setContentText("¡Usuario registrado correctamente!");
             alert.showAndWait();
             volverAIniciarSesion(event);
-        } else {
-            lblMensajeError.setText("No se pudo registrar el usuario. Comprueba los datos.");
+        } catch (OurException e) {
+            lblMensajeError.setText(e.getMessage());
         }
     }
 

@@ -2,26 +2,27 @@ package controlador;
 
 import dao.DAO;
 import dao.DAOImplementacion;
+import exception.OurException;
+import exception.ShowAlert;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-
-import java.io.IOException;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import org.bson.Document;
+import modelo.Administrador;
+import modelo.Cliente;
+import modelo.Empleado;
 
 public class IniciarSesionController implements Initializable {
 
@@ -36,6 +37,8 @@ public class IniciarSesionController implements Initializable {
 
     @FXML
     private Button txtIniciarSesion;
+
+    private final DAO dao = new DAOImplementacion();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -56,38 +59,36 @@ public class IniciarSesionController implements Initializable {
 
         lblMensajeError.setText("");
 
-        DAO dao = new DAOImplementacion();
-        Document usuarioObtenido = dao.comprobarUsuarios(usuario, contrasena);
-
-        if (usuarioObtenido != null) {
-            String nombre = usuarioObtenido.getString("nombre");
-            if (nombre == null) {
-                nombre = usuarioObtenido.getString("nombreUsuario");
-            }
-
-            String rol = usuarioObtenido.getString("rol");
-
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Inicio de Sesión Correcto");
-            alert.setHeaderText(null);
-            alert.setContentText("¡Bienvenido/a " + nombre + "!\nRol: " + rol);
-            alert.showAndWait();
-
-            if ("Administradores".equals(rol) || "Admin".equals(rol)) {
+        try {
+            // Se busca primero en Administradores, luego en Empleados y por último en Clientes
+            Administrador admin = dao.loginAdministrador(usuario, contrasena);
+            if (admin != null) {
+                ShowAlert.showAlert("Inicio de Sesión Correcto", "¡Bienvenido/a " + admin.getNombre() + "!\nRol: Administrador", AlertType.INFORMATION);
                 cambiarPantalla("/vista/Admin.fxml");
-            } else if ("Empleados".equals(rol) || "Empleado".equals(rol)) {
-                cambiarPantalla("/vista/Empleado.fxml");
-            } else if ("Cliente".equals(rol)) {
-                ClienteController.setUsuario(usuarioObtenido);
-                cambiarPantalla("/vista/Cliente.fxml");
+                return;
             }
 
-        } else {
+            Empleado empleado = dao.loginEmpleado(usuario, contrasena);
+            if (empleado != null) {
+                ShowAlert.showAlert("Inicio de Sesión Correcto", "¡Bienvenido/a " + empleado.getNombre() + "!\nRol: Empleado", AlertType.INFORMATION);
+                cambiarPantalla("/vista/Empleado.fxml");
+                return;
+            }
+
+            Cliente cliente = dao.loginCliente(usuario, contrasena);
+            if (cliente != null) {
+                ShowAlert.showAlert("Inicio de Sesión Correcto", "¡Bienvenido/a " + cliente.getNombre() + "!\nRol: Cliente", AlertType.INFORMATION);
+                ClienteController.setUsuario(cliente);
+                cambiarPantalla("/vista/Cliente.fxml");
+                return;
+            }
+
             lblMensajeError.setText("Usuario o contraseña incorrectos.");
+        } catch (OurException e) {
+            ShowAlert.showAlert("Error", e.getMessage(), AlertType.ERROR);
         }
     }
 
-    @FXML
     public void cambiarPantalla(String ruta) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource(ruta));

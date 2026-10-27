@@ -1,11 +1,16 @@
 package controlador;
 
+import exception.ErrorMessages;
+import exception.ShowAlert;
 import java.io.IOException;
+import log.LogApp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -52,11 +57,25 @@ public class AdministradorController {
         cargarVista("/vista/GestionSucursal.fxml");
     }
 
+    // Muestra el fichero de log de la aplicación en el panel central
+    @FXML
+    public void verLog(ActionEvent event) {
+        try {
+            TextArea areaLog = new TextArea(LogApp.leerLog());
+            areaLog.setEditable(false);
+            areaLog.setWrapText(true);
+            areaLog.setPrefSize(panelContenido.getPrefWidth(), panelContenido.getPrefHeight());
+            panelContenido.getChildren().setAll(areaLog);
+        } catch (IOException e) {
+            ShowAlert.showAlert("Error", ErrorMessages.READ_LOG, Alert.AlertType.ERROR);
+        }
+    }
+
     // metodo cerrar sesion.
     @FXML
     public void cerrarSesion(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/vista/InciarSesion.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/vista/IniciarSesion.fxml"));
             Stage stage = (Stage) panelContenido.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();

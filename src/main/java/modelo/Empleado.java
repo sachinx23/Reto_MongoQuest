@@ -10,16 +10,16 @@ package modelo;
  */
 public class Empleado {
     
-    int id;
+    String id;
     String nombre;
     String nombreUsuario;
     String rol;
     String contrasena;
     String correo;
     String cuentaBancaria;
-    int idSucursal;
+    String idSucursal;
 
-    public Empleado(int id, String nombre, String nombreUsuario, String rol, String contrasena, String correo, String cuentaBancaria, int idSucursal) {
+    public Empleado(String id, String nombre, String nombreUsuario, String rol, String contrasena, String correo, String cuentaBancaria, String idSucursal) {
         this.id = id;
         this.nombre = nombre;
         this.nombreUsuario = nombreUsuario;
@@ -30,11 +30,11 @@ public class Empleado {
         this.idSucursal = idSucursal;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -86,11 +86,11 @@ public class Empleado {
         this.cuentaBancaria = cuentaBancaria;
     }
 
-    public int getIdSucursal() {
+    public String getIdSucursal() {
         return idSucursal;
     }
 
-    public void setIdSucursal(int idSucursal) {
+    public void setIdSucursal(String idSucursal) {
         this.idSucursal = idSucursal;
     }
 

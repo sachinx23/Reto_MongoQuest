@@ -9,20 +9,20 @@ import java.util.List;
  * @author eneko
  */
 public class Cliente {
-    int id;
+    String id;
     String cuentaBancaria;
     String nombre;
     String nombreUsuario;
     String contrasena;
     String dni;
     String correo;
-    int telefono;
+    String telefono;
     String direccion;
     List<String> ticketSoporte;
     List<Contrato> contrato;
     List<Valoracion> valoraciones;
 
-    public Cliente(int id, String cuentaBancaria, String nombre, String nombreUsuario, String contrasena, String dni, String correo, int telefono, String direccion, List<String> ticketSoporte, List<Contrato> contrato, List<Valoracion> valoraciones) {
+    public Cliente(String id, String cuentaBancaria, String nombre, String nombreUsuario, String contrasena, String dni, String correo, String telefono, String direccion, List<String> ticketSoporte, List<Contrato> contrato, List<Valoracion> valoraciones) {
         this.id = id;
         this.cuentaBancaria = cuentaBancaria;
         this.nombre = nombre;
@@ -37,11 +37,11 @@ public class Cliente {
         this.valoraciones = valoraciones;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -93,11 +93,11 @@ public class Cliente {
         this.correo = correo;
     }
 
-    public int getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(int telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
