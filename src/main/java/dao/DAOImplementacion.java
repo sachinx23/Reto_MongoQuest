@@ -35,7 +35,7 @@ public class DAOImplementacion implements DAO {
     private static final String COL_CLIENTES = "Clientes";
     private static final String COL_TARIFAS = "Tarifas";
     private static final String COL_CONTRATOS = "Contratos";
-    private static final String COL_TICKETS = "TicketSoportes";
+    private static final String COL_TICKETS = "TicketsSoportes";
     private static final String COL_SUCURSALES = "Sucursales";
     private static final String COL_VALORACIONES = "Valoraciones";
 

@@ -1,7 +1,7 @@
 package modelo;
 
 /**
- * Representa un ticket de la colección <b>TicketSoportes</b>.
+ * Representa un ticket de la colección <b>TicketsSoportes</b>.
  *
  * @author eneko
  */
@@ -22,7 +22,7 @@ public class TicketSoporte {
     /** Id del empleado que lo gestiona (puede ser null). */
     private String idEmpleado;
 
-    /** Nombre del cliente (se rellena con $lookup, no se guarda en TicketSoportes). */
+    /** Nombre del cliente (se rellena con $lookup, no se guarda en TicketsSoportes). */
     private String nombreCliente;
 
     public TicketSoporte(String id, String asunto, String descripcion, String fechaCreacion, String estado, String idCliente, String idEmpleado) {

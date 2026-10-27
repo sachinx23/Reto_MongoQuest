@@ -64,7 +64,7 @@ db.createCollection("Contratos", {
 // ---------------------------------------------------------------- Resto
 db.createCollection("Empleados");
 db.createCollection("Administradores");
-db.createCollection("TicketSoportes");
+db.createCollection("TicketsSoportes");
 db.createCollection("Sucursales");
 db.createCollection("Valoraciones", {
   validator: {
