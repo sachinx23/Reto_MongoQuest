@@ -9,16 +9,16 @@ import java.util.List;
  * @author eneko
  */
 public class Cliente {
-    int id;
-    String nombreUsuario;
-    String nombre;
-    String apellidos;
-    String correo;
-    String contrasena;
-    String dni;
-    int telefono;
-    String cuentaBancaria;
-    String direccion;
+    private int id;
+    private String nombreUsuario;
+    private String nombre;
+    private String apellidos;
+    private String correo;
+    private String contrasena;
+    private String dni;
+    private int telefono;
+    private String cuentaBancaria;
+    private String direccion;
     List<String> ticketSoporte;
     List<Contrato> contrato;
     List<Valoracion> valoraciones;

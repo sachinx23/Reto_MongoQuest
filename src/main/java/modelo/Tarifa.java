@@ -10,14 +10,14 @@ package modelo;
  */
 public class Tarifa {
     
-    int id;
-    String nombreTarifa;
-    double precio;
-    String detalles;
-    String tipoTarifa;
-    double activa;
+    private String id;
+    private String nombreTarifa;
+    private double precio;
+    private String detalles;
+    private String tipoTarifa;
+    private boolean activa;
 
-    public Tarifa(int id, String nombreTarifa, double precio, String detalles, String tipoTarifa, double activa) {
+    public Tarifa(String id, String nombreTarifa, double precio, String detalles, String tipoTarifa, boolean activa) {
         this.id = id;
         this.nombreTarifa = nombreTarifa;
         this.precio = precio;
@@ -25,12 +25,20 @@ public class Tarifa {
         this.tipoTarifa = tipoTarifa;
         this.activa = activa;
     }
+    
+        public Tarifa(String nombreTarifa, double precio, String detalles, String tipoTarifa, boolean activa) {
+        this.nombreTarifa = nombreTarifa;
+        this.precio = precio;
+        this.detalles = detalles;
+        this.tipoTarifa = tipoTarifa;
+        this.activa = activa;
+    }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -66,11 +74,11 @@ public class Tarifa {
         this.tipoTarifa = tipoTarifa;
     }
 
-    public double getActiva() {
+    public boolean getActiva() {
         return activa;
     }
 
-    public void setActiva(double activa) {
+    public void setActiva(boolean activa) {
         this.activa = activa;
     }
 
@@ -78,6 +86,4 @@ public class Tarifa {
     public String toString() {
         return "Tarifa{" + "id=" + id + ", nombreTarifa=" + nombreTarifa + ", precio=" + precio + ", detalles=" + detalles + ", tipoTarifa=" + tipoTarifa + ", activa=" + activa + '}';
     }
-    
-    
 }

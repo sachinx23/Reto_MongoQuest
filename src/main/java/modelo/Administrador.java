@@ -10,11 +10,11 @@ package modelo;
  */
 public class Administrador extends Empleado{
     
-    String gestionarSucursal;
-    String crearSucursal;
-    String crearEmpleado;
-    String ascenderAdmin;
-    String borrarCuentaEmpleado;
+    private String gestionarSucursal;
+    private String crearSucursal;
+    private String crearEmpleado;
+    private String ascenderAdmin;
+    private String borrarCuentaEmpleado;
 
     public Administrador(String gestionarSucursal, String crearSucursal, String crearEmpleado, String ascenderAdmin, String borrarCuentaEmpleado, int id, String nombreUsuario, String nombre, String apellidos, String rol, String contrasena, String correo, String cuentaBancaria, int idSucursal) {
         super(id, nombreUsuario, nombre, apellidos, rol, contrasena, correo, cuentaBancaria, idSucursal);
@@ -63,78 +63,6 @@ public class Administrador extends Empleado{
 
     public void setBorrarCuentaEmpleado(String borrarCuentaEmpleado) {
         this.borrarCuentaEmpleado = borrarCuentaEmpleado;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNombreUsuario() {
-        return nombreUsuario;
-    }
-
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
-
-    public String getContrasena() {
-        return contrasena;
-    }
-
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-
-    public String getCuentaBancaria() {
-        return cuentaBancaria;
-    }
-
-    public void setCuentaBancaria(String cuentaBancaria) {
-        this.cuentaBancaria = cuentaBancaria;
-    }
-
-    public int getIdSucursal() {
-        return idSucursal;
-    }
-
-    public void setIdSucursal(int idSucursal) {
-        this.idSucursal = idSucursal;
     }
 
     @Override

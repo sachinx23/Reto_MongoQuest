@@ -10,6 +10,8 @@ import java.util.List;
 import modelo.Sucursal;
 import modelo.Ubicacion;
 import org.bson.Document;
+import modelo.Tarifa;
+import org.bson.types.ObjectId;
 
 public class DAO {
 
@@ -82,7 +84,7 @@ public class DAO {
                     .append("direccion", direccion)
                     .append("rol", "Cliente");
 
-            // 3Insertar
+            // Insertar
             col.insertOne(nuevo);
             System.err.println("¡Cliente insertado con éxito en MongoDB!");
             return true;
@@ -93,9 +95,8 @@ public class DAO {
             return false;
         }
     }
-    
-// ELIMINAR DATOS SENSIBLES DEL CLIENTE (Administrador)
 
+// Eliminar datos sensibles del cliente desde admin
     public static boolean eliminarDatosSensiblesCliente(String nombreUsuario) {
         try (MongoClient client = MongoClients.create(URI)) {
             MongoDatabase db = client.getDatabase(BBDD);
@@ -209,7 +210,7 @@ public class DAO {
         }
     }
 
-    // GESTIÓN DE SUCURSALES (MÉTODOS SIMPLIFICADOS)
+    // GESTIÓN DE SUCURSALES 
     private static Document ubicacionADocumento(Ubicacion u) {
         if (u == null) {
             return new Document("direccion", "").append("localidad", "").append("codigoPostal", "");
@@ -284,33 +285,119 @@ public class DAO {
         }
     }
 
-  public static List<Sucursal> listarSucursales() {
-    List<Sucursal> resultado = new ArrayList<>();
+ // GESTIÓN DE SUCURSALES (Versión limpia y sin petar con nulls)
+    public static List<Sucursal> listarSucursales() {
+        List<Sucursal> resultado = new ArrayList<>();
 
-    try (MongoClient client = MongoClients.create(URI)) {
-        MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Sucursales");
-        List<Document> lista = col.find().into(new ArrayList<>());
+        try (MongoClient client = MongoClients.create(URI)) {
+            MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Sucursales");
+            List<Document> lista = col.find().into(new ArrayList<>());
 
-        for (Document d : lista) {
-            // ID y Teléfono como enteros si son nulos, pone un 0 como valor por defecto
-            int id = d.getInteger("id") != null ? d.getInteger("id") : 0;
-            int telefono = d.getInteger("telefono") != null ? d.getInteger("telefono") : 0;
+            for (Document d : lista) {
+                Document u = d.get("ubicacion", Document.class);
 
-            // Objeto Ubicacion dentro de la sucursal
-            Document u = d.get("ubicacion", Document.class);
-            String dir = (u != null && u.getString("direccion") != null) ? u.getString("direccion") : "";
-            String loc = (u != null && u.getString("localidad") != null) ? u.getString("localidad") : "";
-            int cp = (u != null && u.getInteger("codigoPostal") != null) ? u.getInteger("codigoPostal") : 0;
+                String dir = "";
+                String loc = "";
+                int cp = 0;
+                
+                if (u != null) {
+                    dir = u.getString("direccion") != null ? u.getString("direccion") : "";
+                    loc = u.getString("localidad") != null ? u.getString("localidad") : "";
+                    // getInteger(campo, valorPorDefectoSiEsNull)
+                    cp = u.getInteger("codigoPostal", 0); 
+                }
 
-            // Creamos los objetos y los añadimos a la lista
-            Ubicacion ubicacion = new Ubicacion(dir, loc, cp);
-            Sucursal s = new Sucursal(id, d.getString("horario"), telefono, ubicacion);
+                // Si viene null en MongoDB, le asigna 0 por defecto y no peta
+                int id = d.getInteger("id", 0);
+                int telefono = d.getInteger("telefono", 0);
+                String horario = d.getString("horario") != null ? d.getString("horario") : "";
 
-            resultado.add(s);
+                resultado.add(new Sucursal(id, horario, telefono, new Ubicacion(dir, loc, cp)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return resultado;
     }
-    return resultado;
-}
+    
+    // Gestion de tarifas desde admin
+    public static List<Tarifa> listarTarifas(){
+        List<Tarifa> resultado = new ArrayList<>();
+        try (MongoClient client = MongoClients.create(URI)){
+            MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Tarifas");
+           for(Document d: col.find()){
+               String id = d.getObjectId("_id").toString();//Lo que hace es devolver el ObjectId(24 carecteres)
+               String nombre = d.getString("nombreTarifa");
+               Object p = d.get("precio");
+               // para que si es cualquier tipo de numero lo convierta a decimal
+               double precio = 0.0;
+               if(p instanceof Number){
+                   precio = ((Number)p).doubleValue();
+           }
+              String detalles = d.getString("detalles");
+              String tipo = d.getString("tipoTarifa");
+              
+              Boolean activa = d.getBoolean("activa");
+               if (activa == null) {
+                   activa = false;
+               }
+               
+               resultado.add(new Tarifa(id,nombre,precio,detalles,tipo,activa ));
+           }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    
+    public static boolean insertarTarifa(Tarifa t){
+        try(MongoClient client = MongoClients.create(URI)){
+            MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Tarifas");
+            
+            Document doc = new Document("nombreTarifa", t.getNombreTarifa())
+                    .append("precio", t.getPrecio())
+                    .append("detalles", t.getDetalles())
+                    .append("tipoTarifa", t.getTipoTarifa())
+                    .append("activa", t.getActiva());
+            
+            col.insertOne(doc);     
+            return true;
+        } catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    
+    public static boolean actualizarTarifa(Tarifa t){
+        try (MongoClient client = MongoClients.create(URI)){
+            MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Tarifas");
+            
+            ObjectId objectId = new ObjectId(t.getId());
+            
+            Document actualizar = new Document("nomberTarifa", t.getNombreTarifa())
+                    .append("precio", t.getPrecio())
+                    .append("detalles", t.getDetalles())
+                    .append("tipoTarifa", t.getTipoTarifa())
+                    .append("activa", t.getActiva());
+            
+            col.updateOne(Filters.eq("_id",objectId), new Document("$set", actualizar));
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public static boolean eliminarTarifa(Tarifa t){
+        try (MongoClient client = MongoClients.create(URI)){
+             MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Tarifas");
+             ObjectId objectId = new ObjectId(t.getId());
+             return col.deleteOne(Filters.eq("_id", objectId)).getDeletedCount() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

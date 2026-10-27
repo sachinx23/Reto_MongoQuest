@@ -17,8 +17,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.Label;
 
 /**
- * Controlador de Administrador basado en los casos de uso del diagrama BPMN.
- *
+ * Controlador de Administrador adaptado para DAM.
  * @author eneko
  */
 public class AdministradorController implements Initializable {
@@ -32,16 +31,17 @@ public class AdministradorController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Opciones agrupadas y limpias
+        // Opciones del ComboBox
         cbOpcionesAdmin.setItems(FXCollections.observableArrayList(
                 "Gestionar Plantilla",
                 "Gestionar Sucursal",
                 "Gestionar Tarifas",
                 "Cerrar Sesión"
         ));
-        // Seleccionar por defecto la vista de sucursales e inyectarla en el StackPane
-        cbOpcionesAdmin.getSelectionModel().select("Gestionar Sucursal");
-        cargarSubvista("/vista/Sucursal.fxml");
+        
+        // CORREGIDO: "Gestionar Plantilla" con P mayúscula
+        cbOpcionesAdmin.getSelectionModel().select("Gestionar Plantilla");
+        cargarSubvista("/vista/GestionarPlantilla.fxml");
     }
 
     @FXML
@@ -59,21 +59,21 @@ public class AdministradorController implements Initializable {
                 cargarSubvista("/vista/Sucursal.fxml");
                 break;
             case "Gestionar Tarifas":
-                cargarSubvista("/vista/GestionTarifas.fxml");
+                // Apunta exactamente a tu archivo GestionarTarifas.fxml
+                cargarSubvista("/vista/GestionarTarifas.fxml");
                 break;
             case "Cerrar Sesión":
                 cerrarSesion(event);
                 break;
         }
     }
-    
-    
+
     @FXML
     public void setNombreUsuario(String nombre) {
-    if (lblNombreAdmin != null && nombre != null) {
-        lblNombreAdmin.setText("Admin: " + nombre);
+        if (lblNombreAdmin != null && nombre != null) {
+            lblNombreAdmin.setText("Admin: " + nombre);
+        }
     }
-}
 
     private void cerrarSesion(ActionEvent event) {
         try {

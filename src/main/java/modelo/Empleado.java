@@ -10,15 +10,15 @@ package modelo;
  */
 public class Empleado {
     
-    int id;
-    String nombreUsuario;
-    String nombre;
-    String apellidos;
-    String contrasena;
-    String correo;
-    String rol;
-    String cuentaBancaria;
-    int idSucursal;
+    private int id;
+    private String nombreUsuario;
+    private String nombre;
+    private String apellidos;
+    private String contrasena;
+    private String correo;
+    private String rol;
+    private String cuentaBancaria;
+    private int idSucursal;
 
     public Empleado(int id, String nombreUsuario,String nombre,String apellidos,String rol, String contrasena, String correo, String cuentaBancaria, int idSucursal) {
         this.id = id;
