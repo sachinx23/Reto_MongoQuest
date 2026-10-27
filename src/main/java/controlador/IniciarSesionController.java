@@ -71,6 +71,7 @@ public class IniciarSesionController implements Initializable {
             Empleado empleado = dao.loginEmpleado(usuario, contrasena);
             if (empleado != null) {
                 ShowAlert.showAlert("Inicio de Sesión Correcto", "¡Bienvenido/a " + empleado.getNombre() + "!\nRol: Empleado", AlertType.INFORMATION);
+                EmpleadoController.setUsuario(empleado);
                 cambiarPantalla("/vista/Empleado.fxml");
                 return;
             }

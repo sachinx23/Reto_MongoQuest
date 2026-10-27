@@ -21,6 +21,8 @@ public class Cliente {
     List<String> ticketSoporte;
     List<Contrato> contrato;
     List<Valoracion> valoraciones;
+    /** true cuando un empleado ha aprobado la baja (se mantiene el perfil). */
+    boolean dadoDeBaja;
 
     public Cliente(String id, String cuentaBancaria, String nombre, String nombreUsuario, String contrasena, String dni, String correo, String telefono, String direccion, List<String> ticketSoporte, List<Contrato> contrato, List<Valoracion> valoraciones) {
         this.id = id;
@@ -131,6 +133,14 @@ public class Cliente {
 
     public void setValoraciones(List<Valoracion> valoraciones) {
         this.valoraciones = valoraciones;
+    }
+
+    public boolean isDadoDeBaja() {
+        return dadoDeBaja;
+    }
+
+    public void setDadoDeBaja(boolean dadoDeBaja) {
+        this.dadoDeBaja = dadoDeBaja;
     }
 
     @Override

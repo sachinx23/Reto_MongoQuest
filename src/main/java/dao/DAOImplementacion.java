@@ -3,11 +3,13 @@ package dao;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import exception.ErrorMessages;
 import exception.OurException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import log.LogApp;
 import modelo.Administrador;
@@ -32,6 +34,12 @@ public class DAOImplementacion implements DAO {
     private static final String COL_TARIFAS = "Tarifas";
     private static final String COL_CONTRATOS = "Contratos";
     private static final String COL_TICKETS = "TicketSoportes";
+
+    /** Estados de un contrato. */
+    public static final String ESTADO_PENDIENTE = "pendiente";
+    public static final String ESTADO_ACTIVO = "activo";
+    public static final String ESTADO_BAJA_PENDIENTE = "baja pendiente";
+    public static final String ESTADO_CANCELADO = "cancelado";
 
     private MongoCollection<Document> coleccion(String nombre) throws OurException {
         return MongoConnection.getDatabase().getCollection(nombre);
@@ -97,6 +105,10 @@ public class DAOImplementacion implements DAO {
     public void insertarCliente(Cliente cliente) throws OurException {
         try {
             MongoCollection<Document> clientes = coleccion(COL_CLIENTES);
+            if (clientes.find(Filters.eq("DNI", cliente.getDni())).first() != null) {
+                LogApp.info("Registro rechazado, DNI repetido: " + cliente.getDni());
+                throw new OurException(ErrorMessages.DNI_EXISTS);
+            }
             if (clientes.find(Filters.eq("nombreUsuario", cliente.getNombreUsuario())).first() != null) {
                 LogApp.info("Registro rechazado, usuario repetido: " + cliente.getNombreUsuario());
                 throw new OurException(ErrorMessages.USER_EXISTS);
@@ -111,7 +123,8 @@ public class DAOImplementacion implements DAO {
                     .append("correo", cliente.getCorreo())
                     .append("telefono", cliente.getTelefono())
                     .append("direccion", cliente.getDireccion())
-                    .append("cuentaBancaria", cliente.getCuentaBancaria());
+                    .append("cuentaBancaria", cliente.getCuentaBancaria())
+                    .append("dadoDeBaja", false);
             clientes.insertOne(d);
             cliente.setId(nuevoId.toHexString());
             LogApp.info("Cliente registrado: " + cliente.getNombreUsuario() + " (id " + cliente.getId() + ")");
@@ -146,9 +159,11 @@ public class DAOImplementacion implements DAO {
     }
 
     private Cliente documentoACliente(Document d) {
-        return new Cliente(id(d, "_id"), texto(d, "cuentaBancaria"), texto(d, "nombre"), texto(d, "nombreUsuario"),
+        Cliente c = new Cliente(id(d, "_id"), texto(d, "cuentaBancaria"), texto(d, "nombre"), texto(d, "nombreUsuario"),
                 texto(d, "contrasena"), texto(d, "DNI"), texto(d, "correo"), texto(d, "telefono"),
                 texto(d, "direccion"), new ArrayList<String>(), new ArrayList<Contrato>(), new ArrayList<modelo.Valoracion>());
+        c.setDadoDeBaja(d.getBoolean("dadoDeBaja", false));
+        return c;
     }
 
     // ------------------------------------------------------------ TARIFAS
@@ -178,21 +193,59 @@ public class DAOImplementacion implements DAO {
 
     @Override
     public List<Contrato> obtenerContratosCliente(String idCliente) throws OurException {
-        List<Contrato> contratos = new ArrayList<>();
-        Bson filtro = Filters.eq("idCliente", new ObjectId(idCliente));
-        try (MongoCursor<Document> cursor = coleccion(COL_CONTRATOS).find(filtro).iterator()) {
-            while (cursor.hasNext()) {
-                Document d = cursor.next();
-                contratos.add(new Contrato(id(d, "_id"), texto(d, "telefono"), texto(d, "estado"),
-                        id(d, "idCliente"), id(d, "idTarifa"), id(d, "idEmpleado"),
-                        texto(d, "fechaComienzo"), texto(d, "fechaFinalizacion")));
-            }
+        try {
+            List<Contrato> contratos = buscarContratos(Filters.eq("idCliente", new ObjectId(idCliente)));
             LogApp.info("Consultados " + contratos.size() + " contratos del cliente " + idCliente);
             return contratos;
         } catch (MongoException e) {
             LogApp.error("Error consultando contratos del cliente " + idCliente, e);
             throw new OurException(ErrorMessages.GET_CONTRATOS);
         }
+    }
+
+    @Override
+    public List<Contrato> obtenerContratosPorEstado(String estado) throws OurException {
+        try {
+            List<Contrato> contratos = buscarContratos(Filters.eq("estado", estado));
+            LogApp.info("Consultados " + contratos.size() + " contratos en estado " + estado);
+            return contratos;
+        } catch (MongoException e) {
+            LogApp.error("Error consultando contratos en estado " + estado, e);
+            throw new OurException(ErrorMessages.GET_CONTRATOS);
+        }
+    }
+
+    /**
+     * Busca contratos y, con $lookup, les une los datos de su tarifa y de su
+     * cliente en una sola consulta (en vez de una consulta por contrato).
+     */
+    private List<Contrato> buscarContratos(Bson filtro) throws OurException {
+        List<Bson> pipeline = Arrays.asList(
+                Aggregates.match(filtro),
+                Aggregates.lookup(COL_TARIFAS, "idTarifa", "_id", "tarifa"),
+                Aggregates.lookup(COL_CLIENTES, "idCliente", "_id", "cliente"));
+        List<Contrato> contratos = new ArrayList<>();
+        try (MongoCursor<Document> cursor = coleccion(COL_CONTRATOS).aggregate(pipeline).iterator()) {
+            while (cursor.hasNext()) {
+                Document d = cursor.next();
+                Contrato c = new Contrato(id(d, "_id"), texto(d, "telefono"), texto(d, "estado"),
+                        id(d, "idCliente"), id(d, "idTarifa"), id(d, "idEmpleado"),
+                        texto(d, "fechaComienzo"), texto(d, "fechaFinalizacion"));
+                Document tarifa = primero(d, "tarifa");
+                if (tarifa != null) {
+                    c.setNombreTarifa(texto(tarifa, "nombreTarifa"));
+                    Number precio = (Number) tarifa.get("precio");
+                    c.setPrecio(precio != null ? precio.doubleValue() : 0);
+                }
+                Document cliente = primero(d, "cliente");
+                if (cliente != null) {
+                    c.setNombreCliente(texto(cliente, "nombre"));
+                    c.setDniCliente(texto(cliente, "DNI"));
+                }
+                contratos.add(c);
+            }
+        }
+        return contratos;
     }
 
     @Override
@@ -210,7 +263,7 @@ public class DAOImplementacion implements DAO {
             coleccion(COL_CONTRATOS).insertOne(d);
             contrato.setId(nuevoId.toHexString());
             LogApp.info("Contrato creado: id " + contrato.getId() + ", cliente " + contrato.getIdCliente()
-                    + ", tarifa " + contrato.getIdTarifa());
+                    + ", tarifa " + contrato.getIdTarifa() + ", estado " + contrato.getEstado());
         } catch (MongoException e) {
             LogApp.error("Error creando contrato del cliente " + contrato.getIdCliente(), e);
             throw new OurException(ErrorMessages.INSERT_CONTRATO);
@@ -218,18 +271,53 @@ public class DAOImplementacion implements DAO {
     }
 
     @Override
-    public void rescindirContrato(String idContrato) throws OurException {
+    public void solicitarBaja(String idContrato) throws OurException {
+        cambiarEstadoContrato(idContrato, ESTADO_BAJA_PENDIENTE, null, ErrorMessages.BAJA_CONTRATO);
+        LogApp.info("Baja solicitada para el contrato " + idContrato);
+    }
+
+    @Override
+    public void validarContrato(String idContrato, String idEmpleado) throws OurException {
+        cambiarEstadoContrato(idContrato, ESTADO_ACTIVO, idEmpleado, ErrorMessages.VALIDAR_CONTRATO);
+        LogApp.info("Contrato " + idContrato + " validado por el empleado " + idEmpleado);
+    }
+
+    @Override
+    public void aprobarBaja(Contrato contrato, String idEmpleado) throws OurException {
+        cambiarEstadoContrato(contrato.getId(), ESTADO_CANCELADO, idEmpleado, ErrorMessages.BAJA_CONTRATO);
+        LogApp.info("Baja del contrato " + contrato.getId() + " aprobada por el empleado " + idEmpleado);
         try {
-            long modificados = coleccion(COL_CONTRATOS)
-                    .updateOne(Filters.eq("_id", new ObjectId(idContrato)), Updates.set("estado", "rescindido"))
-                    .getMatchedCount();
-            if (modificados == 0) {
-                throw new OurException(ErrorMessages.RESCINDIR_CONTRATO);
+            // Si al cliente no le queda ningún contrato en vigor, queda dado de baja (se mantiene su perfil)
+            ObjectId idCliente = new ObjectId(contrato.getIdCliente());
+            long enVigor = coleccion(COL_CONTRATOS).countDocuments(Filters.and(
+                    Filters.eq("idCliente", idCliente),
+                    Filters.in("estado", ESTADO_PENDIENTE, ESTADO_ACTIVO, ESTADO_BAJA_PENDIENTE)));
+            if (enVigor == 0) {
+                coleccion(COL_CLIENTES).updateOne(Filters.eq("_id", idCliente), Updates.set("dadoDeBaja", true));
+                LogApp.info("Cliente " + contrato.getIdCliente() + " dado de baja (sin contratos en vigor)");
             }
-            LogApp.info("Contrato rescindido: id " + idContrato);
         } catch (MongoException e) {
-            LogApp.error("Error rescindiendo contrato " + idContrato, e);
-            throw new OurException(ErrorMessages.RESCINDIR_CONTRATO);
+            LogApp.error("Error marcando como dado de baja al cliente " + contrato.getIdCliente(), e);
+            throw new OurException(ErrorMessages.BAJA_CONTRATO);
+        }
+    }
+
+    /** Cambia el estado de un contrato y, si se indica, el empleado que lo ha gestionado. */
+    private void cambiarEstadoContrato(String idContrato, String estado, String idEmpleado, String mensajeError) throws OurException {
+        try {
+            Bson cambios = Updates.set("estado", estado);
+            if (idEmpleado != null) {
+                cambios = Updates.combine(cambios, Updates.set("idEmpleado", new ObjectId(idEmpleado)));
+            }
+            long encontrados = coleccion(COL_CONTRATOS)
+                    .updateOne(Filters.eq("_id", new ObjectId(idContrato)), cambios)
+                    .getMatchedCount();
+            if (encontrados == 0) {
+                throw new OurException(mensajeError);
+            }
+        } catch (MongoException e) {
+            LogApp.error("Error cambiando el contrato " + idContrato + " a estado " + estado, e);
+            throw new OurException(mensajeError);
         }
     }
 
@@ -274,12 +362,61 @@ public class DAOImplementacion implements DAO {
         }
     }
 
+    @Override
+    public List<TicketSoporte> obtenerTicketsPendientes() throws OurException {
+        List<Bson> pipeline = Arrays.asList(
+                Aggregates.match(Filters.eq("estado", "pendiente")),
+                Aggregates.lookup(COL_CLIENTES, "idCliente", "_id", "cliente"));
+        List<TicketSoporte> tickets = new ArrayList<>();
+        try (MongoCursor<Document> cursor = coleccion(COL_TICKETS).aggregate(pipeline).iterator()) {
+            while (cursor.hasNext()) {
+                Document d = cursor.next();
+                TicketSoporte t = new TicketSoporte(id(d, "_id"), texto(d, "asunto"), texto(d, "descripcion"),
+                        texto(d, "fechaCreacion"), texto(d, "estado"), id(d, "idCliente"), id(d, "idEmpleado"));
+                Document cliente = primero(d, "cliente");
+                if (cliente != null) {
+                    t.setNombreCliente(texto(cliente, "nombre"));
+                }
+                tickets.add(t);
+            }
+            LogApp.info("Consultados " + tickets.size() + " tickets pendientes");
+            return tickets;
+        } catch (MongoException e) {
+            LogApp.error("Error consultando tickets pendientes", e);
+            throw new OurException(ErrorMessages.GET_TICKETS);
+        }
+    }
+
+    @Override
+    public void resolverTicket(String idTicket, String idEmpleado) throws OurException {
+        try {
+            Bson cambios = Updates.combine(Updates.set("estado", "resuelto"),
+                    Updates.set("idEmpleado", new ObjectId(idEmpleado)));
+            long encontrados = coleccion(COL_TICKETS)
+                    .updateOne(Filters.eq("_id", new ObjectId(idTicket)), cambios)
+                    .getMatchedCount();
+            if (encontrados == 0) {
+                throw new OurException(ErrorMessages.RESOLVER_TICKET);
+            }
+            LogApp.info("Ticket " + idTicket + " resuelto por el empleado " + idEmpleado);
+        } catch (MongoException e) {
+            LogApp.error("Error resolviendo el ticket " + idTicket, e);
+            throw new OurException(ErrorMessages.RESOLVER_TICKET);
+        }
+    }
+
     // ------------------------------------------------------------ AYUDANTES
 
     /** Devuelve el campo como texto (vale para String y números), o "" si no existe. */
     private String texto(Document d, String campo) {
         Object valor = d.get(campo);
         return valor != null ? String.valueOf(valor) : "";
+    }
+
+    /** Devuelve el primer documento del array que crea un $lookup, o null si está vacío. */
+    private Document primero(Document d, String campo) {
+        List<Document> lista = d.getList(campo, Document.class);
+        return lista != null && !lista.isEmpty() ? lista.get(0) : null;
     }
 
     /** Devuelve un ObjectId como String hexadecimal, o null si no existe. */

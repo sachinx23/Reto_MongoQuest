@@ -24,6 +24,16 @@ public class Contrato {
     /** Fecha de fin (yyyy-MM-dd). */
     private String fechaFinalizacion;
 
+    // Datos de otras colecciones (se rellenan con $lookup, no se guardan en Contratos)
+    /** Nombre de la tarifa contratada. */
+    private String nombreTarifa;
+    /** Precio de la tarifa contratada. */
+    private double precio;
+    /** Nombre del cliente. */
+    private String nombreCliente;
+    /** DNI del cliente. */
+    private String dniCliente;
+
     public Contrato(String id, String telefono, String estado, String idCliente, String idTarifa, String idEmpleado, String fechaComienzo, String fechaFinalizacion) {
         this.id = id;
         this.telefono = telefono;
@@ -97,6 +107,38 @@ public class Contrato {
 
     public void setFechaFinalizacion(String fechaFinalizacion) {
         this.fechaFinalizacion = fechaFinalizacion;
+    }
+
+    public String getNombreTarifa() {
+        return nombreTarifa;
+    }
+
+    public void setNombreTarifa(String nombreTarifa) {
+        this.nombreTarifa = nombreTarifa;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public String getNombreCliente() {
+        return nombreCliente;
+    }
+
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
+    }
+
+    public String getDniCliente() {
+        return dniCliente;
+    }
+
+    public void setDniCliente(String dniCliente) {
+        this.dniCliente = dniCliente;
     }
 
     @Override

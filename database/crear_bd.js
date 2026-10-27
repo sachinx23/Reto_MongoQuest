@@ -4,6 +4,9 @@
 
 db = db.getSiblingDB("Tel--ONDA");
 
+// OJO: borra la base de datos entera para crearla de cero (también los datos que tenga)
+db.dropDatabase();
+
 // ---------------------------------------------------------------- Clientes
 db.createCollection("Clientes", {
   validator: {
@@ -18,7 +21,8 @@ db.createCollection("Clientes", {
         correo:        { bsonType: "string", pattern: "^.+@.+\\..+$" },
         telefono:      { bsonType: "string" },
         direccion:     { bsonType: "string" },
-        cuentaBancaria:{ bsonType: "string" }
+        cuentaBancaria:{ bsonType: "string" },
+        dadoDeBaja:    { bsonType: "bool" }
       }
     }
   }
@@ -49,7 +53,7 @@ db.createCollection("Contratos", {
       bsonType: "object",
       required: ["telefono", "estado", "idCliente", "idTarifa", "fechaComienzo"],
       properties: {
-        estado:    { enum: ["activo", "pendiente", "rescindido"] },
+        estado:    { enum: ["pendiente", "activo", "baja pendiente", "cancelado"] },
         idCliente: { bsonType: "objectId" },
         idTarifa:  { bsonType: "objectId" }
       }
@@ -84,7 +88,7 @@ db.Empleados.insertOne({
 db.Clientes.insertOne({
   nombreUsuario: "PedroDiaz0", nombre: "Pedro", contrasena: "abcd", DNI: "12345678F",
   correo: "pedrodiaz@gmail.com", telefono: "666 666 666", direccion: "calle abando 2",
-  cuentaBancaria: "ES7921000813610123456789"
+  cuentaBancaria: "ES7921000813610123456789", dadoDeBaja: false
 });
 
 print("Base de datos Tel--ONDA creada");

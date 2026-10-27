@@ -22,6 +22,9 @@ public class TicketSoporte {
     /** Id del empleado que lo gestiona (puede ser null). */
     private String idEmpleado;
 
+    /** Nombre del cliente (se rellena con $lookup, no se guarda en TicketSoportes). */
+    private String nombreCliente;
+
     public TicketSoporte(String id, String asunto, String descripcion, String fechaCreacion, String estado, String idCliente, String idEmpleado) {
         this.id = id;
         this.asunto = asunto;
@@ -86,6 +89,14 @@ public class TicketSoporte {
 
     public void setIdEmpleado(String idEmpleado) {
         this.idEmpleado = idEmpleado;
+    }
+
+    public String getNombreCliente() {
+        return nombreCliente;
+    }
+
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
     }
 
     @Override

@@ -93,11 +93,37 @@ public class MockModelDao implements DAO {
     }
 
     @Override
-    public void rescindirContrato(String idContrato) throws OurException {
+    public void solicitarBaja(String idContrato) throws OurException {
+        cambiarEstado(idContrato, DAOImplementacion.ESTADO_BAJA_PENDIENTE);
+    }
+
+    @Override
+    public List<Contrato> obtenerContratosPorEstado(String estado) throws OurException {
+        comprobarError();
+        List<Contrato> resultado = new ArrayList<>();
+        for (Contrato c : contratos) {
+            if (c.getEstado().equals(estado)) {
+                resultado.add(c);
+            }
+        }
+        return resultado;
+    }
+
+    @Override
+    public void validarContrato(String idContrato, String idEmpleado) throws OurException {
+        cambiarEstado(idContrato, DAOImplementacion.ESTADO_ACTIVO);
+    }
+
+    @Override
+    public void aprobarBaja(Contrato contrato, String idEmpleado) throws OurException {
+        cambiarEstado(contrato.getId(), DAOImplementacion.ESTADO_CANCELADO);
+    }
+
+    private void cambiarEstado(String idContrato, String estado) throws OurException {
         comprobarError();
         for (Contrato c : contratos) {
             if (c.getId().equals(idContrato)) {
-                c.setEstado("rescindido");
+                c.setEstado(estado);
             }
         }
     }
@@ -113,5 +139,27 @@ public class MockModelDao implements DAO {
         comprobarError();
         ticket.setId(new ObjectId().toHexString());
         tickets.add(ticket);
+    }
+
+    @Override
+    public List<TicketSoporte> obtenerTicketsPendientes() throws OurException {
+        comprobarError();
+        List<TicketSoporte> resultado = new ArrayList<>();
+        for (TicketSoporte t : tickets) {
+            if ("pendiente".equals(t.getEstado())) {
+                resultado.add(t);
+            }
+        }
+        return resultado;
+    }
+
+    @Override
+    public void resolverTicket(String idTicket, String idEmpleado) throws OurException {
+        comprobarError();
+        for (TicketSoporte t : tickets) {
+            if (t.getId().equals(idTicket)) {
+                t.setEstado("resuelto");
+            }
+        }
     }
 }

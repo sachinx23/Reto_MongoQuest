@@ -39,7 +39,7 @@ public interface DAO {
     /**
      * Inserta un cliente nuevo. Al volver, el cliente tiene su id asignado.
      *
-     * @throws OurException si el nombre de usuario ya existe o falla la inserción
+     * @throws OurException si el DNI o el nombre de usuario ya existen, o falla la inserción
      */
     void insertarCliente(Cliente cliente) throws OurException;
 
@@ -49,18 +49,39 @@ public interface DAO {
     /** Devuelve todas las tarifas activas. */
     List<Tarifa> obtenerTarifas() throws OurException;
 
-    /** Devuelve los contratos de un cliente. */
+    /** Devuelve los contratos de un cliente, con el nombre de la tarifa. */
     List<Contrato> obtenerContratosCliente(String idCliente) throws OurException;
 
-    /** Inserta un contrato nuevo. */
+    /** Inserta un contrato nuevo (el cliente lo crea en estado "pendiente"). */
     void insertarContrato(Contrato contrato) throws OurException;
 
-    /** Cambia el estado de un contrato a "rescindido". */
-    void rescindirContrato(String idContrato) throws OurException;
+    /** El cliente pide la baja de un contrato: pasa a estado "baja pendiente". */
+    void solicitarBaja(String idContrato) throws OurException;
+
+    /**
+     * Devuelve los contratos con un estado concreto, con los datos del
+     * cliente y de la tarifa. Lo usa el empleado.
+     */
+    List<Contrato> obtenerContratosPorEstado(String estado) throws OurException;
+
+    /** El empleado valida una petición de tarifa: el contrato pasa a "activo". */
+    void validarContrato(String idContrato, String idEmpleado) throws OurException;
+
+    /**
+     * El empleado aprueba una baja: el contrato pasa a "cancelado" y, si el
+     * cliente ya no tiene más contratos, se marca como dadoDeBaja.
+     */
+    void aprobarBaja(Contrato contrato, String idEmpleado) throws OurException;
 
     /** Devuelve los tickets de soporte de un cliente. */
     List<TicketSoporte> obtenerTicketsCliente(String idCliente) throws OurException;
 
     /** Inserta un ticket de soporte nuevo. */
     void insertarTicket(TicketSoporte ticket) throws OurException;
+
+    /** Devuelve los tickets pendientes de todos los clientes, con el nombre del cliente. */
+    List<TicketSoporte> obtenerTicketsPendientes() throws OurException;
+
+    /** El empleado marca un ticket como "resuelto". */
+    void resolverTicket(String idTicket, String idEmpleado) throws OurException;
 }

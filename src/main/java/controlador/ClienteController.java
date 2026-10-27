@@ -2,6 +2,7 @@ package controlador;
 
 import dao.DAO;
 import dao.DAOImplementacion;
+import exception.ShowAlert;
 import exception.OurException;
 import java.io.IOException;
 import java.net.URL;
@@ -111,7 +112,7 @@ public class ClienteController implements Initializable {
         colContratoTelefono.setCellValueFactory(new PropertyValueFactory<Contrato, String>("telefono"));
         colContratoEstado.setCellValueFactory(new PropertyValueFactory<Contrato, String>("estado"));
         colContratoFecha.setCellValueFactory(new PropertyValueFactory<Contrato, String>("fechaFinalizacion"));
-        colContratoIdTarifa.setCellValueFactory(new PropertyValueFactory<Contrato, String>("idTarifa"));
+        colContratoIdTarifa.setCellValueFactory(new PropertyValueFactory<Contrato, String>("nombreTarifa"));
 
         colSoporteAsunto.setCellValueFactory(new PropertyValueFactory<TicketSoporte, String>("asunto"));
         colSoporteFecha.setCellValueFactory(new PropertyValueFactory<TicketSoporte, String>("fechaCreacion"));
@@ -267,13 +268,16 @@ public class ClienteController implements Initializable {
             return;
         }
 
-        if (mostrarConfirmacion("Confirmar contratación", "¿Seguro que deseas contratar la tarifa: " + tarifaSel.getNombreTarifa() + "?")) {
+        if (mostrarConfirmacion("Cambio de tarifa", "¿Estás seguro de que deseas cambiar tu tarifa actual por "
+                + tarifaSel.getNombreTarifa() + "?")) {
+            // Se crea como petición "pendiente": un empleado la valida en "Validar tarifas"
             LocalDate hoy = LocalDate.now();
-            Contrato contrato = new Contrato(null, usuarioActual.getTelefono(), "activo", usuarioActual.getId(),
-                    tarifaSel.getId(), null, hoy.toString(), hoy.plusYears(1).toString());
+            Contrato contrato = new Contrato(null, usuarioActual.getTelefono(), DAOImplementacion.ESTADO_PENDIENTE,
+                    usuarioActual.getId(), tarifaSel.getId(), null, hoy.toString(), hoy.plusYears(1).toString());
             try {
                 dao.insertarContrato(contrato);
-                mostrarInfo("Éxito", "La tarifa " + tarifaSel.getNombreTarifa() + " se ha añadido a tu cuenta correctamente.");
+                mostrarInfo("Petición enviada", "Tu petición de la tarifa " + tarifaSel.getNombreTarifa()
+                        + " está pendiente de validar por un empleado.");
             } catch (OurException e) {
                 mostrarError(e.getMessage());
             }
@@ -298,14 +302,15 @@ public class ClienteController implements Initializable {
             mostrarInfo("Aviso", "Selecciona un contrato de la tabla primero.");
             return;
         }
-        if ("rescindido".equals(contratoSel.getEstado())) {
-            mostrarInfo("Aviso", "Ese contrato ya está rescindido.");
+        if (!DAOImplementacion.ESTADO_ACTIVO.equals(contratoSel.getEstado())) {
+            mostrarInfo("Aviso", "Solo se puede pedir la baja de un contrato activo.");
             return;
         }
-        if (mostrarConfirmacion("Confirmar rescisión", "¿Seguro que deseas rescindir este contrato?")) {
+        if (mostrarConfirmacion("Baja de compañía", "¿Estás seguro de solicitar la baja definitiva y rescindir tu contrato?")) {
             try {
-                dao.rescindirContrato(contratoSel.getId());
-                mostrarInfo("Contrato rescindido", "El contrato se ha rescindido correctamente.");
+                // No se cancela todavía: queda "baja pendiente" hasta que un empleado la apruebe
+                dao.solicitarBaja(contratoSel.getId());
+                mostrarInfo("Solicitud enviada", "Tu solicitud de baja está pendiente de aprobar por un empleado.");
                 cargarContratosDesdeBD();
             } catch (OurException e) {
                 mostrarError(e.getMessage());
@@ -344,11 +349,7 @@ public class ClienteController implements Initializable {
     }
 
     private void mostrarError(String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
+        ShowAlert.showAlert("Error", mensaje, Alert.AlertType.ERROR);
     }
 
     private boolean mostrarConfirmacion(String titulo, String mensaje) {

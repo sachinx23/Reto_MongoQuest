@@ -72,9 +72,9 @@
                                 <TableView fx:id="tablaContratos" prefHeight="210.0" prefWidth="430.0">
                                   <columns>
                                     <TableColumn fx:id="colContratoTelefono" prefWidth="100.0" text="telefono" />
-                                    <TableColumn fx:id="colContratoEstado" prefWidth="80.0" text="estado" />
-                                    <TableColumn fx:id="colContratoFecha" prefWidth="150.0" text="fechaFinalizacion" />
-                                    <TableColumn fx:id="colContratoIdTarifa" prefWidth="100.0" text="idTarifa" />
+                                    <TableColumn fx:id="colContratoEstado" prefWidth="100.0" text="estado" />
+                                    <TableColumn fx:id="colContratoFecha" prefWidth="130.0" text="fechaFinalizacion" />
+                                    <TableColumn fx:id="colContratoIdTarifa" prefWidth="100.0" text="Tarifa" />
                                   </columns>
                                 </TableView>
                                 <Button layoutX="445.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnFirmarContrato" prefWidth="115.0" text="Firmar contrato" />
