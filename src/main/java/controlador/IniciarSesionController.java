@@ -77,9 +77,9 @@ public class IniciarSesionController implements Initializable {
             alert.setContentText("¡Bienvenido/a " + nombre + "!\nRol: " + rol);
             alert.showAndWait();
             if ("Admin".equals(rol)) {
-                abrirPanelAdmin(nombre);
+                abrirPanelAdmin(rol);
             } else if ("Empleado".equals(rol)) {
-                // cambiarPantalla("/vista/Empleado.fxml");
+                 abrirPanelEmpleado("/vista/Empleado.fxml");
             } else if ("Cliente".equals(rol)) {
                 // cambiarPantalla("/vista/Cliente.fxml");
             }
@@ -117,6 +117,23 @@ public class IniciarSesionController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
             lblMensajeError.setText("Error al cargar la pantalla de administración.");
+        }
+    }
+    @FXML
+    public void abrirPanelEmpleado(String nombreUsuario){
+        try {
+            FXMLLoader loader = new FXMLLoader (getClass().getResource("/vista/Empleado.fxml"));
+            Parent root = loader.load();
+            
+            EmpleadoController empleController = loader.getController();
+            empleController.setNombreUsuario(nombreUsuario);
+            
+            Stage stage = (Stage) txtUsuario.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            lblMensajeError.setText("Error al cargar la pantalla de empleado.");
         }
     }
     // metodo para registrarse

@@ -39,7 +39,7 @@ public class AdministradorController implements Initializable {
                 "Cerrar Sesión"
         ));
         
-        // CORREGIDO: "Gestionar Plantilla" con P mayúscula
+        
         cbOpcionesAdmin.getSelectionModel().select("Gestionar Plantilla");
         cargarSubvista("/vista/GestionarPlantilla.fxml");
     }
@@ -59,7 +59,6 @@ public class AdministradorController implements Initializable {
                 cargarSubvista("/vista/Sucursal.fxml");
                 break;
             case "Gestionar Tarifas":
-                // Apunta exactamente a tu archivo GestionarTarifas.fxml
                 cargarSubvista("/vista/GestionarTarifas.fxml");
                 break;
             case "Cerrar Sesión":

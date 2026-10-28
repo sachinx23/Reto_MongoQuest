@@ -145,7 +145,7 @@ public class DAO {
         return todos;
     }
 
-    //  ASCENDER EMPLEADO A ADMIN
+    //  Ascender empleado a admin
     public static boolean ascenderEmpleado(String nombreUsuario, String nuevoRol) {
         try (MongoClient client = MongoClients.create(URI)) {
             MongoDatabase db = client.getDatabase(BBDD);
@@ -167,7 +167,7 @@ public class DAO {
         }
         return false;
     }
-    // CREAR EMPLEADO (Administrador)
+    // crear empleado como admin
 
     public static boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria) {
         try (MongoClient client = MongoClients.create(URI)) {
@@ -195,7 +195,7 @@ public class DAO {
             return false;
         }
     }
-    // DAR DE BAJA EMPLEADO
+    // dar de baja a un empleado
 
     public static boolean eliminarEmpleado(String nombreUsuario) {
         try (MongoClient client = MongoClients.create(URI)) {
@@ -210,7 +210,7 @@ public class DAO {
         }
     }
 
-    // GESTIÓN DE SUCURSALES 
+    // gestion de sucursales
     private static Document ubicacionADocumento(Ubicacion u) {
         if (u == null) {
             return new Document("direccion", "").append("localidad", "").append("codigoPostal", "");
@@ -241,6 +241,7 @@ public class DAO {
         }
     }
 
+    // insertar un sucursal
     public static boolean insertarSucursal(Sucursal s) {
         try (MongoClient client = MongoClients.create(URI)) {
             MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Sucursales");
@@ -258,6 +259,7 @@ public class DAO {
         }
     }
 
+    // actualizar un sucursal
     public static boolean actualizarSucursal(Sucursal s) {
         try (MongoClient client = MongoClients.create(URI)) {
             MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Sucursales");
@@ -274,6 +276,7 @@ public class DAO {
         }
     }
 
+    // eliminar un sucursal
     public static boolean eliminarSucursal(int id) {
         try (MongoClient client = MongoClients.create(URI)) {
             MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Sucursales");
@@ -285,7 +288,7 @@ public class DAO {
         }
     }
 
- // GESTIÓN DE SUCURSALES (Versión limpia y sin petar con nulls)
+ // gestion de listar sucursal
     public static List<Sucursal> listarSucursales() {
         List<Sucursal> resultado = new ArrayList<>();
 
@@ -351,6 +354,7 @@ public class DAO {
     }
     
     
+    // insertar una tarifa
     public static boolean insertarTarifa(Tarifa t){
         try(MongoClient client = MongoClients.create(URI)){
             MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Tarifas");
@@ -370,6 +374,7 @@ public class DAO {
     }
     
     
+    // actualizar una tarifa
     public static boolean actualizarTarifa(Tarifa t){
         try (MongoClient client = MongoClients.create(URI)){
             MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Tarifas");
@@ -390,6 +395,7 @@ public class DAO {
         }
     }
     
+    // eliminar una tarifa
     public static boolean eliminarTarifa(Tarifa t){
         try (MongoClient client = MongoClients.create(URI)){
              MongoCollection<Document> col = client.getDatabase(BBDD).getCollection("Tarifas");
