@@ -2,29 +2,30 @@ package dao;
 
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Updates;
 import exception.ErrorMessages;
 import exception.OurException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import log.LogApp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Administrador;
 import modelo.Cliente;
 import modelo.Contrato;
 import modelo.Empleado;
+import modelo.EstadoContrato;
 import modelo.Sucursal;
 import modelo.Tarifa;
 import modelo.TicketSoporte;
 import modelo.Usuario;
 import modelo.Valoracion;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+/**
+ * Acceso a MongoDB. Cada operación se apunta en el log con LOGGER.
+ * Un Document es como un HashMap: se le meten campos con put() y se leen con get().
+ * Se usa para guardar datos, para buscar (filtro) y para modificar (cambios).
+ */
 public class DAOImplementacion implements DAO {
 
     private static final String COL_ADMINISTRADORES = "Administradores";
@@ -36,87 +37,91 @@ public class DAOImplementacion implements DAO {
     private static final String COL_SUCURSALES = "Sucursales";
     private static final String COL_VALORACIONES = "Valoraciones";
 
-    public static final String ESTADO_PENDIENTE = "pendiente";
-    public static final String ESTADO_ACTIVO = "activo";
-    public static final String ESTADO_BAJA_PENDIENTE = "baja pendiente";
-    public static final String ESTADO_CANCELADO = "cancelado";
+    private static final Logger LOGGER = Logger.getLogger(DAOImplementacion.class.getName());
 
     private MongoCollection<Document> coleccion(String nombre) throws OurException {
         return MongoConnection.getDatabase().getCollection(nombre);
     }
 
+    // ---------- LOGIN Y CLIENTES ----------
+
     @Override
     public Usuario login(String nombreUsuario, String contrasena) throws OurException {
         try {
-            Bson filtro = Filters.and(Filters.eq("nombreUsuario", nombreUsuario), Filters.eq("contrasena", contrasena));
+            Document filtro = new Document();
+            filtro.put("nombreUsuario", nombreUsuario);
+            filtro.put("contrasena", contrasena);
 
             Document d = coleccion(COL_ADMINISTRADORES).find(filtro).first();
             if (d != null) {
-                LogApp.info("Login de administrador: " + nombreUsuario);
-                return new Administrador(id(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"),
+                LOGGER.info("Login de administrador: " + nombreUsuario);
+                return new Administrador(idTexto(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"),
                         texto(d, "contrasena"), texto(d, "correo"), texto(d, "cuentaBancaria"));
             }
 
             d = coleccion(COL_EMPLEADOS).find(filtro).first();
             if (d != null) {
-                LogApp.info("Login de empleado: " + nombreUsuario);
+                LOGGER.info("Login de empleado: " + nombreUsuario);
                 return documentoAEmpleado(d);
             }
 
             d = coleccion(COL_CLIENTES).find(filtro).first();
             if (d != null) {
-                LogApp.info("Login de cliente: " + nombreUsuario);
+                LOGGER.info("Login de cliente: " + nombreUsuario);
                 return documentoACliente(d);
             }
 
-            LogApp.info("Login fallido: " + nombreUsuario);
+            LOGGER.info("Login fallido: " + nombreUsuario);
             return null;
         } catch (MongoException e) {
-            LogApp.error("Error en el login de " + nombreUsuario, e);
+            LOGGER.log(Level.SEVERE, "Error en el login de " + nombreUsuario, e);
             throw new OurException(ErrorMessages.LOGIN);
         }
     }
 
-    // El nombre de usuario no puede repetirse entre clientes, empleados y administradores
-    private boolean nombreUsuarioOcupado(String usuario, String idExcluir) throws OurException {
-        Bson filtro = Filters.eq("nombreUsuario", usuario);
-        if (idExcluir != null) {
-            filtro = Filters.and(filtro, Filters.ne("_id", new ObjectId(idExcluir)));
+    // Mira si otra persona (cliente, empleado o administrador) ya usa ese nombre de usuario.
+    // idPropio es el id de quien modifica sus datos, para no contarse a sí mismo (null al dar de alta).
+    private boolean nombreUsuarioOcupado(String nombreUsuario, String idPropio) throws OurException {
+        String[] colecciones = {COL_ADMINISTRADORES, COL_EMPLEADOS, COL_CLIENTES};
+        for (String nombreColeccion : colecciones) {
+            Document d = coleccion(nombreColeccion).find(new Document("nombreUsuario", nombreUsuario)).first();
+            if (d != null && !idTexto(d, "_id").equals(idPropio)) {
+                return true;
+            }
         }
-        return coleccion(COL_ADMINISTRADORES).countDocuments(filtro) > 0
-                || coleccion(COL_EMPLEADOS).countDocuments(filtro) > 0
-                || coleccion(COL_CLIENTES).countDocuments(filtro) > 0;
+        return false;
     }
 
     @Override
     public void insertarCliente(Cliente cliente) throws OurException {
         try {
-            MongoCollection<Document> clientes = coleccion(COL_CLIENTES);
-            if (clientes.find(Filters.eq("DNI", cliente.getDni())).first() != null) {
-                LogApp.info("Registro rechazado, DNI repetido: " + cliente.getDni());
+            if (coleccion(COL_CLIENTES).find(new Document("DNI", cliente.getDni())).first() != null) {
+                LOGGER.info("Registro rechazado, DNI repetido: " + cliente.getDni());
                 throw new OurException(ErrorMessages.DNI_EXISTS);
             }
             if (nombreUsuarioOcupado(cliente.getNombreUsuario(), null)) {
-                LogApp.info("Registro rechazado, usuario repetido: " + cliente.getNombreUsuario());
+                LOGGER.info("Registro rechazado, usuario repetido: " + cliente.getNombreUsuario());
                 throw new OurException(ErrorMessages.USER_EXISTS);
             }
 
-            ObjectId nuevoId = new ObjectId();
-            Document d = new Document("_id", nuevoId)
-                    .append("nombreUsuario", cliente.getNombreUsuario())
-                    .append("nombre", cliente.getNombre())
-                    .append("contrasena", cliente.getContrasena())
-                    .append("DNI", cliente.getDni())
-                    .append("correo", cliente.getCorreo())
-                    .append("telefono", cliente.getTelefono())
-                    .append("direccion", cliente.getDireccion())
-                    .append("cuentaBancaria", cliente.getCuentaBancaria())
-                    .append("dadoDeBaja", false);
-            clientes.insertOne(d);
-            cliente.setId(nuevoId.toHexString());
-            LogApp.info("Cliente registrado: " + cliente.getNombreUsuario() + " (id " + cliente.getId() + ")");
+            Document d = new Document();
+            d.put("nombreUsuario", cliente.getNombreUsuario());
+            d.put("nombre", cliente.getNombre());
+            d.put("contrasena", cliente.getContrasena());
+            d.put("DNI", cliente.getDni());
+            d.put("correo", cliente.getCorreo());
+            d.put("telefono", cliente.getTelefono());
+            d.put("direccion", cliente.getDireccion());
+            d.put("cuentaBancaria", cliente.getCuentaBancaria());
+            d.put("dadoDeBaja", false);
+            d.put("ticketSoporte", new ArrayList<ObjectId>());
+            coleccion(COL_CLIENTES).insertOne(d);
+
+            // Al insertar, MongoDB le pone un _id nuevo al documento
+            cliente.setId(idTexto(d, "_id"));
+            LOGGER.info("Cliente registrado: " + cliente.getNombreUsuario() + " (id " + cliente.getId() + ")");
         } catch (MongoException e) {
-            LogApp.error("Error registrando cliente " + cliente.getNombreUsuario(), e);
+            LOGGER.log(Level.SEVERE, "Error registrando el cliente " + cliente.getNombreUsuario(), e);
             throw new OurException(ErrorMessages.REGISTER_USER);
         }
     }
@@ -127,104 +132,98 @@ public class DAOImplementacion implements DAO {
             if (nombreUsuarioOcupado(cliente.getNombreUsuario(), cliente.getId())) {
                 throw new OurException(ErrorMessages.USER_EXISTS);
             }
-            Bson cambios = Updates.combine(
-                    Updates.set("nombre", cliente.getNombre()),
-                    Updates.set("nombreUsuario", cliente.getNombreUsuario()),
-                    Updates.set("DNI", cliente.getDni()),
-                    Updates.set("correo", cliente.getCorreo()),
-                    Updates.set("direccion", cliente.getDireccion()),
-                    Updates.set("telefono", cliente.getTelefono()),
-                    Updates.set("cuentaBancaria", cliente.getCuentaBancaria()));
-            long modificados = coleccion(COL_CLIENTES)
-                    .updateOne(Filters.eq("_id", new ObjectId(cliente.getId())), cambios)
-                    .getMatchedCount();
-            if (modificados == 0) {
+            // El DNI tampoco puede ser el de otro cliente
+            Document otro = coleccion(COL_CLIENTES).find(new Document("DNI", cliente.getDni())).first();
+            if (otro != null && !idTexto(otro, "_id").equals(cliente.getId())) {
+                throw new OurException(ErrorMessages.DNI_EXISTS);
+            }
+            Document cambios = new Document();
+            cambios.put("nombre", cliente.getNombre());
+            cambios.put("nombreUsuario", cliente.getNombreUsuario());
+            cambios.put("DNI", cliente.getDni());
+            cambios.put("correo", cliente.getCorreo());
+            cambios.put("direccion", cliente.getDireccion());
+            cambios.put("telefono", cliente.getTelefono());
+            cambios.put("cuentaBancaria", cliente.getCuentaBancaria());
+
+            if (!modificar(COL_CLIENTES, cliente.getId(), cambios)) {
                 throw new OurException(ErrorMessages.UPDATE_USER);
             }
-            LogApp.info("Cliente actualizado: " + cliente.getNombreUsuario() + " (id " + cliente.getId() + ")");
+            LOGGER.info("Cliente modificado: " + cliente.getNombreUsuario() + " (id " + cliente.getId() + ")");
         } catch (MongoException e) {
-            LogApp.error("Error actualizando cliente " + cliente.getId(), e);
+            LOGGER.log(Level.SEVERE, "Error modificando el cliente " + cliente.getId(), e);
             throw new OurException(ErrorMessages.UPDATE_USER);
         }
     }
 
-    private Cliente documentoACliente(Document d) {
-        Cliente c = new Cliente(id(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"), texto(d, "contrasena"),
-                texto(d, "correo"), texto(d, "cuentaBancaria"), texto(d, "DNI"), texto(d, "telefono"), texto(d, "direccion"));
-        c.setDadoDeBaja(d.getBoolean("dadoDeBaja", false));
-        return c;
-    }
+    // ---------- TARIFAS ----------
 
     @Override
     public List<Tarifa> obtenerTarifas() throws OurException {
         List<Tarifa> tarifas = new ArrayList<>();
-        Bson filtro = Filters.ne("activa", false);
-        try (MongoCursor<Document> cursor = coleccion(COL_TARIFAS).find(filtro).iterator()) {
-            while (cursor.hasNext()) {
-                Document d = cursor.next();
-                Number precio = (Number) d.get("precio");
-                tarifas.add(new Tarifa(id(d, "_id"), texto(d, "nombreTarifa"),
-                        precio != null ? precio.doubleValue() : 0,
-                        texto(d, "detalles"), texto(d, "tipotarifa"), d.getBoolean("activa", true)));
+        try {
+            for (Document d : coleccion(COL_TARIFAS).find()) {
+                // Solo se enseñan las tarifas activas (si no tiene el campo "activa", se considera activa)
+                boolean activa = d.getBoolean("activa", true);
+                if (activa) {
+                    tarifas.add(new Tarifa(idTexto(d, "_id"), texto(d, "nombreTarifa"), numero(d, "precio"),
+                            texto(d, "detalles"), texto(d, "tipotarifa"), true));
+                }
             }
-            LogApp.info("Consultadas " + tarifas.size() + " tarifas");
+            LOGGER.info("Consultadas " + tarifas.size() + " tarifas");
             return tarifas;
         } catch (MongoException e) {
-            LogApp.error("Error consultando tarifas", e);
+            LOGGER.log(Level.SEVERE, "Error consultando tarifas", e);
             throw new OurException(ErrorMessages.GET_TARIFAS);
         }
     }
 
+    // ---------- CONTRATOS ----------
+
     @Override
     public List<Contrato> obtenerContratosCliente(String idCliente) throws OurException {
         try {
-            List<Contrato> contratos = buscarContratos(Filters.eq("idCliente", new ObjectId(idCliente)));
-            LogApp.info("Consultados " + contratos.size() + " contratos del cliente " + idCliente);
+            List<Contrato> contratos = buscarContratos(new Document("idCliente", new ObjectId(idCliente)));
+            LOGGER.info("Consultados " + contratos.size() + " contratos del cliente " + idCliente);
             return contratos;
         } catch (MongoException e) {
-            LogApp.error("Error consultando contratos del cliente " + idCliente, e);
+            LOGGER.log(Level.SEVERE, "Error consultando contratos del cliente " + idCliente, e);
             throw new OurException(ErrorMessages.GET_CONTRATOS);
         }
     }
 
     @Override
-    public List<Contrato> obtenerContratosPorEstado(String estado) throws OurException {
+    public List<Contrato> obtenerContratosPorEstado(EstadoContrato estado) throws OurException {
         try {
-            List<Contrato> contratos = buscarContratos(Filters.eq("estado", estado));
-            LogApp.info("Consultados " + contratos.size() + " contratos en estado " + estado);
+            List<Contrato> contratos = buscarContratos(new Document("estado", estado.toString()));
+            LOGGER.info("Consultados " + contratos.size() + " contratos en estado " + estado);
             return contratos;
         } catch (MongoException e) {
-            LogApp.error("Error consultando contratos en estado " + estado, e);
+            LOGGER.log(Level.SEVERE, "Error consultando contratos en estado " + estado, e);
             throw new OurException(ErrorMessages.GET_CONTRATOS);
         }
     }
 
-    // Con $lookup se traen la tarifa y el cliente de cada contrato en una sola consulta
-    private List<Contrato> buscarContratos(Bson filtro) throws OurException {
-        List<Bson> pipeline = Arrays.asList(
-                Aggregates.match(filtro),
-                Aggregates.lookup(COL_TARIFAS, "idTarifa", "_id", "tarifa"),
-                Aggregates.lookup(COL_CLIENTES, "idCliente", "_id", "cliente"));
+    private List<Contrato> buscarContratos(Document filtro) throws OurException {
         List<Contrato> contratos = new ArrayList<>();
-        try (MongoCursor<Document> cursor = coleccion(COL_CONTRATOS).aggregate(pipeline).iterator()) {
-            while (cursor.hasNext()) {
-                Document d = cursor.next();
-                Contrato c = new Contrato(id(d, "_id"), texto(d, "telefono"), texto(d, "estado"),
-                        id(d, "idCliente"), id(d, "idTarifa"), id(d, "idEmpleado"),
-                        texto(d, "fechaComienzo"), texto(d, "fechaFinalizacion"));
-                Document tarifa = primero(d, "tarifa");
-                if (tarifa != null) {
-                    c.setNombreTarifa(texto(tarifa, "nombreTarifa"));
-                    Number precio = (Number) tarifa.get("precio");
-                    c.setPrecio(precio != null ? precio.doubleValue() : 0);
-                }
-                Document cliente = primero(d, "cliente");
-                if (cliente != null) {
-                    c.setNombreCliente(texto(cliente, "nombre"));
-                    c.setDniCliente(texto(cliente, "DNI"));
-                }
-                contratos.add(c);
+        for (Document d : coleccion(COL_CONTRATOS).find(filtro)) {
+            Contrato c = new Contrato(idTexto(d, "_id"), texto(d, "telefono"), EstadoContrato.desdeTexto(texto(d, "estado")),
+                    idTexto(d, "idCliente"), idTexto(d, "idTarifa"), idTexto(d, "idEmpleado"),
+                    texto(d, "fechaComienzo"), texto(d, "fechaFinalizacion"));
+
+            // La tarifa está embebida dentro del contrato
+            Document tarifa = (Document) d.get("tarifa");
+            if (tarifa != null) {
+                c.setNombreTarifa(texto(tarifa, "nombreTarifa"));
+                c.setPrecio(numero(tarifa, "precio"));
             }
+            // El nombre y el DNI del cliente se buscan en su colección
+            Document cliente = buscarPorId(COL_CLIENTES, d.get("idCliente"));
+            if (cliente != null) {
+                c.setNombreCliente(texto(cliente, "nombre"));
+                c.setDniCliente(texto(cliente, "DNI"));
+            }
+            contratos.add(c);
         }
         return contratos;
     }
@@ -232,58 +231,104 @@ public class DAOImplementacion implements DAO {
     @Override
     public void insertarContrato(Contrato contrato) throws OurException {
         try {
-            ObjectId nuevoId = new ObjectId();
-            Document d = new Document("_id", nuevoId)
-                    .append("telefono", contrato.getTelefono())
-                    .append("estado", contrato.getEstado())
-                    .append("idCliente", new ObjectId(contrato.getIdCliente()))
-                    .append("idTarifa", new ObjectId(contrato.getIdTarifa()))
-                    .append("idEmpleado", contrato.getIdEmpleado() != null ? new ObjectId(contrato.getIdEmpleado()) : null)
-                    .append("fechaComienzo", contrato.getFechaComienzo())
-                    .append("fechaFinalizacion", contrato.getFechaFinalizacion());
+            Document d = new Document();
+            d.put("telefono", contrato.getTelefono());
+            d.put("estado", contrato.getEstado().toString());
+            d.put("idCliente", new ObjectId(contrato.getIdCliente()));
+            d.put("idTarifa", new ObjectId(contrato.getIdTarifa()));
+            d.put("idEmpleado", aObjectId(contrato.getIdEmpleado()));
+
+            // Información embebida: los datos de la tarifa se guardan dentro del contrato
+            Document tarifa = new Document();
+            tarifa.put("nombreTarifa", contrato.getNombreTarifa());
+            tarifa.put("precio", contrato.getPrecio());
+            d.put("tarifa", tarifa);
+
+            d.put("fechaComienzo", contrato.getFechaComienzo());
+            d.put("fechaFinalizacion", contrato.getFechaFinalizacion());
             coleccion(COL_CONTRATOS).insertOne(d);
-            contrato.setId(nuevoId.toHexString());
-            LogApp.info("Contrato creado: id " + contrato.getId() + ", cliente " + contrato.getIdCliente()
+
+            contrato.setId(idTexto(d, "_id"));
+            LOGGER.info("Contrato creado: id " + contrato.getId() + ", cliente " + contrato.getIdCliente()
                     + ", tarifa " + contrato.getIdTarifa() + ", estado " + contrato.getEstado());
         } catch (MongoException e) {
-            LogApp.error("Error creando contrato del cliente " + contrato.getIdCliente(), e);
+            LOGGER.log(Level.SEVERE, "Error creando un contrato del cliente " + contrato.getIdCliente(), e);
             throw new OurException(ErrorMessages.INSERT_CONTRATO);
         }
     }
 
     @Override
+    public boolean borrarPeticion(String idCliente, String idTarifa) throws OurException {
+        try {
+            Document filtro = new Document();
+            filtro.put("idCliente", new ObjectId(idCliente));
+            filtro.put("idTarifa", new ObjectId(idTarifa));
+            filtro.put("estado", EstadoContrato.PENDIENTE.toString());
+            long borrados = coleccion(COL_CONTRATOS).deleteOne(filtro).getDeletedCount();
+            LOGGER.info("Petición de tarifa borrada: cliente " + idCliente + ", tarifa " + idTarifa + ", borrados " + borrados);
+            return borrados > 0;
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error borrando la petición del cliente " + idCliente, e);
+            throw new OurException(ErrorMessages.BAJA_CONTRATO);
+        }
+    }
+
+    @Override
     public void solicitarBaja(String idContrato) throws OurException {
-        cambiarEstadoContrato(idContrato, ESTADO_BAJA_PENDIENTE, null, ErrorMessages.BAJA_CONTRATO);
-        LogApp.info("Baja solicitada para el contrato " + idContrato);
+        cambiarEstadoContrato(idContrato, EstadoContrato.BAJA_PENDIENTE, null, ErrorMessages.BAJA_CONTRATO);
+        LOGGER.info("Baja solicitada del contrato " + idContrato);
     }
 
     @Override
     public void validarContrato(String idContrato, String idEmpleado) throws OurException {
-        cambiarEstadoContrato(idContrato, ESTADO_ACTIVO, idEmpleado, ErrorMessages.VALIDAR_CONTRATO);
-        LogApp.info("Contrato " + idContrato + " validado por el empleado " + idEmpleado);
+        cambiarEstadoContrato(idContrato, EstadoContrato.ACTIVO, idEmpleado, ErrorMessages.VALIDAR_CONTRATO);
+        LOGGER.info("Contrato " + idContrato + " validado por el empleado " + idEmpleado);
+        try {
+            // Si el cliente estaba dado de baja, al tener otra vez un contrato activo deja de estarlo
+            Document contrato = buscarPorId(COL_CONTRATOS, new ObjectId(idContrato));
+            modificar(COL_CLIENTES, idTexto(contrato, "idCliente"), new Document("dadoDeBaja", false));
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Reactivar al cliente del contrato " + idContrato, e);
+            throw new OurException(ErrorMessages.VALIDAR_CONTRATO);
+        }
+    }
+
+    private void cambiarEstadoContrato(String idContrato, EstadoContrato estado, String idEmpleado, String mensajeError) throws OurException {
+        try {
+            Document cambios = new Document();
+            cambios.put("estado", estado.toString());
+            if (idEmpleado != null) {
+                cambios.put("idEmpleado", new ObjectId(idEmpleado));
+            }
+            if (!modificar(COL_CONTRATOS, idContrato, cambios)) {
+                throw new OurException(mensajeError);
+            }
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error cambiando el contrato " + idContrato + " a " + estado, e);
+            throw new OurException(mensajeError);
+        }
     }
 
     @Override
     public List<Cliente> obtenerClientesConBajaPendiente() throws OurException {
+        List<Cliente> clientes = new ArrayList<>();
+        List<String> idsVistos = new ArrayList<>();
         try {
-            // Ids de los clientes con alguna baja pendiente (sin repetir) y luego sus datos en una sola consulta
-            List<ObjectId> ids = new ArrayList<>();
-            try (MongoCursor<ObjectId> cursor = coleccion(COL_CONTRATOS)
-                    .distinct("idCliente", Filters.eq("estado", ESTADO_BAJA_PENDIENTE), ObjectId.class).iterator()) {
-                while (cursor.hasNext()) {
-                    ids.add(cursor.next());
+            for (Document contrato : coleccion(COL_CONTRATOS).find(new Document("estado", EstadoContrato.BAJA_PENDIENTE.toString()))) {
+                String idCliente = idTexto(contrato, "idCliente");
+                // Un cliente puede tener varias bajas pendientes: solo se añade una vez
+                if (!idsVistos.contains(idCliente)) {
+                    idsVistos.add(idCliente);
+                    Document d = buscarPorId(COL_CLIENTES, new ObjectId(idCliente));
+                    if (d != null) {
+                        clientes.add(documentoACliente(d));
+                    }
                 }
             }
-            List<Cliente> clientes = new ArrayList<>();
-            try (MongoCursor<Document> cursor = coleccion(COL_CLIENTES).find(Filters.in("_id", ids)).iterator()) {
-                while (cursor.hasNext()) {
-                    clientes.add(documentoACliente(cursor.next()));
-                }
-            }
-            LogApp.info("Consultados " + clientes.size() + " clientes con baja pendiente");
+            LOGGER.info("Consultados " + clientes.size() + " clientes con baja pendiente");
             return clientes;
         } catch (MongoException e) {
-            LogApp.error("Error consultando clientes con baja pendiente", e);
+            LOGGER.log(Level.SEVERE, "Error consultando las bajas pendientes", e);
             throw new OurException(ErrorMessages.GET_CONTRATOS);
         }
     }
@@ -291,354 +336,200 @@ public class DAOImplementacion implements DAO {
     @Override
     public void aprobarBaja(String idCliente, String idEmpleado) throws OurException {
         try {
-            ObjectId id = new ObjectId(idCliente);
-            long cancelados = coleccion(COL_CONTRATOS).updateMany(
-                    Filters.and(Filters.eq("idCliente", id), Filters.eq("estado", ESTADO_BAJA_PENDIENTE)),
-                    Updates.combine(Updates.set("estado", ESTADO_CANCELADO), Updates.set("idEmpleado", new ObjectId(idEmpleado))))
-                    .getModifiedCount();
-            LogApp.info("Baja aprobada por el empleado " + idEmpleado + ": " + cancelados
-                    + " contratos cancelados del cliente " + idCliente);
+            // 1. Cancelar todos los contratos del cliente que están en "baja pendiente"
+            Document filtro = new Document();
+            filtro.put("idCliente", new ObjectId(idCliente));
+            filtro.put("estado", EstadoContrato.BAJA_PENDIENTE.toString());
+            Document cambios = new Document();
+            cambios.put("estado", EstadoContrato.CANCELADO.toString());
+            cambios.put("idEmpleado", new ObjectId(idEmpleado));
+            long cancelados = coleccion(COL_CONTRATOS).updateMany(filtro, new Document("$set", cambios)).getModifiedCount();
+            LOGGER.info("Baja aprobada por el empleado " + idEmpleado + ": " + cancelados + " contratos cancelados del cliente " + idCliente);
 
-            // Si al cliente no le queda ningún contrato en vigor, queda dado de baja (se mantiene su perfil)
-            long enVigor = coleccion(COL_CONTRATOS).countDocuments(Filters.and(
-                    Filters.eq("idCliente", id),
-                    Filters.in("estado", ESTADO_PENDIENTE, ESTADO_ACTIVO, ESTADO_BAJA_PENDIENTE)));
-            if (enVigor == 0) {
-                coleccion(COL_CLIENTES).updateOne(Filters.eq("_id", id), Updates.set("dadoDeBaja", true));
-                LogApp.info("Cliente " + idCliente + " dado de baja (sin contratos en vigor)");
+            // 2. Si ya no le queda ningún contrato sin cancelar, el cliente queda dado de baja (se mantiene su perfil)
+            boolean tieneContratos = false;
+            for (Contrato c : buscarContratos(new Document("idCliente", new ObjectId(idCliente)))) {
+                if (c.getEstado() != EstadoContrato.CANCELADO) {
+                    tieneContratos = true;
+                }
+            }
+            if (!tieneContratos) {
+                modificar(COL_CLIENTES, idCliente, new Document("dadoDeBaja", true));
+                LOGGER.info("Cliente " + idCliente + " dado de baja");
             }
         } catch (MongoException e) {
-            LogApp.error("Error aprobando la baja del cliente " + idCliente, e);
+            LOGGER.log(Level.SEVERE, "Error aprobando la baja del cliente " + idCliente, e);
             throw new OurException(ErrorMessages.BAJA_CONTRATO);
         }
     }
 
-    private void cambiarEstadoContrato(String idContrato, String estado, String idEmpleado, String mensajeError) throws OurException {
-        try {
-            Bson cambios = Updates.set("estado", estado);
-            if (idEmpleado != null) {
-                cambios = Updates.combine(cambios, Updates.set("idEmpleado", new ObjectId(idEmpleado)));
-            }
-            long encontrados = coleccion(COL_CONTRATOS)
-                    .updateOne(Filters.eq("_id", new ObjectId(idContrato)), cambios)
-                    .getMatchedCount();
-            if (encontrados == 0) {
-                throw new OurException(mensajeError);
-            }
-        } catch (MongoException e) {
-            LogApp.error("Error cambiando el contrato " + idContrato + " a estado " + estado, e);
-            throw new OurException(mensajeError);
-        }
-    }
+    // ---------- TICKETS ----------
 
     @Override
     public List<TicketSoporte> obtenerTicketsCliente(String idCliente) throws OurException {
-        List<TicketSoporte> tickets = new ArrayList<>();
-        Bson filtro = Filters.eq("idCliente", new ObjectId(idCliente));
-        try (MongoCursor<Document> cursor = coleccion(COL_TICKETS).find(filtro).iterator()) {
-            while (cursor.hasNext()) {
-                Document d = cursor.next();
-                tickets.add(new TicketSoporte(id(d, "_id"), texto(d, "asunto"), texto(d, "descripcion"),
-                        texto(d, "fechaCreacion"), texto(d, "estado"), id(d, "idCliente"), id(d, "idEmpleado")));
-            }
-            LogApp.info("Consultados " + tickets.size() + " tickets del cliente " + idCliente);
+        try {
+            List<TicketSoporte> tickets = buscarTickets(new Document("idCliente", new ObjectId(idCliente)));
+            LOGGER.info("Consultados " + tickets.size() + " tickets del cliente " + idCliente);
             return tickets;
         } catch (MongoException e) {
-            LogApp.error("Error consultando tickets del cliente " + idCliente, e);
+            LOGGER.log(Level.SEVERE, "Error consultando tickets del cliente " + idCliente, e);
             throw new OurException(ErrorMessages.GET_TICKETS);
-        }
-    }
-
-    @Override
-    public void insertarTicket(TicketSoporte ticket) throws OurException {
-        try {
-            ObjectId nuevoId = new ObjectId();
-            Document d = new Document("_id", nuevoId)
-                    .append("asunto", ticket.getAsunto())
-                    .append("descripcion", ticket.getDescripcion())
-                    .append("fechaCreacion", ticket.getFechaCreacion())
-                    .append("estado", ticket.getEstado())
-                    .append("idCliente", new ObjectId(ticket.getIdCliente()))
-                    .append("idEmpleado", null);
-            coleccion(COL_TICKETS).insertOne(d);
-            ticket.setId(nuevoId.toHexString());
-            LogApp.info("Ticket creado: id " + ticket.getId() + ", cliente " + ticket.getIdCliente()
-                    + ", asunto \"" + ticket.getAsunto() + "\"");
-        } catch (MongoException e) {
-            LogApp.error("Error creando ticket del cliente " + ticket.getIdCliente(), e);
-            throw new OurException(ErrorMessages.INSERT_TICKET);
         }
     }
 
     @Override
     public List<TicketSoporte> obtenerTicketsPendientes() throws OurException {
-        List<Bson> pipeline = Arrays.asList(
-                Aggregates.match(Filters.eq("estado", "pendiente")),
-                Aggregates.lookup(COL_CLIENTES, "idCliente", "_id", "cliente"));
-        List<TicketSoporte> tickets = new ArrayList<>();
-        try (MongoCursor<Document> cursor = coleccion(COL_TICKETS).aggregate(pipeline).iterator()) {
-            while (cursor.hasNext()) {
-                Document d = cursor.next();
-                TicketSoporte t = new TicketSoporte(id(d, "_id"), texto(d, "asunto"), texto(d, "descripcion"),
-                        texto(d, "fechaCreacion"), texto(d, "estado"), id(d, "idCliente"), id(d, "idEmpleado"));
-                Document cliente = primero(d, "cliente");
-                if (cliente != null) {
-                    t.setNombreCliente(texto(cliente, "nombre"));
-                }
-                tickets.add(t);
-            }
-            LogApp.info("Consultados " + tickets.size() + " tickets pendientes");
+        try {
+            List<TicketSoporte> tickets = buscarTickets(new Document("estado", "pendiente"));
+            LOGGER.info("Consultados " + tickets.size() + " tickets pendientes");
             return tickets;
         } catch (MongoException e) {
-            LogApp.error("Error consultando tickets pendientes", e);
+            LOGGER.log(Level.SEVERE, "Error consultando tickets pendientes", e);
             throw new OurException(ErrorMessages.GET_TICKETS);
+        }
+    }
+
+    private List<TicketSoporte> buscarTickets(Document filtro) throws OurException {
+        List<TicketSoporte> tickets = new ArrayList<>();
+        for (Document d : coleccion(COL_TICKETS).find(filtro)) {
+            TicketSoporte t = new TicketSoporte(idTexto(d, "_id"), texto(d, "asunto"), texto(d, "descripcion"),
+                    texto(d, "fechaCreacion"), texto(d, "estado"), idTexto(d, "idCliente"), idTexto(d, "idEmpleado"));
+            Document cliente = buscarPorId(COL_CLIENTES, d.get("idCliente"));
+            if (cliente != null) {
+                t.setNombreCliente(texto(cliente, "nombre"));
+            }
+            tickets.add(t);
+        }
+        return tickets;
+    }
+
+    @Override
+    public void insertarTicket(TicketSoporte ticket) throws OurException {
+        try {
+            Document d = new Document();
+            d.put("asunto", ticket.getAsunto());
+            d.put("descripcion", ticket.getDescripcion());
+            d.put("fechaCreacion", ticket.getFechaCreacion());
+            d.put("estado", ticket.getEstado());
+            d.put("idCliente", new ObjectId(ticket.getIdCliente()));
+            d.put("idEmpleado", null);
+            coleccion(COL_TICKETS).insertOne(d);
+            ticket.setId(idTexto(d, "_id"));
+
+            // Array de _id: el cliente guarda los _id de sus tickets en "ticketSoporte".
+            // "$push" añade un elemento al final del array
+            Document filtroCliente = new Document("_id", new ObjectId(ticket.getIdCliente()));
+            Document nuevoTicket = new Document("ticketSoporte", d.get("_id"));
+            coleccion(COL_CLIENTES).updateOne(filtroCliente, new Document("$push", nuevoTicket));
+            LOGGER.info("Ticket creado: id " + ticket.getId() + ", cliente " + ticket.getIdCliente() + ", asunto \"" + ticket.getAsunto() + "\"");
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error creando un ticket del cliente " + ticket.getIdCliente(), e);
+            throw new OurException(ErrorMessages.INSERT_TICKET);
         }
     }
 
     @Override
     public void resolverTicket(String idTicket, String idEmpleado) throws OurException {
         try {
-            Bson cambios = Updates.combine(Updates.set("estado", "resuelto"),
-                    Updates.set("idEmpleado", new ObjectId(idEmpleado)));
-            long encontrados = coleccion(COL_TICKETS)
-                    .updateOne(Filters.eq("_id", new ObjectId(idTicket)), cambios)
-                    .getMatchedCount();
-            if (encontrados == 0) {
+            Document cambios = new Document();
+            cambios.put("estado", "resuelto");
+            cambios.put("idEmpleado", new ObjectId(idEmpleado));
+            if (!modificar(COL_TICKETS, idTicket, cambios)) {
                 throw new OurException(ErrorMessages.RESOLVER_TICKET);
             }
-            LogApp.info("Ticket " + idTicket + " resuelto por el empleado " + idEmpleado);
+            LOGGER.info("Ticket " + idTicket + " resuelto por el empleado " + idEmpleado);
         } catch (MongoException e) {
-            LogApp.error("Error resolviendo el ticket " + idTicket, e);
+            LOGGER.log(Level.SEVERE, "Error resolviendo el ticket " + idTicket, e);
             throw new OurException(ErrorMessages.RESOLVER_TICKET);
         }
     }
 
+    // ---------- EMPLEADOS Y ADMINISTRADORES (los métodos vacíos son de la parte del administrador) ----------
+
     @Override
     public void actualizarEmpleado(Empleado empleado) throws OurException {
-        String nombreColeccion = empleado instanceof Administrador ? COL_ADMINISTRADORES : COL_EMPLEADOS;
+        String nombreColeccion = COL_EMPLEADOS;
+        if (empleado instanceof Administrador) {
+            nombreColeccion = COL_ADMINISTRADORES;
+        }
         try {
             if (nombreUsuarioOcupado(empleado.getNombreUsuario(), empleado.getId())) {
                 throw new OurException(ErrorMessages.USER_EXISTS);
             }
-            Bson cambios = Updates.combine(
-                    Updates.set("nombre", empleado.getNombre()),
-                    Updates.set("nombreUsuario", empleado.getNombreUsuario()),
-                    Updates.set("contrasena", empleado.getContrasena()),
-                    Updates.set("correo", empleado.getCorreo()),
-                    Updates.set("cuentaBancaria", empleado.getCuentaBancaria()));
-            long encontrados = coleccion(nombreColeccion)
-                    .updateOne(Filters.eq("_id", new ObjectId(empleado.getId())), cambios)
-                    .getMatchedCount();
-            if (encontrados == 0) {
+            Document cambios = new Document();
+            cambios.put("nombre", empleado.getNombre());
+            cambios.put("nombreUsuario", empleado.getNombreUsuario());
+            cambios.put("contrasena", empleado.getContrasena());
+            cambios.put("correo", empleado.getCorreo());
+            cambios.put("cuentaBancaria", empleado.getCuentaBancaria());
+            if (!modificar(nombreColeccion, empleado.getId(), cambios)) {
                 throw new OurException(ErrorMessages.UPDATE_USER);
             }
-            LogApp.info("Datos actualizados en " + nombreColeccion + ": " + empleado.getNombreUsuario()
-                    + " (id " + empleado.getId() + ")");
+            LOGGER.info("Datos modificados en " + nombreColeccion + ": " + empleado.getNombreUsuario());
         } catch (MongoException e) {
-            LogApp.error("Error actualizando " + empleado.getNombreUsuario() + " en " + nombreColeccion, e);
+            LOGGER.log(Level.SEVERE, "Error modificando " + empleado.getNombreUsuario() + " en " + nombreColeccion, e);
             throw new OurException(ErrorMessages.UPDATE_USER);
         }
     }
 
     @Override
     public List<Empleado> obtenerEmpleados() throws OurException {
-        List<Empleado> empleados = new ArrayList<>();
-        try (MongoCursor<Document> cursor = coleccion(COL_EMPLEADOS).find().iterator()) {
-            while (cursor.hasNext()) {
-                empleados.add(documentoAEmpleado(cursor.next()));
-            }
-            LogApp.info("Consultados " + empleados.size() + " empleados");
-            return empleados;
-        } catch (MongoException e) {
-            LogApp.error("Error consultando empleados", e);
-            throw new OurException(ErrorMessages.GET_EMPLEADOS);
-        }
+        // TODO parte del administrador
+        return new ArrayList<>();
     }
 
     @Override
     public void insertarEmpleado(Empleado empleado) throws OurException {
-        try {
-            if (nombreUsuarioOcupado(empleado.getNombreUsuario(), null)) {
-                throw new OurException(ErrorMessages.USER_EXISTS);
-            }
-            ObjectId nuevoId = new ObjectId();
-            coleccion(COL_EMPLEADOS).insertOne(documentoEmpleado(nuevoId, empleado, "Empleado")
-                    .append("idSucursal", empleado.getIdSucursal() != null ? new ObjectId(empleado.getIdSucursal()) : null));
-            empleado.setId(nuevoId.toHexString());
-            LogApp.info("Empleado dado de alta: " + empleado.getNombreUsuario() + " (id " + empleado.getId() + ")");
-        } catch (MongoException e) {
-            LogApp.error("Error dando de alta el empleado " + empleado.getNombreUsuario(), e);
-            throw new OurException(ErrorMessages.INSERT_EMPLEADO);
-        }
+        // TODO parte del administrador
     }
 
     @Override
     public void ascenderEmpleado(Empleado empleado) throws OurException {
-        ObjectId id = new ObjectId(empleado.getId());
-        try {
-            // Se copia a Administradores con el mismo _id y luego se borra de Empleados
-            coleccion(COL_ADMINISTRADORES).insertOne(documentoEmpleado(id, empleado, "Admin"));
-        } catch (MongoException e) {
-            LogApp.error("Error ascendiendo al empleado " + empleado.getId(), e);
-            throw new OurException(ErrorMessages.ASCENDER_EMPLEADO);
-        }
-        try {
-            coleccion(COL_EMPLEADOS).deleteOne(Filters.eq("_id", id));
-            coleccion(COL_SUCURSALES).updateMany(Filters.eq("empleado", id), Updates.pull("empleado", id));
-            LogApp.info("Empleado ascendido a administrador: " + empleado.getNombreUsuario() + " (id " + empleado.getId() + ")");
-        } catch (MongoException e) {
-            // Deshacer el primer paso para que la persona no quede en las dos colecciones
-            LogApp.error("Error ascendiendo al empleado " + empleado.getId() + ", se deshace el cambio", e);
-            try {
-                coleccion(COL_ADMINISTRADORES).deleteOne(Filters.eq("_id", id));
-            } catch (MongoException e2) {
-                LogApp.error("No se pudo deshacer el ascenso del empleado " + empleado.getId(), e2);
-            }
-            throw new OurException(ErrorMessages.ASCENDER_EMPLEADO);
-        }
+        // TODO parte del administrador
     }
 
     @Override
     public void borrarEmpleado(String idEmpleado) throws OurException {
-        try {
-            ObjectId id = new ObjectId(idEmpleado);
-            long borrados = coleccion(COL_EMPLEADOS).deleteOne(Filters.eq("_id", id)).getDeletedCount();
-            if (borrados == 0) {
-                throw new OurException(ErrorMessages.DELETE_EMPLEADO);
-            }
-            coleccion(COL_SUCURSALES).updateMany(Filters.eq("empleado", id), Updates.pull("empleado", id));
-            LogApp.info("Empleado borrado: id " + idEmpleado);
-        } catch (MongoException e) {
-            LogApp.error("Error borrando el empleado " + idEmpleado, e);
-            throw new OurException(ErrorMessages.DELETE_EMPLEADO);
-        }
+        // TODO parte del administrador
     }
 
-    private Empleado documentoAEmpleado(Document d) {
-        return new Empleado(id(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"), texto(d, "contrasena"),
-                texto(d, "correo"), texto(d, "cuentaBancaria"), id(d, "idSucursal"));
-    }
-
-    private Document documentoEmpleado(ObjectId id, Empleado empleado, String rol) {
-        return new Document("_id", id)
-                .append("nombre", empleado.getNombre())
-                .append("nombreUsuario", empleado.getNombreUsuario())
-                .append("rol", rol)
-                .append("contrasena", empleado.getContrasena())
-                .append("correo", empleado.getCorreo())
-                .append("cuentaBancaria", empleado.getCuentaBancaria());
-    }
+    // ---------- SUCURSALES (parte del administrador) ----------
 
     @Override
     public List<Sucursal> obtenerSucursales() throws OurException {
-        List<Sucursal> sucursales = new ArrayList<>();
-        try (MongoCursor<Document> cursor = coleccion(COL_SUCURSALES).find().iterator()) {
-            while (cursor.hasNext()) {
-                Document d = cursor.next();
-                Document ubicacion = d.get("Ubicacion", Document.class);
-                if (ubicacion == null) {
-                    ubicacion = new Document();
-                }
-                Number cp = (Number) ubicacion.get("CodigoPostal");
-                List<String> empleados = new ArrayList<>();
-                List<ObjectId> ids = d.getList("empleado", ObjectId.class);
-                if (ids != null) {
-                    for (ObjectId idEmpleado : ids) {
-                        empleados.add(idEmpleado.toHexString());
-                    }
-                }
-                sucursales.add(new Sucursal(id(d, "_id"), texto(d, "nombre"), texto(d, "horario"), texto(d, "telefono"),
-                        texto(ubicacion, "Direccion"), texto(ubicacion, "Localidad"),
-                        cp != null ? cp.intValue() : 0, empleados));
-            }
-            LogApp.info("Consultadas " + sucursales.size() + " sucursales");
-            return sucursales;
-        } catch (MongoException e) {
-            LogApp.error("Error consultando sucursales", e);
-            throw new OurException(ErrorMessages.GET_SUCURSALES);
-        }
+        // TODO parte del administrador
+        return new ArrayList<>();
     }
 
     @Override
     public void insertarSucursal(Sucursal sucursal) throws OurException {
-        try {
-            ObjectId nuevoId = new ObjectId();
-            Document d = new Document("_id", nuevoId)
-                    .append("nombre", sucursal.getNombre())
-                    .append("horario", sucursal.getHorario())
-                    .append("telefono", sucursal.getTelefono())
-                    .append("empleado", new ArrayList<ObjectId>())
-                    .append("Ubicacion", documentoUbicacion(sucursal));
-            coleccion(COL_SUCURSALES).insertOne(d);
-            sucursal.setId(nuevoId.toHexString());
-            LogApp.info("Sucursal creada: " + sucursal.getNombre() + " (id " + sucursal.getId() + ")");
-        } catch (MongoException e) {
-            LogApp.error("Error creando la sucursal " + sucursal.getNombre(), e);
-            throw new OurException(ErrorMessages.SAVE_SUCURSAL);
-        }
+        // TODO parte del administrador
     }
 
     @Override
     public void actualizarSucursal(Sucursal sucursal) throws OurException {
-        try {
-            Bson cambios = Updates.combine(
-                    Updates.set("nombre", sucursal.getNombre()),
-                    Updates.set("horario", sucursal.getHorario()),
-                    Updates.set("telefono", sucursal.getTelefono()),
-                    Updates.set("Ubicacion", documentoUbicacion(sucursal)));
-            long encontrados = coleccion(COL_SUCURSALES)
-                    .updateOne(Filters.eq("_id", new ObjectId(sucursal.getId())), cambios)
-                    .getMatchedCount();
-            if (encontrados == 0) {
-                throw new OurException(ErrorMessages.SAVE_SUCURSAL);
-            }
-            LogApp.info("Sucursal actualizada: " + sucursal.getNombre() + " (id " + sucursal.getId() + ")");
-        } catch (MongoException e) {
-            LogApp.error("Error actualizando la sucursal " + sucursal.getId(), e);
-            throw new OurException(ErrorMessages.SAVE_SUCURSAL);
-        }
+        // TODO parte del administrador
     }
 
     @Override
     public void borrarSucursal(String idSucursal) throws OurException {
-        try {
-            ObjectId id = new ObjectId(idSucursal);
-            if (coleccion(COL_EMPLEADOS).countDocuments(Filters.eq("idSucursal", id)) > 0) {
-                LogApp.info("Borrado rechazado, la sucursal " + idSucursal + " tiene empleados");
-                throw new OurException(ErrorMessages.SUCURSAL_CON_EMPLEADOS);
-            }
-            long borrados = coleccion(COL_SUCURSALES).deleteOne(Filters.eq("_id", id)).getDeletedCount();
-            if (borrados == 0) {
-                throw new OurException(ErrorMessages.SAVE_SUCURSAL);
-            }
-            LogApp.info("Sucursal borrada: id " + idSucursal);
-        } catch (MongoException e) {
-            LogApp.error("Error borrando la sucursal " + idSucursal, e);
-            throw new OurException(ErrorMessages.SAVE_SUCURSAL);
-        }
+        // TODO parte del administrador
     }
 
-    private Document documentoUbicacion(Sucursal sucursal) {
-        return new Document("Direccion", sucursal.getDireccion())
-                .append("Localidad", sucursal.getLocalidad())
-                .append("CodigoPostal", sucursal.getCodigoPostal());
-    }
+    // ---------- VALORACIONES ----------
 
     @Override
     public List<Valoracion> obtenerValoracionesCliente(String idCliente) throws OurException {
         List<Valoracion> valoraciones = new ArrayList<>();
-        Bson filtro = Filters.eq("idCliente", new ObjectId(idCliente));
-        try (MongoCursor<Document> cursor = coleccion(COL_VALORACIONES).find(filtro).iterator()) {
-            while (cursor.hasNext()) {
-                Document d = cursor.next();
-                Number puntuacion = (Number) d.get("puntuacion");
-                valoraciones.add(new Valoracion(id(d, "_id"), puntuacion != null ? puntuacion.intValue() : 0,
-                        texto(d, "texto"), id(d, "idCliente"), id(d, "idTarifa")));
+        try {
+            for (Document d : coleccion(COL_VALORACIONES).find(new Document("idCliente", new ObjectId(idCliente)))) {
+                valoraciones.add(new Valoracion(idTexto(d, "_id"), (int) numero(d, "puntuacion"), texto(d, "texto"),
+                        idTexto(d, "idCliente"), idTexto(d, "idTarifa")));
             }
-            LogApp.info("Consultadas " + valoraciones.size() + " valoraciones del cliente " + idCliente);
+            LOGGER.info("Consultadas " + valoraciones.size() + " valoraciones del cliente " + idCliente);
             return valoraciones;
         } catch (MongoException e) {
-            LogApp.error("Error consultando valoraciones del cliente " + idCliente, e);
+            LOGGER.log(Level.SEVERE, "Error consultando valoraciones del cliente " + idCliente, e);
             throw new OurException(ErrorMessages.GET_VALORACIONES);
         }
     }
@@ -646,18 +537,17 @@ public class DAOImplementacion implements DAO {
     @Override
     public void insertarValoracion(Valoracion valoracion) throws OurException {
         try {
-            ObjectId nuevoId = new ObjectId();
-            Document d = new Document("_id", nuevoId)
-                    .append("puntuacion", valoracion.getPuntuacion())
-                    .append("texto", valoracion.getTexto())
-                    .append("idCliente", new ObjectId(valoracion.getIdCliente()))
-                    .append("idTarifa", valoracion.getIdTarifa() != null ? new ObjectId(valoracion.getIdTarifa()) : null);
+            Document d = new Document();
+            d.put("puntuacion", valoracion.getPuntuacion());
+            d.put("texto", valoracion.getTexto());
+            d.put("idCliente", new ObjectId(valoracion.getIdCliente()));
+            d.put("idTarifa", aObjectId(valoracion.getIdTarifa()));
             coleccion(COL_VALORACIONES).insertOne(d);
-            valoracion.setId(nuevoId.toHexString());
-            LogApp.info("Valoración publicada: id " + valoracion.getId() + ", cliente " + valoracion.getIdCliente()
-                    + ", puntuación " + valoracion.getPuntuacion());
+
+            valoracion.setId(idTexto(d, "_id"));
+            LOGGER.info("Valoración publicada: id " + valoracion.getId() + ", puntuación " + valoracion.getPuntuacion());
         } catch (MongoException e) {
-            LogApp.error("Error publicando valoración del cliente " + valoracion.getIdCliente(), e);
+            LOGGER.log(Level.SEVERE, "Error publicando una valoración del cliente " + valoracion.getIdCliente(), e);
             throw new OurException(ErrorMessages.SAVE_VALORACION);
         }
     }
@@ -665,17 +555,15 @@ public class DAOImplementacion implements DAO {
     @Override
     public void actualizarValoracion(Valoracion valoracion) throws OurException {
         try {
-            Bson cambios = Updates.combine(Updates.set("puntuacion", valoracion.getPuntuacion()),
-                    Updates.set("texto", valoracion.getTexto()));
-            long encontrados = coleccion(COL_VALORACIONES)
-                    .updateOne(Filters.eq("_id", new ObjectId(valoracion.getId())), cambios)
-                    .getMatchedCount();
-            if (encontrados == 0) {
+            Document cambios = new Document();
+            cambios.put("puntuacion", valoracion.getPuntuacion());
+            cambios.put("texto", valoracion.getTexto());
+            if (!modificar(COL_VALORACIONES, valoracion.getId(), cambios)) {
                 throw new OurException(ErrorMessages.SAVE_VALORACION);
             }
-            LogApp.info("Valoración editada: id " + valoracion.getId() + ", puntuación " + valoracion.getPuntuacion());
+            LOGGER.info("Valoración modificada: id " + valoracion.getId());
         } catch (MongoException e) {
-            LogApp.error("Error editando la valoración " + valoracion.getId(), e);
+            LOGGER.log(Level.SEVERE, "Error modificando la valoración " + valoracion.getId(), e);
             throw new OurException(ErrorMessages.SAVE_VALORACION);
         }
     }
@@ -683,37 +571,89 @@ public class DAOImplementacion implements DAO {
     @Override
     public void borrarValoracion(String idValoracion) throws OurException {
         try {
-            long borrados = coleccion(COL_VALORACIONES)
-                    .deleteOne(Filters.eq("_id", new ObjectId(idValoracion)))
-                    .getDeletedCount();
-            if (borrados == 0) {
+            if (!borrar(COL_VALORACIONES, idValoracion)) {
                 throw new OurException(ErrorMessages.SAVE_VALORACION);
             }
-            LogApp.info("Valoración borrada: id " + idValoracion);
+            LOGGER.info("Valoración borrada: id " + idValoracion);
         } catch (MongoException e) {
-            LogApp.error("Error borrando la valoración " + idValoracion, e);
+            LOGGER.log(Level.SEVERE, "Error borrando la valoración " + idValoracion, e);
             throw new OurException(ErrorMessages.SAVE_VALORACION);
         }
+    }
+
+    // ---------- DE DOCUMENT A OBJETO Y AL REVÉS ----------
+
+    private Cliente documentoACliente(Document d) {
+        Cliente c = new Cliente(idTexto(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"), texto(d, "contrasena"),
+                texto(d, "correo"), texto(d, "cuentaBancaria"), texto(d, "DNI"), texto(d, "telefono"), texto(d, "direccion"));
+        c.setDadoDeBaja(d.getBoolean("dadoDeBaja", false));
+        return c;
+    }
+
+    private Empleado documentoAEmpleado(Document d) {
+        return new Empleado(idTexto(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"), texto(d, "contrasena"),
+                texto(d, "correo"), texto(d, "cuentaBancaria"), idTexto(d, "idSucursal"));
+    }
+
+    // ---------- AYUDANTES ----------
+
+    // Busca un documento por su _id. Devuelve null si no existe
+    private Document buscarPorId(String nombreColeccion, Object id) throws OurException {
+        return coleccion(nombreColeccion).find(new Document("_id", id)).first();
+    }
+
+    // Modifica los campos de "cambios" en el documento con ese id. Devuelve false si no existe
+    private boolean modificar(String nombreColeccion, String id, Document cambios) throws OurException {
+        Document filtro = new Document("_id", new ObjectId(id));
+        // "$set" le dice a MongoDB que solo cambie esos campos y deje el resto como está
+        long encontrados = coleccion(nombreColeccion).updateOne(filtro, new Document("$set", cambios)).getMatchedCount();
+        return encontrados > 0;
+    }
+
+    // Borra el documento con ese id. Devuelve false si no existe
+    private boolean borrar(String nombreColeccion, String id) throws OurException {
+        Document filtro = new Document("_id", new ObjectId(id));
+        long borrados = coleccion(nombreColeccion).deleteOne(filtro).getDeletedCount();
+        return borrados > 0;
+    }
+
+    // Convierte un id de texto a ObjectId (null si no hay id)
+    private ObjectId aObjectId(String id) {
+        if (id == null) {
+            return null;
+        }
+        return new ObjectId(id);
     }
 
     // Devuelve el campo como texto, o "" si no existe
     private String texto(Document d, String campo) {
         Object valor = d.get(campo);
-        return valor != null ? String.valueOf(valor) : "";
-    }
-
-    // $lookup devuelve una lista: se coge el primer documento
-    private Document primero(Document d, String campo) {
-        List<Document> lista = d.getList(campo, Document.class);
-        return lista != null && !lista.isEmpty() ? lista.get(0) : null;
-    }
-
-    // Devuelve el ObjectId como texto, o null si no existe
-    private String id(Document d, String campo) {
-        Object valor = d.get(campo);
-        if (valor instanceof ObjectId) {
-            return ((ObjectId) valor).toHexString();
+        if (valor == null) {
+            return "";
         }
-        return valor != null ? String.valueOf(valor) : null;
+        return valor.toString();
+    }
+
+    // Devuelve un id (ObjectId) como texto, o null si no existe
+    private String idTexto(Document d, String campo) {
+        Object valor = d.get(campo);
+        if (valor == null) {
+            return null;
+        }
+        return valor.toString();
+    }
+
+    // Devuelve un número (puede estar guardado como int o como double), o 0 si no existe
+    private double numero(Document d, String campo) {
+        Object valor = d.get(campo);
+        if (valor == null) {
+            return 0;
+        }
+        try {
+            return Double.parseDouble(valor.toString());
+        } catch (NumberFormatException e) {
+            // Si en la base de datos hay algo que no es un número, se toma como 0 en vez de cerrar la aplicación
+            return 0;
+        }
     }
 }

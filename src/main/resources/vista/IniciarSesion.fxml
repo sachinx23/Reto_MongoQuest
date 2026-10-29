@@ -13,6 +13,7 @@
          <children>
             <Button fx:id="btnIniciarSesion" defaultButton="true" layoutX="149.0" layoutY="269.0" mnemonicParsing="false" onAction="#btnIniciarSesion" text="Iniciar Sesion" />
             <Button fx:id="btnRegistrarse" layoutX="389.0" layoutY="269.0" mnemonicParsing="false" onAction="#btnRegistrarse" text="Registrarse" />
+            <Label alignment="CENTER" layoutX="0.0" layoutY="20.0" prefWidth="600.0" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #1f6fb2;" text="Tel-ONDA" />
             <Label layoutX="286.0" layoutY="82.0" text="Usuario" />
             <TextField fx:id="txtUsuario" layoutX="235.0" layoutY="111.0" />
             <Label layoutX="276.0" layoutY="178.0" text="Contraseña" />

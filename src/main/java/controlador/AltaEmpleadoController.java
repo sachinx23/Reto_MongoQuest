@@ -1,13 +1,10 @@
 package controlador;
 
-import exception.OurException;
-import exception.ShowAlert;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import modelo.Empleado;
 import modelo.Sucursal;
 
 public class AltaEmpleadoController {
@@ -21,41 +18,11 @@ public class AltaEmpleadoController {
 
     @FXML
     public void initialize() {
-        try {
-            cmbSucursal.getItems().setAll(Sesion.getDao().obtenerSucursales());
-        } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
-        }
+        // TODO parte del administrador
     }
 
     @FXML
     public void btnDarDeAlta(ActionEvent event) {
-        String error = ValidarPerfil.comprobar(txtNombre.getText(), txtNombreUsuario.getText(),
-                txtContrasena.getText(), txtCorreo.getText());
-        if (error != null) {
-            ShowAlert.info("Campos incompletos", error);
-            return;
-        }
-        if (!ShowAlert.confirmar("Confirmar alta", "¿Seguro que deseas dar de alta a " + txtNombre.getText().trim() + "?")) {
-            return;
-        }
-        String idSucursal = null;
-        if (cmbSucursal.getValue() != null) {
-            idSucursal = cmbSucursal.getValue().getId();
-        }
-        Empleado empleado = new Empleado(null, txtNombre.getText().trim(), txtNombreUsuario.getText().trim(),
-                txtContrasena.getText().trim(), txtCorreo.getText().trim(), txtCuentaBancaria.getText().trim(), idSucursal);
-        try {
-            Sesion.getDao().insertarEmpleado(empleado);
-            ShowAlert.info("Empleado registrado", "La cuenta del nuevo trabajador ha sido generada en el sistema.");
-            txtNombre.clear();
-            txtNombreUsuario.clear();
-            txtContrasena.clear();
-            txtCorreo.clear();
-            txtCuentaBancaria.clear();
-            cmbSucursal.setValue(null);
-        } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
-        }
+        // TODO parte del administrador
     }
 }

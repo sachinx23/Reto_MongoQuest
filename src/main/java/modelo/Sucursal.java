@@ -1,7 +1,5 @@
 package modelo;
 
-import java.util.List;
-
 public class Sucursal {
 
     private String id;
@@ -11,9 +9,8 @@ public class Sucursal {
     private String direccion;
     private String localidad;
     private int codigoPostal;
-    private List<String> empleados;
 
-    public Sucursal(String id, String nombre, String horario, String telefono, String direccion, String localidad, int codigoPostal, List<String> empleados) {
+    public Sucursal(String id, String nombre, String horario, String telefono, String direccion, String localidad, int codigoPostal) {
         this.id = id;
         this.nombre = nombre;
         this.horario = horario;
@@ -21,7 +18,6 @@ public class Sucursal {
         this.direccion = direccion;
         this.localidad = localidad;
         this.codigoPostal = codigoPostal;
-        this.empleados = empleados;
     }
 
     public String getId() {
@@ -78,14 +74,6 @@ public class Sucursal {
 
     public void setCodigoPostal(int codigoPostal) {
         this.codigoPostal = codigoPostal;
-    }
-
-    public List<String> getEmpleados() {
-        return empleados;
-    }
-
-    public void setEmpleados(List<String> empleados) {
-        this.empleados = empleados;
     }
 
     // El ComboBox de alta de empleado muestra lo que devuelve toString()

@@ -1,42 +1,36 @@
 package exception;
 
-import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 /**
- * Ventanas emergentes de la aplicación.
+ * Ventanas emergentes (avisos) de la aplicación.
  */
-public class ShowAlert
-{
+public class ShowAlert {
 
-    public static void showAlert(String title, String message, Alert.AlertType type)
-    {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
+    public static void showAlert(String titulo, String mensaje, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
         alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setContentText(mensaje);
         alert.showAndWait();
     }
 
-    public static void info(String title, String message)
-    {
-        showAlert(title, message, Alert.AlertType.INFORMATION);
+    public static void info(String titulo, String mensaje) {
+        showAlert(titulo, mensaje, Alert.AlertType.INFORMATION);
     }
 
-    public static void error(String message)
-    {
-        showAlert("Error", message, Alert.AlertType.ERROR);
+    public static void error(String mensaje) {
+        showAlert("Error", mensaje, Alert.AlertType.ERROR);
     }
 
-    // Devuelve true si el usuario pulsa Aceptar
-    public static boolean confirmar(String title, String message)
-    {
+    // Pregunta algo al usuario. Devuelve true si pulsa Aceptar
+    public static boolean confirmar(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(title);
+        alert.setTitle(titulo);
         alert.setHeaderText(null);
-        alert.setContentText(message);
-        Optional<ButtonType> respuesta = alert.showAndWait();
-        return respuesta.isPresent() && respuesta.get() == ButtonType.OK;
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+        return alert.getResult() == ButtonType.OK;
     }
 }

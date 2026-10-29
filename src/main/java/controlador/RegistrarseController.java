@@ -1,7 +1,10 @@
 package controlador;
 
+import com.mycompany.reto_1.Reto_1;
+import dao.DAO;
 import exception.OurException;
 import exception.ShowAlert;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -10,6 +13,10 @@ import javafx.scene.control.TextField;
 import modelo.Cliente;
 
 public class RegistrarseController {
+
+    private static final Logger LOGGER = Logger.getLogger(RegistrarseController.class.getName());
+
+    private final DAO dao = Sesion.getDao();
 
     @FXML private TextField txtUsuario;
     @FXML private TextField txtNombre;
@@ -30,21 +37,9 @@ public class RegistrarseController {
         String telefono = txtTelefono.getText().trim();
         String direccion = txtDireccion.getText().trim();
 
-        if (usuario.isEmpty() || nombre.isEmpty() || contrasena.isEmpty() || correo.isEmpty()
-                || dni.isEmpty() || telefono.isEmpty() || direccion.isEmpty()) {
-            lblMensajeError.setText("Por favor, rellena todos los campos.");
-            return;
-        }
-        if (!correo.contains("@") || !correo.contains(".")) {
-            lblMensajeError.setText("El correo no es válido.");
-            return;
-        }
-        if (!dni.matches("[0-9]{8}[A-Z]")) {
-            lblMensajeError.setText("DNI introducido incorrectamente.");
-            return;
-        }
-        if (!telefono.matches("[0-9 ]{9,15}")) {
-            lblMensajeError.setText("El teléfono no es válido.");
+        String error = ValidarPerfil.comprobarCliente(nombre, usuario, dni, correo, telefono, direccion, "");
+        if (error != null) {
+            lblMensajeError.setText(error);
             return;
         }
         if (contrasena.length() < 4) {
@@ -55,10 +50,11 @@ public class RegistrarseController {
 
         Cliente cliente = new Cliente(null, nombre, usuario, contrasena, correo, "", dni, telefono, direccion);
         try {
-            Sesion.getDao().insertarCliente(cliente);
+            dao.insertarCliente(cliente);
             ShowAlert.info("Usuario registrado", "Tu cuenta ha sido creada correctamente.");
-            Ventana.cambiar(txtUsuario, "/vista/IniciarSesion.fxml");
+            Reto_1.setRoot("IniciarSesion");
         } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
             lblMensajeError.setText(e.getMessage());
         }
     }
@@ -66,7 +62,7 @@ public class RegistrarseController {
     @FXML
     public void btnSalir(ActionEvent event) {
         if (ShowAlert.confirmar("Cancelar registro", "¿Seguro que deseas cancelar el registro?")) {
-            Ventana.cambiar(txtUsuario, "/vista/IniciarSesion.fxml");
+            Reto_1.setRoot("IniciarSesion");
         }
     }
 }

@@ -1,9 +1,10 @@
 package controlador;
 
+import com.mycompany.reto_1.Reto_1;
 import dao.DAO;
-import dao.DAOImplementacion;
 import exception.OurException;
 import exception.ShowAlert;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,20 +19,19 @@ import javafx.scene.layout.AnchorPane;
 import modelo.Cliente;
 import modelo.Contrato;
 import modelo.Empleado;
+import modelo.EstadoContrato;
 import modelo.TicketSoporte;
 
 public class EmpleadoController {
 
-    private static final String OP_TICKETS = "Tickets pendientes";
-    private static final String OP_BAJAS = "Solicitudes de baja";
-    private static final String OP_VALIDAR = "Validar tarifas";
-    private static final String OP_CERRAR = "Cerrar Sesion";
+    private static final Logger LOGGER = Logger.getLogger(EmpleadoController.class.getName());
 
     private final DAO dao = Sesion.getDao();
+
     private Empleado empleado;
 
     @FXML private Label lblBienvenida;
-    @FXML private ComboBox<String> cmbOpciones;
+    @FXML private ComboBox<OpcionEmpleado> cmbOpciones;
 
     @FXML private AnchorPane panelPerfil;
     @FXML private AnchorPane panelTickets;
@@ -63,20 +63,26 @@ public class EmpleadoController {
     public void initialize() {
         empleado = (Empleado) Sesion.getUsuario();
         lblBienvenida.setText("Bienvenido/a " + empleado.getNombre());
-        cmbOpciones.getItems().addAll(OP_TICKETS, OP_BAJAS, OP_VALIDAR, OP_CERRAR);
+        cmbOpciones.setItems(FXCollections.observableArrayList(OpcionEmpleado.values()));
 
-        colTicketCliente.setCellValueFactory(new PropertyValueFactory<TicketSoporte, String>("nombreCliente"));
-        colTicketAsunto.setCellValueFactory(new PropertyValueFactory<TicketSoporte, String>("asunto"));
-        colTicketDescripcion.setCellValueFactory(new PropertyValueFactory<TicketSoporte, String>("descripcion"));
-        colTicketFecha.setCellValueFactory(new PropertyValueFactory<TicketSoporte, String>("fechaCreacion"));
+        colTicketCliente.setCellValueFactory(new PropertyValueFactory<>("nombreCliente"));
+        colTicketAsunto.setCellValueFactory(new PropertyValueFactory<>("asunto"));
+        colTicketDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        colTicketFecha.setCellValueFactory(new PropertyValueFactory<>("fechaCreacion"));
 
-        colBajaCliente.setCellValueFactory(new PropertyValueFactory<Cliente, String>("nombre"));
-        colBajaDni.setCellValueFactory(new PropertyValueFactory<Cliente, String>("dni"));
+        colBajaCliente.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colBajaDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
 
-        colPeticionCliente.setCellValueFactory(new PropertyValueFactory<Contrato, String>("nombreCliente"));
-        colPeticionTarifa.setCellValueFactory(new PropertyValueFactory<Contrato, String>("nombreTarifa"));
-        colPeticionPrecio.setCellValueFactory(new PropertyValueFactory<Contrato, Double>("precio"));
+        colPeticionCliente.setCellValueFactory(new PropertyValueFactory<>("nombreCliente"));
+        colPeticionTarifa.setCellValueFactory(new PropertyValueFactory<>("nombreTarifa"));
+        colPeticionPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
 
+        // Al entrar se muestra el perfil; el desplegable siempre indica en qué apartado estás
+        cmbOpciones.setValue(OpcionEmpleado.PERFIL);
+        mostrarPerfil();
+    }
+
+    private void mostrarPerfil() {
         mostrarPanel(panelPerfil);
         cargarPerfil();
     }
@@ -101,7 +107,7 @@ public class EmpleadoController {
         try {
             tablaTickets.setItems(FXCollections.observableArrayList(dao.obtenerTicketsPendientes()));
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
@@ -109,48 +115,55 @@ public class EmpleadoController {
         try {
             tablaBajas.setItems(FXCollections.observableArrayList(dao.obtenerClientesConBajaPendiente()));
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
     private void cargarPeticiones() {
         try {
-            tablaPeticiones.setItems(FXCollections.observableArrayList(
-                    dao.obtenerContratosPorEstado(DAOImplementacion.ESTADO_PENDIENTE)));
+            tablaPeticiones.setItems(FXCollections.observableArrayList(dao.obtenerContratosPorEstado(EstadoContrato.PENDIENTE)));
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
     @FXML
     public void btnMiPerfil(ActionEvent event) {
-        mostrarPanel(panelPerfil);
-        cargarPerfil();
+        cmbOpciones.setValue(OpcionEmpleado.PERFIL);
+        mostrarPerfil();
     }
 
     @FXML
     public void cmbOpcionSeleccionada(ActionEvent event) {
-        String opcion = cmbOpciones.getValue();
+        OpcionEmpleado opcion = cmbOpciones.getValue();
         if (opcion == null) {
             return;
         }
-        if (opcion.equals(OP_TICKETS)) {
-            mostrarPanel(panelTickets);
-            cargarTickets();
-        } else if (opcion.equals(OP_BAJAS)) {
-            mostrarPanel(panelBajas);
-            cargarBajas();
-        } else if (opcion.equals(OP_VALIDAR)) {
-            mostrarPanel(panelValidar);
-            cargarPeticiones();
-        } else if (opcion.equals(OP_CERRAR)) {
-            if (ShowAlert.confirmar("Salir", "¿Deseas salir del panel de empleado?")) {
-                Sesion.cerrar();
-                Ventana.cambiar(cmbOpciones, "/vista/IniciarSesion.fxml");
-                return;
-            }
+        switch (opcion) {
+            case PERFIL:
+                mostrarPerfil();
+                break;
+            case TICKETS:
+                mostrarPanel(panelTickets);
+                cargarTickets();
+                break;
+            case BAJAS:
+                mostrarPanel(panelBajas);
+                cargarBajas();
+                break;
+            case VALIDAR:
+                mostrarPanel(panelValidar);
+                cargarPeticiones();
+                break;
         }
-        cmbOpciones.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    public void btnCerrarSesion(ActionEvent event) {
+        if (ShowAlert.confirmar("Salir", "¿Deseas salir del panel de empleado?")) {
+            Sesion.cerrar();
+            Reto_1.setRoot("IniciarSesion");
+        }
     }
 
     @FXML
@@ -161,19 +174,27 @@ public class EmpleadoController {
             ShowAlert.info("Datos inválidos", error);
             return;
         }
+        String cuenta = txtCuentaBancaria.getText().trim().toUpperCase();
+        if (!ValidarPerfil.cuentaValida(cuenta)) {
+            ShowAlert.info("Datos inválidos", "La cuenta bancaria debe ser ES seguido de 22 números (o dejarla vacía).");
+            return;
+        }
         if (!ShowAlert.confirmar("Confirmar cambios", "¿Seguro que deseas guardar los cambios?")) {
             return;
         }
-        empleado.setNombre(txtNombre.getText().trim());
-        empleado.setNombreUsuario(txtNombreUsuario.getText().trim());
-        empleado.setContrasena(txtContrasena.getText().trim());
-        empleado.setCorreo(txtCorreo.getText().trim());
-        empleado.setCuentaBancaria(txtCuentaBancaria.getText().trim());
+
+        // Se crea un empleado nuevo con los cambios: si falla al guardar, el de la sesión no se toca
+        Empleado modificado = new Empleado(empleado.getId(), txtNombre.getText().trim(), txtNombreUsuario.getText().trim(),
+                txtContrasena.getText().trim(), txtCorreo.getText().trim(), cuenta, empleado.getIdSucursal());
         try {
-            dao.actualizarEmpleado(empleado);
+            dao.actualizarEmpleado(modificado);
+            empleado = modificado;
+            Sesion.setUsuario(modificado);
+            lblBienvenida.setText("Bienvenido/a " + empleado.getNombre());
             ShowAlert.info("Modificación exitosa", "Tus datos se han actualizado correctamente.");
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
+            cargarPerfil();
         }
     }
 
@@ -192,7 +213,7 @@ public class EmpleadoController {
             ShowAlert.info("Ticket resuelto", "El ticket se ha marcado como resuelto.");
             cargarTickets();
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
@@ -211,7 +232,7 @@ public class EmpleadoController {
             ShowAlert.info("Gestión completada", "La operación sobre la cuenta del cliente se ha procesado con éxito.");
             cargarBajas();
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
@@ -230,7 +251,13 @@ public class EmpleadoController {
             ShowAlert.info("Tarifa validada", "La tarifa se ha validado y el contrato está activo.");
             cargarPeticiones();
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
+    }
+
+    // Apunta el error en el log y se lo enseña al usuario
+    private void mostrarError(OurException e) {
+        LOGGER.warning(e.getMessage());
+        ShowAlert.error(e.getMessage());
     }
 }

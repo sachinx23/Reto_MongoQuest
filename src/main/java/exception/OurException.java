@@ -1,12 +1,11 @@
 package exception;
 
-public class OurException extends Exception
-{
+/**
+ * Excepción propia de la aplicación. Su mensaje es el que se le enseña al usuario.
+ */
+public class OurException extends Exception {
 
-    private static final long serialVersionUID = 1L;
-
-    public OurException(String mensaje)
-    {
+    public OurException(String mensaje) {
         super(mensaje);
     }
 }

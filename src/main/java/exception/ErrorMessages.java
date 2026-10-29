@@ -3,8 +3,7 @@ package exception;
 /**
  * Mensajes de error que se muestran al usuario.
  */
-public class ErrorMessages
-{
+public class ErrorMessages {
     public static final String DATABASE = "No se pudo conectar con la base de datos. Comprueba que MongoDB está arrancado.";
     public static final String LOGIN = "Error al iniciar sesión. Inténtalo de nuevo.";
     public static final String REGISTER_USER = "No se pudo registrar el usuario. Comprueba los datos.";

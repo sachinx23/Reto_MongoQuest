@@ -5,6 +5,7 @@ import java.util.List;
 import modelo.Cliente;
 import modelo.Contrato;
 import modelo.Empleado;
+import modelo.EstadoContrato;
 import modelo.Sucursal;
 import modelo.Tarifa;
 import modelo.TicketSoporte;
@@ -27,9 +28,12 @@ public interface DAO {
 
     List<Contrato> obtenerContratosCliente(String idCliente) throws OurException;
 
-    List<Contrato> obtenerContratosPorEstado(String estado) throws OurException;
+    List<Contrato> obtenerContratosPorEstado(EstadoContrato estado) throws OurException;
 
     void insertarContrato(Contrato contrato) throws OurException;
+
+    // Borra la petición pendiente de una tarifa. Devuelve false si no había ninguna
+    boolean borrarPeticion(String idCliente, String idTarifa) throws OurException;
 
     void solicitarBaja(String idContrato) throws OurException;
 

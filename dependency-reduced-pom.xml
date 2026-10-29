@@ -21,7 +21,7 @@
               <shadedClassifierName>ejecutable</shadedClassifierName>
               <transformers>
                 <transformer>
-                  <mainClass>com.mycompany.reto_1.Reto_1</mainClass>
+                  <mainClass>com.mycompany.reto_1.Launcher</mainClass>
                 </transformer>
               </transformers>
             </configuration>

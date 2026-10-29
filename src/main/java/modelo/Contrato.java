@@ -4,20 +4,20 @@ public class Contrato {
 
     private String id;
     private String telefono;
-    private String estado;
+    private EstadoContrato estado;
     private String idCliente;
     private String idTarifa;
     private String idEmpleado;
     private String fechaComienzo;
     private String fechaFinalizacion;
 
-    // No se guardan en Contratos: se rellenan al consultar con $lookup
+    // Datos de la tarifa embebida y del cliente, para enseñarlos en las tablas
     private String nombreTarifa;
     private double precio;
     private String nombreCliente;
     private String dniCliente;
 
-    public Contrato(String id, String telefono, String estado, String idCliente, String idTarifa, String idEmpleado, String fechaComienzo, String fechaFinalizacion) {
+    public Contrato(String id, String telefono, EstadoContrato estado, String idCliente, String idTarifa, String idEmpleado, String fechaComienzo, String fechaFinalizacion) {
         this.id = id;
         this.telefono = telefono;
         this.estado = estado;
@@ -44,11 +44,11 @@ public class Contrato {
         this.telefono = telefono;
     }
 
-    public String getEstado() {
+    public EstadoContrato getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(EstadoContrato estado) {
         this.estado = estado;
     }
 

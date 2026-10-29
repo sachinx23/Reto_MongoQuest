@@ -1,10 +1,11 @@
 package controlador;
 
+import com.mycompany.reto_1.Reto_1;
 import dao.DAO;
-import dao.DAOImplementacion;
 import exception.OurException;
 import exception.ShowAlert;
 import java.time.LocalDate;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,23 +20,21 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import modelo.Cliente;
 import modelo.Contrato;
+import modelo.EstadoContrato;
 import modelo.Tarifa;
 import modelo.TicketSoporte;
 import modelo.Valoracion;
 
 public class ClienteController {
 
-    private static final String OP_TARIFAS = "Mis Tarifas";
-    private static final String OP_CONTRATOS = "Mis Contratos";
-    private static final String OP_SOPORTE = "Soporte";
-    private static final String OP_VALORACIONES = "Mis Valoraciones";
-    private static final String OP_CERRAR = "Cerrar Sesion";
+    private static final Logger LOGGER = Logger.getLogger(ClienteController.class.getName());
 
     private final DAO dao = Sesion.getDao();
+
     private Cliente cliente;
 
     @FXML private Label lblBienvenida;
-    @FXML private ComboBox<String> cmbOpciones;
+    @FXML private ComboBox<OpcionCliente> cmbOpciones;
 
     @FXML private AnchorPane panelPerfil;
     @FXML private AnchorPane panelTarifas;
@@ -62,7 +61,7 @@ public class ClienteController {
 
     @FXML private TableView<Contrato> tablaContratos;
     @FXML private TableColumn<Contrato, String> colContratoTelefono;
-    @FXML private TableColumn<Contrato, String> colContratoEstado;
+    @FXML private TableColumn<Contrato, EstadoContrato> colContratoEstado;
     @FXML private TableColumn<Contrato, String> colContratoFecha;
     @FXML private TableColumn<Contrato, String> colContratoIdTarifa;
 
@@ -81,30 +80,34 @@ public class ClienteController {
         cliente = (Cliente) Sesion.getUsuario();
         lblBienvenida.setText("Bienvenido/a " + cliente.getNombre());
 
-        cmbOpciones.getItems().addAll(OP_TARIFAS, OP_CONTRATOS, OP_SOPORTE, OP_VALORACIONES, OP_CERRAR);
-        for (int i = 1; i <= 5; i++) {
-            cmbPuntuacion.getItems().add(i);
-        }
+        cmbOpciones.setItems(FXCollections.observableArrayList(OpcionCliente.values()));
+        cmbPuntuacion.setItems(FXCollections.observableArrayList(1, 2, 3, 4, 5));
 
         // PropertyValueFactory usa el getter: "nombreTarifa" llama a getNombreTarifa()
-        colTarifaNombre.setCellValueFactory(new PropertyValueFactory<Tarifa, String>("nombreTarifa"));
-        colTarifaPrecio.setCellValueFactory(new PropertyValueFactory<Tarifa, Double>("precio"));
-        colTarifaDetalles.setCellValueFactory(new PropertyValueFactory<Tarifa, String>("detalles"));
-        colTarifaTipo.setCellValueFactory(new PropertyValueFactory<Tarifa, String>("tipoTarifa"));
+        colTarifaNombre.setCellValueFactory(new PropertyValueFactory<>("nombreTarifa"));
+        colTarifaPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
+        colTarifaDetalles.setCellValueFactory(new PropertyValueFactory<>("detalles"));
+        colTarifaTipo.setCellValueFactory(new PropertyValueFactory<>("tipoTarifa"));
 
-        colContratoTelefono.setCellValueFactory(new PropertyValueFactory<Contrato, String>("telefono"));
-        colContratoEstado.setCellValueFactory(new PropertyValueFactory<Contrato, String>("estado"));
-        colContratoFecha.setCellValueFactory(new PropertyValueFactory<Contrato, String>("fechaFinalizacion"));
-        colContratoIdTarifa.setCellValueFactory(new PropertyValueFactory<Contrato, String>("nombreTarifa"));
+        colContratoTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
+        colContratoEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        colContratoFecha.setCellValueFactory(new PropertyValueFactory<>("fechaFinalizacion"));
+        colContratoIdTarifa.setCellValueFactory(new PropertyValueFactory<>("nombreTarifa"));
 
-        colSoporteAsunto.setCellValueFactory(new PropertyValueFactory<TicketSoporte, String>("asunto"));
-        colSoporteFecha.setCellValueFactory(new PropertyValueFactory<TicketSoporte, String>("fechaCreacion"));
+        colSoporteAsunto.setCellValueFactory(new PropertyValueFactory<>("asunto"));
+        colSoporteFecha.setCellValueFactory(new PropertyValueFactory<>("fechaCreacion"));
 
-        colValoracionPuntuacion.setCellValueFactory(new PropertyValueFactory<Valoracion, Integer>("puntuacion"));
-        colValoracionTexto.setCellValueFactory(new PropertyValueFactory<Valoracion, String>("texto"));
+        colValoracionPuntuacion.setCellValueFactory(new PropertyValueFactory<>("puntuacion"));
+        colValoracionTexto.setCellValueFactory(new PropertyValueFactory<>("texto"));
         // Las celdas de texto se pueden editar con doble clic
-        colValoracionTexto.setCellFactory(TextFieldTableCell.<Valoracion>forTableColumn());
+        colValoracionTexto.setCellFactory(TextFieldTableCell.forTableColumn());
 
+        // Al entrar se muestra el perfil; el desplegable siempre indica en qué apartado estás
+        cmbOpciones.setValue(OpcionCliente.PERFIL);
+        mostrarPerfil();
+    }
+
+    private void mostrarPerfil() {
         mostrarPanel(panelPerfil);
         cargarPerfil();
     }
@@ -132,7 +135,7 @@ public class ClienteController {
         try {
             tablaTarifas.setItems(FXCollections.observableArrayList(dao.obtenerTarifas()));
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
@@ -140,7 +143,7 @@ public class ClienteController {
         try {
             tablaContratos.setItems(FXCollections.observableArrayList(dao.obtenerContratosCliente(cliente.getId())));
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
@@ -148,7 +151,7 @@ public class ClienteController {
         try {
             tablaSoporte.setItems(FXCollections.observableArrayList(dao.obtenerTicketsCliente(cliente.getId())));
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
@@ -156,42 +159,51 @@ public class ClienteController {
         try {
             tablaValoraciones.setItems(FXCollections.observableArrayList(dao.obtenerValoracionesCliente(cliente.getId())));
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
     @FXML
     public void btnMiPerfil(ActionEvent event) {
-        mostrarPanel(panelPerfil);
-        cargarPerfil();
+        cmbOpciones.setValue(OpcionCliente.PERFIL);
+        mostrarPerfil();
     }
 
     @FXML
     public void cmbOpcionSeleccionada(ActionEvent event) {
-        String opcion = cmbOpciones.getValue();
+        OpcionCliente opcion = cmbOpciones.getValue();
         if (opcion == null) {
             return;
         }
-        if (opcion.equals(OP_TARIFAS)) {
-            mostrarPanel(panelTarifas);
-            cargarTarifas();
-        } else if (opcion.equals(OP_CONTRATOS)) {
-            mostrarPanel(panelContratos);
-            cargarContratos();
-        } else if (opcion.equals(OP_SOPORTE)) {
-            mostrarPanel(panelSoporte);
-            cargarTickets();
-        } else if (opcion.equals(OP_VALORACIONES)) {
-            mostrarPanel(panelValoraciones);
-            cargarValoraciones();
-        } else if (opcion.equals(OP_CERRAR)) {
-            if (ShowAlert.confirmar("Salir", "¿Deseas salir del panel de cliente?")) {
-                Sesion.cerrar();
-                Ventana.cambiar(cmbOpciones, "/vista/IniciarSesion.fxml");
-                return;
-            }
+        switch (opcion) {
+            case PERFIL:
+                mostrarPerfil();
+                break;
+            case TARIFAS:
+                mostrarPanel(panelTarifas);
+                cargarTarifas();
+                break;
+            case CONTRATOS:
+                mostrarPanel(panelContratos);
+                cargarContratos();
+                break;
+            case SOPORTE:
+                mostrarPanel(panelSoporte);
+                cargarTickets();
+                break;
+            case VALORACIONES:
+                mostrarPanel(panelValoraciones);
+                cargarValoraciones();
+                break;
         }
-        cmbOpciones.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    public void btnCerrarSesion(ActionEvent event) {
+        if (ShowAlert.confirmar("Salir", "¿Deseas salir del panel de cliente?")) {
+            Sesion.cerrar();
+            Reto_1.setRoot("IniciarSesion");
+        }
     }
 
     @FXML
@@ -200,35 +212,32 @@ public class ClienteController {
         String nombreUsuario = txtNombreUsuario.getText().trim();
         String dni = txtDni.getText().trim().toUpperCase();
         String correo = txtCorreo.getText().trim();
+        String direccion = txtDireccion.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String cuenta = txtCuentaBancaria.getText().trim().toUpperCase();
 
-        if (nombre.isEmpty() || nombreUsuario.isEmpty()) {
-            ShowAlert.info("Datos inválidos", "El nombre y el nombre de usuario son obligatorios.");
-            return;
-        }
-        if (!dni.matches("[0-9]{8}[A-Z]")) {
-            ShowAlert.info("Datos inválidos", "DNI introducido incorrectamente.");
-            return;
-        }
-        if (!correo.contains("@") || !correo.contains(".")) {
-            ShowAlert.info("Datos inválidos", "El correo no es válido.");
+        String error = ValidarPerfil.comprobarCliente(nombre, nombreUsuario, dni, correo, telefono, direccion, cuenta);
+        if (error != null) {
+            ShowAlert.info("Datos inválidos", error);
             return;
         }
         if (!ShowAlert.confirmar("Confirmar cambios", "¿Seguro que deseas guardar los cambios?")) {
             return;
         }
 
-        cliente.setNombre(nombre);
-        cliente.setNombreUsuario(nombreUsuario);
-        cliente.setDni(dni);
-        cliente.setCorreo(correo);
-        cliente.setDireccion(txtDireccion.getText().trim());
-        cliente.setTelefono(txtTelefono.getText().trim());
-        cliente.setCuentaBancaria(txtCuentaBancaria.getText().trim());
+        // Se crea un cliente nuevo con los cambios: si falla al guardar, el de la sesión no se toca
+        Cliente modificado = new Cliente(cliente.getId(), nombre, nombreUsuario, cliente.getContrasena(), correo,
+                cuenta, dni, telefono, direccion);
+        modificado.setDadoDeBaja(cliente.isDadoDeBaja());
         try {
-            dao.actualizarCliente(cliente);
+            dao.actualizarCliente(modificado);
+            cliente = modificado;
+            Sesion.setUsuario(modificado);
+            lblBienvenida.setText("Bienvenido/a " + cliente.getNombre());
             ShowAlert.info("Modificación exitosa", "Los datos se han actualizado correctamente.");
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
+            cargarPerfil();
         }
     }
 
@@ -239,33 +248,76 @@ public class ClienteController {
             ShowAlert.info("Aviso", "Por favor, selecciona una tarifa de la tabla primero.");
             return;
         }
+        try {
+            // No se puede pedir otra vez una tarifa que ya está pendiente o activa
+            for (Contrato c : dao.obtenerContratosCliente(cliente.getId())) {
+                boolean mismaTarifa = c.getIdTarifa().equals(tarifa.getId());
+                boolean enVigor = c.getEstado() == EstadoContrato.PENDIENTE
+                        || c.getEstado() == EstadoContrato.ACTIVO;
+                if (mismaTarifa && enVigor) {
+                    ShowAlert.info("Aviso", "Ya tienes la tarifa " + tarifa.getNombreTarifa() + " pedida o contratada.");
+                    return;
+                }
+            }
+        } catch (OurException e) {
+            mostrarError(e);
+            return;
+        }
         if (!ShowAlert.confirmar("Cambio de tarifa", "¿Estás seguro de que deseas contratar la tarifa " + tarifa.getNombreTarifa() + "?")) {
             return;
         }
         // Se guarda como petición pendiente: un empleado la valida en "Validar tarifas"
         LocalDate hoy = LocalDate.now();
-        Contrato contrato = new Contrato(null, cliente.getTelefono(), DAOImplementacion.ESTADO_PENDIENTE, cliente.getId(),
+        Contrato contrato = new Contrato(null, cliente.getTelefono(), EstadoContrato.PENDIENTE, cliente.getId(),
                 tarifa.getId(), null, hoy.toString(), hoy.plusYears(1).toString());
+        contrato.setNombreTarifa(tarifa.getNombreTarifa());
+        contrato.setPrecio(tarifa.getPrecio());
         try {
             dao.insertarContrato(contrato);
             ShowAlert.info("Petición enviada", "Tu petición de la tarifa " + tarifa.getNombreTarifa()
                     + " está pendiente de validar por un empleado.");
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
     @FXML
     public void btnEliminarTarifa(ActionEvent event) {
-        if (ShowAlert.confirmar("Confirmar eliminación", "¿Seguro que deseas eliminar esta tarifa?")) {
-            ShowAlert.info("Tarifa eliminada", "La tarifa ha sido eliminada.");
+        Tarifa tarifa = tablaTarifas.getSelectionModel().getSelectedItem();
+        if (tarifa == null) {
+            ShowAlert.info("Aviso", "Por favor, selecciona una tarifa de la tabla primero.");
+            return;
+        }
+        if (!ShowAlert.confirmar("Confirmar eliminación", "¿Seguro que deseas eliminar tu petición de la tarifa " + tarifa.getNombreTarifa() + "?")) {
+            return;
+        }
+        try {
+            // Solo se puede eliminar una petición que todavía no ha validado ningún empleado
+            boolean borrada = dao.borrarPeticion(cliente.getId(), tarifa.getId());
+            if (borrada) {
+                ShowAlert.info("Tarifa eliminada", "Tu petición de la tarifa " + tarifa.getNombreTarifa() + " ha sido eliminada.");
+            } else {
+                ShowAlert.info("Aviso", "No tienes ninguna petición pendiente de esa tarifa.");
+            }
+        } catch (OurException e) {
+            mostrarError(e);
         }
     }
 
     @FXML
     public void btnFirmarContrato(ActionEvent event) {
-        if (ShowAlert.confirmar("Confirmar firma", "¿Seguro que deseas firmar este contrato?")) {
-            ShowAlert.info("Contrato firmado", "El contrato ha sido firmado y activado.");
+        Contrato contrato = tablaContratos.getSelectionModel().getSelectedItem();
+        if (contrato == null) {
+            ShowAlert.info("Aviso", "Selecciona un contrato de la tabla primero.");
+            return;
+        }
+        // El contrato queda firmado cuando un empleado valida la tarifa (pasa a "activo")
+        if (contrato.getEstado() == EstadoContrato.ACTIVO) {
+            ShowAlert.info("Contrato firmado", "Este contrato ya está firmado y activo.");
+        } else if (contrato.getEstado() == EstadoContrato.PENDIENTE) {
+            ShowAlert.info("Contrato pendiente", "Este contrato se firmará cuando un empleado valide la tarifa.");
+        } else {
+            ShowAlert.info("Aviso", "Este contrato no se puede firmar porque está " + contrato.getEstado() + ".");
         }
     }
 
@@ -276,7 +328,7 @@ public class ClienteController {
             ShowAlert.info("Aviso", "Selecciona un contrato de la tabla primero.");
             return;
         }
-        if (!contrato.getEstado().equals(DAOImplementacion.ESTADO_ACTIVO)) {
+        if (contrato.getEstado() != EstadoContrato.ACTIVO) {
             ShowAlert.info("Aviso", "Solo se puede pedir la baja de un contrato activo.");
             return;
         }
@@ -289,7 +341,7 @@ public class ClienteController {
             ShowAlert.info("Solicitud enviada", "Tu solicitud de baja está pendiente de aprobar por un empleado.");
             cargarContratos();
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
@@ -313,7 +365,7 @@ public class ClienteController {
             txtSoporteMensaje.clear();
             cargarTickets();
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
@@ -349,7 +401,7 @@ public class ClienteController {
             limpiarValoracion();
             cargarValoraciones();
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
@@ -391,7 +443,7 @@ public class ClienteController {
             ShowAlert.info("Modificación exitosa", "Tu valoración se ha actualizado.");
             limpiarValoracion();
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
         cargarValoraciones();
     }
@@ -412,12 +464,18 @@ public class ClienteController {
             limpiarValoracion();
             cargarValoraciones();
         } catch (OurException e) {
-            ShowAlert.error(e.getMessage());
+            mostrarError(e);
         }
     }
 
     private void limpiarValoracion() {
         cmbPuntuacion.setValue(null);
         txtValoracion.clear();
+    }
+
+    // Apunta el error en el log y se lo enseña al usuario
+    private void mostrarError(OurException e) {
+        LOGGER.warning(e.getMessage());
+        ShowAlert.error(e.getMessage());
     }
 }

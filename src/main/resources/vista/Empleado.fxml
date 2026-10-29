@@ -1,119 +1,200 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ContextMenu?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="420.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.EmpleadoController">
+<AnchorPane prefHeight="620.0" prefWidth="950.0" styleClass="root-admin" stylesheets="@../css/estilo.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.EmpleadoController">
     <children>
-        <Pane prefHeight="420.0" prefWidth="600.0">
+
+        <!-- CABECERA: marca, nombre del empleado, Mi Perfil y opciones -->
+        <HBox alignment="CENTER_LEFT" prefHeight="70.0" spacing="15.0" styleClass="cabecera" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <padding>
+                <Insets left="20.0" right="20.0" />
+            </padding>
             <children>
-                <Label layoutX="14.0" layoutY="14.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Panel de empleado" />
-                <Label fx:id="lblBienvenida" layoutX="150.0" layoutY="65.0" prefHeight="17.0" prefWidth="300.0" />
-                <Button fx:id="btnMiPerfil" layoutX="14.0" layoutY="98.0" mnemonicParsing="false" onAction="#btnMiPerfil" prefWidth="130.0" text="Mi Perfil" />
-                <ComboBox fx:id="cmbOpciones" layoutX="418.0" layoutY="98.0" onAction="#cmbOpcionSeleccionada" prefWidth="150.0" promptText="Opciones" />
-
-                <Pane layoutX="14.5" layoutY="140.0" prefHeight="265.0" prefWidth="570.0">
+                <HBox alignment="CENTER_LEFT">
                     <children>
-
-                        <!-- PANEL PERFIL -->
-                        <AnchorPane fx:id="panelPerfil" prefHeight="265.0" prefWidth="570.0" visible="false" style="-fx-background-color: #f9f9f9; -fx-border-color: #cccccc;">
-                            <children>
-                                <Label layoutX="15.0" layoutY="10.0" text="Datos empleado">
-                                    <font><Font name="System Bold" size="14.0" /></font>
-                                </Label>
-                                <Label layoutX="15.0" layoutY="40.0" text="Nombre:" />
-                                <TextField fx:id="txtNombre" layoutX="100.0" layoutY="36.0" prefWidth="160.0" />
-                                <Label layoutX="280.0" layoutY="40.0" text="Usuario:" />
-                                <TextField fx:id="txtNombreUsuario" layoutX="350.0" layoutY="36.0" prefWidth="200.0" />
-
-                                <Label layoutX="15.0" layoutY="75.0" text="Contraseña:" />
-                                <PasswordField fx:id="txtContrasena" layoutX="100.0" layoutY="71.0" prefWidth="160.0" />
-                                <Label layoutX="280.0" layoutY="75.0" text="Correo:" />
-                                <TextField fx:id="txtCorreo" layoutX="350.0" layoutY="71.0" prefWidth="200.0" />
-
-                                <Label layoutX="15.0" layoutY="110.0" text="Cuenta:" />
-                                <TextField fx:id="txtCuentaBancaria" layoutX="100.0" layoutY="106.0" prefWidth="450.0" />
-
-                                <Button fx:id="btnModificar" layoutX="430.0" layoutY="190.0" mnemonicParsing="false" onAction="#btnModificar" prefWidth="120.0" text="Modificar" />
-                            </children>
-                        </AnchorPane>
-
-                        <!-- PANEL TICKETS PENDIENTES -->
-                        <AnchorPane fx:id="panelTickets" prefHeight="265.0" prefWidth="570.0" visible="false">
-                            <children>
-                                <TableView fx:id="tablaTickets" prefHeight="210.0" prefWidth="430.0">
-                                  <contextMenu>
-                                    <ContextMenu>
-                                      <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#btnResolverTicket" text="Resolver ticket" />
-                                      </items>
-                                    </ContextMenu>
-                                  </contextMenu>
-                                  <columns>
-                                    <TableColumn fx:id="colTicketCliente" prefWidth="90.0" text="Cliente" />
-                                    <TableColumn fx:id="colTicketAsunto" prefWidth="110.0" text="asunto" />
-                                    <TableColumn fx:id="colTicketDescripcion" prefWidth="140.0" text="descripcion" />
-                                    <TableColumn fx:id="colTicketFecha" prefWidth="90.0" text="fechaCreacion" />
-                                  </columns>
-                                </TableView>
-                                <Button fx:id="btnResolverTicket" layoutX="445.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnResolverTicket" prefWidth="115.0" text="Resolver" />
-                            </children>
-                        </AnchorPane>
-
-                        <!-- PANEL SOLICITUDES DE BAJA -->
-                        <AnchorPane fx:id="panelBajas" prefHeight="265.0" prefWidth="570.0" visible="false">
-                            <children>
-                                <TableView fx:id="tablaBajas" prefHeight="210.0" prefWidth="430.0">
-                                  <contextMenu>
-                                    <ContextMenu>
-                                      <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#btnAprobarBaja" text="Aprobar baja" />
-                                      </items>
-                                    </ContextMenu>
-                                  </contextMenu>
-                                  <columns>
-                                    <TableColumn fx:id="colBajaCliente" prefWidth="250.0" text="nombre" />
-                                    <TableColumn fx:id="colBajaDni" prefWidth="180.0" text="DNI" />
-                                  </columns>
-                                </TableView>
-                                <Button fx:id="btnAprobarBaja" layoutX="445.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnAprobarBaja" prefWidth="115.0" text="Aprobar baja" />
-                            </children>
-                        </AnchorPane>
-
-                        <!-- PANEL VALIDAR TARIFAS -->
-                        <AnchorPane fx:id="panelValidar" prefHeight="265.0" prefWidth="570.0" visible="false">
-                            <children>
-                                <TableView fx:id="tablaPeticiones" prefHeight="210.0" prefWidth="430.0">
-                                  <contextMenu>
-                                    <ContextMenu>
-                                      <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#btnValidarTarifa" text="Validar tarifa" />
-                                      </items>
-                                    </ContextMenu>
-                                  </contextMenu>
-                                  <columns>
-                                    <TableColumn fx:id="colPeticionCliente" prefWidth="150.0" text="Cliente" />
-                                    <TableColumn fx:id="colPeticionTarifa" prefWidth="180.0" text="nombreTarifa" />
-                                    <TableColumn fx:id="colPeticionPrecio" prefWidth="100.0" text="precio" />
-                                  </columns>
-                                </TableView>
-                                <Button fx:id="btnValidarTarifa" layoutX="445.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnValidarTarifa" prefWidth="115.0" text="Validar" />
-                            </children>
-                        </AnchorPane>
-
+                        <Label minWidth="-Infinity" styleClass="marca-tel" text="Tel" />
+                        <Label minWidth="-Infinity" styleClass="marca-onda" text="-ONDA" />
                     </children>
-                </Pane>
+                </HBox>
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblBienvenida" minWidth="-Infinity" styleClass="texto-cabecera" style="-fx-font-weight: bold;" />
+                <Button fx:id="btnMiPerfil" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnMiPerfil" styleClass="boton-cabecera" text="Mi Perfil" />
+                <ComboBox fx:id="cmbOpciones" minWidth="-Infinity" onAction="#cmbOpcionSeleccionada" prefWidth="215.0" styleClass="combo-admin" />
+                <Button fx:id="btnCerrarSesion" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnCerrarSesion" styleClass="boton-cerrar" text="Cerrar sesión" />
             </children>
-        </Pane>
+        </HBox>
+
+        <!-- CONTENIDO: solo se ve uno de los paneles a la vez -->
+        <StackPane AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="90.0">
+            <children>
+
+                <!-- MI PERFIL -->
+                <AnchorPane fx:id="panelPerfil" styleClass="panel-contenido">
+                    <children>
+                        <VBox spacing="20.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+                            <children>
+                                <Label styleClass="titulo-principal" text="Datos del empleado" />
+                                <GridPane hgap="15.0" vgap="15.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints minWidth="90.0" />
+                                        <ColumnConstraints hgrow="ALWAYS" />
+                                        <ColumnConstraints minWidth="90.0" />
+                                        <ColumnConstraints hgrow="ALWAYS" />
+                                    </columnConstraints>
+                                    <children>
+                                        <Label styleClass="label-bold" text="Nombre" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                        <TextField fx:id="txtNombre" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                        <Label styleClass="label-bold" text="Usuario" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                                        <TextField fx:id="txtNombreUsuario" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+                                        <Label styleClass="label-bold" text="Contraseña" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                        <PasswordField fx:id="txtContrasena" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <Label styleClass="label-bold" text="Correo" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                        <TextField fx:id="txtCorreo" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+                                        <Label styleClass="label-bold" text="Cuenta" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                        <TextField fx:id="txtCuentaBancaria" promptText="ES + 22 números (opcional)" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                    </children>
+                                </GridPane>
+                                <HBox alignment="CENTER_RIGHT">
+                                    <children>
+                                        <Button fx:id="btnModificar" mnemonicParsing="false" onAction="#btnModificar" styleClass="btn-primary" text="Guardar cambios" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+
+                <!-- TICKETS PENDIENTES -->
+                <AnchorPane fx:id="panelTickets" styleClass="panel-contenido" visible="false">
+                    <children>
+                        <VBox spacing="15.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+                            <children>
+                                <Label styleClass="titulo-principal" text="Tickets pendientes" />
+                                <HBox spacing="15.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <TableView fx:id="tablaTickets" HBox.hgrow="ALWAYS">
+                                            <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                            </columnResizePolicy>
+                                            <contextMenu>
+                                                <ContextMenu>
+                                                    <items>
+                                                        <MenuItem mnemonicParsing="false" onAction="#btnResolverTicket" text="Resolver ticket" />
+                                                    </items>
+                                                </ContextMenu>
+                                            </contextMenu>
+                                            <columns>
+                                                <TableColumn fx:id="colTicketCliente" text="Cliente" />
+                                                <TableColumn fx:id="colTicketAsunto" text="Asunto" />
+                                                <TableColumn fx:id="colTicketDescripcion" text="Descripción" />
+                                                <TableColumn fx:id="colTicketFecha" text="Fecha" />
+                                            </columns>
+                                        </TableView>
+                                        <VBox minWidth="160.0" spacing="10.0">
+                                            <children>
+                                                <Button fx:id="btnResolverTicket" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnResolverTicket" styleClass="btn-primary" text="Resolver" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+
+                <!-- SOLICITUDES DE BAJA -->
+                <AnchorPane fx:id="panelBajas" styleClass="panel-contenido" visible="false">
+                    <children>
+                        <VBox spacing="15.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+                            <children>
+                                <Label styleClass="titulo-principal" text="Solicitudes de baja" />
+                                <HBox spacing="15.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <TableView fx:id="tablaBajas" HBox.hgrow="ALWAYS">
+                                            <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                            </columnResizePolicy>
+                                            <contextMenu>
+                                                <ContextMenu>
+                                                    <items>
+                                                        <MenuItem mnemonicParsing="false" onAction="#btnAprobarBaja" text="Aprobar baja" />
+                                                    </items>
+                                                </ContextMenu>
+                                            </contextMenu>
+                                            <columns>
+                                                <TableColumn fx:id="colBajaCliente" text="Cliente" />
+                                                <TableColumn fx:id="colBajaDni" text="DNI / NIE" />
+                                            </columns>
+                                        </TableView>
+                                        <VBox minWidth="160.0" spacing="10.0">
+                                            <children>
+                                                <Button fx:id="btnAprobarBaja" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnAprobarBaja" styleClass="btn-danger" text="Aprobar baja" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+
+                <!-- VALIDAR TARIFAS -->
+                <AnchorPane fx:id="panelValidar" styleClass="panel-contenido" visible="false">
+                    <children>
+                        <VBox spacing="15.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+                            <children>
+                                <Label styleClass="titulo-principal" text="Peticiones de tarifa pendientes" />
+                                <HBox spacing="15.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <TableView fx:id="tablaPeticiones" HBox.hgrow="ALWAYS">
+                                            <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                            </columnResizePolicy>
+                                            <contextMenu>
+                                                <ContextMenu>
+                                                    <items>
+                                                        <MenuItem mnemonicParsing="false" onAction="#btnValidarTarifa" text="Validar tarifa" />
+                                                    </items>
+                                                </ContextMenu>
+                                            </contextMenu>
+                                            <columns>
+                                                <TableColumn fx:id="colPeticionCliente" text="Cliente" />
+                                                <TableColumn fx:id="colPeticionTarifa" text="Tarifa" />
+                                                <TableColumn fx:id="colPeticionPrecio" text="Precio (€)" />
+                                            </columns>
+                                        </TableView>
+                                        <VBox minWidth="160.0" spacing="10.0">
+                                            <children>
+                                                <Button fx:id="btnValidarTarifa" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnValidarTarifa" styleClass="btn-primary" text="Validar" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+
+            </children>
+        </StackPane>
     </children>
 </AnchorPane>
