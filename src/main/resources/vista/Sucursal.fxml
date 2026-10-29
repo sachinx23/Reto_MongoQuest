@@ -14,73 +14,75 @@
             xmlns="http://javafx.com/javafx/17" 
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="controlador.GestionSucursalController">
-   <children>
-      <HBox spacing="20.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
-         <children>
+    <children>
+        <HBox spacing="20.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+            <children>
             
-            <!-- TARJETA FORMULARIO -->
-            <VBox prefWidth="390.0" spacing="10.0" styleClass="card">
-               <children>
-                  <Label styleClass="titulo-principal" text="Gestión de Sucursales" />
+                <!-- TARJETA FORMULARIO -->
+                <VBox prefWidth="390.0" spacing="10.0" styleClass="card">
+                    <children>
+                        <Label styleClass="titulo-principal" text="Gestión de Sucursales" />
                   
-                  <VBox spacing="3.0">
-                     <children>
-                        <Label styleClass="label-bold" text="ID Sucursal:" />
-                        <TextField fx:id="txtId" promptText="Ej: 1" />
-                     </children>
-                  </VBox>
+                        <VBox spacing="3.0">
+                            <children>
+                                <Label styleClass="label-bold" text="ID Sucursal:" />
+                                <TextField fx:id="txtId" promptText="Ej: 1" />
+                            </children>
+                        </VBox>
 
-                  <VBox spacing="3.0">
-                     <children>
-                        <Label styleClass="label-bold" text="Horario:" />
-                        <TextField fx:id="txtHorario" promptText="Ej: 08:00 - 20:00" />
-                     </children>
-                  </VBox>
+                        <VBox spacing="3.0">
+                            <children>
+                                <Label styleClass="label-bold" text="Horario:" />
+                                <TextField fx:id="txtHorario" promptText="Ej: 08:00 - 20:00" />
+                            </children>
+                        </VBox>
 
-                  <VBox spacing="3.0">
-                     <children>
-                        <Label styleClass="label-bold" text="Teléfono:" />
-                        <TextField fx:id="txtTelefono" promptText="Ej: 944123456" />
-                     </children>
-                  </VBox>
+                        <VBox spacing="3.0">
+                            <children>
+                                <Label styleClass="label-bold" text="Teléfono:" />
+                                <TextField fx:id="txtTelefono" promptText="Ej: 944123456" />
+                            </children>
+                        </VBox>
 
-                  <VBox spacing="3.0">
-                     <children>
-                        <Label styleClass="label-bold" text="Ubicación (Dirección):" />
-                        <TextField fx:id="txtUbicacion" promptText="Ej: Lonbo Kalea, Bilbao" />
-                     </children>
-                  </VBox>
+                        <VBox spacing="3.0">
+                            <children>
+                                <Label styleClass="label-bold" text="Ubicación (Dirección):" />
+                                <TextField fx:id="txtUbicacion" promptText="Ej: Lonbo Kalea, Bilbao" />
+                            </children>
+                        </VBox>
 
-                  <VBox spacing="3.0">
-                     <children>
-                        <Label styleClass="label-bold" text="Código Postal:" />
-                        <TextField fx:id="txtCodigoPostal" promptText="Ej: 48480" />
-                     </children>
-                  </VBox>
+                        <VBox spacing="3.0">
+                            <children>
+                                <Label styleClass="label-bold" text="Código Postal:" />
+                                <TextField fx:id="txtCodigoPostal" promptText="Ej: 48480" />
+                            </children>
+                        </VBox>
 
-                  <!-- BOTONES CON CLASES CSS Y ANCHO MÍNIMO -->
-                  <HBox spacing="8.0" style="-fx-padding: 6 0 0 0;">
-                     <children>
-                        <Button fx:id="btnAnadir" minWidth="95.0" onAction="#añadirSucursal" styleClass="btn-primary" text="Añadir" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnGestionar" minWidth="95.0" onAction="#gestionarSucursal" styleClass="btn-secondary" text="Modificar" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnEliminar" minWidth="95.0" onAction="#eliminarSucursal" styleClass="btn-danger" text="Eliminar" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
+                        <!-- BOTONES CON CLASES CSS Y ANCHO MÍNIMO -->
+                        <HBox spacing="8.0" style="-fx-padding: 6 0 0 0;">
+                            <children>
+                                <Button fx:id="btnAnadir" minWidth="95.0" onAction="#añadirSucursal" styleClass="btn-primary" text="Añadir" HBox.hgrow="ALWAYS" />
+                                <Button fx:id="btnGestionar" minWidth="95.0" onAction="#gestionarSucursal" styleClass="btn-secondary" text="Modificar" HBox.hgrow="ALWAYS" />
+                                <Button fx:id="btnEliminar" minWidth="95.0" onAction="#eliminarSucursal" styleClass="btn-danger" text="Eliminar" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
 
-                  <Label styleClass="label-bold" text="Lista de Sucursales:" />
-                      <ListView fx:id="listSucursales" VBox.vgrow="ALWAYS" />
-               </children>
-            </VBox>
+                        <Label styleClass="label-bold" text="Lista de Sucursales:" />
+                        <ListView fx:id="listSucursales" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
 
-            <!-- TARJETA MAPA -->
-            <VBox spacing="10.0" styleClass="card" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label styleClass="titulo-principal" text="Ubicación en Mapa" />
-                  <WebView fx:id="webViewMapa" VBox.vgrow="ALWAYS" />
-               </children>
-            </VBox>
+                <!-- TARJETA MAPA -->
+                <VBox spacing="10.0" styleClass="card" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="titulo-principal" text="Ubicación en Mapa" />
+                        <Button fx:id="btnAbrirMaps" onAction="#abrirMapaSeleccionada" styleClass="btn-primary" text="Abrir en Maps" />
 
-         </children>
-      </HBox>
-   </children>
+                        <WebView fx:id="webViewMapa" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+
+            </children>
+        </HBox>
+    </children>
 </AnchorPane>

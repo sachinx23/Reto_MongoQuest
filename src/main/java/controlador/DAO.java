@@ -406,4 +406,9 @@ public class DAO {
             return false;
         }
     }
+    
+    //listar los contratos
+   // public static boolean List<Contrato>listarContratos(){
+    //    List<Contrato> resultado = new ArrayList<>();
+    //}
 }

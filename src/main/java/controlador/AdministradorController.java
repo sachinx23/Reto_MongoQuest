@@ -36,6 +36,9 @@ public class AdministradorController implements Initializable {
                 "Gestionar Plantilla",
                 "Gestionar Sucursal",
                 "Gestionar Tarifas",
+                "Gestionar Contratos",
+                "Gestionar Tickets",
+                "Ver valoraciones",
                 "Cerrar Sesión"
         ));
         
@@ -43,6 +46,7 @@ public class AdministradorController implements Initializable {
         cbOpcionesAdmin.getSelectionModel().select("Gestionar Plantilla");
         cargarSubvista("/vista/GestionarPlantilla.fxml");
     }
+   
 
     @FXML
     public void cambiarSubVista(ActionEvent event) {
@@ -60,6 +64,15 @@ public class AdministradorController implements Initializable {
                 break;
             case "Gestionar Tarifas":
                 cargarSubvista("/vista/GestionarTarifas.fxml");
+                break;
+            case "Gestionar Contratos":
+                cargarSubvista("/vista/GestionarContratos.fxml");
+                break;
+            case "Gestionar Tickets":
+                cargarSubvista("/vista/GestionarTickets.fxml");
+                break;
+            case "Ver valoraciones":
+                cargarSubvista("/vista/VerValoraciones.fxml");
                 break;
             case "Cerrar Sesión":
                 cerrarSesion(event);

@@ -125,7 +125,7 @@ public class GestionarPlantillaController implements Initializable {
         if (seleccionado != null) {
             String usuario = seleccionado.getString("nombreUsuario");
 
-            // USAMOS TU MÉTODO EXACTO DEL DAO: ascenderEmpleado(...)
+            
             boolean ok = DAO.ascenderEmpleado(usuario, "Admin");
 
             if (ok) {
@@ -168,7 +168,7 @@ public class GestionarPlantillaController implements Initializable {
         // Generamos el nombreUsuario automático 
         String usuario = (nombre + apellidos.split(" ")[0]).toLowerCase().replaceAll("\\s+", "");
 
-        //Llamada al DAO con los 6 parámetros exactos
+        
         boolean ok = DAO.crearEmpleado(usuario, nombre, apellidos, "1234", usuario + "@telonda.com", cuentaBancaria);
 
         if (ok) {

@@ -17,6 +17,10 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import modelo.Sucursal;
 import modelo.Ubicacion;
+import java.awt.Desktop;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Controlador de Gestión de Sucursales.
@@ -226,6 +230,26 @@ public class GestionSucursalController implements Initializable {
         listSucursales.getSelectionModel().clearSelection();
     }
 
+    // Abre la sucursal seleccionada en Google Maps, en el navegador del sistema
+@FXML
+public void abrirMapaSeleccionada(ActionEvent event) {
+    Sucursal seleccionada = listSucursales.getSelectionModel().getSelectedItem();
+    if (seleccionada == null || seleccionada.getUbicacion() == null) {
+        mostrarAlerta("Atención", "Selecciona una sucursal de la lista.", Alert.AlertType.WARNING);
+        return;
+    }
+
+    try {
+        String direccion = seleccionada.getUbicacion().getDireccion()
+                + ", " + seleccionada.getUbicacion().getLocalidad();
+        String consulta = URLEncoder.encode(direccion, StandardCharsets.UTF_8);
+        String url = "https://www.google.com/maps/search/?api=1&query=" + consulta;
+        Desktop.getDesktop().browse(new URI(url));
+    } catch (Exception e) {
+        e.printStackTrace();
+        mostrarAlerta("Error", "No se pudo abrir el mapa.", Alert.AlertType.ERROR);
+    }
+}
     private void mostrarAlerta(String titulo, String texto, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
