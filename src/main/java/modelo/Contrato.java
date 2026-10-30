@@ -1,11 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
 /**
- *
+ * Modelo de datos para la entidad Contrato en la aplicación Tel-ONDA.
  * @author eneko
  */
 public class Contrato {
@@ -18,6 +14,11 @@ public class Contrato {
     private String fechaComienzo;
     private String fechaFin;
 
+    // --- Constructor por defecto (OBLIGATORIO para el mapeo del DAO) ---
+    public Contrato() {
+    }
+
+    // --- Constructor completo ---
     public Contrato(String id, String telefono, String estado, String idCliente, String idTarifa, String idEmpleado, String fechaComienzo, String fechaFin) {
         this.id = id;
         this.telefono = telefono;
@@ -28,6 +29,8 @@ public class Contrato {
         this.fechaComienzo = fechaComienzo;
         this.fechaFin = fechaFin;
     }
+
+    // --- Getters y Setters ---
 
     public String getId() {
         return id;
@@ -97,6 +100,4 @@ public class Contrato {
     public String toString() {
         return "Contrato{" + "id=" + id + ", telefono=" + telefono + ", estado=" + estado + ", idCliente=" + idCliente + ", idTarifa=" + idTarifa + ", idEmpleado=" + idEmpleado + ", fechaComienzo=" + fechaComienzo + ", fechaFin=" + fechaFin + '}';
     }
-    
-    
 }

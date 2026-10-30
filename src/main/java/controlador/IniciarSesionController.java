@@ -28,6 +28,9 @@ import org.bson.Document;
  */
 public class IniciarSesionController implements Initializable {
 
+    // Guarda el _id del usuario que ha iniciado sesión (lo leen otros controladores)
+    public static String idUsuarioActual;
+
     @FXML
     private TextField txtUsuario;
 
@@ -63,6 +66,9 @@ public class IniciarSesionController implements Initializable {
         Document usuarioObtenido = DAO.comprobarUsuarios(usuario, contrasena);
 
         if (usuarioObtenido != null) {
+            // Guardamos el id del usuario para usarlo en otras pantallas
+            idUsuarioActual = usuarioObtenido.getObjectId("_id").toHexString();
+
             String nombre = usuarioObtenido.getString("nombre");
             if (nombre == null) {
                 nombre = usuarioObtenido.getString("nombreUsuario");
@@ -76,10 +82,11 @@ public class IniciarSesionController implements Initializable {
             alert.setHeaderText(null);
             alert.setContentText("¡Bienvenido/a " + nombre + "!\nRol: " + rol);
             alert.showAndWait();
+
             if ("Admin".equals(rol)) {
-                abrirPanelAdmin(rol);
+                cambiarPantalla("/vista/Admin.fxml");
             } else if ("Empleado".equals(rol)) {
-                 abrirPanelEmpleado("/vista/Empleado.fxml");
+                cambiarPantalla("/vista/Empleado.fxml");
             } else if ("Cliente".equals(rol)) {
                 // cambiarPantalla("/vista/Cliente.fxml");
             }
@@ -88,55 +95,21 @@ public class IniciarSesionController implements Initializable {
             lblMensajeError.setText("Usuario o contraseña incorrectos.");
         }
     }
-    
-    //metodo cambiar pantalla
-    @FXML
+
+    // Método para cambiar de pantalla
     public void cambiarPantalla(String ruta) {
-    try {
-       Parent root = FXMLLoader.load(getClass().getResource(ruta));
-            Stage stage = (Stage) txtUsuario.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-    } catch (IOException e) {
-        e.printStackTrace();
-        lblMensajeError.setText("Error al cargar la pantalla.");
-    }
-}
-    private void abrirPanelAdmin(String nombreUsuario) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/Admin.fxml"));
-            Parent root = loader.load();
-
-            // Obtenemos la instancia del AdministradorController e inyectamos el nombre
-            AdministradorController adminController = loader.getController();
-           adminController.setNombreUsuario(nombreUsuario);
-
+            Parent root = FXMLLoader.load(getClass().getResource(ruta));
             Stage stage = (Stage) txtUsuario.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            lblMensajeError.setText("Error al cargar la pantalla de administración.");
+            lblMensajeError.setText("Error al cargar la pantalla.");
         }
     }
-    @FXML
-    public void abrirPanelEmpleado(String nombreUsuario){
-        try {
-            FXMLLoader loader = new FXMLLoader (getClass().getResource("/vista/Empleado.fxml"));
-            Parent root = loader.load();
-            
-            EmpleadoController empleController = loader.getController();
-            empleController.setNombreUsuario(nombreUsuario);
-            
-            Stage stage = (Stage) txtUsuario.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            lblMensajeError.setText("Error al cargar la pantalla de empleado.");
-        }
-    }
-    // metodo para registrarse
+
+    // Método para registrarse
     @FXML
     public void btnRegistrarse(ActionEvent event) {
         try {

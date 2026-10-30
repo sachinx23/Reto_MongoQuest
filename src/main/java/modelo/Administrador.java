@@ -16,8 +16,8 @@ public class Administrador extends Empleado{
     private String ascenderAdmin;
     private String borrarCuentaEmpleado;
 
-    public Administrador(String gestionarSucursal, String crearSucursal, String crearEmpleado, String ascenderAdmin, String borrarCuentaEmpleado, int id, String nombreUsuario, String nombre, String apellidos, String rol, String contrasena, String correo, String cuentaBancaria, int idSucursal) {
-        super(id, nombreUsuario, nombre, apellidos, rol, contrasena, correo, cuentaBancaria, idSucursal);
+    public Administrador(String gestionarSucursal, String crearSucursal, String crearEmpleado, String ascenderAdmin, String borrarCuentaEmpleado, String id, String nombreUsuario, String nombre, String apellidos, String contrasena, String correo, String rol, String cuentaBancaria, String idSucursal) {
+        super(id, nombreUsuario, nombre, apellidos, contrasena, correo, rol, cuentaBancaria, idSucursal);
         this.gestionarSucursal = gestionarSucursal;
         this.crearSucursal = crearSucursal;
         this.crearEmpleado = crearEmpleado;
@@ -70,5 +70,6 @@ public class Administrador extends Empleado{
         return "Administrador{" + "gestionarSucursal=" + gestionarSucursal + ", crearSucursal=" + crearSucursal + ", crearEmpleado=" + crearEmpleado + ", ascenderAdmin=" + ascenderAdmin + ", borrarCuentaEmpleado=" + borrarCuentaEmpleado + '}';
     }
 
-   
+    
+    
 }

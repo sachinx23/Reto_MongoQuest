@@ -3,19 +3,12 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.IniciarSesionController">
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.EmpleadoController">
    <children>
-      <AnchorPane prefHeight="400.0" prefWidth="600.0">
-         <children>
-            <Label layoutX="14.0" layoutY="21.0" prefHeight="26.0" prefWidth="101.0" text="Panel Empleado:" />
-            <ComboBox layoutX="116.0" layoutY="22.0" prefWidth="150.0" promptText="Elegir una opcion..." />
-            <Label layoutX="461.0" layoutY="26.0" prefHeight="19.0" prefWidth="110.0" text="Empleado: usuario">
-               <font>
-                  <Font size="13.0" />
-               </font></Label>
-         </children>
-      </AnchorPane>
+      <ComboBox layoutX="126.0" layoutY="22.0" onAction="#cambiarSubVista" prefWidth="150.0" promptText="Eligiendo opcion..." />
+      <Label layoutX="14.0" layoutY="22.0" prefHeight="25.0" prefWidth="99.0" text="Panel Empleado:" />
+      <Label fx:id="lblNombreAdmin" layoutX="484.0" layoutY="25.0" style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Admin: Usuario" textFill="#38bdf8" />
    </children>
 </AnchorPane>

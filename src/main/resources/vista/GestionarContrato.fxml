@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="500.0" prefWidth="920.0" styleClass="panel-principal" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.GestionarContratoController">
+   <stylesheets>
+      <URL value="@../css/Estilos.css" />
+   </stylesheets>
+   <children>
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <children>
+            <!-- CABECERA Y FILTROS -->
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <Label styleClass="titulo-vista" text="Gestión de Contratos" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  
+                  <Label text="Teléfono:" textFill="WHITE" />
+                  <TextField fx:id="txtFiltroTelefono" prefWidth="130.0" promptText="Buscar teléfono..." />
+                  
+                  <Label text="Estado:" textFill="WHITE" />
+                  <ComboBox fx:id="comboFiltroEstado" prefWidth="120.0" />
+                  
+                  <Button onAction="#filtrarContratos" styleClass="btn-filtrar" text="Filtrar" />
+                  <Button fx:id="btnRefrescar" onAction="#refrescarFiltro" styleClass="btn-refrescar" text="Refrescar" />
+               </children>
+            </HBox>
+
+            <!-- TABLA DE CONTRATOS -->
+            <TableView fx:id="tablaContratos" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="colIdContrato" prefWidth="100.0" text="ID" />
+                  <TableColumn fx:id="colTelefono" prefWidth="100.0" text="Teléfono" />
+                  <TableColumn fx:id="colIdCliente" prefWidth="110.0" text="ID Cliente" />
+                  <TableColumn fx:id="colIdTarifa" prefWidth="110.0" text="ID Tarifa" />
+                  <TableColumn fx:id="colIdEmpleado" prefWidth="110.0" text="ID Empleado" />
+                  <TableColumn fx:id="colEstado" prefWidth="90.0" text="Estado" />
+                  <TableColumn fx:id="colFechaInicio" prefWidth="110.0" text="Fecha Inicio" />
+                  <TableColumn fx:id="colFechaFin" prefWidth="110.0" text="Fecha Fin" />
+               </columns>
+            </TableView>
+
+            <!-- BOTONES DE ACCIÓN SOBRE CONTRATO -->
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+               <children>
+                  <Button fx:id="btnAceptarPeticion" onAction="#aceptarPeticion" styleClass="btn-aceptar" text="Aceptar Petición" />
+                  <Button fx:id="btnRechazarPeticion" onAction="#rechazarPeticion" styleClass="btn-rechazar" text="Rechazar Petición" />
+                  <Button fx:id="btnRescindirContrato" onAction="#rescindirContrato" styleClass="btn-rescindir" text="Rescindir Contrato" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -4,7 +4,12 @@
     -fx-background-color: #f4f9fc;
 }
 
-/* Tarjetas o contenedores principales */
+/* Fondo para pantallas cargadas dentro de otro panel */
+.fondo-pantalla {
+    -fx-background-color: #f4f9fc;
+}
+
+/* Tarjetas y Contenedores Blancos */
 .card {
     -fx-background-color: #ffffff;
     -fx-padding: 16;
@@ -28,7 +33,70 @@
     -fx-border-radius: 6;
 }
 
-/* Botón  Guardar, Aceptar */
+.text-area {
+    -fx-background-radius: 6px;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
+}
+
+.text-area .content {
+    -fx-background-radius: 6px;
+}
+
+/* ComboBox */
+.combo-box {
+    -fx-background-color: white;
+    -fx-background-radius: 6px;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.combo-box:focused {
+    -fx-border-color: #00b4a2;
+}
+
+/* TableView */
+.table-view {
+    -fx-background-color: white;
+    -fx-background-radius: 6px;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #0a3871;
+    -fx-background-radius: 6px 6px 0 0;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: #0a3871;
+    -fx-size: 36px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #00b4a2;
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f4f9fc;
+}
+
+.table-row-cell:odd:selected {
+    -fx-background-color: #00b4a2;
+}
+
+/* Botones Generales */
 .btn-primary {
     -fx-background-color: #00b4a2;
     -fx-text-fill: white;
@@ -36,12 +104,24 @@
     -fx-cursor: hand;
     -fx-background-radius: 6;
 }
+.btn-primary:hover {
+    -fx-background-color: #009688;
+}
 
-/* Botón Cancelar, Borrar*/
-.btn-secundary {
+.btn-secondary {
+    -fx-background-color: #0a3871;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+}
+.btn-secondary:hover {
+    -fx-background-color: #082c59;
+}
+
+.btn-danger {
     -fx-background-color: #e11d48;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-cursor: hand;
-    -fx-background-radius: 6;
 }

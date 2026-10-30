@@ -1,42 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Mapa de sucursales</title>
     <meta charset="UTF-8">
     <style>
-        
-        html, body {
-            width: 100%;
+        html, body, #mapa {
             height: 100%;
             margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-        #mapa {
-            width: 100%;
-            height: 100%;
-            border: none;
         }
     </style>
 </head>
 <body>
-
-    
-    
-    <iframe id="mapa" src="https://maps.google.com/maps?q=España&output=embed"></iframe>
+    <div id="mapa"></div>
 
     <script>
-        // Funciones vacías obligatorias para que el controlador de JavaFX no de errores
-        function refrescarMapa() {}
-        function limpiarMapa() {}
-        function agregarSucursal(id, direccion, localidad) {}
+        var mapa;
+        var geocoder;
+        var marcadores = [];
 
-        // Función ultracorta para actualizar el mapa al hacer clic en la lista
-        function enfocarUbicacion(direccion, localidad) {
-            var direccionCompleta = direccion + ", " + localidad;
-            var url = "https://maps.google.com/maps?q=" + encodeURIComponent(direccionCompleta) + "&output=embed";
-            document.getElementById('mapa').src = url;
+
+
+        // Se ejecuta cuando Google Maps termina de cargar
+        function initMap() {
+            mapa = new google.maps.Map(document.getElementById("mapa"), {
+                center: { lat: 40.4, lng: -3.7 },
+                zoom: 6
+            });
+            geocoder = new google.maps.Geocoder();
         }
-    </script>
 
+        // Borrar todos los marcadores
+        function limpiarMapa() {
+            for (var i = 0; i < marcadores.length; i++) {
+                marcadores[i].setMap(null);
+            }
+            marcadores = [];
+        }
 </body>
 </html>
