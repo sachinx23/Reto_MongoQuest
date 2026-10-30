@@ -2,8 +2,8 @@ package controlador;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,13 +11,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import org.bson.Document;
-import javafx.scene.control.ButtonType;
-import java.util.Optional;
-import java.util.Optional;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.cell.PropertyValueFactory;
+import modelo.Cliente;
+import modelo.Empleado;
 
 /**
  * Controlador para la vista GestionarPlantilla.fxml
@@ -28,69 +28,57 @@ public class GestionarPlantillaController implements Initializable {
 
     // TABLA EMPLEADOS
     @FXML
-    private TableView<Document> tablaEmpleados;
+    private TableView<Empleado> tablaEmpleados;
     @FXML
-    private TableColumn<Document, String> colEmpNombre;
+    private TableColumn<Empleado, String> colEmpNombre;
     @FXML
-    private TableColumn<Document, String> colEmpApellidos;
+    private TableColumn<Empleado, String> colEmpApellidos;
     @FXML
-    private TableColumn<Document, String> colEmpUsuario;
+    private TableColumn<Empleado, String> colEmpUsuario;
     @FXML
-    private TableColumn<Document, String> colEmpRol;
+    private TableColumn<Empleado, String> colEmpRol;
     @FXML
-    private TableColumn<Document, String> colEmpEmail;
+    private TableColumn<Empleado, String> colEmpEmail;
     @FXML
-    private TableColumn<Document, String> colEmpIBAN;
+    private TableColumn<Empleado, String> colEmpIBAN;
 
     // TABLA CLIENTES
     @FXML
-    private TableView<Document> tablaClientes;
+    private TableView<Cliente> tablaClientes;
     @FXML
-    private TableColumn<Document, String> colCliNombre;
+    private TableColumn<Cliente, String> colCliNombre;
     @FXML
-    private TableColumn<Document, String> colCliApellidos;
+    private TableColumn<Cliente, String> colCliApellidos;
     @FXML
-    private TableColumn<Document, String> colCliUsuario;
+    private TableColumn<Cliente, String> colCliUsuario;
     @FXML
-    private TableColumn<Document, String> colCliEmail;
+    private TableColumn<Cliente, String> colCliEmail;
     @FXML
-    private TableColumn<Document, String> colCliTelefono;
+    private TableColumn<Cliente, String> colCliTelefono;
 
-    private ObservableList<Document> listaEmpleados = FXCollections.observableArrayList();
-    private ObservableList<Document> listaClientes = FXCollections.observableArrayList();
+    private final ObservableList<Empleado> listaEmpleados = FXCollections.observableArrayList();
+    private final ObservableList<Cliente> listaClientes = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Configuración de las columnas con los campos del Document
-        colEmpNombre.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("nombre")));
-        colEmpApellidos.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("apellidos")));
-        colEmpUsuario.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("nombreUsuario")));
-        colEmpRol.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("rol")));
-        colEmpIBAN.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("cuentaBancaria")));
+        // Mapeo de columnas con el POJO Empleado
+        colEmpNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colEmpApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
+        colEmpUsuario.setCellValueFactory(new PropertyValueFactory<>("nombreUsuario"));
+        colEmpRol.setCellValueFactory(new PropertyValueFactory<>("rol"));
+        colEmpEmail.setCellValueFactory(new PropertyValueFactory<>("correo"));
+        colEmpIBAN.setCellValueFactory(new PropertyValueFactory<>("cuentaBancaria"));
 
-        colEmpEmail.setCellValueFactory(fila -> {
-            String mail = fila.getValue().getString("correo");
-            if (mail == null) {
-                mail = fila.getValue().getString("email");
-            }
-            return new SimpleStringProperty(mail != null ? mail : "");
-        });
+        // Mapeo de columnas con el POJO Cliente
+        colCliNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colCliApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
+        colCliUsuario.setCellValueFactory(new PropertyValueFactory<>("nombreUsuario"));
+        colCliEmail.setCellValueFactory(new PropertyValueFactory<>("correo"));
+        colCliTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
 
-        colCliNombre.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("nombre")));
-        colCliApellidos.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("apellidos")));
-        colCliUsuario.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("nombreUsuario")));
+        tablaEmpleados.setItems(listaEmpleados);
+        tablaClientes.setItems(listaClientes);
 
-        colCliEmail.setCellValueFactory(fila -> {
-            String mail = fila.getValue().getString("correo");
-            if (mail == null) {
-                mail = fila.getValue().getString("email");
-            }
-            return new SimpleStringProperty(mail != null ? mail : "");
-        });
-
-        colCliTelefono.setCellValueFactory(fila -> new SimpleStringProperty(fila.getValue().getString("telefono")));
-
-        // Cargar las dos tablas
         cargarTablas();
     }
 
@@ -98,34 +86,26 @@ public class GestionarPlantillaController implements Initializable {
         listaEmpleados.clear();
         listaClientes.clear();
 
-        // USAMOS TU MÉTODO EXACTO DEL DAO: obtenerPlantilla()
-        List<Document> todosLosUsuarios = DAO.obtenerPlantilla();
+        // Llamadas a los métodos estáticos del DAO
+        List<Empleado> empleados = DAO.listarEmpleados();
+        List<Cliente> clientes = DAO.listarClientes();
 
-        if (todosLosUsuarios != null) {
-            for (Document doc : todosLosUsuarios) {
-                String rol = doc.getString("rol");
-
-                if ("Empleado".equals(rol)) {
-                    listaEmpleados.add(doc);
-                } else if ("Cliente".equals(rol)) {
-                    listaClientes.add(doc);
-                }
-            }
+        if (empleados != null) {
+            listaEmpleados.addAll(empleados);
         }
-
-        tablaEmpleados.setItems(listaEmpleados);
-        tablaClientes.setItems(listaClientes);
+        if (clientes != null) {
+            listaClientes.addAll(clientes);
+        }
     }
 
     // Ascender empleado a admin
     @FXML
     public void ascenderAAdmin(ActionEvent event) {
-        Document seleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
+        Empleado seleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
 
         if (seleccionado != null) {
-            String usuario = seleccionado.getString("nombreUsuario");
+            String usuario = seleccionado.getNombreUsuario();
 
-            // USAMOS TU MÉTODO EXACTO DEL DAO: ascenderEmpleado(...)
             boolean ok = DAO.ascenderEmpleado(usuario, "Admin");
 
             if (ok) {
@@ -138,54 +118,45 @@ public class GestionarPlantillaController implements Initializable {
             mostrarAlerta("Atención", "Selecciona primero un empleado en la tabla.");
         }
     }
-// Crear Empleado 
+
+    // Crear Empleado
     @FXML
     public void crearEmpleado(ActionEvent event) {
-        // Pedir Nombre
-        TextInputDialog dNombre = new TextInputDialog();
-        dNombre.setTitle("Nuevo Empleado");
-        dNombre.setContentText("Introduce el Nombre:");
-        Optional<String> resNombre = dNombre.showAndWait();
-        if (!resNombre.isPresent() || resNombre.get().trim().isEmpty()) return;
-        String nombre = resNombre.get().trim();
+        String nombre = pedirTexto("Introduce el Nombre:");
+        if (nombre == null) {
+            return;
+        }
+        String apellidos = pedirTexto("Introduce los Apellidos:");
+        if (apellidos == null) {
+            return;
+        }
+        String cuentaBancaria = pedirTexto("Introduce la Cuenta Bancaria (IBAN):");
+        if (cuentaBancaria == null) {
+            return;
+        }
 
-        //  Pedir Apellidos
-        TextInputDialog dApellidos = new TextInputDialog();
-        dApellidos.setTitle("Nuevo Empleado");
-        dApellidos.setContentText("Introduce los Apellidos:");
-        Optional<String> resApellidos = dApellidos.showAndWait();
-        if (!resApellidos.isPresent() || resApellidos.get().trim().isEmpty()) return;
-        String apellidos = resApellidos.get().trim();
+        // Generar nombreUsuario automáticamente (ejemplo: eneko.garcia)
+        String nombreN = nombre.toLowerCase().replaceAll("\\s+", "");
+        String primerApellido = apellidos.split("\\s+")[0].toLowerCase();
+        String usuario = nombreN + "." + primerApellido;
 
-        // Pedir Cuenta Bancaria
-        TextInputDialog nIBAN = new TextInputDialog();
-        nIBAN.setTitle("Nuevo Empleado");
-        nIBAN.setContentText("Introduce la Cuenta Bancaria (IBAN):");
-        Optional<String> resIBAN = nIBAN.showAndWait();
-        if (!resIBAN.isPresent() || resIBAN.get().trim().isEmpty()) return;
-        String cuentaBancaria = resIBAN.get().trim();
-
-        // Generamos el nombreUsuario automático 
-        String usuario = (nombre + apellidos.split(" ")[0]).toLowerCase().replaceAll("\\s+", "");
-
-        //Llamada al DAO con los 6 parámetros exactos
         boolean ok = DAO.crearEmpleado(usuario, nombre, apellidos, "1234", usuario + "@telonda.com", cuentaBancaria);
 
         if (ok) {
-            mostrarAlerta("Éxito", "Empleado" + nombre + " " + apellidos + " creado correctamente.");
+            mostrarAlerta("Éxito", "Empleado " + nombre + " " + apellidos + " creado correctamente.");
             cargarTablas();
         } else {
             mostrarAlerta("Error", "No se pudo crear el empleado (quizás el usuario ya existe).");
         }
     }
+
     @FXML
     public void eliminarEmpleado(ActionEvent event) {
-        Document seleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
+        Empleado seleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
 
         if (seleccionado != null) {
-            String usuario = seleccionado.getString("nombreUsuario");
+            String usuario = seleccionado.getNombreUsuario();
 
-            // USAMOS TU MÉTODO EXACTO DEL DAO: eliminarEmpleado(...)
             boolean ok = DAO.eliminarEmpleado(usuario);
 
             if (ok) {
@@ -201,10 +172,10 @@ public class GestionarPlantillaController implements Initializable {
 
     @FXML
     public void eliminarCliente(ActionEvent event) {
-        Document seleccionado = tablaClientes.getSelectionModel().getSelectedItem();
+        Cliente seleccionado = tablaClientes.getSelectionModel().getSelectedItem();
 
         if (seleccionado != null) {
-            String usuario = seleccionado.getString("nombreUsuario");
+            String usuario = seleccionado.getNombreUsuario();
 
             Alert confirmacion = new Alert(AlertType.CONFIRMATION);
             confirmacion.setTitle("Confirmar eliminación de datos sensibles");
@@ -224,6 +195,17 @@ public class GestionarPlantillaController implements Initializable {
         } else {
             mostrarAlerta("Atención", "Selecciona primero un cliente de la tabla.");
         }
+    }
+
+    private String pedirTexto(String mensaje) {
+        TextInputDialog dialogo = new TextInputDialog();
+        dialogo.setTitle("Nuevo Empleado");
+        dialogo.setContentText(mensaje);
+        Optional<String> res = dialogo.showAndWait();
+        if (!res.isPresent() || res.get().trim().isEmpty()) {
+            return null;
+        }
+        return res.get().trim();
     }
 
     private void mostrarAlerta(String titulo, String texto) {

@@ -1,16 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
 /**
- *
+ * Modelo de datos para la entidad Empleado.
  * @author eneko
  */
 public class Empleado {
-    
-    private int id;
+    private String id;
     private String nombreUsuario;
     private String nombre;
     private String apellidos;
@@ -18,25 +13,28 @@ public class Empleado {
     private String correo;
     private String rol;
     private String cuentaBancaria;
-    private int idSucursal;
+    private String idSucursal;
 
-    public Empleado(int id, String nombreUsuario,String nombre,String apellidos,String rol, String contrasena, String correo, String cuentaBancaria, int idSucursal) {
+    // --- ÚNICO CONSTRUCTOR ---
+    public Empleado(String id, String nombreUsuario, String nombre, String apellidos, String contrasena, String correo, String rol, String cuentaBancaria, String idSucursal) {
         this.id = id;
         this.nombreUsuario = nombreUsuario;
         this.nombre = nombre;
         this.apellidos = apellidos;
-        this.correo = correo;
         this.contrasena = contrasena;
+        this.correo = correo;
         this.rol = rol;
         this.cuentaBancaria = cuentaBancaria;
         this.idSucursal = idSucursal;
     }
 
-    public int getId() {
+    // --- Getters y Setters ---
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -96,19 +94,16 @@ public class Empleado {
         this.cuentaBancaria = cuentaBancaria;
     }
 
-    public int getIdSucursal() {
+    public String getIdSucursal() {
         return idSucursal;
     }
 
-    public void setIdSucursal(int idSucursal) {
+    public void setIdSucursal(String idSucursal) {
         this.idSucursal = idSucursal;
     }
 
     @Override
     public String toString() {
-        return "Empleado{" + "id=" + id + ", nombreUsuario=" + nombreUsuario + ", nombre=" + nombre + ", apellidos=" + apellidos + ", contrasena=" + contrasena + ", correo=" + correo + ", rol=" + rol + ", cuentaBancaria=" + cuentaBancaria + ", idSucursal=" + idSucursal + '}';
+        return "Empleado{" + "nombreUsuario=" + nombreUsuario + ", nombre=" + nombre + ", rol=" + rol + '}';
     }
-
-    
-    
 }

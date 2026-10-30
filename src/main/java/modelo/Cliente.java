@@ -1,48 +1,62 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
+
 import java.util.List;
+
 /**
- *
+ * Modelo de datos para la entidad Cliente.
  * @author eneko
  */
 public class Cliente {
-    private int id;
+    private String id;
+    private String cuentaBancaria;
     private String nombreUsuario;
     private String nombre;
     private String apellidos;
-    private String correo;
     private String contrasena;
+    private String correo;
     private String dni;
-    private int telefono;
-    private String cuentaBancaria;
+    private String telefono;
     private String direccion;
-    List<String> ticketSoporte;
-    List<Contrato> contrato;
-    List<Valoracion> valoraciones;
+    private List<String> ticketSoporte;
+    private List<Contrato> contrato;
+    private List<Valoracion> valoraciones;
 
-    public Cliente(int id, String cuentaBancaria, String nombre, String nombreUsuario, String contrasena, String dni, String correo, int telefono, String direccion, List<String> ticketSoporte, List<Contrato> contrato, List<Valoracion> valoraciones) {
-        this.id = id;
-        this.cuentaBancaria = cuentaBancaria;
-        this.nombre = nombre;
-        this.nombreUsuario = nombreUsuario;
-        this.contrasena = contrasena;
-        this.dni = dni;
-        this.correo = correo;
-        this.telefono = telefono;
-        this.direccion = direccion;
-        this.ticketSoporte = ticketSoporte;
-        this.contrato = contrato;
-        this.valoraciones = valoraciones;
+    // --- Constructor Vacío (Obligatorio para el DAO) ---
+    public Cliente() {
     }
 
-    public int getId() {
+    // --- Constructor para el método listarClientes() ---
+    public Cliente(String nombreUsuario, String nombre, String apellidos, String correo, String dni, String telefono, String direccion) {
+        this.nombreUsuario = nombreUsuario;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.correo = correo;
+        this.dni = dni;
+        this.telefono = telefono;
+        this.direccion = direccion;
+    }
+
+    // --- Constructor Completo ---
+    public Cliente(String id, String cuentaBancaria, String nombreUsuario, String nombre, String apellidos, String contrasena, String correo, String dni, String telefono, String direccion) {
+        this.id = id;
+        this.cuentaBancaria = cuentaBancaria;
+        this.nombreUsuario = nombreUsuario;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.contrasena = contrasena;
+        this.correo = correo;
+        this.dni = dni;
+        this.telefono = telefono;
+        this.direccion = direccion;
+    }
+
+    // --- Getters y Setters ---
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -54,6 +68,14 @@ public class Cliente {
         this.cuentaBancaria = cuentaBancaria;
     }
 
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -62,12 +84,12 @@ public class Cliente {
         this.nombre = nombre;
     }
 
-    public String getNombreUsuario() {
-        return nombreUsuario;
+    public String getApellidos() {
+        return apellidos;
     }
 
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
     }
 
     public String getContrasena() {
@@ -78,14 +100,6 @@ public class Cliente {
         this.contrasena = contrasena;
     }
 
-    public String getDni() {
-        return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
     public String getCorreo() {
         return correo;
     }
@@ -94,11 +108,19 @@ public class Cliente {
         this.correo = correo;
     }
 
-    public int getTelefono() {
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(int telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
@@ -136,9 +158,6 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "Cliente{" + "id=" + id + ", cuentaBancaria=" + cuentaBancaria + ", nombre=" + nombre + ", nombreUsuario=" + nombreUsuario + ", contrasena=" + contrasena + ", dni=" + dni + ", correo=" + correo + ", telefono=" + telefono + ", direccion=" + direccion + ", ticketSoporte=" + ticketSoporte + ", contrato=" + contrato + ", valoraciones=" + valoraciones + '}';
+        return "Cliente{" + "nombreUsuario=" + nombreUsuario + ", nombre=" + nombre + ", correo=" + correo + '}';
     }
-    
-    
-    
 }

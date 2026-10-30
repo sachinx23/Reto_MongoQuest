@@ -12,12 +12,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.scene.control.Label;
 
 /**
- * Controlador de Administrador adaptado para DAM.
+ * Controlador de Administrador (incluye funciones de Empleado por herencia).
  * @author eneko
  */
 public class AdministradorController implements Initializable {
@@ -31,14 +31,16 @@ public class AdministradorController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Opciones del ComboBox
+        // Opciones propias de Admin + Opciones heredadas de Empleado
         cbOpcionesAdmin.setItems(FXCollections.observableArrayList(
                 "Gestionar Plantilla",
                 "Gestionar Sucursal",
                 "Gestionar Tarifas",
+                "Gestionar Contratos",
+                "Tickets de Soporte",
+                "Ver Valoraciones",
                 "Cerrar Sesión"
         ));
-        
         
         cbOpcionesAdmin.getSelectionModel().select("Gestionar Plantilla");
         cargarSubvista("/vista/GestionarPlantilla.fxml");
@@ -52,6 +54,7 @@ public class AdministradorController implements Initializable {
         }
 
         switch (seleccion) {
+            // --- Opciones de Administrador ---
             case "Gestionar Plantilla":
                 cargarSubvista("/vista/GestionarPlantilla.fxml");
                 break;
@@ -61,6 +64,19 @@ public class AdministradorController implements Initializable {
             case "Gestionar Tarifas":
                 cargarSubvista("/vista/GestionarTarifas.fxml");
                 break;
+
+            // --- Opciones heredadas de Empleado ---
+            case "Gestionar Contratos":
+                cargarSubvista("/vista/GestionarContrato.fxml");
+                break;
+            case "Tickets de Soporte":
+                cargarSubvista("/vista/GestionarTickets.fxml");
+                break;
+            case "Ver Valoraciones":
+                cargarSubvista("/vista/VerValoraciones.fxml");
+                break;
+
+            // --- Sistema ---
             case "Cerrar Sesión":
                 cerrarSesion(event);
                 break;

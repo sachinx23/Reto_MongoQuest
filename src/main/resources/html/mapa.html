@@ -1,100 +1,84 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Mapa de sucursales</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title>Mapa de sucursales</title>
+    <meta charset="UTF-8">
+    <style>
+        html, body, #mapa {
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="mapa"></div>
 
-        <!-- Leaflet: librería de mapas -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var mapa;
+        var geocoder;
+        var marcadores = [];
 
-        <style>
-            html, body, #mapa {
-                height: 100%;
-                margin: 0;
-                padding: 0;
+        // Se ejecuta cuando Google Maps termina de cargar
+        function initMap() {
+            mapa = new google.maps.Map(document.getElementById("mapa"), {
+                center: { lat: 40.4, lng: -3.7 },
+                zoom: 6
+            });
+            geocoder = new google.maps.Geocoder();
+        }
+
+        // Borrar todos los marcadores
+        function limpiarMapa() {
+            for (var i = 0; i < marcadores.length; i++) {
+                marcadores[i].setMap(null);
             }
-        </style>
-    </head>
-    <body>
-        <div id="mapa"></div>
+            marcadores = [];
+        }
 
-        <script>
-            // Inicializar mapa
-            var mapa = L.map('mapa').setView([40.4, -3.7], 6);
+        // Añadir una sucursal buscando su dirección
+        function agregarSucursal(id, direccion, localidad) {
+            var texto = direccion + ", " + localidad + ", España";
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; OpenStreetMap'
-            }).addTo(mapa);
+            geocoder.geocode({ address: texto }, function (resultados, estado) {
+                if (estado === "OK") {
+                    var posicion = resultados[0].geometry.location;
 
-            // Capa para almacenar todos los marcadores
-            var marcadoresGroup = L.layerGroup().addTo(mapa);
+                    var marcador = new google.maps.Marker({
+                        position: posicion,
+                        map: mapa,
+                        title: "Sucursal " + id
+                    });
 
-            //Corregir el recuadro gris cuando se redimensiona el componente en Java
-            function refrescarMapa() {
-            setTimeout(function() {
-            mapa.invalidateSize();
-            }, 200);
-            }
+                    var ventana = new google.maps.InfoWindow({
+                        content: "<b>Sucursal " + id + "</b><br>" + direccion
+                    });
+                    marcador.addListener("click", function () {
+                        ventana.open(mapa, marcador);
+                    });
 
-            // Llamar al redimensionar la ventana
-            window.onresize = function() {
-            refrescarMapa();
-            };
+                    marcadores.push(marcador);
+                    mapa.setCenter(posicion);
+                    mapa.setZoom(13);
+                } else {
+                    console.log("No se encontró: " + texto);
+                }
+            });
+        }
 
-            //Limpiar todos los marcadores del mapa
-            function limpiarMapa() {
-            marcadoresGroup.clearLayers();
-            }
+        // Centrar el mapa en una dirección
+        function enfocarUbicacion(direccion, localidad) {
+            var texto = direccion + ", " + localidad + ", España";
 
-            // Añadir una sucursal al mapa por dirección
-            // Función para añadir marcador haciendo geocodificación de la dirección
-            function agregarSucursal(id, direccion, localidad) {
-            var direccionCompleta = direccion + ", " + localidad + ", España";
+            geocoder.geocode({ address: texto }, function (resultados, estado) {
+                if (estado === "OK") {
+                    mapa.setCenter(resultados[0].geometry.location);
+                    mapa.setZoom(15);
+                }
+            });
+        }
+    </script>
 
-            // Consulta a Nominatim para obtener latitud y longitud
-            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(direccionCompleta))
-            .then(response => response.json())
-            .then(data => {
-            if (data && data.length > 0) {
-            var lat = parseFloat(data[0].lat);
-            var lon = parseFloat(data[0].lon);
-
-            // Crear y añadir el marcador al mapa
-            var marker = L.marker([lat, lon]).addTo(map);
-            marker.bindPopup("<b>Sucursal " + id + "</b><br>" + direccion);
-
-            // Centrar el mapa en el nuevo marcador
-            map.setView([lat, lon], 13);
-            } else {
-            console.warn("No se encontraron coordenadas para: " + direccionCompleta);
-            }
-            })
-            .catch(error => console.error("Error al geocodificar dirección:", error));
-            }
-
-            // Enfocar una sucursal específica (al hacer clic en la lista)
-            function enfocarUbicacion(direccion, localidad) {
-            var busqueda = direccion + ', ' + localidad;
-            var url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' 
-            + encodeURIComponent(busqueda);
-
-            var peticion = new XMLHttpRequest();
-            peticion.open('GET', url, true);
-            peticion.onreadystatechange = function () {
-            if (peticion.readyState === 4 && peticion.status === 200) {
-            var resultados = JSON.parse(peticion.responseText);
-            if (resultados.length > 0) {
-            var lat = parseFloat(resultados[0].lat);
-            var lon = parseFloat(resultados[0].lon);
-            mapa.setView([lat, lon], 15);
-            }
-            }
-            };
-            peticion.send();
-            }
-        </script>
-    </body>
+    <!-- Cambia TU_API_KEY por tu clave de Google Maps -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&callback=initMap"></script>
+</body>
 </html>
