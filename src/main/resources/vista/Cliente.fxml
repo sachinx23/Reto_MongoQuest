@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="620.0" prefWidth="950.0" styleClass="root-admin" stylesheets="@../css/estilo.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.ClienteController">
+<AnchorPane prefHeight="620.0" prefWidth="950.0" styleClass="root-admin" stylesheets="@../css/Estilo.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.ClienteController">
    <children>
 
       <!-- CABECERA: marca, nombre del cliente, Mi Perfil y opciones -->

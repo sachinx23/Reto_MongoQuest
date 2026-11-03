@@ -1,181 +1,126 @@
-/* 
-   Azul marino: #0B3C8C | Azul medio: #1565A8
-   Turquesa: #14C4B4 | Turquesa claro: #7FE3D8 | Fondo: #F2F6FA */
-
+/* Paleta de colores corporativa Tel-ONDA */
 .root {
-    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    -fx-background-color: #F2F6FA;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-background-color: #f4f9fc;
 }
 
-/* Regla general de los botones: va la primera para que las clases de abajo (btn-primary, boton-cerrar...) la puedan cambiar */
-.button {
-    -fx-background-color: #1565A8;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-background-radius: 6px;
-    -fx-cursor: hand;
+/* Fondo para pantallas cargadas dentro de otro panel */
+.fondo-pantalla {
+    -fx-background-color: #f4f9fc;
 }
 
-.root-admin {
-    -fx-background-color: #F2F6FA;
-    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-}
-
-/* ---------- Cabecera ---------- */
-.cabecera {
-    -fx-background-color: linear-gradient(to right, #0B3C8C, #1565A8 55%, #14C4B4);
-    -fx-effect: dropshadow(gaussian, rgba(11, 60, 140, 0.35), 12, 0.2, 0, 3);
-}
-
-.marca-tel {
-    -fx-text-fill: white;
-    -fx-font-size: 26px;
-    -fx-font-weight: bold;
-}
-
-.marca-onda {
-    -fx-text-fill: #7FE3D8;
-    -fx-font-size: 26px;
-    -fx-font-weight: bold;
-}
-
-.texto-cabecera {
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-}
-
-/* ---------- Botones de la cabecera ---------- */
-.boton-cabecera {
-    -fx-background-color: rgba(255, 255, 255, 0.18);
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-background-radius: 20;
-    -fx-padding: 8 18 8 18;
-    -fx-cursor: hand;
-}
-
-.boton-cabecera:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.32);
-}
-
-.boton-cerrar {
-    -fx-background-color: white;
-    -fx-text-fill: #0B3C8C;
-    -fx-font-weight: bold;
-    -fx-background-radius: 20;
-    -fx-padding: 8 18 8 18;
-    -fx-cursor: hand;
-}
-
-.boton-cerrar:hover {
-    -fx-background-color: #7FE3D8;
-}
-
-/* ---------- ComboBox de opciones ---------- */
-.combo-admin {
-    -fx-background-color: white;
-    -fx-background-radius: 20;
-    -fx-border-radius: 20;
-    -fx-border-color: transparent;
-    -fx-font-size: 14px;
-    -fx-cursor: hand;
-}
-
-.combo-admin .list-cell {
-    -fx-text-fill: #0B3C8C;
-    -fx-font-weight: bold;
-    -fx-padding: 6 6 6 14;
-}
-
-.combo-admin .arrow-button {
-    -fx-background-color: transparent;
-}
-
-.combo-admin .arrow {
-    -fx-background-color: #14C4B4;
-}
-
-.combo-admin .combo-box-popup .list-view {
-    -fx-background-color: white;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(11, 60, 140, 0.3), 10, 0.2, 0, 3);
-}
-
-.combo-admin .combo-box-popup .list-cell {
-    -fx-background-color: white;
-    -fx-text-fill: #0B3C8C;
-    -fx-padding: 10 14 10 14;
-}
-
-.combo-admin .combo-box-popup .list-cell:hover {
-    -fx-background-color: #7FE3D8;
-    -fx-text-fill: #0B3C8C;
-}
-
-.combo-admin .combo-box-popup .list-cell:selected {
-    -fx-background-color: #14C4B4;
-    -fx-text-fill: white;
-}
-
-/* ---------- Panel central ---------- */
-.panel-contenido {
-    -fx-background-color: white;
-    -fx-background-radius: 16;
-    -fx-border-color: #7FE3D8;
-    -fx-border-radius: 16;
-    -fx-border-width: 1.5;
-    -fx-effect: dropshadow(gaussian, rgba(11, 60, 140, 0.12), 14, 0.1, 0, 4);
-}
-
+/* Tarjetas y Contenedores Blancos */
 .card {
     -fx-background-color: #ffffff;
     -fx-padding: 16px;
     -fx-background-radius: 12px;
-    -fx-effect: dropshadow(three-pass-box, rgba(10, 56, 113, 0.12), 12, 0, 0, 4);
+    -fx-effect: dropshadow(three-pass-box, rgba(10,56,113,0.12), 12, 0, 0, 4);
 }
 
-/* ---------- Textos ---------- */
+/* Encabezados y Labels */
 .titulo-principal {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: #0B3C8C;
+    -fx-text-fill: #0a3871;
 }
 
 .label-bold {
     -fx-font-weight: bold;
-    -fx-text-fill: #0B3C8C;
+    -fx-text-fill: #0a3871;
 }
 
-/* ---------- Campos de texto ---------- */
-.text-field, .password-field {
+/* Entradas de Texto */
+.text-field {
     -fx-background-radius: 6px;
     -fx-border-color: #cbd5e1;
     -fx-border-radius: 6px;
     -fx-padding: 6px;
 }
 
-.text-field:focused, .password-field:focused {
-    -fx-border-color: #14C4B4;
+.text-area {
+    -fx-background-radius: 6px;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
 }
 
-/* ---------- Botones ---------- */
+.text-area .content {
+    -fx-background-radius: 6px;
+}
 
+/* ComboBox */
+.combo-box {
+    -fx-background-color: white;
+    -fx-background-radius: 6px;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.combo-box:focused {
+    -fx-border-color: #00b4a2;
+}
+
+/* TableView */
+.table-view {
+    -fx-background-color: white;
+    -fx-background-radius: 6px;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #0a3871;
+    -fx-background-radius: 6px 6px 0 0;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: #0a3871;
+    -fx-size: 36px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #00b4a2;
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f4f9fc;
+}
+
+.table-row-cell:odd:selected {
+    -fx-background-color: #00b4a2;
+}
+
+/* Botones Generales */
 .btn-primary {
-    -fx-background-color: #14C4B4;
+    -fx-background-color: #00b4a2;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-cursor: hand;
     -fx-background-radius: 6px;
-    -fx-padding: 8 16 8 16;
+}
+.btn-primary:hover {
+    -fx-background-color: #009688;
 }
 
 .btn-secondary {
-    -fx-background-color: #0B3C8C;
+    -fx-background-color: #0a3871;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-cursor: hand;
     -fx-background-radius: 6px;
-    -fx-padding: 8 16 8 16;
+}
+.btn-secondary:hover {
+    -fx-background-color: #082c59;
 }
 
 .btn-danger {
@@ -184,38 +129,151 @@
     -fx-font-weight: bold;
     -fx-cursor: hand;
     -fx-background-radius: 6px;
-    -fx-padding: 8 16 8 16;
+}
+.btn-danger:hover {
+    -fx-background-color: #be123c;
 }
 
-.btn-primary:hover, .btn-secondary:hover, .btn-danger:hover {
-    -fx-opacity: 0.85;
+/* Botones deshabilitados (todos) */
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-danger:disabled,
+.btn-filtrar:disabled,
+.btn-refrescar:disabled,
+.btn-aceptar:disabled,
+.btn-rechazar:disabled,
+.btn-rescindir:disabled {
+    -fx-opacity: 0.45;
+    -fx-cursor: default;
 }
 
-/* ---------- Tablas ---------- */
-.table-view {
-    -fx-background-color: white;
-    -fx-border-color: #7FE3D8;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
+/* ==========================================
+   BOTONES ESPECÍFICOS DE GESTIÓN DE CONTRATOS
+   ========================================== */
+.panel-principal {
+    -fx-background-color: #f4f9fc;
 }
 
-.table-view .column-header {
-    -fx-background-color: #0B3C8C;
+.titulo-vista {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0a3871;
 }
-
-.table-view .column-header .label {
+.btn-filtrar {
+    -fx-background-color: #3b82f6;
     -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+}
+.btn-filtrar:hover {
+    -fx-background-color: #2563eb;
+}
+
+.btn-refrescar {
+    -fx-background-color: #64748b;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+}
+.btn-refrescar:hover {
+    -fx-background-color: #475569;
+}
+
+.btn-aceptar {
+    -fx-background-color: #10b981;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+}
+.btn-aceptar:hover {
+    -fx-background-color: #059669;
+}
+
+.btn-rechazar {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+}
+.btn-rechazar:hover {
+    -fx-background-color: #dc2626;
+}
+
+.btn-rescindir {
+    -fx-background-color: #f59e0b;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+}
+.btn-rescindir:hover {
+    -fx-background-color: #d97706;
+}
+.btn-rescindir:hover {
+    -fx-background-color: #d97706;
+}
+
+/* ==========================================
+   PANEL EMPLEADO
+   ========================================== */
+.barra-superior {
+    -fx-background-color: linear-gradient(to right, #0a3871, #1565c0 50%, #00b4a2);
+    -fx-effect: dropshadow(gaussian, rgba(10,56,113,0.35), 8, 0, 0, 2);
+}
+
+.franja-turquesa {
+    -fx-background-color: #00b4a2;
+}
+
+.titulo-barra {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.nombre-usuario {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/* Desplegable de opciones del empleado */
+.combo-empleado {
+    -fx-background-color: white;
+    -fx-background-radius: 18px;
+    -fx-border-color: #00b4a2;
+    -fx-border-radius: 18px;
+    -fx-border-width: 2px;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.combo-empleado:hover {
+    -fx-border-color: #009688;
+}
+
+.combo-empleado .list-cell {
+    -fx-text-fill: #0a3871;
     -fx-font-weight: bold;
 }
 
-.table-view .column-header-background .filler {
-    -fx-background-color: #0B3C8C;
+.combo-empleado .arrow-button {
+    -fx-background-color: transparent;
 }
 
-.table-row-cell:selected {
-    -fx-background-color: #14C4B4;
+.combo-empleado .arrow {
+    -fx-background-color: #0a3871;
 }
 
-.table-row-cell:selected .text {
-    -fx-fill: white;
+/* Contenedor donde se cargan las subvistas */
+.panel-contenido {
+    -fx-background-color: white;
+    -fx-background-radius: 14px;
+    -fx-border-color: #d6e4f0;
+    -fx-border-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(10,56,113,0.12), 10, 0, 0, 2);
 }

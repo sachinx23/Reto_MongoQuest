@@ -22,9 +22,9 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 
 /**
- * Acceso a MongoDB. Cada operación se apunta en el log con LOGGER.
- * Un Document es como un HashMap: se le meten campos con put() y se leen con get().
- * Se usa para guardar datos, para buscar (filtro) y para modificar (cambios).
+ * Acceso a MongoDB. Cada operación se apunta en el log con LOGGER. Un Document
+ * es como un HashMap: se le meten campos con put() y se leen con get(). Se usa
+ * para guardar datos, para buscar (filtro) y para modificar (cambios).
  */
 public class DAOImplementacion implements DAO {
 
@@ -44,7 +44,6 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- LOGIN Y CLIENTES ----------
-
     @Override
     public Usuario login(String nombreUsuario, String contrasena) throws OurException {
         try {
@@ -157,7 +156,6 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- TARIFAS ----------
-
     @Override
     public List<Tarifa> obtenerTarifas() throws OurException {
         List<Tarifa> tarifas = new ArrayList<>();
@@ -179,7 +177,6 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- CONTRATOS ----------
-
     @Override
     public List<Contrato> obtenerContratosCliente(String idCliente) throws OurException {
         try {
@@ -364,7 +361,6 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- TICKETS ----------
-
     @Override
     public List<TicketSoporte> obtenerTicketsCliente(String idCliente) throws OurException {
         try {
@@ -445,7 +441,6 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- EMPLEADOS Y ADMINISTRADORES (los métodos vacíos son de la parte del administrador) ----------
-
     @Override
     public void actualizarEmpleado(Empleado empleado) throws OurException {
         String nombreColeccion = COL_EMPLEADOS;
@@ -494,7 +489,6 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- SUCURSALES (parte del administrador) ----------
-
     @Override
     public List<Sucursal> obtenerSucursales() throws OurException {
         // TODO parte del administrador
@@ -517,7 +511,6 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- VALORACIONES ----------
-
     @Override
     public List<Valoracion> obtenerValoracionesCliente(String idCliente) throws OurException {
         List<Valoracion> valoraciones = new ArrayList<>();
@@ -582,7 +575,6 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- DE DOCUMENT A OBJETO Y AL REVÉS ----------
-
     private Cliente documentoACliente(Document d) {
         Cliente c = new Cliente(idTexto(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"), texto(d, "contrasena"),
                 texto(d, "correo"), texto(d, "cuentaBancaria"), texto(d, "DNI"), texto(d, "telefono"), texto(d, "direccion"));
@@ -596,7 +588,6 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- AYUDANTES ----------
-
     // Busca un documento por su _id. Devuelve null si no existe
     private Document buscarPorId(String nombreColeccion, Object id) throws OurException {
         return coleccion(nombreColeccion).find(new Document("_id", id)).first();

@@ -9,16 +9,11 @@ import modelo.Usuario;
  */
 public class Sesion {
 
-    private static DAO dao = new DAOImplementacion();
+    private static final DAO dao = new DAOImplementacion();
     private static Usuario usuario;
 
     public static DAO getDao() {
         return dao;
-    }
-
-    // Para los tests: cambia el DAO de MongoDB por un MockModelDao
-    public static void setDao(DAO nuevoDao) {
-        dao = nuevoDao;
     }
 
     public static Usuario getUsuario() {
