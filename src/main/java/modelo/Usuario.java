@@ -11,6 +11,7 @@ public abstract class Usuario {
     private String contrasena;
     private String correo;
     private String cuentaBancaria;
+    private String apellidos;
 
     public Usuario(String id, String nombre, String nombreUsuario, String contrasena, String correo, String cuentaBancaria) {
         this.id = id;
@@ -67,5 +68,17 @@ public abstract class Usuario {
 
     public void setCuentaBancaria(String cuentaBancaria) {
         this.cuentaBancaria = cuentaBancaria;
+    }
+
+    // Constructor vacío: lo usan los DAO de administrador, que rellenan el objeto con los setters
+    public Usuario() {
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
     }
 }

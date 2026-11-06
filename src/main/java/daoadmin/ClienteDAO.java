@@ -4,7 +4,7 @@
  */
 package daoadmin;
 
-import modeloadmin.Cliente;
+import modelo.Cliente;
 import org.bson.Document;
 import java.util.List;
 /**

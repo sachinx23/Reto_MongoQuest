@@ -4,7 +4,7 @@
  */
 package daoadmin;
 
-import modeloadmin.Contrato;
+import modelo.Contrato;
 import java.util.List;
 
 /**

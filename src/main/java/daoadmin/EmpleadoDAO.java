@@ -1,6 +1,6 @@
 package daoadmin;
 
-import modeloadmin.Empleado;
+import modelo.Empleado;
 import org.bson.Document;
 import java.util.List;
 /*

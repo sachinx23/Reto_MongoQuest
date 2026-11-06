@@ -4,11 +4,11 @@
  */
 package daoadmin.implementacion;
 
+import daocliente.MongoConnection;
 import daoadmin.ContratoDAO;
-import daoadmin.MongoDBConexion;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import modeloadmin.Contrato;
+import modelo.Contrato;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -61,7 +61,7 @@ public class ContratoDaoImpl implements ContratoDAO{
     public List<Contrato> listarContratos() {
         List<Contrato> lista = new ArrayList<>();
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Contratos");
             
             for (Document doc : col.find()) {
@@ -79,7 +79,7 @@ public class ContratoDaoImpl implements ContratoDAO{
     @Override
     public boolean aprobarContrato(Contrato c, String idGestor) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Contratos");
 
             Object idEmp = ObjectId.isValid(idGestor) ? new ObjectId(idGestor) : idGestor;
@@ -119,7 +119,7 @@ public class ContratoDaoImpl implements ContratoDAO{
     @Override
     public boolean rechazarContratos(Contrato c) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Contratos");
 
             Document camposNuevos = new Document("estado", "rechazado");
@@ -135,7 +135,7 @@ public class ContratoDaoImpl implements ContratoDAO{
     @Override
     public boolean rescindirContrato(Contrato c) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Contratos");
 
             Document camposNuevos = new Document("estado", "rescindido")
@@ -154,7 +154,7 @@ public class ContratoDaoImpl implements ContratoDAO{
     public List<Contrato> filtrarContratos(String telefono, String estado) {
         List<Contrato> lista = new ArrayList<>();
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Contratos");
             
             Document filtro = new Document();

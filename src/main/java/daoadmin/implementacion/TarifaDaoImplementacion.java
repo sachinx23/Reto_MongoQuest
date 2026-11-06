@@ -4,9 +4,9 @@
  */
 package daoadmin.implementacion;
 
+import daocliente.MongoConnection;
 import daoadmin.TarifaDAO;
-import daoadmin.MongoDBConexion;
-import modeloadmin.Tarifa;
+import modelo.Tarifa;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -32,7 +32,7 @@ private Bson getFiltroId(String idStr) {
     public List<Tarifa> listarTarifas() {
         List<Tarifa> resultado = new ArrayList<>();
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Tarifas");
             for (Document d : col.find()) {
                 String id = d.get("_id") != null ? d.get("_id").toString() : "";
@@ -54,7 +54,7 @@ private Bson getFiltroId(String idStr) {
     @Override
     public boolean insertarTarifa(Tarifa t) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Tarifas");
             Document doc = new Document("nombreTarifa", t.getNombreTarifa())
                     .append("precio", t.getPrecio())
@@ -72,7 +72,7 @@ private Bson getFiltroId(String idStr) {
     @Override
     public boolean actualizarTarifa(Tarifa t) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Tarifas");
             Document actualizar = new Document("nombreTarifa", t.getNombreTarifa())
                     .append("precio", t.getPrecio())
@@ -90,7 +90,7 @@ private Bson getFiltroId(String idStr) {
     @Override
     public boolean eliminarTarifa(Tarifa t) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Tarifas");
             return col.deleteOne(getFiltroId(t.getId())).getDeletedCount() > 0;
         } catch (Exception e) {

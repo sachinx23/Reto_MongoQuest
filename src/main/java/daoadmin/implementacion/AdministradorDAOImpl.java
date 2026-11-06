@@ -4,8 +4,8 @@
  */
 package daoadmin.implementacion;
 
+import daocliente.MongoConnection;
 import daoadmin.AdministradorDAO;
-import daoadmin.MongoDBConexion;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -21,7 +21,7 @@ public class AdministradorDAOImpl implements AdministradorDAO{
 @Override
     public Document comprobarUsuarios(String usuario, String contrasena) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             Document query = new Document("nombreUsuario", usuario);
             query.append("contrasena", contrasena);
 
@@ -51,7 +51,7 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     @Override
     public boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> colEmp = db.getCollection("Empleados");
 
             Document filtroBusqueda = new Document("nombreUsuario", usuario);
@@ -78,7 +78,7 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     @Override
     public boolean eliminarEmpleado(String nombreUsuario) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> colEmp = db.getCollection("Empleados");
             long borrados = colEmp.deleteOne(Filters.eq("nombreUsuario", nombreUsuario)).getDeletedCount();
             if (borrados > 0) {
@@ -95,7 +95,7 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     @Override
     public boolean ascenderEmpleado(String nombreUsuario, String nuevoRol) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> colEmp = db.getCollection("Empleados");
 
             Document emp = colEmp.find(Filters.eq("nombreUsuario", nombreUsuario)).first();
@@ -115,7 +115,7 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     public List<Document> obtenerPlantilla() {
         List<Document> todos = new ArrayList<>();
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
 
             // Usamos .into() para volcar los documentos en una lista clásica sin bucles avanzados
             List<Document> listaAdmin = db.getCollection("Administradores").find().into(new ArrayList<>());

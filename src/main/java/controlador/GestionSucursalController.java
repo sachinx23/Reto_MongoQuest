@@ -15,8 +15,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import modeloadmin.Sucursal;
-import modeloadmin.Ubicacion;
+import modelo.Sucursal;
+import modelo.Ubicacion;
 import daoadmin.SucursalDAO;
 import daoadmin.implementacion.SucursalDaoImplementacion;
 

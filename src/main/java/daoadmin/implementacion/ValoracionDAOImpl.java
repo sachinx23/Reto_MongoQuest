@@ -4,9 +4,9 @@
  */
 package daoadmin.implementacion;
 
+import daocliente.MongoConnection;
 import daoadmin.ValoracionDAO;
-import daoadmin.MongoDBConexion;
-import modeloadmin.Valoracion;
+import modelo.Valoracion;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -22,7 +22,7 @@ import java.util.List;
 public class ValoracionDAOImpl implements ValoracionDAO {
 
     private MongoCollection<Document> getColeccion() {
-        return MongoDBConexion.getColeccion("Valoraciones");
+        return MongoConnection.getColeccion("Valoraciones");
     }
 
     private Document getFiltroId(String idStr) {
@@ -53,14 +53,14 @@ public class ValoracionDAOImpl implements ValoracionDAO {
             Document d = docs.get(i);
             Valoracion v = mapearValoracion(d);
 
-            Document cliente = MongoDBConexion.getColeccion("Clientes").find(getFiltroId(v.getIdCliente())).first();
+            Document cliente = MongoConnection.getColeccion("Clientes").find(getFiltroId(v.getIdCliente())).first();
             if (cliente != null) {
                 v.setNombreCliente(cliente.getString("nombre"));
             } else {
                 v.setNombreCliente("Cliente eliminado");
             }
 
-            Document tarifa = MongoDBConexion.getColeccion("Tarifas").find(getFiltroId(v.getIdTarifa())).first();
+            Document tarifa = MongoConnection.getColeccion("Tarifas").find(getFiltroId(v.getIdTarifa())).first();
             if (tarifa != null) {
                 v.setNombreTarifa(tarifa.getString("nombreTarifa"));
             } else {

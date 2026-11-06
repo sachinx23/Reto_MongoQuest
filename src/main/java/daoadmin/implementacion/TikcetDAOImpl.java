@@ -4,15 +4,14 @@
  */
 package daoadmin.implementacion;
 
-import daoadmin.MongoDBConexion;
-import daoadmin.MongoDBConexion;
+import daocliente.MongoConnection;
 import daoadmin.TicketDAO;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import modeloadmin.TicketSoporte;
+import modelo.TicketSoporte;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class TikcetDAOImpl implements TicketDAO {
 
     public boolean crearTickets(String idCliente, String asunto, String descripcion) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             Object idCli = idCliente;
             if (idCliente != null) {
                 if (ObjectId.isValid(idCliente)) {
@@ -65,7 +64,7 @@ public class TikcetDAOImpl implements TicketDAO {
     public List<TicketSoporte> listarTicket(String estado) {
         List<TicketSoporte> lista = new ArrayList<>();
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("TicketsSoporte");
 
             Document filtro = new Document("tipo", "incidencia");
@@ -92,7 +91,7 @@ public class TikcetDAOImpl implements TicketDAO {
     public List<TicketSoporte> listarTicketsCliente(String idCliente) {
         List<TicketSoporte> lista = new ArrayList<>();
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("TicketsSoporte");
 
             ObjectId id = new ObjectId(idCliente);
@@ -116,7 +115,7 @@ public class TikcetDAOImpl implements TicketDAO {
 
     public boolean asignarTicket(TicketSoporte t, String idEmpleado) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("TicketsSoporte");
 
             ObjectId idEmp = new ObjectId(idEmpleado);
@@ -136,7 +135,7 @@ public class TikcetDAOImpl implements TicketDAO {
 
     public boolean cambiarEstadoTicket(TicketSoporte t, String estado) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("TicketsSoporte");
 
             Document cambios = new Document("estado", estado);

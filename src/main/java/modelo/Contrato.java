@@ -132,6 +132,22 @@ public class Contrato {
         this.nombreCliente = nombreCliente;
     }
 
+    public Contrato() {
+    }
+
+    // La parte de administrador trabaja con el estado como texto ("pendiente", "activo"...)
+    public void setEstado(String estado) {
+        this.estado = EstadoContrato.desdeTexto(estado);
+    }
+
+    public String getFechaFin() {
+        return fechaFinalizacion;
+    }
+
+    public void setFechaFin(String fechaFin) {
+        this.fechaFinalizacion = fechaFin;
+    }
+
     // Estados por los que pasa un contrato
     public enum EstadoContrato {
         PENDIENTE("pendiente"),

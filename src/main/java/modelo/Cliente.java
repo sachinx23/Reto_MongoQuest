@@ -48,4 +48,17 @@ public class Cliente extends Usuario {
         this.dadoDeBaja = dadoDeBaja;
     }
 
+    public Cliente() {
+    }
+
+    // Constructor que usa la parte de administrador (listado de clientes)
+    public Cliente(String nombreUsuario, String nombre, String apellidos, String correo, String dni, String telefono, String direccion) {
+        setNombreUsuario(nombreUsuario);
+        setNombre(nombre);
+        setApellidos(apellidos);
+        setCorreo(correo);
+        this.dni = dni;
+        this.telefono = telefono;
+        this.direccion = direccion;
+    }
 }

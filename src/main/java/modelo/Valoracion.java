@@ -10,6 +10,7 @@ public class Valoracion {
 
     // No se guarda en Valoraciones: se rellena al consultar, para la tabla del administrador
     private String nombreCliente;
+    private String nombreTarifa;
 
     public Valoracion(String id, int puntuacion, String texto, String idCliente, String idTarifa) {
         this.id = id;
@@ -65,5 +66,16 @@ public class Valoracion {
 
     public void setNombreCliente(String nombreCliente) {
         this.nombreCliente = nombreCliente;
+    }
+
+    public Valoracion() {
+    }
+
+    public String getNombreTarifa() {
+        return nombreTarifa;
+    }
+
+    public void setNombreTarifa(String nombreTarifa) {
+        this.nombreTarifa = nombreTarifa;
     }
 }

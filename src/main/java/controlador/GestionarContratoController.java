@@ -15,7 +15,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import modeloadmin.Contrato;
+import modelo.Contrato;
 import daoadmin.ContratoDAO;
 import daoadmin.implementacion.ContratoDaoImpl;
 
@@ -174,8 +174,8 @@ public class GestionarContratoController implements Initializable {
     //acrualizar estado
     private void actualizarEstadoBotones() {
         boolean haySeleccion = contratoSeleccionado != null;
-        boolean pendiente = haySeleccion && "pendiente".equalsIgnoreCase(contratoSeleccionado.getEstado());
-        boolean activo = haySeleccion && "activo".equalsIgnoreCase(contratoSeleccionado.getEstado());
+        boolean pendiente = haySeleccion && "pendiente".equalsIgnoreCase(String.valueOf(contratoSeleccionado.getEstado()));
+        boolean activo = haySeleccion && "activo".equalsIgnoreCase(String.valueOf(contratoSeleccionado.getEstado()));
 
         btnAceptarPeticion.setDisable(!pendiente);
         btnRechazarPeticion.setDisable(!pendiente);

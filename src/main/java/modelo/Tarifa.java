@@ -72,4 +72,13 @@ public class Tarifa {
     public void setActiva(boolean activa) {
         this.activa = activa;
     }
+
+    // Tarifa nueva (todavía sin id): la usa la parte de administrador
+    public Tarifa(String nombreTarifa, double precio, String detalles, String tipoTarifa, boolean activa) {
+        this(null, nombreTarifa, precio, detalles, tipoTarifa, activa);
+    }
+
+    public boolean getActiva() {
+        return activa;
+    }
 }

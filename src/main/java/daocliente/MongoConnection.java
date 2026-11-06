@@ -2,11 +2,13 @@ package daocliente;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import exception.ErrorMessages;
 import exception.OurException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bson.Document;
 
 public class MongoConnection {
 
@@ -38,6 +40,12 @@ public class MongoConnection {
             throw new OurException(ErrorMessages.DATABASE);
         }
         return database;
+    }
+
+    // Una colección de la base de datos (la usan los DAO de administrador).
+    // No lanza OurException: la aplicación no arranca si no ha podido conectar con MongoDB
+    public static MongoCollection<Document> getColeccion(String nombre) {
+        return database.getCollection(nombre);
     }
 
     // Cierra la conexión. Se llama al cerrar la aplicación

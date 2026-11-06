@@ -16,7 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import modeloadmin.Tarifa;
+import modelo.Tarifa;
 import daoadmin.TarifaDAO;
 import daoadmin.implementacion.TarifaDaoImplementacion;
 

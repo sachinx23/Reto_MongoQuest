@@ -12,6 +12,8 @@ public class TicketSoporte {
 
     // No se guarda en TicketsSoportes: se rellena al consultar con $lookup
     private String nombreCliente;
+    private String tipo;
+    private String idContrato;
 
     public TicketSoporte(String id, String asunto, String descripcion, String fechaCreacion, String estado, String idCliente, String idEmpleado) {
         this.id = id;
@@ -95,5 +97,24 @@ public class TicketSoporte {
 
     public void setNombreCliente(String nombreCliente) {
         this.nombreCliente = nombreCliente;
+    }
+
+    public TicketSoporte() {
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getIdContrato() {
+        return idContrato;
+    }
+
+    public void setIdContrato(String idContrato) {
+        this.idContrato = idContrato;
     }
 }

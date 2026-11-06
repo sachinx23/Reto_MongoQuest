@@ -18,7 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import modeloadmin.TicketSoporte;
+import modelo.TicketSoporte;
 
 /**
  * FXML Controller class para Tickets de Soporte

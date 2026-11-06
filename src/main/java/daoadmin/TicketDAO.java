@@ -4,7 +4,7 @@
  */
 package daoadmin;
 
-import modeloadmin.TicketSoporte;
+import modelo.TicketSoporte;
 import java.util.List;
 /**
  *

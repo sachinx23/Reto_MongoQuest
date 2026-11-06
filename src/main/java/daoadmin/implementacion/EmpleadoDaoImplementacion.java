@@ -4,9 +4,9 @@
  */
 package daoadmin.implementacion;
 
+import daocliente.MongoConnection;
 import daoadmin.EmpleadoDAO;
-import daoadmin.MongoDBConexion;
-import modeloadmin.Empleado;
+import modelo.Empleado;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -22,7 +22,7 @@ public class EmpleadoDaoImplementacion implements EmpleadoDAO{
 @Override
     public Document comprobarUsuarios(String usuario, String contrasena) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             Document query = new Document("nombreUsuario", usuario).append("contrasena", contrasena);
 
             Document admin = db.getCollection("Administradores").find(query).first();
@@ -52,7 +52,7 @@ public class EmpleadoDaoImplementacion implements EmpleadoDAO{
     public List<Empleado> listarEmpleados() {
         List<Empleado> lista = new ArrayList<>();
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Empleados");
             for (Document doc : col.find()) {
                 String id = doc.get("_id") != null ? doc.get("_id").toString() : "";
@@ -78,7 +78,7 @@ public class EmpleadoDaoImplementacion implements EmpleadoDAO{
     @Override
     public boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> colEmp = db.getCollection("Empleados");
 
             if (colEmp.find(new Document("nombreUsuario", usuario)).first() != null) {
@@ -104,7 +104,7 @@ public class EmpleadoDaoImplementacion implements EmpleadoDAO{
     @Override
     public boolean eliminarEmpleado(String nombreUsuario) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             return db.getCollection("Empleados").deleteOne(Filters.eq("nombreUsuario", nombreUsuario)).getDeletedCount() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -115,7 +115,7 @@ public class EmpleadoDaoImplementacion implements EmpleadoDAO{
     @Override
     public boolean ascenderEmpleado(String nombreUsuario, String nuevoRol) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> colEmp = db.getCollection("Empleados");
 
             Document emp = colEmp.find(Filters.eq("nombreUsuario", nombreUsuario)).first();

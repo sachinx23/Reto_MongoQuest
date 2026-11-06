@@ -4,10 +4,10 @@
  */
 package daoadmin.implementacion;
 
+import daocliente.MongoConnection;
 import daoadmin.SucursalDAO;
-import daoadmin.MongoDBConexion;
-import modeloadmin.Sucursal;
-import modeloadmin.Ubicacion;
+import modelo.Sucursal;
+import modelo.Ubicacion;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -32,7 +32,7 @@ private Document ubicacionADocumento(Ubicacion u) {
     @Override
     public int siguienteIdSucursal() {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Sucursales");
             int maxId = 0;
             for (Document d : col.find()) {
@@ -51,7 +51,7 @@ private Document ubicacionADocumento(Ubicacion u) {
     @Override
     public boolean insertarSucursal(Sucursal s) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Sucursales");
             Document doc = new Document("id", s.getId())
                     .append("horario", s.getHorario())
@@ -68,7 +68,7 @@ private Document ubicacionADocumento(Ubicacion u) {
     @Override
     public boolean actualizarSucursal(Sucursal s) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Sucursales");
             Document cambios = new Document("horario", s.getHorario())
                     .append("telefono", s.getTelefono())
@@ -84,7 +84,7 @@ private Document ubicacionADocumento(Ubicacion u) {
     @Override
     public boolean eliminarSucursal(int id) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             return db.getCollection("Sucursales").deleteOne(Filters.eq("id", id)).getDeletedCount() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,7 +96,7 @@ private Document ubicacionADocumento(Ubicacion u) {
     public List<Sucursal> listarSucursales() {
         List<Sucursal> resultado = new ArrayList<>();
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Sucursales");
             for (Document d : col.find()) {
                 Document u = d.get("ubicacion", Document.class);

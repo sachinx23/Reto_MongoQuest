@@ -4,7 +4,7 @@
  */
 package daoadmin;
 
-import modeloadmin.Sucursal;
+import modelo.Sucursal;
 import java.util.List;
 /**
  *

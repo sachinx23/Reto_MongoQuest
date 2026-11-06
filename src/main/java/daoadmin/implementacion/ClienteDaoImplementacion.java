@@ -4,9 +4,9 @@
  */
 package daoadmin.implementacion;
 
+import daocliente.MongoConnection;
 import daoadmin.ClienteDAO;
-import daoadmin.MongoDBConexion;
-import modeloadmin.Cliente;
+import modelo.Cliente;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -23,7 +23,7 @@ public class ClienteDaoImplementacion implements ClienteDAO {
     @Override
     public Document comprobarUsuarios(String usuario, String contrasena) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             Document query = new Document("nombreUsuario", usuario).append("contrasena", contrasena);
             
             Document cliente = db.getCollection("Clientes").find(query).first();
@@ -40,7 +40,7 @@ public class ClienteDaoImplementacion implements ClienteDAO {
     @Override
     public boolean registrarCliente(String usuario, String nombre, String apellidos, String contrasena, String correo, String dni, String telefono, String direccion) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Clientes");
 
             if (col.find(new Document("nombreUsuario", usuario)).first() != null) {
@@ -68,7 +68,7 @@ public class ClienteDaoImplementacion implements ClienteDAO {
     @Override
     public boolean eliminarDatosSensiblesCliente(String nombreUsuario) {
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             return db.getCollection("Clientes").deleteOne(Filters.eq("nombreUsuario", nombreUsuario)).getDeletedCount() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,7 +80,7 @@ public class ClienteDaoImplementacion implements ClienteDAO {
     public List<Cliente> listarClientes() {
         List<Cliente> lista = new ArrayList<>();
         try {
-            MongoDatabase db = MongoDBConexion.getDatabase();
+            MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> col = db.getCollection("Clientes");
             
             for (Document doc : col.find()) {
