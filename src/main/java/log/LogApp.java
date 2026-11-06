@@ -33,7 +33,7 @@ public class LogApp extends Formatter {
             FileHandler fichero = new FileHandler(FICHERO_LOG, true);
             fichero.setEncoding("UTF-8");
             fichero.setFormatter(new LogApp());
-            // El LOGGER de cada clase pasa sus mensajes al de su paquete (dao.DAOImplementacion -> dao)
+            // El LOGGER de cada clase pasa sus mensajes al de su paquete (dao.implementacion.DAOImplementacion -> dao)
             for (Logger paquete : PAQUETES) {
                 paquete.addHandler(fichero);
             }

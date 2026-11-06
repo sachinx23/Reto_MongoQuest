@@ -1,7 +1,7 @@
 package controlador;
 
 import dao.DAO;
-import dao.DAOImplementacion;
+import dao.implementacion.DAOImplementacion;
 import modelo.Usuario;
 
 /**

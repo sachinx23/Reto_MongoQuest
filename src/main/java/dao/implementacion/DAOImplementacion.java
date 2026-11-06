@@ -1,7 +1,9 @@
-package dao;
+package dao.implementacion;
 
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
+import dao.DAO;
+import dao.MongoConnection;
 import exception.ErrorMessages;
 import exception.OurException;
 import java.util.ArrayList;
