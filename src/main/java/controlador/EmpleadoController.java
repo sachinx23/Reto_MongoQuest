@@ -1,5 +1,9 @@
 package controlador;
 
+import log.LogApp;
+import exception.ShowAlert;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,6 +26,8 @@ import javafx.stage.Stage;
  * @author eneko
  */
 public class EmpleadoController implements Initializable {
+
+    private static final Logger LOGGER = Logger.getLogger(EmpleadoController.class.getName());
 
     @FXML
     private ComboBox<String> cbOpcionesEmpleado;
@@ -82,6 +88,8 @@ public class EmpleadoController implements Initializable {
 
     private void cerrarSesion(ActionEvent event) {
         try {
+            LOGGER.info("Sesión cerrada");
+            LogApp.setUsuario(null);
             URL url = getClass().getResource("/vista/IniciarSesion.fxml");
             Parent loginView = FXMLLoader.load(url);
 
@@ -90,7 +98,8 @@ public class EmpleadoController implements Initializable {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            System.err.println("Error al volver a la pantalla de login: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Error al volver al login", e);
+            ShowAlert.error("No se pudo volver a la pantalla de inicio de sesión.");
         }
     }
 
@@ -102,11 +111,12 @@ public class EmpleadoController implements Initializable {
                 contenidoDinamico.getChildren().clear();
                 contenidoDinamico.getChildren().add(vista);
             } else {
-                System.err.println("No se encontró el FXML en la ruta: " + rutaFXML);
+                LOGGER.severe("No existe la pantalla " + rutaFXML);
+                ShowAlert.error("No se encontró la pantalla " + rutaFXML);
             }
         } catch (IOException e) {
-            System.err.println("Error al cargar la subvista: " + e.getMessage());
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error al abrir " + rutaFXML, e);
+            ShowAlert.error("No se pudo abrir la pantalla.");
         }
     }
 }

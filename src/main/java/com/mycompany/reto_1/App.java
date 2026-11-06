@@ -1,6 +1,7 @@
 package com.mycompany.reto_1;
 
 import java.io.InputStream;
+import log.LogApp;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,6 +13,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        LogApp.configurar();
         // Cargas la ventana de Login
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("vista/IniciarSesion.fxml"));
         

@@ -1,5 +1,8 @@
 package controlador;
 
+import java.util.logging.Logger;
+import exception.ShowAlert;
+import exception.OurException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -19,9 +22,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import modelo.Contrato;
 import DAO.ContratoDAO;
-import DAO.implementacion.ContratoDaoImpl;
+import DAO.implementacion.ContratoDAOImplementacion;
 
 public class GestionarContratoController implements Initializable {
+
+    private static final Logger LOGGER = Logger.getLogger(GestionarContratoController.class.getName());
 
     @FXML
     private TextField txtFiltroTelefono;
@@ -57,7 +62,7 @@ public class GestionarContratoController implements Initializable {
     private Button btnRefrescar;
 
     private Contrato contratoSeleccionado;
-    private final ContratoDAO contratoDAO = new ContratoDaoImpl();
+    private final ContratoDAO contratoDAO = new ContratoDAOImplementacion();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -94,56 +99,86 @@ public class GestionarContratoController implements Initializable {
     }
 
     public void cargarContratos() {
-        List<Contrato> lista = contratoDAO.listarContratos();
-        if (lista != null) {
-            ObservableList<Contrato> datos = FXCollections.observableArrayList(lista);
-            tablaContratos.setItems(datos);
+        try {
+            List<Contrato> lista = contratoDAO.listarContratos();
+            if (lista != null) {
+                ObservableList<Contrato> datos = FXCollections.observableArrayList(lista);
+                tablaContratos.setItems(datos);
+            }
+            limpiarSeleccion();
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
-        limpiarSeleccion();
     }
 
     @FXML
     private void filtrarContratos(ActionEvent event) {
-        String tel = txtFiltroTelefono.getText();
-        String est = comboFiltroEstado.getValue();
-        List<Contrato> filtrados = contratoDAO.filtrarContratos(tel, est);
-        tablaContratos.setItems(FXCollections.observableArrayList(filtrados));
-        limpiarSeleccion();
+        try {
+            String tel = txtFiltroTelefono.getText();
+            String est = comboFiltroEstado.getValue();
+            List<Contrato> filtrados = contratoDAO.filtrarContratos(tel, est);
+            tablaContratos.setItems(FXCollections.observableArrayList(filtrados));
+            limpiarSeleccion();
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
+        }
     }
 
     @FXML
     private void aceptarPeticion(ActionEvent event) {
-        if (contratoSeleccionado != null) {
-            if (contratoDAO.aprobarContrato(contratoSeleccionado, IniciarSesionController.idUsuarioActual)) {
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa confirmada. Contrato pendiente de firma por el cliente.");
-                cargarContratos();
-            } else {
-                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo confirmar la tarifa.");
+        try {
+            if (contratoSeleccionado != null) {
+                if (contratoDAO.aprobarContrato(contratoSeleccionado, IniciarSesionController.idUsuarioActual)) {
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa confirmada. Contrato pendiente de firma por el cliente.");
+                    cargarContratos();
+                } else {
+                    mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo confirmar la tarifa.");
+                }
             }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
     @FXML
     private void rechazarPeticion(ActionEvent event) {
-        if (contratoSeleccionado != null) {
-            if (contratoDAO.rechazarContratos(contratoSeleccionado)) {
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Contrato rechazado.");
-                cargarContratos();
-            } else {
-                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rechazar el contrato.");
+        try {
+            if (contratoSeleccionado != null) {
+                if (contratoDAO.rechazarContratos(contratoSeleccionado)) {
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Contrato rechazado.");
+                    cargarContratos();
+                } else {
+                    mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rechazar el contrato.");
+                }
             }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
     @FXML
     private void rescindirContrato(ActionEvent event) {
-        if (contratoSeleccionado != null) {
-            if (contratoDAO.rescindirContrato(contratoSeleccionado)) {
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Contrato rescindido correctamente.");
-                cargarContratos();
-            } else {
-                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rescindir el contrato.");
+        try {
+            if (contratoSeleccionado != null) {
+                if (contratoDAO.rescindirContrato(contratoSeleccionado)) {
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Contrato rescindido correctamente.");
+                    cargarContratos();
+                } else {
+                    mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rescindir el contrato.");
+                }
             }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 

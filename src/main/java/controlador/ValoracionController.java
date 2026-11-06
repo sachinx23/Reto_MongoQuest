@@ -4,6 +4,9 @@
  */
 package controlador;
 
+import java.util.logging.Logger;
+import exception.ShowAlert;
+import exception.OurException;
 import com.mongodb.client.MongoDatabase;
 import java.util.Optional;
 import javafx.collections.FXCollections;
@@ -18,13 +21,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import modelo.Valoracion;
 import DAO.ValoracionDAO;
-import DAO.implementacion.ValoracionDAOImpl;
+import DAO.implementacion.ValoracionDAOImplementacion;
 
 /**
  *
  * @author eneko
  */
 public class ValoracionController {
+
+    private static final Logger LOGGER = Logger.getLogger(ValoracionController.class.getName());
 
     @FXML
     private ComboBox<String> cbPuntuacion;
@@ -40,7 +45,7 @@ public class ValoracionController {
     private TableColumn<Valoracion, String> colTexto;
     @FXML
     private Label lblMedia;
-    private final ValoracionDAO valoracionDAO = new ValoracionDAOImpl();
+    private final ValoracionDAO valoracionDAO = new ValoracionDAOImplementacion();
 
     @FXML
     public void initialize() {
@@ -56,27 +61,33 @@ public class ValoracionController {
     }
 
     private void cargarTabla() {
-        String filtro = cbPuntuacion.getValue();
+        try {
+            String filtro = cbPuntuacion.getValue();
 
-        ObservableList<Valoracion> listaCompleta = FXCollections.observableArrayList(valoracionDAO.listarValoraciones());
+            ObservableList<Valoracion> listaCompleta = FXCollections.observableArrayList(valoracionDAO.listarValoraciones());
 
-        if (filtro == null || filtro.equals("Todas")) {
-            tabla.setItems(listaCompleta);
-        } else {
-            int puntuacion = Integer.parseInt(filtro);
-            ObservableList<Valoracion> listaFiltrada = FXCollections.observableArrayList();
+            if (filtro == null || filtro.equals("Todas")) {
+                tabla.setItems(listaCompleta);
+            } else {
+                int puntuacion = Integer.parseInt(filtro);
+                ObservableList<Valoracion> listaFiltrada = FXCollections.observableArrayList();
 
-            for (int i = 0; i < listaCompleta.size(); i++) {
-                Valoracion v = listaCompleta.get(i);
-                if (v.getPuntuacion() == puntuacion) {
-                    listaFiltrada.add(v);
+                for (int i = 0; i < listaCompleta.size(); i++) {
+                    Valoracion v = listaCompleta.get(i);
+                    if (v.getPuntuacion() == puntuacion) {
+                        listaFiltrada.add(v);
+                    }
                 }
+
+                tabla.setItems(listaFiltrada);
             }
 
-            tabla.setItems(listaFiltrada);
+            lblMedia.setText("Media: " + String.format("%.2f", valoracionDAO.mediaValoraciones()) + " / 5");
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
-
-        lblMedia.setText("Media: " + String.format("%.2f", valoracionDAO.mediaValoraciones()) + " / 5");
     }
 
     @FXML
@@ -86,25 +97,31 @@ public class ValoracionController {
 
     @FXML
     private void btnEliminar() {
-        Valoracion seleccionada = tabla.getSelectionModel().getSelectedItem();
+        try {
+            Valoracion seleccionada = tabla.getSelectionModel().getSelectedItem();
 
-        if (seleccionada == null) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Selecciona una valoracion de la tabla para eliminarla");
-            return;
-        }
-
-        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacion.setTitle("Eliminar valoración");
-        confirmacion.setHeaderText(null);
-        confirmacion.setContentText("¿Seguro que quieres eliminar la valoracion de " + seleccionada.getNombreCliente() + "sobre la tarifa " + seleccionada.getNombreTarifa() + "?");
-
-        Optional<ButtonType> resultado = confirmacion.showAndWait();
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            if (valoracionDAO.eliminarValoracion(seleccionada)) {
-                cargarTabla();
-            } else {
-                mostrarAlerta(Alert.AlertType.ERROR, "No se ha podido eliminar la valoración.");
+            if (seleccionada == null) {
+                mostrarAlerta(Alert.AlertType.WARNING, "Selecciona una valoracion de la tabla para eliminarla");
+                return;
             }
+
+            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacion.setTitle("Eliminar valoración");
+            confirmacion.setHeaderText(null);
+            confirmacion.setContentText("¿Seguro que quieres eliminar la valoracion de " + seleccionada.getNombreCliente() + "sobre la tarifa " + seleccionada.getNombreTarifa() + "?");
+
+            Optional<ButtonType> resultado = confirmacion.showAndWait();
+            if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                if (valoracionDAO.eliminarValoracion(seleccionada)) {
+                    cargarTabla();
+                } else {
+                    mostrarAlerta(Alert.AlertType.ERROR, "No se ha podido eliminar la valoración.");
+                }
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 

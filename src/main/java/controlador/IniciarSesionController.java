@@ -1,10 +1,15 @@
 package controlador;
 
+import log.LogApp;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import exception.ShowAlert;
+import exception.OurException;
 import DAO.AdministradorDAO;
 import DAO.ClienteDAO;
 import DAO.EmpleadoDAO;
 import DAO.implementacion.AdministradorDAOImpl;
-import DAO.implementacion.ClienteDaoImplementacion;
+import DAO.implementacion.ClienteDAOImplementacion;
 import DAO.implementacion.EmpleadoDaoImplementacion;
 
 import java.net.URL;
@@ -34,9 +39,11 @@ import org.bson.Document;
  */
 public class IniciarSesionController implements Initializable {
 
+    private static final Logger LOGGER = Logger.getLogger(IniciarSesionController.class.getName());
+
     private final AdministradorDAO administradorDAO = new AdministradorDAOImpl();
     private final EmpleadoDAO empleadoDAO = new EmpleadoDaoImplementacion();
-    private final ClienteDAO clienteDAO = new ClienteDaoImplementacion();
+    private final ClienteDAO clienteDAO = new ClienteDAOImplementacion();
 
     public static String idUsuarioActual;
 
@@ -62,75 +69,83 @@ public class IniciarSesionController implements Initializable {
 
     @FXML
     public void btnIniciarSesion() {
-        String usuario = txtUsuario.getText().trim();
-        String contrasena = txtContrasena.getText().trim();
+        try {
+            String usuario = txtUsuario.getText().trim();
+            String contrasena = txtContrasena.getText().trim();
 
-        if (usuario.isEmpty() || contrasena.isEmpty()) {
-            lblMensajeError.setText("Rellena todos los campos.");
-            return;
-        }
+            if (usuario.isEmpty() || contrasena.isEmpty()) {
+                lblMensajeError.setText("Rellena todos los campos.");
+                return;
+            }
 
-        lblMensajeError.setText("");
+            lblMensajeError.setText("");
 
-        String rolDeducido = null;
+            String rolDeducido = null;
 
-        // 1. Busca en Administradores
-        Document usuarioObtenido = administradorDAO.comprobarUsuarios(usuario, contrasena);
-        if (usuarioObtenido != null) {
-            rolDeducido = "Admin";
-        }
-
-        // 2. Si no lo encuentra, busca en Empleados
-        if (usuarioObtenido == null) {
-            usuarioObtenido = empleadoDAO.comprobarUsuarios(usuario, contrasena);
+            // 1. Busca en Administradores
+            Document usuarioObtenido = administradorDAO.comprobarUsuarios(usuario, contrasena);
             if (usuarioObtenido != null) {
-                rolDeducido = "Empleado";
-            }
-        }
-
-        // 3. Si tampoco lo encuentra, busca en Clientes
-        if (usuarioObtenido == null) {
-            usuarioObtenido = clienteDAO.comprobarUsuarios(usuario, contrasena);
-            if (usuarioObtenido != null) {
-                rolDeducido = "Cliente";
-            }
-        }
-
-        if (usuarioObtenido != null) {
-            idUsuarioActual = usuarioObtenido.getObjectId("_id").toHexString();
-
-            String nombre = usuarioObtenido.getString("nombre");
-            if (nombre == null) {
-                nombre = usuarioObtenido.getString("nombreUsuario");
+                rolDeducido = "Admin";
             }
 
-            // Si el documento de MongoDB tiene un campo "rol", lo usamos; si no, usamos el deducido por el DAO
-            String rolBD = usuarioObtenido.getString("rol");
-            String rolFinal = (rolBD != null && !rolBD.isEmpty()) ? rolBD : rolDeducido;
-
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Inicio de Sesión Correcto");
-            alert.setHeaderText(null);
-            alert.setContentText("¡Bienvenido/a " + (nombre != null ? nombre : usuario) + "!\nRol: " + rolFinal);
-            alert.showAndWait();
-
-            // Redirección según el rol correspondiente
-            if (rolFinal != null) {
-                if (rolFinal.equalsIgnoreCase("Admin")) {
-                    cambiarPantalla("/vista/Admin.fxml");
-                } else if (rolFinal.equalsIgnoreCase("Empleado")) {
-                    cambiarPantalla("/vista/Empleado.fxml");
-                } else if (rolFinal.equalsIgnoreCase("Cliente")) {
-                    cambiarPantalla("/vista/Cliente.fxml");
-                } else {
-                    lblMensajeError.setText("El rol asignado no es válido.");
+            // 2. Si no lo encuentra, busca en Empleados
+            if (usuarioObtenido == null) {
+                usuarioObtenido = empleadoDAO.comprobarUsuarios(usuario, contrasena);
+                if (usuarioObtenido != null) {
+                    rolDeducido = "Empleado";
                 }
-            } else {
-                lblMensajeError.setText("Error: El usuario no tiene rol asignado.");
             }
 
-        } else {
-            lblMensajeError.setText("Usuario o contraseña incorrectos.");
+            // 3. Si tampoco lo encuentra, busca en Clientes
+            if (usuarioObtenido == null) {
+                usuarioObtenido = clienteDAO.comprobarUsuarios(usuario, contrasena);
+                if (usuarioObtenido != null) {
+                    rolDeducido = "Cliente";
+                }
+            }
+
+            if (usuarioObtenido != null) {
+                idUsuarioActual = usuarioObtenido.getObjectId("_id").toHexString();
+
+                String nombre = usuarioObtenido.getString("nombre");
+                if (nombre == null) {
+                    nombre = usuarioObtenido.getString("nombreUsuario");
+                }
+
+                // Si el documento de MongoDB tiene un campo "rol", lo usamos; si no, usamos el deducido por el DAO
+                String rolBD = usuarioObtenido.getString("rol");
+                String rolFinal = (rolBD != null && !rolBD.isEmpty()) ? rolBD : rolDeducido;
+                LogApp.setUsuario(usuario + " (" + rolFinal + ")");
+                LOGGER.info("Sesión iniciada");
+
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Inicio de Sesión Correcto");
+                alert.setHeaderText(null);
+                alert.setContentText("¡Bienvenido/a " + (nombre != null ? nombre : usuario) + "!\nRol: " + rolFinal);
+                alert.showAndWait();
+
+                // Redirección según el rol correspondiente
+                if (rolFinal != null) {
+                    if (rolFinal.equalsIgnoreCase("Admin")) {
+                        cambiarPantalla("/vista/Admin.fxml");
+                    } else if (rolFinal.equalsIgnoreCase("Empleado")) {
+                        cambiarPantalla("/vista/Empleado.fxml");
+                    } else if (rolFinal.equalsIgnoreCase("Cliente")) {
+                        cambiarPantalla("/vista/Cliente.fxml");
+                    } else {
+                        lblMensajeError.setText("El rol asignado no es válido.");
+                    }
+                } else {
+                    lblMensajeError.setText("Error: El usuario no tiene rol asignado.");
+                }
+
+            } else {
+                lblMensajeError.setText("Usuario o contraseña incorrectos.");
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
@@ -140,7 +155,7 @@ public class IniciarSesionController implements Initializable {
             URL resource = getClass().getResource(ruta);
             if (resource == null) {
                 lblMensajeError.setText("Error: No se encuentra el archivo FXML en " + ruta);
-                System.err.println("No se encontró el archivo de vista en la ruta: " + ruta);
+                LOGGER.severe("No existe la pantalla " + ruta);
                 return;
             }
             Parent root = FXMLLoader.load(resource);
@@ -148,8 +163,8 @@ public class IniciarSesionController implements Initializable {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
-            lblMensajeError.setText("Error al cargar la pantalla. Revisa la consola.");
+            LOGGER.log(Level.SEVERE, "Error al abrir " + ruta, e);
+            lblMensajeError.setText("Error al cargar la pantalla.");
         }
     }
 
@@ -161,8 +176,8 @@ public class IniciarSesionController implements Initializable {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error al abrir el registro", e);
             lblMensajeError.setText("No se pudo abrir la pantalla de registro.");
-            e.printStackTrace();
         }
     }
 }

@@ -1,5 +1,10 @@
 package controlador;
 
+import javafx.beans.value.ObservableValue;
+import javafx.beans.value.ChangeListener;
+import java.util.logging.Logger;
+import exception.ShowAlert;
+import exception.OurException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -18,9 +23,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import modelo.Tarifa;
 import DAO.TarifaDAO;
-import DAO.implementacion.TarifaDaoImplementacion;
+import DAO.implementacion.TarifaDAOImplementacion;
 
 public class GestionTarifasController implements Initializable {
+
+    private static final Logger LOGGER = Logger.getLogger(GestionTarifasController.class.getName());
 
     @FXML
     private TextField txtNombre;
@@ -57,7 +64,7 @@ public class GestionTarifasController implements Initializable {
 
     private Tarifa tarifaSeleccionada;
 
-    private final TarifaDAO tarifaDAO = new TarifaDaoImplementacion();
+    private final TarifaDAO tarifaDAO = new TarifaDAOImplementacion();
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         comboTipo.setItems(FXCollections.observableArrayList("Fibra", "Móvil","Fibra + Móvil", "Convergente", "Televisión"));
@@ -70,20 +77,29 @@ public class GestionTarifasController implements Initializable {
 
         cargarTabla();
 
-        tablaTarifas.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                tarifaSeleccionada = newSelection;
-                mostrarDatosEnFormulario(tarifaSeleccionada);
+        tablaTarifas.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tarifa>() {
+            @Override
+            public void changed(ObservableValue<? extends Tarifa> obs, Tarifa oldSelection, Tarifa newSelection) {
+                if (newSelection != null) {
+                    tarifaSeleccionada = newSelection;
+                    mostrarDatosEnFormulario(tarifaSeleccionada);
+                }
             }
         });
     }
 
     // Carga los datos de MongoDB en la TableView
     private void cargarTabla() {
-        List<Tarifa> lista = tarifaDAO.listarTarifas();
-        System.out.println("Tarifas cargadas: " + lista.size());
-        ObservableList<Tarifa> datos = FXCollections.observableArrayList(lista);
-        tablaTarifas.setItems(datos);
+        try {
+            List<Tarifa> lista = tarifaDAO.listarTarifas();
+            LOGGER.info("Tarifas cargadas: " + lista.size());
+            ObservableList<Tarifa> datos = FXCollections.observableArrayList(lista);
+            tablaTarifas.setItems(datos);
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
+        }
     }
 
     //  Pasa los datos de la fila seleccionada a los controles del formulario
@@ -98,112 +114,140 @@ public class GestionTarifasController implements Initializable {
     // guardar campos
     @FXML
     private void btnGuardarAccion() {
-        if (!validarCampos()) return;
+        try {
+            if (!validarCampos()) return;
 
-        String nombre = txtNombre.getText().trim();
-        double precio = Double.parseDouble(txtPrecio.getText().trim());
-        String tipo = comboTipo.getValue();
-        String detalles = txtDetalles.getText().trim();
-        boolean activa = chkActiva.isSelected();
+            String nombre = txtNombre.getText().trim();
+            double precio = Double.parseDouble(txtPrecio.getText().trim());
+            String tipo = comboTipo.getValue();
+            String detalles = txtDetalles.getText().trim();
+            boolean activa = chkActiva.isSelected();
 
-        Tarifa nueva = new Tarifa(nombre, precio, detalles, tipo, activa);
+            Tarifa nueva = new Tarifa(nombre, precio, detalles, tipo, activa);
 
-        if (tarifaDAO.insertarTarifa(nueva)) {
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa guardada en MongoDB.");
-            cargarTabla();
-            btnLimpiarAccion();
-        } else {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo guardar la tarifa.");
+            if (tarifaDAO.insertarTarifa(nueva)) {
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa guardada en MongoDB.");
+                cargarTabla();
+                btnLimpiarAccion();
+            } else {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo guardar la tarifa.");
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
     // catualizar tarifas
     @FXML
     private void btnActualizarAccion() {
-        if (tarifaSeleccionada == null) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa de la tabla.");
-            return;
-        }
+        try {
+            if (tarifaSeleccionada == null) {
+                mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa de la tabla.");
+                return;
+            }
 
-        if (!validarCampos()) return;
+            if (!validarCampos()) return;
 
-        tarifaSeleccionada.setNombreTarifa(txtNombre.getText().trim());
-        tarifaSeleccionada.setPrecio(Double.parseDouble(txtPrecio.getText().trim()));
-        tarifaSeleccionada.setTipoTarifa(comboTipo.getValue());
-        tarifaSeleccionada.setDetalles(txtDetalles.getText().trim());
-        tarifaSeleccionada.setActiva(chkActiva.isSelected());
+            tarifaSeleccionada.setNombreTarifa(txtNombre.getText().trim());
+            tarifaSeleccionada.setPrecio(Double.parseDouble(txtPrecio.getText().trim()));
+            tarifaSeleccionada.setTipoTarifa(comboTipo.getValue());
+            tarifaSeleccionada.setDetalles(txtDetalles.getText().trim());
+            tarifaSeleccionada.setActiva(chkActiva.isSelected());
 
-        if (tarifaDAO.actualizarTarifa(tarifaSeleccionada)) {
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa actualizada.");
-            cargarTabla();
-            btnLimpiarAccion();
-        } else {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo actualizar la tarifa.");
+            if (tarifaDAO.actualizarTarifa(tarifaSeleccionada)) {
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa actualizada.");
+                cargarTabla();
+                btnLimpiarAccion();
+            } else {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo actualizar la tarifa.");
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
     // eliminar tarifas
     @FXML
     private void btnEliminarAccion() {
-        if (tarifaSeleccionada == null) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa para eliminar.");
-            return;
-        }
+        try {
+            if (tarifaSeleccionada == null) {
+                mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa para eliminar.");
+                return;
+            }
 
-        if (tarifaDAO.eliminarTarifa(tarifaSeleccionada)) {
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa eliminada.");
-            cargarTabla();
-            btnLimpiarAccion();
-        } else {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo eliminar la tarifa.");
+            if (tarifaDAO.eliminarTarifa(tarifaSeleccionada)) {
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa eliminada.");
+                cargarTabla();
+                btnLimpiarAccion();
+            } else {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo eliminar la tarifa.");
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
     
 // confirmar tarifa: pasa a activa
 @FXML
 private void confirmarTarifa() {
-    Tarifa seleccionada = tablaTarifas.getSelectionModel().getSelectedItem();
-    if (seleccionada == null) {
-        mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa de la tabla.");
-        return;
-    }
-    if (seleccionada.getActiva()) {
-        mostrarAlerta(Alert.AlertType.INFORMATION, "Aviso", "Esta tarifa ya está confirmada.");
-        return;
-    }
+    try {
+        Tarifa seleccionada = tablaTarifas.getSelectionModel().getSelectedItem();
+        if (seleccionada == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa de la tabla.");
+            return;
+        }
+        if (seleccionada.getActiva()) {
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Aviso", "Esta tarifa ya está confirmada.");
+            return;
+        }
 
-    seleccionada.setActiva(true);
-    if (tarifaDAO.actualizarTarifa(seleccionada)) {
-        mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa confirmada.");
-        cargarTabla();
-        btnLimpiarAccion();
-    } else {
-        seleccionada.setActiva(false);
-        mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo confirmar la tarifa.");
+        seleccionada.setActiva(true);
+        if (tarifaDAO.actualizarTarifa(seleccionada)) {
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa confirmada.");
+            cargarTabla();
+            btnLimpiarAccion();
+        } else {
+            seleccionada.setActiva(false);
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo confirmar la tarifa.");
+        }
+    } catch (OurException e) {
+        LOGGER.warning(e.getMessage());
+        ShowAlert.error(e.getMessage());
     }
 }
 
 // rechazar tarifa: pasa a no activa
 @FXML
 private void rechazarTarifa() {
-    Tarifa seleccionada = tablaTarifas.getSelectionModel().getSelectedItem();
-    if (seleccionada == null) {
-        mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa de la tabla.");
-        return;
-    }
-    if (!seleccionada.getActiva()) {
-        mostrarAlerta(Alert.AlertType.INFORMATION, "Aviso", "Esta tarifa ya está rechazada.");
-        return;
-    }
+    try {
+        Tarifa seleccionada = tablaTarifas.getSelectionModel().getSelectedItem();
+        if (seleccionada == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa de la tabla.");
+            return;
+        }
+        if (!seleccionada.getActiva()) {
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Aviso", "Esta tarifa ya está rechazada.");
+            return;
+        }
 
-    seleccionada.setActiva(false);
-    if (tarifaDAO.actualizarTarifa(seleccionada)) {
-        mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa rechazada.");
-        cargarTabla();
-        btnLimpiarAccion();
-    } else {
-        seleccionada.setActiva(true);
-        mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rechazar la tarifa.");
+        seleccionada.setActiva(false);
+        if (tarifaDAO.actualizarTarifa(seleccionada)) {
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa rechazada.");
+            cargarTabla();
+            btnLimpiarAccion();
+        } else {
+            seleccionada.setActiva(true);
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rechazar la tarifa.");
+        }
+    } catch (OurException e) {
+        LOGGER.warning(e.getMessage());
+        ShowAlert.error(e.getMessage());
     }
 }
     // limpiar formualario

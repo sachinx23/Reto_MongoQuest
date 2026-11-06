@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import exception.OurException;
 import modelo.TicketSoporte;
 import java.util.List;
 /**
@@ -11,10 +12,10 @@ import java.util.List;
  * @author Eneko.Plaza
  */
 public interface TicketDAO {
-    boolean crearTickets(String idCliente, String asunto, String descripcion);
-    List<TicketSoporte> listarTicket(String estado);
-    List<TicketSoporte> listarTicketsCliente(String idCliente);
-    boolean asignarTicket(TicketSoporte t, String idEmpleado);
-    boolean cambiarEstadoTicket(TicketSoporte t, String estado);
+    boolean crearTickets(String idCliente, String asunto, String descripcion) throws OurException;
+    List<TicketSoporte> listarTicket(String estado) throws OurException;
+    List<TicketSoporte> listarTicketsCliente(String idCliente) throws OurException;
+    boolean asignarTicket(TicketSoporte t, String idEmpleado) throws OurException;
+    boolean cambiarEstadoTicket(TicketSoporte t, String estado) throws OurException;
     TicketSoporte mapearTicket(org.bson.Document d);
 }

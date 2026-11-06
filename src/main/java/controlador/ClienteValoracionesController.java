@@ -1,9 +1,14 @@
 package controlador;
 
-import daocliente.ValoracionDAO;
-import daocliente.implementacion.ValoracionDAOImplementacion;
+import java.util.logging.Logger;
+import DAO.ValoracionDAO;
+import DAO.implementacion.ValoracionDAOImplementacion;
+import DAO.TarifaDAO;
+import DAO.implementacion.TarifaDAOImplementacion;
 import exception.OurException;
 import exception.ShowAlert;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,51 +19,61 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
-import modelocliente.Cliente;
-import modelocliente.Valoracion;
+import modelo.Cliente;
+import modelo.Valoracion;
+import modelo.Tarifa;
 
-/**
- * Mis Valoraciones: valorar, editar (también con doble clic en la celda) y eliminar.
- */
 public class ClienteValoracionesController {
+
+    private static final Logger LOGGER = Logger.getLogger(ClienteValoracionesController.class.getName());
     private final ValoracionDAO valoracionDAO = new ValoracionDAOImplementacion();
+    private final TarifaDAO tarifaDAO = new TarifaDAOImplementacion();
     private Cliente cliente;
 
+    // Mismo orden que cmbTarifa
+    private List<Tarifa> tarifas = new ArrayList<>();
+
+    @FXML private ComboBox<String> cmbTarifa;
     @FXML private ComboBox<Integer> cmbPuntuacion;
     @FXML private TextField txtValoracion;
     @FXML private TableView<Valoracion> tablaValoraciones;
     @FXML private TableColumn<Valoracion, Integer> colValoracionPuntuacion;
     @FXML private TableColumn<Valoracion, String> colValoracionTexto;
 
-    /**
-     * Se ejecuta al abrir la pantalla: prepara la tabla y carga los datos.
-     */
     @FXML
     public void initialize() {
-        cliente = (Cliente) Sesion.getUsuario();
+        cliente = ClienteController.getCliente();
         cmbPuntuacion.setItems(FXCollections.observableArrayList(1, 2, 3, 4, 5));
+        cargarTarifas();
         colValoracionPuntuacion.setCellValueFactory(new PropertyValueFactory<>("puntuacion"));
         colValoracionTexto.setCellValueFactory(new PropertyValueFactory<>("texto"));
         colValoracionTexto.setCellFactory(TextFieldTableCell.forTableColumn());
         cargarValoraciones();
     }
 
-    /**
-     * Recarga la tabla con las valoraciones del cliente.
-     */
-    private void cargarValoraciones() {
+    private void cargarTarifas() {
         try {
-            tablaValoraciones.setItems(FXCollections.observableArrayList(valoracionDAO.obtenerValoracionesCliente(cliente.getId())));
+            tarifas = tarifaDAO.tarifasActivas();
+            List<String> nombres = new ArrayList<>();
+            for (Tarifa t : tarifas) {
+                nombres.add(t.getNombreTarifa());
+            }
+            cmbTarifa.setItems(FXCollections.observableArrayList(nombres));
         } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
         }
     }
 
-    /**
-     * Pasa la valoración pulsada al formulario para poder editarla.
-     *
-     * @param event evento de la acción (botón, menú o desplegable)
-     */
+    private void cargarValoraciones() {
+        try {
+            tablaValoraciones.setItems(FXCollections.observableArrayList(valoracionDAO.obtenerValoracionesCliente(cliente.getId())));
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
+        }
+    }
+
     @FXML
     public void seleccionarValoracion(MouseEvent event) {
         Valoracion valoracion = tablaValoraciones.getSelectionModel().getSelectedItem();
@@ -68,11 +83,6 @@ public class ClienteValoracionesController {
         }
     }
 
-    /**
-     * Comprueba que hay puntuación y opinión (si no, avisa).
-     *
-     * @return true si hay puntuación y opinión
-     */
     private boolean valoracionValida() {
         if (cmbPuntuacion.getValue() == null || txtValoracion.getText().trim().isEmpty()) {
             ShowAlert.info("Aviso", "Elige una puntuación y escribe tu opinión.");
@@ -81,35 +91,33 @@ public class ClienteValoracionesController {
         return true;
     }
 
-    /**
-     * Publica una valoración nueva de la tarifa elegida, después de confirmarlo.
-     *
-     * @param event evento de la acción (botón, menú o desplegable)
-     */
     @FXML
     public void btnValorar(ActionEvent event) {
+        int posicion = cmbTarifa.getSelectionModel().getSelectedIndex();
+        if (posicion < 0) {
+            ShowAlert.info("Aviso", "Elige la tarifa que quieres valorar.");
+            return;
+        }
         if (!valoracionValida()) {
             return;
         }
+        Tarifa tarifa = tarifas.get(posicion);
         if (!ShowAlert.confirmar("Confirmar valoración", "¿Seguro que deseas publicar esta valoración?")) {
             return;
         }
-        Valoracion valoracion = new Valoracion(null, cmbPuntuacion.getValue(), txtValoracion.getText().trim(), cliente.getId(), null);
+        Valoracion valoracion = new Valoracion(null, cmbPuntuacion.getValue(), txtValoracion.getText().trim(), cliente.getId(), tarifa.getId(),
+                "", tarifa.getNombreTarifa());
         try {
             valoracionDAO.insertarValoracion(valoracion);
             ShowAlert.info("Valoración publicada", "Tu valoración ha sido registrada correctamente. ¡Gracias por tu opinión!");
             limpiarValoracion();
             cargarValoraciones();
         } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
         }
     }
 
-    /**
-     * Guarda los cambios de la valoración elegida, después de confirmarlo.
-     *
-     * @param event evento de la acción (botón, menú o desplegable)
-     */
     @FXML
     public void btnEditarValoracion(ActionEvent event) {
         Valoracion valoracion = tablaValoraciones.getSelectionModel().getSelectedItem();
@@ -128,11 +136,6 @@ public class ClienteValoracionesController {
         guardarValoracion(valoracion);
     }
 
-    /**
-     * Se llama al terminar de editar una celda de texto en la tabla.
-     *
-     * @param event edición de la celda (valoración y texto nuevo)
-     */
     @FXML
     public void editarTextoValoracion(TableColumn.CellEditEvent<Valoracion, String> event) {
         Valoracion valoracion = event.getRowValue();
@@ -146,27 +149,18 @@ public class ClienteValoracionesController {
         guardarValoracion(valoracion);
     }
 
-    /**
-     * Guarda en MongoDB los cambios de una valoración y recarga la tabla.
-     *
-     * @param valoracion valoración
-     */
     private void guardarValoracion(Valoracion valoracion) {
         try {
             valoracionDAO.actualizarValoracion(valoracion);
             ShowAlert.info("Modificación exitosa", "Tu valoración se ha actualizado.");
             limpiarValoracion();
         } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
         }
         cargarValoraciones();
     }
 
-    /**
-     * Elimina la valoración elegida, después de confirmarlo.
-     *
-     * @param event evento de la acción (botón, menú o desplegable)
-     */
     @FXML
     public void btnEliminarValoracion(ActionEvent event) {
         Valoracion valoracion = tablaValoraciones.getSelectionModel().getSelectedItem();
@@ -178,19 +172,18 @@ public class ClienteValoracionesController {
             return;
         }
         try {
-            valoracionDAO.borrarValoracion(valoracion.getId());
+            valoracionDAO.eliminarValoracion(valoracion);
             ShowAlert.info("Valoración eliminada", "La valoración ha sido eliminada.");
             limpiarValoracion();
             cargarValoraciones();
         } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
         }
     }
 
-    /**
-     * Vacía el formulario de valoración.
-     */
     private void limpiarValoracion() {
+        cmbTarifa.getSelectionModel().clearSelection();
         cmbPuntuacion.setValue(null);
         txtValoracion.clear();
     }

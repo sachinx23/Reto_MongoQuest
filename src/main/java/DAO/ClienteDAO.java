@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import exception.OurException;
 import modelo.Cliente;
 import org.bson.Document;
 import java.util.List;
@@ -14,13 +15,15 @@ import java.util.List;
  */
 public interface ClienteDAO {
 
-    Document comprobarUsuarios(String usuario, String contrasena);
+    Document comprobarUsuarios(String usuario, String contrasena) throws OurException;
 
-    boolean actualizarCliente(Cliente c);
+    boolean actualizarCliente(Cliente c) throws OurException;
 
-    boolean registrarCliente(String usuario, String nombre, String apellidos, String contrasena, String correo, String dni, String telefono, String direccion);
+    boolean registrarCliente(String usuario, String nombre, String apellidos, String contrasena, String correo, String dni, String telefono, String direccion) throws OurException;
 
-    boolean eliminarDatosSensiblesCliente(String nombreUsuario);
+    boolean eliminarDatosSensiblesCliente(String nombreUsuario) throws OurException;
 
-    List<Cliente> listarClientes();
+    List<Cliente> listarClientes() throws OurException;
+
+    Cliente obtenerCliente(String id) throws OurException;
 }

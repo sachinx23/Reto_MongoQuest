@@ -1,5 +1,6 @@
 package DAO;
 
+import exception.OurException;
 import modelo.Empleado;
 import org.bson.Document;
 import java.util.List;
@@ -13,9 +14,9 @@ import java.util.List;
  * @author Eneko.Plaza
  */
 public interface EmpleadoDAO {
-    Document comprobarUsuarios(String usuario, String contrasena);
-    List<Empleado> listarEmpleados();
-    boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria);
-    boolean eliminarEmpleado(String nombreUsuario);
-    boolean ascenderEmpleado(String nombreUsuario, String nuevoRol);
+    Document comprobarUsuarios(String usuario, String contrasena) throws OurException;
+    List<Empleado> listarEmpleados() throws OurException;
+    boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria) throws OurException;
+    boolean eliminarEmpleado(String nombreUsuario) throws OurException;
+    boolean ascenderEmpleado(String nombreUsuario, String nuevoRol) throws OurException;
 }

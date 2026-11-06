@@ -1,61 +1,75 @@
 package controlador;
 
-import daocliente.ContratoDAO;
-import daocliente.implementacion.ContratoDAOImplementacion;
+import java.util.logging.Logger;
+import DAO.ContratoDAO;
+import DAO.implementacion.ContratoDAOImplementacion;
+import DAO.TarifaDAO;
+import DAO.implementacion.TarifaDAOImplementacion;
 import exception.OurException;
 import exception.ShowAlert;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import modelocliente.Cliente;
-import modelocliente.Contrato;
-import modelocliente.Contrato.EstadoContrato;
+import javafx.util.Callback;
+import modelo.Cliente;
+import modelo.Contrato;
+import modelo.Tarifa;
 
-/**
- * Mis Contratos: firmar o pedir la baja.
- */
 public class ClienteContratosController {
+
+    private static final Logger LOGGER = Logger.getLogger(ClienteContratosController.class.getName());
     private final ContratoDAO contratoDAO = new ContratoDAOImplementacion();
+    private final TarifaDAO tarifaDAO = new TarifaDAOImplementacion();
     private Cliente cliente;
+
+    // Tarifa de cada contrato por su id
+    private final Map<String, Tarifa> tarifas = new HashMap<>();
 
     @FXML private TableView<Contrato> tablaContratos;
     @FXML private TableColumn<Contrato, String> colContratoIdTarifa;
     @FXML private TableColumn<Contrato, String> colContratoTelefono;
-    @FXML private TableColumn<Contrato, EstadoContrato> colContratoEstado;
+    @FXML private TableColumn<Contrato, String> colContratoEstado;
     @FXML private TableColumn<Contrato, String> colContratoFecha;
 
-    /**
-     * Se ejecuta al abrir la pantalla: prepara la tabla y carga los datos.
-     */
     @FXML
     public void initialize() {
-        cliente = (Cliente) Sesion.getUsuario();
+        cliente = ClienteController.getCliente();
         colContratoTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
         colContratoEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
-        colContratoFecha.setCellValueFactory(new PropertyValueFactory<>("fechaFinalizacionTexto"));
-        colContratoIdTarifa.setCellValueFactory(new PropertyValueFactory<>("nombreTarifa"));
+        colContratoFecha.setCellValueFactory(new PropertyValueFactory<>("fechaFin"));
+        // Nombre de la tarifa
+        colContratoIdTarifa.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Contrato, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Contrato, String> fila) {
+                return new SimpleStringProperty(nombreTarifa(fila.getValue()));
+            }
+        });
         cargarContratos();
     }
 
-    /**
-     * Recarga la tabla con los contratos del cliente.
-     */
     private void cargarContratos() {
         try {
-            tablaContratos.setItems(FXCollections.observableArrayList(contratoDAO.obtenerContratosCliente(cliente.getId())));
+            List<Contrato> contratos = contratoDAO.obtenerContratosCliente(cliente.getId());
+            for (Contrato c : contratos) {
+                if (c.getIdTarifa() != null && !tarifas.containsKey(c.getIdTarifa())) {
+                    tarifas.put(c.getIdTarifa(), tarifaDAO.buscarTarifa(c.getIdTarifa()));
+                }
+            }
+            tablaContratos.setItems(FXCollections.observableArrayList(contratos));
         } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
         }
     }
 
-    /**
-     * Informa del estado del contrato elegido (firmado, pendiente de validar o no se puede firmar).
-     *
-     * @param event evento de la acción (botón, menú o desplegable)
-     */
     @FXML
     public void btnFirmarContrato(ActionEvent event) {
         Contrato contrato = tablaContratos.getSelectionModel().getSelectedItem();
@@ -63,26 +77,20 @@ public class ClienteContratosController {
             ShowAlert.info("Aviso", "Selecciona un contrato de la tabla primero.");
             return;
         }
-        // Solo se firma cuando un empleado o administrador ha validado la tarifa ("pendiente de firma")
-        if (contrato.getEstado() == EstadoContrato.ACTIVO) {
+        if ("activo".equals(contrato.getEstado())) {
             ShowAlert.info("Contrato firmado", "Este contrato ya está firmado y activo.");
-        } else if (contrato.getEstado() == EstadoContrato.PENDIENTE) {
+        } else if ("pendiente".equals(contrato.getEstado())) {
             ShowAlert.info("Contrato pendiente", "Podrás firmar este contrato cuando un empleado valide la tarifa.");
-        } else if (contrato.getEstado() == EstadoContrato.PENDIENTE_FIRMA) {
+        } else if ("pendiente de firma".equals(contrato.getEstado())) {
             firmar(contrato);
         } else {
             ShowAlert.info("Aviso", "Este contrato no se puede firmar porque está " + contrato.getEstado() + ".");
         }
     }
 
-    /**
-     * Pide confirmación y firma el contrato (pasa a activo).
-     *
-     * @param contrato contrato pendiente de firma
-     */
     private void firmar(Contrato contrato) {
-        if (!ShowAlert.confirmar("Firmar contrato", "¿Firmar el contrato de la tarifa " + contrato.getNombreTarifa()
-                + "? Empieza hoy y dura un año.")) {
+        if (!ShowAlert.confirmar("Firmar contrato", "¿Firmar el contrato de la tarifa " + nombreTarifa(contrato)
+                + "? Empieza hoy.")) {
             return;
         }
         try {
@@ -90,15 +98,11 @@ public class ClienteContratosController {
             ShowAlert.info("Contrato firmado", "Tu contrato ya está activo. Tienes los detalles de la compra en Soporte.");
             cargarContratos();
         } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
         }
     }
 
-    /**
-     * Pide la baja del contrato activo elegido, después de confirmarlo.
-     *
-     * @param event evento de la acción (botón, menú o desplegable)
-     */
     @FXML
     public void btnRescindirContrato(ActionEvent event) {
         Contrato contrato = tablaContratos.getSelectionModel().getSelectedItem();
@@ -106,7 +110,7 @@ public class ClienteContratosController {
             ShowAlert.info("Aviso", "Selecciona un contrato de la tabla primero.");
             return;
         }
-        if (contrato.getEstado() != EstadoContrato.ACTIVO) {
+        if (!"activo".equals(contrato.getEstado())) {
             ShowAlert.info("Aviso", "Solo se puede pedir la baja de un contrato activo.");
             return;
         }
@@ -114,12 +118,20 @@ public class ClienteContratosController {
             return;
         }
         try {
-            // Queda en "baja pendiente" hasta que un empleado la apruebe
             contratoDAO.solicitarBaja(contrato.getId());
             ShowAlert.info("Solicitud enviada", "Tu solicitud de baja está pendiente de aprobar por un empleado.");
             cargarContratos();
         } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
         }
+    }
+
+    private String nombreTarifa(Contrato contrato) {
+        Tarifa tarifa = tarifas.get(contrato.getIdTarifa());
+        if (tarifa == null) {
+            return "";
+        }
+        return tarifa.getNombreTarifa();
     }
 }

@@ -18,12 +18,10 @@
       <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
          <children>
             
-            <!-- BARRA SUPERIOR: DEGRADADO DEL LOGO -->
             <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="barra-superior">
                <children>
                   <Label minWidth="-Infinity" styleClass="titulo-barra" text="Panel Cliente:" />
                   
-                  <!-- DESPLEGABLE CON ESTILO REDONDEADO (Cerrar Sesión es una opción más, como en el admin) -->
                   <ComboBox fx:id="cmbOpciones" onAction="#cmbOpcionSeleccionada" prefWidth="250.0" promptText="Seleccionar sección..." styleClass="combo-empleado" />
                   
                   <Region HBox.hgrow="ALWAYS" />
@@ -32,10 +30,8 @@
                </children>
             </HBox>
 
-            <!-- FRANJA SEPARADORA TURQUESA DECORATIVA -->
             <AnchorPane minHeight="3.0" prefHeight="3.0" styleClass="franja-turquesa" />
 
-            <!-- CONTENEDOR DINÁMICO DE SUBVISTAS -->
             <StackPane fx:id="panelContenido" styleClass="panel-contenido" VBox.vgrow="ALWAYS" />
 
          </children>

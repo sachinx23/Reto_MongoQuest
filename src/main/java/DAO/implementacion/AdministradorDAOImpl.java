@@ -4,6 +4,10 @@
  */
 package DAO.implementacion;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import exception.OurException;
+import exception.ErrorMessages;
 import DAO.AdministradorDAO;
 import DAO.MongoDBConexion;
 import com.mongodb.client.MongoDatabase;
@@ -18,9 +22,12 @@ import java.util.List;
  * @author Eneko.Plaza
  */
 public class AdministradorDAOImpl implements AdministradorDAO{
+
+    private static final Logger LOGGER = Logger.getLogger(AdministradorDAOImpl.class.getName());
 @Override
-    public Document comprobarUsuarios(String usuario, String contrasena) {
+    public Document comprobarUsuarios(String usuario, String contrasena) throws OurException {
         try {
+            LOGGER.info("Buscar en Administradores al usuario: " + usuario);
             MongoDatabase db = MongoDBConexion.getDatabase();
             Document query = new Document("nombreUsuario", usuario);
             query.append("contrasena", contrasena);
@@ -43,14 +50,16 @@ public class AdministradorDAOImpl implements AdministradorDAO{
                 return cliente;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error en comprobarUsuarios", e);
+            throw new OurException(ErrorMessages.LOGIN);
         }
         return null;
     }
 
    @Override
-    public boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria, String direccion, String idSucursal) {
+    public boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria, String direccion, String idSucursal) throws OurException {
         try {
+            LOGGER.info("Crear empleado, usuario: " + usuario + ", nombre: " + nombre + " " + apellidos + ", correo: " + correo + ", sucursal: " + idSucursal);
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> colEmp = db.getCollection("Empleados");
 
@@ -72,13 +81,14 @@ public class AdministradorDAOImpl implements AdministradorDAO{
             colEmp.insertOne(nuevoEmp);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en crearEmpleado", e);
+            throw new OurException(ErrorMessages.INSERT_EMPLEADO);
         }
     }
     @Override
-    public boolean eliminarEmpleado(String nombreUsuario) {
+    public boolean eliminarEmpleado(String nombreUsuario) throws OurException {
         try {
+            LOGGER.info("Eliminar empleado, usuario: " + nombreUsuario);
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> colEmp = db.getCollection("Empleados");
             long borrados = colEmp.deleteOne(Filters.eq("nombreUsuario", nombreUsuario)).getDeletedCount();
@@ -88,14 +98,15 @@ public class AdministradorDAOImpl implements AdministradorDAO{
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en eliminarEmpleado", e);
+            throw new OurException(ErrorMessages.DELETE_EMPLEADO);
         }
     }
 
     @Override
-    public boolean ascenderEmpleado(String nombreUsuario, String nuevoRol) {
+    public boolean ascenderEmpleado(String nombreUsuario, String nuevoRol) throws OurException {
         try {
+            LOGGER.info("Cambiar rol del empleado " + nombreUsuario + " a " + nuevoRol);
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> colEmp = db.getCollection("Empleados");
 
@@ -107,13 +118,15 @@ public class AdministradorDAOImpl implements AdministradorDAO{
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error en ascenderEmpleado", e);
+            throw new OurException(ErrorMessages.ASCENDER_EMPLEADO);
         }
         return false;
     }
 
     @Override
-    public List<Document> obtenerPlantilla() {
+    public List<Document> obtenerPlantilla() throws OurException {
+        LOGGER.info("Consultar la plantilla de empleados");
         List<Document> todos = new ArrayList<>();
         try {
             MongoDatabase db = MongoDBConexion.getDatabase();
@@ -147,14 +160,16 @@ public class AdministradorDAOImpl implements AdministradorDAO{
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error en obtenerPlantilla", e);
+            throw new OurException(ErrorMessages.GET_EMPLEADOS);
         }
         return todos;
     }
     
     @Override
-public boolean agregarEmpleadoASucursal(int idSucursal, String nombreUsuarioEmpleado) {
+public boolean agregarEmpleadoASucursal(int idSucursal, String nombreUsuarioEmpleado) throws OurException {
     try {
+        LOGGER.info("Añadir el empleado " + nombreUsuarioEmpleado + " a la sucursal " + idSucursal);
         MongoDatabase db = MongoDBConexion.getDatabase();
         MongoCollection<Document> colSucursales = db.getCollection("Sucursales");
         
@@ -164,8 +179,8 @@ public boolean agregarEmpleadoASucursal(int idSucursal, String nombreUsuarioEmpl
         );
         return true;
     } catch (Exception e) {
-        e.printStackTrace();
-        return false;
+        LOGGER.log(Level.SEVERE, "Error en agregarEmpleadoASucursal", e);
+        throw new OurException(ErrorMessages.SAVE_SUCURSAL);
     }
 }
 }

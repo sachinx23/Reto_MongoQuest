@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<!-- Mi Perfil del cliente: ver y modificar sus datos. -->
 <AnchorPane stylesheets="@../css/Estilos.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.ClientePerfilController" styleClass="card">
    <children>
       <VBox spacing="20.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">

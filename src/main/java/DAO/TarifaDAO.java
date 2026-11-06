@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import exception.OurException;
 import modelo.Tarifa;
 import java.util.List;
 
@@ -13,11 +14,16 @@ import java.util.List;
  */
 public interface TarifaDAO {
 
-    List<Tarifa> listarTarifas();
+    List<Tarifa> listarTarifas() throws OurException;
 
-    boolean insertarTarifa(Tarifa t);
+    boolean insertarTarifa(Tarifa t) throws OurException;
 
-    boolean actualizarTarifa(Tarifa t);
+    boolean actualizarTarifa(Tarifa t) throws OurException;
 
-    boolean eliminarTarifa(Tarifa t);
+    boolean eliminarTarifa(Tarifa t) throws OurException;
+
+    // Parte cliente
+    Tarifa buscarTarifa(String idTarifa) throws OurException;
+
+    List<Tarifa> tarifasActivas() throws OurException;
 }

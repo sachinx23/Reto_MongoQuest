@@ -1,5 +1,9 @@
 package DAO.implementacion;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import exception.OurException;
+import exception.ErrorMessages;
 import DAO.SucursalDAO;
 import DAO.MongoDBConexion;
 import modelo.Sucursal;
@@ -13,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SucursalDaoImplementacion implements SucursalDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(SucursalDaoImplementacion.class.getName());
 
     private Document ubicacionADocumento(Ubicacion u) {
         Document doc = new Document();
@@ -29,8 +35,9 @@ public class SucursalDaoImplementacion implements SucursalDAO {
     }
 
     @Override
-    public int siguienteIdSucursal() {
+    public int siguienteIdSucursal() throws OurException {
         try {
+            LOGGER.info("Calcular el id de la siguiente sucursal");
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Sucursales");
             List<Document> listaDocs = col.find().into(new ArrayList<>());
@@ -46,14 +53,15 @@ public class SucursalDaoImplementacion implements SucursalDAO {
             }
             return maxId + 1;
         } catch (Exception e) {
-            e.printStackTrace();
-            return 1;
+            LOGGER.log(Level.SEVERE, "Error en siguienteIdSucursal", e);
+            throw new OurException(ErrorMessages.GET_SUCURSALES);
         }
     }
 
     @Override
-    public boolean insertarSucursal(Sucursal s) {
+    public boolean insertarSucursal(Sucursal s) throws OurException {
         try {
+            LOGGER.info("Insertar sucursal " + s.getNombre() + ", ubicación: " + s.getUbicacion() + ", teléfono: " + s.getTelefono());
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Sucursales");
             Document doc = new Document();
@@ -64,14 +72,15 @@ public class SucursalDaoImplementacion implements SucursalDAO {
             col.insertOne(doc);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en insertarSucursal", e);
+            throw new OurException(ErrorMessages.SAVE_SUCURSAL);
         }
     }
 
     @Override
-    public boolean actualizarSucursal(Sucursal s) {
+    public boolean actualizarSucursal(Sucursal s) throws OurException {
         try {
+            LOGGER.info("Actualizar sucursal " + s.getNombre() + ", ubicación: " + s.getUbicacion() + ", teléfono: " + s.getTelefono());
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Sucursales");
             Document cambios = new Document();
@@ -84,14 +93,15 @@ public class SucursalDaoImplementacion implements SucursalDAO {
             col.updateOne(filtro, actualizacion);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en actualizarSucursal", e);
+            throw new OurException(ErrorMessages.SAVE_SUCURSAL);
         }
     }
 
     @Override
-    public boolean eliminarSucursal(String nombre) {
+    public boolean eliminarSucursal(String nombre) throws OurException {
         try {
+            LOGGER.info("Eliminar sucursal " + nombre);
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Sucursales");
             Document filtro = new Document("nombre", nombre);
@@ -102,13 +112,14 @@ public class SucursalDaoImplementacion implements SucursalDAO {
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en eliminarSucursal", e);
+            throw new OurException(ErrorMessages.DELETE_SUCURSAL);
         }
     }
 
     @Override
-    public List<Sucursal> listarSucursales() {
+    public List<Sucursal> listarSucursales() throws OurException {
+        LOGGER.info("Listar sucursales");
         List<Sucursal> resultado = new ArrayList<>();
         try {
             MongoDatabase db = MongoDBConexion.getDatabase();
@@ -163,7 +174,8 @@ public class SucursalDaoImplementacion implements SucursalDAO {
                 resultado.add(suc);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error en listarSucursales", e);
+            throw new OurException(ErrorMessages.GET_SUCURSALES);
         }
         return resultado;
     }

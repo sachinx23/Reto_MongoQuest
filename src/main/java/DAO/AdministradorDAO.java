@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import exception.OurException;
 import org.bson.Document;
 import java.util.List;
 
@@ -13,15 +14,15 @@ import java.util.List;
  */
 public interface AdministradorDAO {
 
-    Document comprobarUsuarios(String usuario, String contrasena);
+    Document comprobarUsuarios(String usuario, String contrasena) throws OurException;
 
-    boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria, String direccion, String idSucursal);
+    boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria, String direccion, String idSucursal) throws OurException;
 
-    boolean eliminarEmpleado(String nombreUsuario);
+    boolean eliminarEmpleado(String nombreUsuario) throws OurException;
 
-    boolean ascenderEmpleado(String nombreUsuario, String nuevoRol);
+    boolean ascenderEmpleado(String nombreUsuario, String nuevoRol) throws OurException;
 
-    List<Document> obtenerPlantilla();
+    List<Document> obtenerPlantilla() throws OurException;
     
-    boolean agregarEmpleadoASucursal(int idSucursal, String nombreUsuarioEmpleado);
+    boolean agregarEmpleadoASucursal(int idSucursal, String nombreUsuarioEmpleado) throws OurException;
 }

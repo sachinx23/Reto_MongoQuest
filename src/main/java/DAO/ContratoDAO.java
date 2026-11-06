@@ -4,18 +4,29 @@
  */
 package DAO;
 
+import exception.OurException;
 import modelo.Contrato;
 import java.util.List;
+import modelo.Tarifa;
 
 /**
  *
  * @author Eneko.Plaza
  */
 public interface ContratoDAO {
-    List<Contrato> listarContratos();
-    boolean aprobarContrato(Contrato c, String idGestor);
-    boolean firmarContrato(Contrato c);
-    boolean rechazarContratos(Contrato c);
-    boolean rescindirContrato(Contrato c);
-    List<Contrato> filtrarContratos(String telefono, String estado);
+    List<Contrato> listarContratos() throws OurException;
+    boolean aprobarContrato(Contrato c, String idGestor) throws OurException;
+    boolean firmarContrato(Contrato c) throws OurException;
+    boolean rechazarContratos(Contrato c) throws OurException;
+    boolean rescindirContrato(Contrato c) throws OurException;
+    List<Contrato> filtrarContratos(String telefono, String estado) throws OurException;
+
+    // Parte cliente
+    List<Contrato> obtenerContratosCliente(String idCliente) throws OurException;
+
+    void insertarContrato(Contrato contrato, Tarifa tarifa) throws OurException;
+
+    boolean borrarPeticion(String idCliente, String idTarifa) throws OurException;
+
+    void solicitarBaja(String idContrato) throws OurException;
 }

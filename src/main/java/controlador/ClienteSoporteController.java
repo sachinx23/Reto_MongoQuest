@@ -1,10 +1,10 @@
 package controlador;
 
-import daocliente.TicketDAO;
-import daocliente.implementacion.TicketDAOImplementacion;
+import java.util.logging.Logger;
+import DAO.TicketDAO;
+import DAO.implementacion.TikcetDAOImpl;
 import exception.OurException;
 import exception.ShowAlert;
-import java.time.LocalDate;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,14 +12,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import modelocliente.Cliente;
-import modelocliente.TicketSoporte;
+import modelo.Cliente;
+import modelo.TicketSoporte;
 
-/**
- * Soporte: enviar un ticket y ver los míos.
- */
 public class ClienteSoporteController {
-    private final TicketDAO ticketDAO = new TicketDAOImplementacion();
+
+    private static final Logger LOGGER = Logger.getLogger(ClienteSoporteController.class.getName());
+    private final TicketDAO ticketDAO = new TikcetDAOImpl();
     private Cliente cliente;
 
     @FXML private TextField txtSoporteAsunto;
@@ -28,33 +27,23 @@ public class ClienteSoporteController {
     @FXML private TableColumn<TicketSoporte, String> colSoporteAsunto;
     @FXML private TableColumn<TicketSoporte, String> colSoporteFecha;
 
-    /**
-     * Se ejecuta al abrir la pantalla: prepara la tabla y carga los datos.
-     */
     @FXML
     public void initialize() {
-        cliente = (Cliente) Sesion.getUsuario();
+        cliente = ClienteController.getCliente();
         colSoporteAsunto.setCellValueFactory(new PropertyValueFactory<>("asunto"));
-        colSoporteFecha.setCellValueFactory(new PropertyValueFactory<>("fechaCreacionTexto"));
+        colSoporteFecha.setCellValueFactory(new PropertyValueFactory<>("fechaCreacion"));
         cargarTickets();
     }
 
-    /**
-     * Recarga la tabla con los tickets del cliente.
-     */
     private void cargarTickets() {
         try {
-            tablaSoporte.setItems(FXCollections.observableArrayList(ticketDAO.obtenerTicketsCliente(cliente.getId())));
+            tablaSoporte.setItems(FXCollections.observableArrayList(ticketDAO.listarTicketsCliente(cliente.getId())));
         } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
         }
     }
 
-    /**
-     * Comprueba el asunto y la descripción, pide confirmación y envía el ticket.
-     *
-     * @param event evento de la acción (botón, menú o desplegable)
-     */
     @FXML
     public void btnEnviarTicket(ActionEvent event) {
         String asunto = txtSoporteAsunto.getText().trim();
@@ -66,15 +55,14 @@ public class ClienteSoporteController {
         if (!ShowAlert.confirmar("Confirmar envío", "¿Seguro que deseas enviar este ticket?")) {
             return;
         }
-        TicketSoporte ticket = new TicketSoporte(null, asunto, descripcion, LocalDate.now().toString(), "pendiente",
-                cliente.getId(), null);
         try {
-            ticketDAO.insertarTicket(ticket);
+            ticketDAO.crearTickets(cliente.getId(), asunto, descripcion);
             ShowAlert.info("Ticket enviado", "Tu consulta ha sido enviada al departamento de soporte con éxito.");
             txtSoporteAsunto.clear();
             txtSoporteMensaje.clear();
             cargarTickets();
         } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
         }
     }

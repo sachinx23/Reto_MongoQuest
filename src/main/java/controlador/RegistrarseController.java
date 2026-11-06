@@ -1,7 +1,11 @@
 package controlador;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import exception.ShowAlert;
+import exception.OurException;
 import DAO.ClienteDAO;
-import DAO.implementacion.ClienteDaoImplementacion;
+import DAO.implementacion.ClienteDAOImplementacion;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,8 +31,10 @@ import javafx.stage.Stage;
  */
 public class RegistrarseController implements Initializable {
 
+    private static final Logger LOGGER = Logger.getLogger(RegistrarseController.class.getName());
+
     // Instancia del DAO
-    private final ClienteDAO clienteDAO = new ClienteDaoImplementacion();
+    private final ClienteDAO clienteDAO = new ClienteDAOImplementacion();
 
     @FXML
     private TextField txtUsuario;
@@ -72,51 +78,57 @@ public class RegistrarseController implements Initializable {
 
     @FXML
     public void btnRegistrarse(ActionEvent event) {
-        String usuario = txtUsuario.getText().trim();
-        String nombre = txtNombre.getText().trim();
-        String apellidos = txtApellidos.getText().trim();
-        String contrasena = txtContrasena.getText().trim();
-        String correo = txtCorreo.getText().trim();
-        String dni = txtDni.getText().trim();
-        String telefono = txtTelefono.getText().trim();
-        String direccion = txtDireccion.getText().trim();
+        try {
+            String usuario = txtUsuario.getText().trim();
+            String nombre = txtNombre.getText().trim();
+            String apellidos = txtApellidos.getText().trim();
+            String contrasena = txtContrasena.getText().trim();
+            String correo = txtCorreo.getText().trim();
+            String dni = txtDni.getText().trim();
+            String telefono = txtTelefono.getText().trim();
+            String direccion = txtDireccion.getText().trim();
 
-        // Validar que no haya campos vacíos
-        if (usuario.isEmpty() || nombre.isEmpty() || apellidos.isEmpty() || contrasena.isEmpty()
-                || correo.isEmpty() || dni.isEmpty() || telefono.isEmpty() || direccion.isEmpty()) {
-            lblMensajeError.setText("Rellena todos los campos.");
-            return;
-        }
-        // Validar correo
-        if (!correo.contains("@") || !correo.contains(".")) {
-            lblMensajeError.setText("El correo no es válido.");
-            return;
-        }
-        // Validar dni
-        if (!dni.matches("[0-9]{8}[A-Z]")) {
-            lblMensajeError.setText("DNI introducido incorrectamente.");
-            return;
-        }
-        // Validar contraseña
-        if (contrasena.length() < 6) {
-            lblMensajeError.setText("La contraseña debe tener mínimo 6 caracteres.");
-            return;
-        }
+            // Validar que no haya campos vacíos
+            if (usuario.isEmpty() || nombre.isEmpty() || apellidos.isEmpty() || contrasena.isEmpty()
+                    || correo.isEmpty() || dni.isEmpty() || telefono.isEmpty() || direccion.isEmpty()) {
+                lblMensajeError.setText("Rellena todos los campos.");
+                return;
+            }
+            // Validar correo
+            if (!correo.contains("@") || !correo.contains(".")) {
+                lblMensajeError.setText("El correo no es válido.");
+                return;
+            }
+            // Validar dni
+            if (!dni.matches("[0-9]{8}[A-Z]")) {
+                lblMensajeError.setText("DNI introducido incorrectamente.");
+                return;
+            }
+            // Validar contraseña
+            if (contrasena.length() < 6) {
+                lblMensajeError.setText("La contraseña debe tener mínimo 6 caracteres.");
+                return;
+            }
 
-        lblMensajeError.setText("");
+            lblMensajeError.setText("");
 
-        // Llamada a la instancia del DAO
-        boolean registrado = clienteDAO.registrarCliente(usuario, nombre, apellidos, contrasena, correo, dni, telefono, direccion);
+            // Llamada a la instancia del DAO
+            boolean registrado = clienteDAO.registrarCliente(usuario, nombre, apellidos, contrasena, correo, dni, telefono, direccion);
 
-        if (registrado) {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setContentText("¡Usuario registrado correctamente!");
-            alert.showAndWait();
+            if (registrado) {
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setContentText("¡Usuario registrado correctamente!");
+                alert.showAndWait();
 
-            // Volver automáticamente a la pantalla de Inicio de Sesión
-            volverAIniciarSesion(event);
-        } else {
-            lblMensajeError.setText("No se pudo registrar el usuario. Comprueba los datos.");
+                // Volver automáticamente a la pantalla de Inicio de Sesión
+                volverAIniciarSesion(event);
+            } else {
+                lblMensajeError.setText("No se pudo registrar el usuario. Comprueba los datos.");
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
@@ -129,7 +141,7 @@ public class RegistrarseController implements Initializable {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error al volver al login", e);
             lblMensajeError.setText("Error al cargar la pantalla de inicio de sesión.");
         }
     }

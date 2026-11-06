@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import exception.OurException;
 import modelo.Valoracion;
 import org.bson.Document;
 import java.util.List;
@@ -13,8 +14,15 @@ import java.util.List;
  */
 public interface ValoracionDAO {
     Valoracion mapearValoracion(Document d);
-    List<Valoracion> listarValoraciones();
-    List<Valoracion> listarValoracionesPorPuntuacion(int puntuacion);
-    double mediaValoraciones();
-    boolean eliminarValoracion(Valoracion v);
+    List<Valoracion> listarValoraciones() throws OurException;
+    List<Valoracion> listarValoracionesPorPuntuacion(int puntuacion) throws OurException;
+    double mediaValoraciones() throws OurException;
+    boolean eliminarValoracion(Valoracion v) throws OurException;
+
+    // Parte cliente
+    List<Valoracion> obtenerValoracionesCliente(String idCliente) throws OurException;
+
+    void insertarValoracion(Valoracion valoracion) throws OurException;
+
+    void actualizarValoracion(Valoracion valoracion) throws OurException;
 }

@@ -4,6 +4,10 @@
  */
 package DAO.implementacion;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import exception.OurException;
+import exception.ErrorMessages;
 import DAO.TarifaDAO;
 import DAO.MongoDBConexion;
 import modelo.Tarifa;
@@ -16,11 +20,14 @@ import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.mongodb.MongoException;
 /**
  *
  * @author Eneko.Plaza
  */
-public class TarifaDaoImplementacion implements TarifaDAO {
+public class TarifaDAOImplementacion extends DAOBase implements TarifaDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(TarifaDAOImplementacion.class.getName());
 private Bson getFiltroId(String idStr) {
         if (idStr != null && ObjectId.isValid(idStr)) {
             return Filters.or(Filters.eq("_id", new ObjectId(idStr)), Filters.eq("_id", idStr));
@@ -29,7 +36,8 @@ private Bson getFiltroId(String idStr) {
     }
 
     @Override
-    public List<Tarifa> listarTarifas() {
+    public List<Tarifa> listarTarifas() throws OurException {
+        LOGGER.info("Listar tarifas");
         List<Tarifa> resultado = new ArrayList<>();
         try {
             MongoDatabase db = MongoDBConexion.getDatabase();
@@ -46,14 +54,16 @@ private Bson getFiltroId(String idStr) {
                 resultado.add(new Tarifa(id, nombre, precio, detalles, tipo, activa));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error en listarTarifas", e);
+            throw new OurException(ErrorMessages.GET_TARIFAS);
         }
         return resultado;
     }
 
     @Override
-    public boolean insertarTarifa(Tarifa t) {
+    public boolean insertarTarifa(Tarifa t) throws OurException {
         try {
+            LOGGER.info("Insertar tarifa " + t.getNombreTarifa() + ", precio: " + t.getPrecio() + ", tipo: " + t.getTipoTarifa());
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Tarifas");
             Document doc = new Document("nombreTarifa", t.getNombreTarifa())
@@ -64,14 +74,15 @@ private Bson getFiltroId(String idStr) {
             col.insertOne(doc);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en insertarTarifa", e);
+            throw new OurException(ErrorMessages.SAVE_TARIFA);
         }
     }
 
     @Override
-    public boolean actualizarTarifa(Tarifa t) {
+    public boolean actualizarTarifa(Tarifa t) throws OurException {
         try {
+            LOGGER.info("Actualizar tarifa " + t.getId() + ", nombre: " + t.getNombreTarifa() + ", precio: " + t.getPrecio() + ", activa: " + t.getActiva());
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Tarifas");
             Document actualizar = new Document("nombreTarifa", t.getNombreTarifa())
@@ -82,20 +93,51 @@ private Bson getFiltroId(String idStr) {
 
             return col.updateOne(getFiltroId(t.getId()), new Document("$set", actualizar)).getModifiedCount() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en actualizarTarifa", e);
+            throw new OurException(ErrorMessages.SAVE_TARIFA);
         }
     }
 
     @Override
-    public boolean eliminarTarifa(Tarifa t) {
+    public boolean eliminarTarifa(Tarifa t) throws OurException {
         try {
+            LOGGER.info("Eliminar tarifa " + t.getId() + ", nombre: " + t.getNombreTarifa());
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Tarifas");
             return col.deleteOne(getFiltroId(t.getId())).getDeletedCount() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en eliminarTarifa", e);
+            throw new OurException(ErrorMessages.DELETE_TARIFA);
         }
+    }
+
+    // Parte cliente
+
+    @Override
+    public Tarifa buscarTarifa(String idTarifa) throws OurException {
+        LOGGER.info("Buscar tarifa con id: " + idTarifa);
+        try {
+            Document d = buscarPorId(COL_TARIFAS, aObjectId(idTarifa));
+            if (d == null) {
+                return null;
+            }
+            return documentoATarifa(d);
+        } catch (MongoException | IllegalArgumentException e) {
+            LOGGER.log(Level.SEVERE, "Error en buscarTarifa", e);
+            throw new OurException(ErrorMessages.GET_TARIFAS);
+        }
+    }
+
+    @Override
+    public List<Tarifa> tarifasActivas() throws OurException {
+        LOGGER.info("Listar tarifas activas");
+        // Usa el DAO de Eneko y quita las tarifas desactivadas
+        List<Tarifa> activas = new ArrayList<>();
+        for (Tarifa t : listarTarifas()) {
+            if (t.getActiva()) {
+                activas.add(t);
+            }
+        }
+        return activas;
     }
 }

@@ -14,12 +14,10 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<!-- Mis Valoraciones: valorar, editar (también con doble clic en la celda) y eliminar. -->
 <AnchorPane stylesheets="@../css/Estilos.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.ClienteValoracionesController">
    <children>
       <VBox spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <!-- Cabecera: título y acciones -->
             <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="card">
                <children>
                   <Label styleClass="titulo-vista" text="Mis valoraciones" />
@@ -41,9 +39,14 @@
                   </Button>
                </children>
             </HBox>
-            <!-- Formulario: nueva valoración -->
             <HBox styleClass="card" alignment="CENTER_LEFT" spacing="12.0">
                <children>
+                  <Label styleClass="label-bold" text="Tarifa" />
+                  <ComboBox fx:id="cmbTarifa" prefWidth="180.0" promptText="Elige la tarifa">
+                     <tooltip>
+                        <Tooltip text="Tarifa que quieres valorar" />
+                     </tooltip>
+                  </ComboBox>
                   <Label styleClass="label-bold" text="Puntuación" />
                   <ComboBox fx:id="cmbPuntuacion" prefWidth="90.0">
                      <tooltip>
@@ -54,7 +57,6 @@
                   <TextField fx:id="txtValoracion" promptText="Escribe tu opinión" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <!-- Tabla -->
             <VBox styleClass="card" VBox.vgrow="ALWAYS">
                <children>
                   <TableView fx:id="tablaValoraciones" editable="true" onMouseClicked="#seleccionarValoracion" VBox.vgrow="ALWAYS">

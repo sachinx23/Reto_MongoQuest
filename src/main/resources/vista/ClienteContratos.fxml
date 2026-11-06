@@ -12,12 +12,10 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<!-- Mis Contratos: firmar o pedir la baja. -->
 <AnchorPane stylesheets="@../css/Estilos.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.ClienteContratosController">
    <children>
       <VBox spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <!-- Cabecera: título y acciones -->
             <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="card">
                <children>
                   <Label styleClass="titulo-vista" text="Mis contratos" />
@@ -34,7 +32,6 @@
                   </Button>
                </children>
             </HBox>
-            <!-- Tabla -->
             <VBox styleClass="card" VBox.vgrow="ALWAYS">
                <children>
                   <TableView fx:id="tablaContratos" VBox.vgrow="ALWAYS">

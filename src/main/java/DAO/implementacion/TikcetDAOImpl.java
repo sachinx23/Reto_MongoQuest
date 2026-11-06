@@ -4,7 +4,10 @@
  */
 package DAO.implementacion;
 
-import DAO.MongoDBConexion;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import exception.OurException;
+import exception.ErrorMessages;
 import DAO.MongoDBConexion;
 import DAO.TicketDAO;
 import com.mongodb.client.MongoDatabase;
@@ -20,6 +23,8 @@ import java.util.List;
  * @author Eneko.Plaza
  */
 public class TikcetDAOImpl implements TicketDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(TikcetDAOImpl.class.getName());
     private Document getFiltroId(String idStr) {
         if (idStr != null) {
             if (ObjectId.isValid(idStr)) {
@@ -29,8 +34,9 @@ public class TikcetDAOImpl implements TicketDAO {
         return new Document("_id", idStr);
     }
 
-    public boolean crearTickets(String idCliente, String asunto, String descripcion) {
+    public boolean crearTickets(String idCliente, String asunto, String descripcion) throws OurException {
         try {
+            LOGGER.info("Crear ticket del cliente " + idCliente + ", asunto: " + asunto);
             MongoDatabase db = MongoDBConexion.getDatabase();
             Object idCli = idCliente;
             if (idCliente != null) {
@@ -57,12 +63,13 @@ public class TikcetDAOImpl implements TicketDAO {
 
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en crearTickets", e);
+            throw new OurException(ErrorMessages.INSERT_TICKET);
         }
     }
 
-    public List<TicketSoporte> listarTicket(String estado) {
+    public List<TicketSoporte> listarTicket(String estado) throws OurException {
+        LOGGER.info("Listar tickets con estado: " + estado);
         List<TicketSoporte> lista = new ArrayList<>();
         try {
             MongoDatabase db = MongoDBConexion.getDatabase();
@@ -84,12 +91,14 @@ public class TikcetDAOImpl implements TicketDAO {
                 i = i + 1;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error en listarTicket", e);
+            throw new OurException(ErrorMessages.GET_TICKETS);
         }
         return lista;
     }
 
-    public List<TicketSoporte> listarTicketsCliente(String idCliente) {
+    public List<TicketSoporte> listarTicketsCliente(String idCliente) throws OurException {
+        LOGGER.info("Listar tickets del cliente " + idCliente);
         List<TicketSoporte> lista = new ArrayList<>();
         try {
             MongoDatabase db = MongoDBConexion.getDatabase();
@@ -109,13 +118,15 @@ public class TikcetDAOImpl implements TicketDAO {
                 i = i + 1;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error en listarTicketsCliente", e);
+            throw new OurException(ErrorMessages.GET_TICKETS);
         }
         return lista;
     }
 
-    public boolean asignarTicket(TicketSoporte t, String idEmpleado) {
+    public boolean asignarTicket(TicketSoporte t, String idEmpleado) throws OurException {
         try {
+            LOGGER.info("Asignar ticket " + t.getId() + " (" + t.getAsunto() + ") al empleado " + idEmpleado);
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("TicketsSoporte");
 
@@ -129,13 +140,14 @@ public class TikcetDAOImpl implements TicketDAO {
 
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en asignarTicket", e);
+            throw new OurException(ErrorMessages.CAMBIAR_TICKET);
         }
     }
 
-    public boolean cambiarEstadoTicket(TicketSoporte t, String estado) {
+    public boolean cambiarEstadoTicket(TicketSoporte t, String estado) throws OurException {
         try {
+            LOGGER.info("Cambiar estado del ticket " + t.getId() + " a " + estado);
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("TicketsSoporte");
 
@@ -149,8 +161,8 @@ public class TikcetDAOImpl implements TicketDAO {
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en cambiarEstadoTicket", e);
+            throw new OurException(ErrorMessages.CAMBIAR_TICKET);
         }
     }
 

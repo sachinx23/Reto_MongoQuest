@@ -1,5 +1,8 @@
 package controlador;
 
+import java.util.logging.Logger;
+import exception.ShowAlert;
+import exception.OurException;
 import DAO.TicketDAO;
 import DAO.implementacion.TikcetDAOImpl;
 import java.net.URL;
@@ -25,6 +28,8 @@ import modelo.TicketSoporte;
  * @author Eneko.Plaza
  */
 public class TicketsSoporteController implements Initializable {
+
+    private static final Logger LOGGER = Logger.getLogger(TicketsSoporteController.class.getName());
 
     private final TicketDAO ticketDAO = new TikcetDAOImpl();
 
@@ -82,13 +87,19 @@ public class TicketsSoporteController implements Initializable {
     }
 
     private void cargarTickets() {
-        listaTickets.clear();
-        String estadoFiltro = comboFiltroEstado.getValue() != null ? comboFiltroEstado.getValue() : "Todos";
+        try {
+            listaTickets.clear();
+            String estadoFiltro = comboFiltroEstado.getValue() != null ? comboFiltroEstado.getValue() : "Todos";
         
-        List<TicketSoporte> tickets = ticketDAO.listarTicket(estadoFiltro);
+            List<TicketSoporte> tickets = ticketDAO.listarTicket(estadoFiltro);
 
-        if (tickets != null) {
-            listaTickets.addAll(tickets);
+            if (tickets != null) {
+                listaTickets.addAll(tickets);
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
@@ -113,43 +124,55 @@ public class TicketsSoporteController implements Initializable {
 
     @FXML
     public void asignarTicket(ActionEvent event) {
-        TicketSoporte seleccionado = tablaTickets.getSelectionModel().getSelectedItem();
-        String idEmpleadoActual = IniciarSesionController.idUsuarioActual;
+        try {
+            TicketSoporte seleccionado = tablaTickets.getSelectionModel().getSelectedItem();
+            String idEmpleadoActual = IniciarSesionController.idUsuarioActual;
 
-        if (seleccionado != null) {
-            boolean asignado = ticketDAO.asignarTicket(seleccionado, idEmpleadoActual);
-            if (asignado) {
-                mostrarAlerta("Éxito", "Te has asignado el ticket correctamente.");
-                cargarTickets();
+            if (seleccionado != null) {
+                boolean asignado = ticketDAO.asignarTicket(seleccionado, idEmpleadoActual);
+                if (asignado) {
+                    mostrarAlerta("Éxito", "Te has asignado el ticket correctamente.");
+                    cargarTickets();
+                } else {
+                    mostrarAlerta("Error", "No se pudo asignar el ticket.");
+                }
             } else {
-                mostrarAlerta("Error", "No se pudo asignar el ticket.");
+                mostrarAlerta("Atención", "Selecciona primero un ticket de la tabla.");
             }
-        } else {
-            mostrarAlerta("Atención", "Selecciona primero un ticket de la tabla.");
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
     @FXML
     public void cambiarEstado(ActionEvent event) {
-        TicketSoporte seleccionado = tablaTickets.getSelectionModel().getSelectedItem();
-        String nuevoEstado = comboNuevoEstado.getValue();
+        try {
+            TicketSoporte seleccionado = tablaTickets.getSelectionModel().getSelectedItem();
+            String nuevoEstado = comboNuevoEstado.getValue();
 
-        if (seleccionado == null) {
-            mostrarAlerta("Atención", "Selecciona primero un ticket de la tabla.");
-            return;
-        }
+            if (seleccionado == null) {
+                mostrarAlerta("Atención", "Selecciona primero un ticket de la tabla.");
+                return;
+            }
 
-        if (nuevoEstado == null || nuevoEstado.isEmpty()) {
-            mostrarAlerta("Atención", "Selecciona un nuevo estado en el desplegable.");
-            return;
-        }
+            if (nuevoEstado == null || nuevoEstado.isEmpty()) {
+                mostrarAlerta("Atención", "Selecciona un nuevo estado en el desplegable.");
+                return;
+            }
 
-        boolean cambiado = ticketDAO.cambiarEstadoTicket(seleccionado, nuevoEstado);
-        if (cambiado) {
-            mostrarAlerta("Éxito", "El estado del ticket ha sido actualizado a: " + nuevoEstado);
-            cargarTickets();
-        } else {
-            mostrarAlerta("Error", "No se pudo cambiar el estado del ticket.");
+            boolean cambiado = ticketDAO.cambiarEstadoTicket(seleccionado, nuevoEstado);
+            if (cambiado) {
+                mostrarAlerta("Éxito", "El estado del ticket ha sido actualizado a: " + nuevoEstado);
+                cargarTickets();
+            } else {
+                mostrarAlerta("Error", "No se pudo cambiar el estado del ticket.");
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 

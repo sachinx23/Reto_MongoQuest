@@ -4,6 +4,10 @@
  */
 package DAO.implementacion;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import exception.OurException;
+import exception.ErrorMessages;
 import DAO.ClienteDAO;
 import DAO.MongoDBConexion;
 import modelo.Cliente;
@@ -15,15 +19,19 @@ import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.mongodb.MongoException;
 /**
  *
  * @author Eneko.Plaza
  */
-public class ClienteDaoImplementacion implements ClienteDAO {
+public class ClienteDAOImplementacion extends DAOBase implements ClienteDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(ClienteDAOImplementacion.class.getName());
 
     @Override
-    public Document comprobarUsuarios(String usuario, String contrasena) {
+    public Document comprobarUsuarios(String usuario, String contrasena) throws OurException {
         try {
+            LOGGER.info("Buscar en Clientes al usuario: " + usuario);
             MongoDatabase db = MongoDBConexion.getDatabase();
             Document query = new Document("nombreUsuario", usuario).append("contrasena", contrasena);
             
@@ -33,14 +41,24 @@ public class ClienteDaoImplementacion implements ClienteDAO {
                 return cliente;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error en comprobarUsuarios", e);
+            throw new OurException(ErrorMessages.LOGIN);
         }
         return null;
     }
 
     @Override
-    public boolean actualizarCliente(Cliente c) {
+    public boolean actualizarCliente(Cliente c) throws OurException {
         try {
+            LOGGER.info("Actualizar cliente " + c.getId() + ", usuario: " + c.getNombreUsuario() + ", DNI: " + c.getDni() + ", correo: " + c.getCorreo());
+            // Usuario o DNI repetidos
+            if (nombreUsuarioOcupado(c.getNombreUsuario(), c.getId())) {
+                throw new OurException(ErrorMessages.USER_EXISTS);
+            }
+            Document otro = coleccion(COL_CLIENTES).find(new Document("dni", c.getDni())).first();
+            if (otro != null && !idTexto(otro, "_id").equals(c.getId())) {
+                throw new OurException(ErrorMessages.DNI_EXISTS);
+            }
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Clientes");
 
@@ -67,15 +85,17 @@ public class ClienteDaoImplementacion implements ClienteDAO {
             long modificados = col.updateOne(new Document("_id", idFiltro), sentenciaUpdate).getModifiedCount();
             
             return modificados > 0;
-            
+        } catch (OurException e) {
+            throw e;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en actualizarCliente", e);
+            throw new OurException(ErrorMessages.UPDATE_USER);
         }
     }
     @Override
-    public boolean registrarCliente(String usuario, String nombre, String apellidos, String contrasena, String correo, String dni, String telefono, String direccion) {
+    public boolean registrarCliente(String usuario, String nombre, String apellidos, String contrasena, String correo, String dni, String telefono, String direccion) throws OurException {
         try {
+            LOGGER.info("Registrar cliente, usuario: " + usuario + ", nombre: " + nombre + " " + apellidos + ", DNI: " + dni + ", correo: " + correo);
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Clientes");
 
@@ -96,24 +116,26 @@ public class ClienteDaoImplementacion implements ClienteDAO {
             col.insertOne(nuevo);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en registrarCliente", e);
+            throw new OurException(ErrorMessages.REGISTER_USER);
         }
     }
 
     @Override
-    public boolean eliminarDatosSensiblesCliente(String nombreUsuario) {
+    public boolean eliminarDatosSensiblesCliente(String nombreUsuario) throws OurException {
         try {
+            LOGGER.info("Eliminar datos del cliente, usuario: " + nombreUsuario);
             MongoDatabase db = MongoDBConexion.getDatabase();
             return db.getCollection("Clientes").deleteOne(Filters.eq("nombreUsuario", nombreUsuario)).getDeletedCount() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en eliminarDatosSensiblesCliente", e);
+            throw new OurException(ErrorMessages.DATOS_SENSIBLES);
         }
     }
 
     @Override
-    public List<Cliente> listarClientes() {
+    public List<Cliente> listarClientes() throws OurException {
+        LOGGER.info("Listar clientes");
         List<Cliente> lista = new ArrayList<>();
         try {
             MongoDatabase db = MongoDBConexion.getDatabase();
@@ -132,8 +154,26 @@ public class ClienteDaoImplementacion implements ClienteDAO {
                 lista.add(new Cliente(usuario, nombre, apellidos, correo, dni, telefono, direccion));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error en listarClientes", e);
+            throw new OurException(ErrorMessages.GET_CLIENTES);
         }
         return lista;
+    }
+
+    // Parte cliente
+
+    @Override
+    public Cliente obtenerCliente(String id) throws OurException {
+        LOGGER.info("Cargar cliente con id: " + id);
+        try {
+            Document d = buscarPorId(COL_CLIENTES, new ObjectId(id));
+            if (d == null) {
+                return null;
+            }
+            return documentoACliente(d);
+        } catch (MongoException | IllegalArgumentException e) {
+            LOGGER.log(Level.SEVERE, "Error en obtenerCliente", e);
+            throw new OurException(ErrorMessages.LOGIN);
+        }
     }
 }

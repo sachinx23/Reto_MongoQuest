@@ -1,18 +1,18 @@
 package controlador;
 
-import daocliente.ClienteDAO;
-import daocliente.implementacion.ClienteDAOImplementacion;
+import java.util.logging.Logger;
+import DAO.ClienteDAO;
+import DAO.implementacion.ClienteDAOImplementacion;
 import exception.OurException;
 import exception.ShowAlert;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import modelocliente.Cliente;
+import modelo.Cliente;
 
-/**
- * Mi Perfil del cliente: ver y modificar sus datos.
- */
 public class ClientePerfilController {
+
+    private static final Logger LOGGER = Logger.getLogger(ClientePerfilController.class.getName());
     private final ClienteDAO clienteDAO = new ClienteDAOImplementacion();
     private Cliente cliente;
 
@@ -24,18 +24,12 @@ public class ClientePerfilController {
     @FXML private TextField txtCuentaBancaria;
     @FXML private TextField txtDireccion;
 
-    /**
-     * Se ejecuta al abrir la pantalla: rellena el formulario con los datos del cliente.
-     */
     @FXML
     public void initialize() {
-        cliente = (Cliente) Sesion.getUsuario();
+        cliente = ClienteController.getCliente();
         cargarPerfil();
     }
 
-    /**
-     * Rellena el formulario con los datos del cliente de la sesión.
-     */
     private void cargarPerfil() {
         txtNombre.setText(cliente.getNombre());
         txtNombreUsuario.setText(cliente.getNombreUsuario());
@@ -46,11 +40,6 @@ public class ClientePerfilController {
         txtCuentaBancaria.setText(cliente.getCuentaBancaria());
     }
 
-    /**
-     * Comprueba los datos, pide confirmación y guarda el perfil.
-     *
-     * @param event evento de la acción (botón, menú o desplegable)
-     */
     @FXML
     public void btnModificar(ActionEvent event) {
         String nombre = txtNombre.getText().trim();
@@ -70,17 +59,16 @@ public class ClientePerfilController {
             return;
         }
 
-        // Se crea un cliente nuevo con los cambios: si falla al guardar, el de la sesión no se toca
-        Cliente modificado = new Cliente(cliente.getId(), nombre, nombreUsuario, cliente.getContrasena(), correo,
-                cuenta, dni, telefono, direccion);
-        modificado.setDadoDeBaja(cliente.isDadoDeBaja());
+        Cliente modificado = new Cliente(cliente.getId(), cuenta, nombreUsuario, nombre, cliente.getApellidos(),
+                cliente.getContrasena(), correo, dni, telefono, direccion);
         try {
             clienteDAO.actualizarCliente(modificado);
             cliente = modificado;
-            Sesion.setUsuario(modificado);
+            ClienteController.setCliente(modificado);
             ClienteController.actualizarBienvenida();
             ShowAlert.info("Modificación exitosa", "Los datos se han actualizado correctamente.");
         } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
             cargarPerfil();
         }

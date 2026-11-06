@@ -1,5 +1,8 @@
 package controlador;
 
+import java.util.logging.Logger;
+import exception.ShowAlert;
+import exception.OurException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -26,11 +29,13 @@ import DAO.ClienteDAO;
 import DAO.AdministradorDAO;
 import DAO.SucursalDAO;
 import DAO.implementacion.EmpleadoDaoImplementacion;
-import DAO.implementacion.ClienteDaoImplementacion;
+import DAO.implementacion.ClienteDAOImplementacion;
 import DAO.implementacion.AdministradorDAOImpl;
 import DAO.implementacion.SucursalDaoImplementacion;
 
 public class GestionarPlantillaController implements Initializable {
+
+    private static final Logger LOGGER = Logger.getLogger(GestionarPlantillaController.class.getName());
 
     // Tabla empleado
     @FXML
@@ -88,7 +93,7 @@ public class GestionarPlantillaController implements Initializable {
     private final ObservableList<Cliente> listaClientes = FXCollections.observableArrayList();
 
     private final EmpleadoDAO empleadoDAO = new EmpleadoDaoImplementacion();
-    private final ClienteDAO clienteDAO = new ClienteDaoImplementacion();
+    private final ClienteDAO clienteDAO = new ClienteDAOImplementacion();
     private final AdministradorDAO administradorDAO = new AdministradorDAOImpl();
     private final SucursalDAO sucursalDAO = new SucursalDaoImplementacion();
     
@@ -123,27 +128,39 @@ public class GestionarPlantillaController implements Initializable {
     }
 
     private void cargarTablas() {
-        listaEmpleados.clear();
-        listaClientes.clear();
+        try {
+            listaEmpleados.clear();
+            listaClientes.clear();
 
-        List<Empleado> empleados = empleadoDAO.listarEmpleados();
-        List<Cliente> clientes = clienteDAO.listarClientes();
+            List<Empleado> empleados = empleadoDAO.listarEmpleados();
+            List<Cliente> clientes = clienteDAO.listarClientes();
 
-        if (empleados != null) {
-            listaEmpleados.addAll(empleados);
-        }
-        if (clientes != null) {
-            listaClientes.addAll(clientes);
+            if (empleados != null) {
+                listaEmpleados.addAll(empleados);
+            }
+            if (clientes != null) {
+                listaClientes.addAll(clientes);
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
     private void cargarComboSucursales() {
-        cmbIdSucursal.getItems().clear();
-        List<Sucursal> sucursales = sucursalDAO.listarSucursales();
-        if (sucursales != null) {
-            for (Sucursal s : sucursales) {
-                cmbIdSucursal.getItems().add(String.valueOf(s.getUbicacion()));
+        try {
+            cmbIdSucursal.getItems().clear();
+            List<Sucursal> sucursales = sucursalDAO.listarSucursales();
+            if (sucursales != null) {
+                for (Sucursal s : sucursales) {
+                    cmbIdSucursal.getItems().add(String.valueOf(s.getUbicacion()));
+                }
             }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
@@ -166,31 +183,37 @@ public class GestionarPlantillaController implements Initializable {
 
     @FXML
     public void crearEmpleado(ActionEvent event) {
-        String nombre = txtNombre.getText().trim();
-        String apellidos = txtApellidos.getText().trim();
-        String direccion = txtDireccion.getText().trim();
-        String idSucursal = cmbIdSucursal.getValue();
-        String cuentaBancaria = txtIban.getText().trim();
+        try {
+            String nombre = txtNombre.getText().trim();
+            String apellidos = txtApellidos.getText().trim();
+            String direccion = txtDireccion.getText().trim();
+            String idSucursal = cmbIdSucursal.getValue();
+            String cuentaBancaria = txtIban.getText().trim();
 
-        if (nombre.isEmpty() || apellidos.isEmpty() || direccion.isEmpty() || idSucursal == null || idSucursal.isEmpty() || cuentaBancaria.isEmpty()) {
-            mostrarAlerta("Error", "Por favor, rellena todos los campos y selecciona una sucursal.");
-            return;
-        }
+            if (nombre.isEmpty() || apellidos.isEmpty() || direccion.isEmpty() || idSucursal == null || idSucursal.isEmpty() || cuentaBancaria.isEmpty()) {
+                mostrarAlerta("Error", "Por favor, rellena todos los campos y selecciona una sucursal.");
+                return;
+            }
 
-        String nombreN = nombre.toLowerCase().replaceAll("\\s+", "");
-        String primerApellido = apellidos.split("\\s+")[0].toLowerCase();
-        String usuario = nombreN + "." + primerApellido;
+            String nombreN = nombre.toLowerCase().replaceAll("\\s+", "");
+            String primerApellido = apellidos.split("\\s+")[0].toLowerCase();
+            String usuario = nombreN + "." + primerApellido;
 
-        boolean ok = administradorDAO.crearEmpleado(usuario, nombre, apellidos, "1234", usuario + "@telonda.com", cuentaBancaria, direccion, idSucursal);
+            boolean ok = administradorDAO.crearEmpleado(usuario, nombre, apellidos, "1234", usuario + "@telonda.com", cuentaBancaria, direccion, idSucursal);
 
-        if (ok) {
-            administradorDAO.agregarEmpleadoASucursal(Integer.parseInt(idSucursal), usuario);
+            if (ok) {
+                administradorDAO.agregarEmpleadoASucursal(Integer.parseInt(idSucursal), usuario);
 
-            mostrarAlerta("Éxito", "Empleado creado y metido en la sucursal.");
-            cargarTablas();
-            cancelarFormulario();
-        } else {
-            mostrarAlerta("Error", "No se pudo crear el empleado (quizás el usuario ya existe).");
+                mostrarAlerta("Éxito", "Empleado creado y metido en la sucursal.");
+                cargarTablas();
+                cancelarFormulario();
+            } else {
+                mostrarAlerta("Error", "No se pudo crear el empleado (quizás el usuario ya existe).");
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
@@ -204,57 +227,75 @@ public class GestionarPlantillaController implements Initializable {
 
     @FXML
     public void ascenderAAdmin(ActionEvent event) {
-        Empleado seleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
-        if (seleccionado != null) {
-            boolean ok = empleadoDAO.ascenderEmpleado(seleccionado.getNombreUsuario(), "Admin");
-            if (ok) {
-                mostrarAlerta("Éxito", "El empleado ahora es Administrador.");
-                cargarTablas();
+        try {
+            Empleado seleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
+            if (seleccionado != null) {
+                boolean ok = empleadoDAO.ascenderEmpleado(seleccionado.getNombreUsuario(), "Admin");
+                if (ok) {
+                    mostrarAlerta("Éxito", "El empleado ahora es Administrador.");
+                    cargarTablas();
+                } else {
+                    mostrarAlerta("Error", "No se pudo ascender al empleado.");
+                }
             } else {
-                mostrarAlerta("Error", "No se pudo ascender al empleado.");
+                mostrarAlerta("Atención", "Selecciona primero un empleado en la tabla.");
             }
-        } else {
-            mostrarAlerta("Atención", "Selecciona primero un empleado en la tabla.");
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
     @FXML
     public void eliminarEmpleado(ActionEvent event) {
-        Empleado seleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
-        if (seleccionado != null) {
-            boolean ok = empleadoDAO.eliminarEmpleado(seleccionado.getNombreUsuario());
-            if (ok) {
-                mostrarAlerta("Éxito", "El empleado ha sido dado de baja.");
-                cargarTablas();
+        try {
+            Empleado seleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
+            if (seleccionado != null) {
+                boolean ok = empleadoDAO.eliminarEmpleado(seleccionado.getNombreUsuario());
+                if (ok) {
+                    mostrarAlerta("Éxito", "El empleado ha sido dado de baja.");
+                    cargarTablas();
+                } else {
+                    mostrarAlerta("Error", "No se pudo eliminar al empleado.");
+                }
             } else {
-                mostrarAlerta("Error", "No se pudo eliminar al empleado.");
+                mostrarAlerta("Atención", "Selecciona primero un empleado en la tabla.");
             }
-        } else {
-            mostrarAlerta("Atención", "Selecciona primero un empleado en la tabla.");
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
     @FXML
     public void eliminarCliente(ActionEvent event) {
-        Cliente seleccionado = tablaClientes.getSelectionModel().getSelectedItem();
-        if (seleccionado != null) {
-            Alert confirmacion = new Alert(AlertType.CONFIRMATION);
-            confirmacion.setTitle("Confirmar eliminación");
-            confirmacion.setHeaderText(null);
-            confirmacion.setContentText("¿Desea eliminar los datos sensibles del cliente?");
+        try {
+            Cliente seleccionado = tablaClientes.getSelectionModel().getSelectedItem();
+            if (seleccionado != null) {
+                Alert confirmacion = new Alert(AlertType.CONFIRMATION);
+                confirmacion.setTitle("Confirmar eliminación");
+                confirmacion.setHeaderText(null);
+                confirmacion.setContentText("¿Desea eliminar los datos sensibles del cliente?");
 
-            Optional<ButtonType> res = confirmacion.showAndWait();
-            if (res.isPresent() && res.get() == ButtonType.OK) {
-                boolean ok = clienteDAO.eliminarDatosSensiblesCliente(seleccionado.getNombreUsuario());
-                if (ok) {
-                    mostrarAlerta("Éxito", "Datos sensibles eliminados.");
-                    cargarTablas();
-                } else {
-                    mostrarAlerta("Error", "No se pudieron borrar los datos.");
+                Optional<ButtonType> res = confirmacion.showAndWait();
+                if (res.isPresent() && res.get() == ButtonType.OK) {
+                    boolean ok = clienteDAO.eliminarDatosSensiblesCliente(seleccionado.getNombreUsuario());
+                    if (ok) {
+                        mostrarAlerta("Éxito", "Datos sensibles eliminados.");
+                        cargarTablas();
+                    } else {
+                        mostrarAlerta("Error", "No se pudieron borrar los datos.");
+                    }
                 }
+            } else {
+                mostrarAlerta("Atención", "Selecciona primero un cliente de la tabla.");
             }
-        } else {
-            mostrarAlerta("Atención", "Selecciona primero un cliente de la tabla.");
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 

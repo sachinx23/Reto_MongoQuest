@@ -1,0 +1,15 @@
+2026-11-06 13:40:01 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: sachin
+2026-11-06 13:40:01 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-06 13:40:02 [INFO] [sachin (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-06 13:40:02 [INFO] [sachin (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 6aeae2470d8c9312c4bb5f42
+2026-11-06 13:40:05 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-06 13:40:05 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-06 13:40:06 [INFO] [sachin (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 6aeae2470d8c9312c4bb5f42
+2026-11-06 13:40:06 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 6aeae08420bce10958ba7b68
+2026-11-06 13:40:06 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 6aeae08420bce10958ba7b69
+2026-11-06 13:40:06 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 6aeb0ebbf34a8c5a476ec752
+2026-11-06 13:40:08 [INFO] [sachin (Cliente)] DAO.implementacion.TikcetDAOImpl.listarTicketsCliente: Listar tickets del cliente 6aeae2470d8c9312c4bb5f42
+2026-11-06 13:40:11 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-06 13:40:11 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-06 13:40:11 [INFO] [sachin (Cliente)] DAO.implementacion.ValoracionDAOImplementacion.obtenerValoracionesCliente: Listar valoraciones del cliente 6aeae2470d8c9312c4bb5f42
+2026-11-06 13:40:18 [INFO] [sachin (Cliente)] controlador.ClienteController.cerrarSesion: Sesión cerrada

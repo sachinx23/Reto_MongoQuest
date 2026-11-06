@@ -1,5 +1,8 @@
 package controlador;
 
+import java.util.logging.Logger;
+import exception.ShowAlert;
+import exception.OurException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -24,6 +27,8 @@ import DAO.SucursalDAO;
 import DAO.implementacion.SucursalDaoImplementacion;
 
 public class GestionSucursalController implements Initializable {
+
+    private static final Logger LOGGER = Logger.getLogger(GestionSucursalController.class.getName());
 
     @FXML
     private TextField txtNombre;
@@ -129,11 +134,17 @@ public class GestionSucursalController implements Initializable {
     }
 
     private void cargarSucursalesBD() {
-        listaSucursalesData.clear();
-        List<Sucursal> sucursales = sucursalDAO.listarSucursales();
-        listaSucursalesData.addAll(sucursales);
+        try {
+            listaSucursalesData.clear();
+            List<Sucursal> sucursales = sucursalDAO.listarSucursales();
+            listaSucursalesData.addAll(sucursales);
 
-        mostrarTodasLasSucursalesEnMapa();
+            mostrarTodasLasSucursalesEnMapa();
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
+        }
     }
 
     private void cargarCampos(Sucursal sucursal) {
@@ -151,87 +162,105 @@ public class GestionSucursalController implements Initializable {
 
     @FXML
     public void añadirSucursal(ActionEvent event) {
-        String nombre = txtNombre.getText().trim();
-        String horario = txtHorario.getText().trim();
-        String telefono = txtTelefono.getText().trim();
-        String direccion = txtUbicacion.getText().trim();
-
-        if (nombre.isEmpty()) {
-            mostrarAlerta("Atención", "Por favor, completa todos los campos.", Alert.AlertType.WARNING);
-            return;
-        }
-        if (horario.isEmpty()) {
-            mostrarAlerta("Atención", "Por favor, completa todos los campos.", Alert.AlertType.WARNING);
-            return;
-        }
-        if (telefono.isEmpty()) {
-            mostrarAlerta("Atención", "Por favor, completa todos los campos.", Alert.AlertType.WARNING);
-            return;
-        }
-        if (direccion.isEmpty()) {
-            mostrarAlerta("Atención", "Por favor, completa todos los campos.", Alert.AlertType.WARNING);
-            return;
-        }
-
         try {
-            Ubicacion ubicacion = new Ubicacion(direccion, "Bilbao", 48480);
-            Sucursal nueva = new Sucursal(nombre, horario, Integer.parseInt(telefono.trim()), ubicacion);
+            String nombre = txtNombre.getText().trim();
+            String horario = txtHorario.getText().trim();
+            String telefono = txtTelefono.getText().trim();
+            String direccion = txtUbicacion.getText().trim();
 
-            if (sucursalDAO.insertarSucursal(nueva)) {
-                cargarSucursalesBD();
-                limpiar();
-                mostrarAlerta("Éxito", "Sucursal guardada correctamente.", Alert.AlertType.INFORMATION);
-            } else {
-                mostrarAlerta("Error", "No se pudo guardar la sucursal.", Alert.AlertType.ERROR);
+            if (nombre.isEmpty()) {
+                mostrarAlerta("Atención", "Por favor, completa todos los campos.", Alert.AlertType.WARNING);
+                return;
             }
-        } catch (NumberFormatException e) {
-            mostrarAlerta("Error", "El teléfono debe ser un número entero.", Alert.AlertType.ERROR);
+            if (horario.isEmpty()) {
+                mostrarAlerta("Atención", "Por favor, completa todos los campos.", Alert.AlertType.WARNING);
+                return;
+            }
+            if (telefono.isEmpty()) {
+                mostrarAlerta("Atención", "Por favor, completa todos los campos.", Alert.AlertType.WARNING);
+                return;
+            }
+            if (direccion.isEmpty()) {
+                mostrarAlerta("Atención", "Por favor, completa todos los campos.", Alert.AlertType.WARNING);
+                return;
+            }
+
+            try {
+                Ubicacion ubicacion = new Ubicacion(direccion, "Bilbao", 48480);
+                Sucursal nueva = new Sucursal(nombre, horario, Integer.parseInt(telefono.trim()), ubicacion);
+
+                if (sucursalDAO.insertarSucursal(nueva)) {
+                    cargarSucursalesBD();
+                    limpiar();
+                    mostrarAlerta("Éxito", "Sucursal guardada correctamente.", Alert.AlertType.INFORMATION);
+                } else {
+                    mostrarAlerta("Error", "No se pudo guardar la sucursal.", Alert.AlertType.ERROR);
+                }
+            } catch (NumberFormatException e) {
+                mostrarAlerta("Error", "El teléfono debe ser un número entero.", Alert.AlertType.ERROR);
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
     @FXML
     public void gestionarSucursal(ActionEvent event) {
-        Sucursal seleccionada = listSucursales.getSelectionModel().getSelectedItem();
-        if (seleccionada == null) {
-            mostrarAlerta("Atención", "Selecciona una sucursal de la lista.", Alert.AlertType.WARNING);
-            return;
-        }
-
-        seleccionada.setHorario(txtHorario.getText().trim());
-        seleccionada.setTelefono(Integer.parseInt(txtTelefono.getText().trim()));
-        if (seleccionada.getUbicacion() != null) {
-            seleccionada.getUbicacion().setDireccion(txtUbicacion.getText().trim());
-            try {
-                int codigoPostal = Integer.parseInt(txtCodigoPostal.getText().trim());
-                seleccionada.getUbicacion().setCodigoPostal(codigoPostal);
-            } catch (NumberFormatException e) {
-                System.out.println("Por favor, introduce un código postal válido.");
+        try {
+            Sucursal seleccionada = listSucursales.getSelectionModel().getSelectedItem();
+            if (seleccionada == null) {
+                mostrarAlerta("Atención", "Selecciona una sucursal de la lista.", Alert.AlertType.WARNING);
+                return;
             }
-        }
 
-        if (sucursalDAO.actualizarSucursal(seleccionada)) {
-            cargarSucursalesBD();
-            limpiar();
-            mostrarAlerta("Éxito", "Sucursal actualizada correctamente.", Alert.AlertType.INFORMATION);
-        } else {
-            mostrarAlerta("Error", "No se pudo actualizar la sucursal.", Alert.AlertType.ERROR);
+            seleccionada.setHorario(txtHorario.getText().trim());
+            seleccionada.setTelefono(Integer.parseInt(txtTelefono.getText().trim()));
+            if (seleccionada.getUbicacion() != null) {
+                seleccionada.getUbicacion().setDireccion(txtUbicacion.getText().trim());
+                try {
+                    int codigoPostal = Integer.parseInt(txtCodigoPostal.getText().trim());
+                    seleccionada.getUbicacion().setCodigoPostal(codigoPostal);
+                } catch (NumberFormatException e) {
+                    ShowAlert.error("Introduce un código postal válido (solo números).");
+                }
+            }
+
+            if (sucursalDAO.actualizarSucursal(seleccionada)) {
+                cargarSucursalesBD();
+                limpiar();
+                mostrarAlerta("Éxito", "Sucursal actualizada correctamente.", Alert.AlertType.INFORMATION);
+            } else {
+                mostrarAlerta("Error", "No se pudo actualizar la sucursal.", Alert.AlertType.ERROR);
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 
     @FXML
     public void eliminarSucursal(ActionEvent event) {
-        Sucursal seleccionada = listSucursales.getSelectionModel().getSelectedItem();
-        if (seleccionada == null) {
-            mostrarAlerta("Atención", "Selecciona una sucursal para borrar.", Alert.AlertType.WARNING);
-            return;
-        }
+        try {
+            Sucursal seleccionada = listSucursales.getSelectionModel().getSelectedItem();
+            if (seleccionada == null) {
+                mostrarAlerta("Atención", "Selecciona una sucursal para borrar.", Alert.AlertType.WARNING);
+                return;
+            }
 
-        if (sucursalDAO.eliminarSucursal(seleccionada.getNombre())) {
-            cargarSucursalesBD();
-            limpiar();
-            mostrarAlerta("Éxito", "Sucursal eliminada.", Alert.AlertType.INFORMATION);
-        } else {
-            mostrarAlerta("Error", "No se pudo eliminar la sucursal.", Alert.AlertType.ERROR);
+            if (sucursalDAO.eliminarSucursal(seleccionada.getNombre())) {
+                cargarSucursalesBD();
+                limpiar();
+                mostrarAlerta("Éxito", "Sucursal eliminada.", Alert.AlertType.INFORMATION);
+            } else {
+                mostrarAlerta("Error", "No se pudo eliminar la sucursal.", Alert.AlertType.ERROR);
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
     }
 

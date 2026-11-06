@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import exception.OurException;
 import modelo.Sucursal;
 import java.util.List;
 /**
@@ -11,10 +12,10 @@ import java.util.List;
  * @author Eneko.Plaza
  */
 public interface SucursalDAO {
-    int siguienteIdSucursal();
-    boolean insertarSucursal(Sucursal s);
-    boolean actualizarSucursal(Sucursal s);
-    boolean eliminarSucursal(String nombre);
-    List<Sucursal> listarSucursales();
+    int siguienteIdSucursal() throws OurException;
+    boolean insertarSucursal(Sucursal s) throws OurException;
+    boolean actualizarSucursal(Sucursal s) throws OurException;
+    boolean eliminarSucursal(String nombre) throws OurException;
+    List<Sucursal> listarSucursales() throws OurException;
     
 }

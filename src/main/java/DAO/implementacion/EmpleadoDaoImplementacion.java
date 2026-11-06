@@ -4,6 +4,10 @@
  */
 package DAO.implementacion;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import exception.OurException;
+import exception.ErrorMessages;
 import DAO.EmpleadoDAO;
 import DAO.MongoDBConexion;
 import modelo.Empleado;
@@ -19,9 +23,12 @@ import java.util.List;
  * @author Eneko.Plaza
  */
 public class EmpleadoDaoImplementacion implements EmpleadoDAO{
+
+    private static final Logger LOGGER = Logger.getLogger(EmpleadoDaoImplementacion.class.getName());
 @Override
-    public Document comprobarUsuarios(String usuario, String contrasena) {
+    public Document comprobarUsuarios(String usuario, String contrasena) throws OurException {
         try {
+            LOGGER.info("Buscar en Empleados al usuario: " + usuario);
             MongoDatabase db = MongoDBConexion.getDatabase();
             Document query = new Document("nombreUsuario", usuario).append("contrasena", contrasena);
 
@@ -43,13 +50,15 @@ public class EmpleadoDaoImplementacion implements EmpleadoDAO{
                 return cliente;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error en comprobarUsuarios", e);
+            throw new OurException(ErrorMessages.LOGIN);
         }
         return null;
     }
 
     @Override
-    public List<Empleado> listarEmpleados() {
+    public List<Empleado> listarEmpleados() throws OurException {
+        LOGGER.info("Listar empleados");
         List<Empleado> lista = new ArrayList<>();
         try {
             MongoDatabase db = MongoDBConexion.getDatabase();
@@ -75,14 +84,16 @@ public class EmpleadoDaoImplementacion implements EmpleadoDAO{
                 lista.add(new Empleado(id, usuario, nombre, apellidos, contrasena, direccion, correo, rol, iban, idSucursal));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error en listarEmpleados", e);
+            throw new OurException(ErrorMessages.GET_EMPLEADOS);
         }
         return lista;
     }
 
     @Override
-    public boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria) {
+    public boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria) throws OurException {
         try {
+            LOGGER.info("Crear empleado, usuario: " + usuario + ", nombre: " + nombre + " " + apellidos + ", correo: " + correo);
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> colEmp = db.getCollection("Empleados");
 
@@ -101,25 +112,27 @@ public class EmpleadoDaoImplementacion implements EmpleadoDAO{
             colEmp.insertOne(nuevoEmp);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en crearEmpleado", e);
+            throw new OurException(ErrorMessages.INSERT_EMPLEADO);
         }
     }
 
     @Override
-    public boolean eliminarEmpleado(String nombreUsuario) {
+    public boolean eliminarEmpleado(String nombreUsuario) throws OurException {
         try {
+            LOGGER.info("Eliminar empleado, usuario: " + nombreUsuario);
             MongoDatabase db = MongoDBConexion.getDatabase();
             return db.getCollection("Empleados").deleteOne(Filters.eq("nombreUsuario", nombreUsuario)).getDeletedCount() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            LOGGER.log(Level.SEVERE, "Error en eliminarEmpleado", e);
+            throw new OurException(ErrorMessages.DELETE_EMPLEADO);
         }
     }
 
     @Override
-    public boolean ascenderEmpleado(String nombreUsuario, String nuevoRol) {
+    public boolean ascenderEmpleado(String nombreUsuario, String nuevoRol) throws OurException {
         try {
+            LOGGER.info("Cambiar rol del empleado " + nombreUsuario + " a " + nuevoRol);
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> colEmp = db.getCollection("Empleados");
 
@@ -131,7 +144,8 @@ public class EmpleadoDaoImplementacion implements EmpleadoDAO{
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error en ascenderEmpleado", e);
+            throw new OurException(ErrorMessages.ASCENDER_EMPLEADO);
         }
         return false;
     }
