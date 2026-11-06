@@ -51,6 +51,16 @@ public class TicketSoporte {
         return fechaCreacion;
     }
 
+    // Fecha con formato para la tabla, por ejemplo "30/10/2026"
+    public String getFechaCreacionTexto() {
+        // En MongoDB se guarda como "2026-10-30" y en la tabla se enseña como "30/10/2026"
+        String[] partes = fechaCreacion.split("-");
+        if (partes.length != 3) {
+            return fechaCreacion;
+        }
+        return partes[2] + "/" + partes[1] + "/" + partes[0];
+    }
+
     public void setFechaCreacion(String fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }

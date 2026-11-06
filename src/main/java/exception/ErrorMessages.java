@@ -26,6 +26,14 @@ public class ErrorMessages {
     public static final String GET_SUCURSALES = "No se pudieron cargar las sucursales.";
     public static final String SAVE_SUCURSAL = "No se pudo guardar la sucursal.";
     public static final String SUCURSAL_CON_EMPLEADOS = "La sucursal tiene empleados, no se puede eliminar.";
+    public static final String GET_CLIENTES = "No se pudieron cargar los clientes.";
+    public static final String CLIENTE_ACTIVO = "Solo se pueden borrar los datos de un cliente dado de baja.";
+    public static final String YA_ES_ADMIN = "Ese usuario ya es administrador.";
+    public static final String DATOS_SENSIBLES = "No se pudieron borrar los datos del cliente.";
+    public static final String SAVE_TARIFA = "No se pudo guardar la tarifa.";
+    public static final String DELETE_TARIFA = "No se pudo borrar la tarifa.";
+    public static final String TARIFA_EN_USO = "La tarifa tiene contratos, no se puede eliminar. Desactívala en su lugar.";
+    public static final String CAMBIAR_CONTRATO = "No se pudo cambiar el estado del contrato.";
     public static final String GET_VALORACIONES = "No se pudieron cargar las valoraciones.";
     public static final String SAVE_VALORACION = "No se pudo guardar la valoración.";
 }

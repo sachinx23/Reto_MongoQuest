@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- GESTIONAR SUCURSALES: lista, formulario y botón para ver el mapa -->
+<AnchorPane styleClass="panel-contenido" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.GestionSucursalController">
+   <children>
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+         <children>
+            <Label styleClass="titulo-principal" text="Sucursales" />
+            <HBox spacing="15.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <VBox spacing="10.0" minWidth="400.0" prefWidth="430.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <ListView fx:id="listSucursales" onMouseClicked="#seleccionarSucursal" prefHeight="150.0" VBox.vgrow="ALWAYS" />
+                        <GridPane hgap="12.0" vgap="10.0">
+                           <columnConstraints>
+                              <ColumnConstraints minWidth="95.0" />
+                              <ColumnConstraints hgrow="ALWAYS" />
+                           </columnConstraints>
+                           <children>
+                           <Label styleClass="label-bold" text="Nombre" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                  <TextField fx:id="txtNombre" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                           <Label styleClass="label-bold" text="Horario" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtHorario" promptText="Lunes a viernes: 09:00-20:00" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           <Label styleClass="label-bold" text="Teléfono" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                  <TextField fx:id="txtTelefono" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <tooltip>
+                        <Tooltip text="9 números" />
+                     </tooltip>
+                  </TextField>
+                           <Label styleClass="label-bold" text="Dirección" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                  <TextField fx:id="txtDireccion" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                           <Label styleClass="label-bold" text="Localidad" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                  <TextField fx:id="txtLocalidad" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                           <Label styleClass="label-bold" text="Cód. postal" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                  <TextField fx:id="txtCodigoPostal" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                     <tooltip>
+                        <Tooltip text="5 números, por ejemplo 48480" />
+                     </tooltip>
+                  </TextField>
+                           </children>
+                        </GridPane>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Button fx:id="btnAnadir" mnemonicParsing="true" onAction="#btnAnadir" styleClass="btn-primary" text="_Añadir">
+                                 <tooltip>
+                                    <Tooltip text="Crea una sucursal con los datos del formulario (Alt+A)" />
+                                 </tooltip>
+                              </Button>
+                              <Button fx:id="btnModificar" mnemonicParsing="true" onAction="#btnModificar" styleClass="btn-secondary" text="_Modificar">
+                                 <tooltip>
+                                    <Tooltip text="Guarda los cambios de la sucursal seleccionada (Alt+M)" />
+                                 </tooltip>
+                              </Button>
+                              <Button fx:id="btnEliminar" mnemonicParsing="true" onAction="#btnEliminar" styleClass="btn-danger" text="_Eliminar">
+                                 <tooltip>
+                                    <Tooltip text="Borra la sucursal seleccionada si no tiene empleados (Alt+E)" />
+                                 </tooltip>
+                              </Button>
+                              <Button fx:id="btnLimpiar" mnemonicParsing="true" onAction="#btnLimpiar" styleClass="btn-secondary" text="_Limpiar">
+                                 <tooltip>
+                                    <Tooltip text="Vacía el formulario (Alt+L)" />
+                                 </tooltip>
+                              </Button>
+                              <Button fx:id="btnVerMapa" mnemonicParsing="true" onAction="#btnVerMapa" styleClass="btn-secondary" text="_Ver en el mapa">
+                                 <tooltip>
+                                    <Tooltip text="Abre la dirección de la sucursal seleccionada en OpenStreetMap (Alt+V)" />
+                                 </tooltip>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

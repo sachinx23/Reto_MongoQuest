@@ -76,9 +76,13 @@ public class Sucursal {
         this.codigoPostal = codigoPostal;
     }
 
-    // El ComboBox de alta de empleado muestra lo que devuelve toString()
+    // La lista de sucursales y el ComboBox de alta de empleado muestran lo que devuelve toString()
+    // Si a la sucursal le falta el nombre, se muestra la dirección para que no salga en blanco
     @Override
     public String toString() {
+        if (nombre == null || nombre.isEmpty()) {
+            return direccion + " (" + localidad + ")";
+        }
         return nombre;
     }
 }

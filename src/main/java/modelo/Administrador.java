@@ -9,4 +9,9 @@ public class Administrador extends Empleado {
             String cuentaBancaria) {
         super(id, nombre, nombreUsuario, contrasena, correo, cuentaBancaria, null);
     }
+
+    @Override
+    public String getRol() {
+        return "Administrador";
+    }
 }

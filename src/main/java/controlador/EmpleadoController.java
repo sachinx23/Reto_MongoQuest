@@ -5,6 +5,7 @@ import dao.DAO;
 import exception.OurException;
 import exception.ShowAlert;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -57,7 +58,7 @@ public class EmpleadoController {
     @FXML private TableView<Contrato> tablaPeticiones;
     @FXML private TableColumn<Contrato, String> colPeticionCliente;
     @FXML private TableColumn<Contrato, String> colPeticionTarifa;
-    @FXML private TableColumn<Contrato, Double> colPeticionPrecio;
+    @FXML private TableColumn<Contrato, String> colPeticionPrecio;
 
     @FXML
     public void initialize() {
@@ -65,17 +66,18 @@ public class EmpleadoController {
         lblBienvenida.setText("Bienvenido/a " + empleado.getNombre());
         cmbOpciones.setItems(FXCollections.observableArrayList(OpcionEmpleado.values()));
 
+        // Los "...Texto" devuelven el precio y las fechas ya con formato (40,00 €, 30/10/2026)
         colTicketCliente.setCellValueFactory(new PropertyValueFactory<>("nombreCliente"));
         colTicketAsunto.setCellValueFactory(new PropertyValueFactory<>("asunto"));
         colTicketDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-        colTicketFecha.setCellValueFactory(new PropertyValueFactory<>("fechaCreacion"));
+        colTicketFecha.setCellValueFactory(new PropertyValueFactory<>("fechaCreacionTexto"));
 
         colBajaCliente.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colBajaDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
 
         colPeticionCliente.setCellValueFactory(new PropertyValueFactory<>("nombreCliente"));
         colPeticionTarifa.setCellValueFactory(new PropertyValueFactory<>("nombreTarifa"));
-        colPeticionPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
+        colPeticionPrecio.setCellValueFactory(new PropertyValueFactory<>("precioTexto"));
 
         // Al entrar se muestra el perfil; el desplegable siempre indica en qué apartado estás
         cmbOpciones.setValue(OpcionEmpleado.PERFIL);
@@ -107,7 +109,7 @@ public class EmpleadoController {
         try {
             tablaTickets.setItems(FXCollections.observableArrayList(dao.obtenerTicketsPendientes()));
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -115,7 +117,7 @@ public class EmpleadoController {
         try {
             tablaBajas.setItems(FXCollections.observableArrayList(dao.obtenerClientesConBajaPendiente()));
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -123,7 +125,7 @@ public class EmpleadoController {
         try {
             tablaPeticiones.setItems(FXCollections.observableArrayList(dao.obtenerContratosPorEstado(EstadoContrato.PENDIENTE)));
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -168,15 +170,11 @@ public class EmpleadoController {
 
     @FXML
     public void btnModificar(ActionEvent event) {
-        String error = ValidarPerfil.comprobar(txtNombre.getText(), txtNombreUsuario.getText(),
-                txtContrasena.getText(), txtCorreo.getText());
+        String cuenta = txtCuentaBancaria.getText().trim().toUpperCase();
+        String error = ValidarPerfil.comprobarEmpleado(txtNombre.getText(), txtNombreUsuario.getText(),
+                txtContrasena.getText(), txtCorreo.getText(), cuenta);
         if (error != null) {
             ShowAlert.info("Datos inválidos", error);
-            return;
-        }
-        String cuenta = txtCuentaBancaria.getText().trim().toUpperCase();
-        if (!ValidarPerfil.cuentaValida(cuenta)) {
-            ShowAlert.info("Datos inválidos", "La cuenta bancaria debe ser ES seguido de 22 números (o dejarla vacía).");
             return;
         }
         if (!ShowAlert.confirmar("Confirmar cambios", "¿Seguro que deseas guardar los cambios?")) {
@@ -193,7 +191,7 @@ public class EmpleadoController {
             lblBienvenida.setText("Bienvenido/a " + empleado.getNombre());
             ShowAlert.info("Modificación exitosa", "Tus datos se han actualizado correctamente.");
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
             cargarPerfil();
         }
     }
@@ -213,7 +211,7 @@ public class EmpleadoController {
             ShowAlert.info("Ticket resuelto", "El ticket se ha marcado como resuelto.");
             cargarTickets();
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -232,7 +230,7 @@ public class EmpleadoController {
             ShowAlert.info("Gestión completada", "La operación sobre la cuenta del cliente se ha procesado con éxito.");
             cargarBajas();
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -251,13 +249,21 @@ public class EmpleadoController {
             ShowAlert.info("Tarifa validada", "La tarifa se ha validado y el contrato está activo.");
             cargarPeticiones();
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
-    // Apunta el error en el log y se lo enseña al usuario
-    private void mostrarError(OurException e) {
-        LOGGER.warning(e.getMessage());
-        ShowAlert.error(e.getMessage());
+    // Cierra la aplicación entera después de confirmar
+    @FXML
+    public void menuSalir(ActionEvent event) {
+        if (ShowAlert.confirmar("Salir", "¿Deseas cerrar la aplicación?")) {
+            LOGGER.info("Aplicación cerrada desde el menú");
+            Platform.exit();
+        }
+    }
+
+    @FXML
+    public void menuAcercaDe(ActionEvent event) {
+        ShowAlert.info("Acerca de", "Tel-ONDA 1.0\nReto MongoQuest\nSachin, Iñigo y Eneko Plaza");
     }
 }

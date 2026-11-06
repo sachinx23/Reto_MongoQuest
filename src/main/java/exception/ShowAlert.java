@@ -1,5 +1,6 @@
 package exception;
 
+import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -32,5 +33,11 @@ public class ShowAlert {
         alert.setContentText(mensaje);
         alert.showAndWait();
         return alert.getResult() == ButtonType.OK;
+    }
+
+    // Apunta el error en el log de la clase que lo recibe y se lo enseña al usuario
+    public static void error(Logger logger, OurException e) {
+        logger.warning(e.getMessage());
+        error(e.getMessage());
     }
 }

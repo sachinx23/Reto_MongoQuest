@@ -2,6 +2,8 @@ package log;
 
 import controlador.Sesion;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.FileHandler;
@@ -54,5 +56,13 @@ public class LogApp extends Formatter {
             linea = linea + " | ERROR: " + registro.getThrown();
         }
         return linea + "\n";
+    }
+
+    // Devuelve todo el contenido del fichero de log, para que el administrador lo vea en la aplicación
+    public static String leerLog() throws IOException {
+        if (!Files.exists(Paths.get(FICHERO_LOG))) {
+            return "";
+        }
+        return new String(Files.readAllBytes(Paths.get(FICHERO_LOG)), "UTF-8");
     }
 }

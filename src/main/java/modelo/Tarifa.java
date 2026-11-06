@@ -1,5 +1,7 @@
 package modelo;
 
+import java.util.Locale;
+
 public class Tarifa {
 
     private String id;
@@ -38,6 +40,11 @@ public class Tarifa {
         return precio;
     }
 
+    // Precio con formato para la tabla, por ejemplo "40,00 €"
+    public String getPrecioTexto() {
+        return String.format(Locale.forLanguageTag("es-ES"), "%.2f €", precio);
+    }
+
     public void setPrecio(double precio) {
         this.precio = precio;
     }
@@ -60,6 +67,14 @@ public class Tarifa {
 
     public boolean isActiva() {
         return activa;
+    }
+
+    // Para la tabla del administrador: "Sí" o "No"
+    public String getActivaTexto() {
+        if (activa) {
+            return "Sí";
+        }
+        return "No";
     }
 
     public void setActiva(boolean activa) {

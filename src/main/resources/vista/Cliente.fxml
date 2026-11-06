@@ -5,10 +5,14 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -20,8 +24,27 @@
 <AnchorPane prefHeight="620.0" prefWidth="950.0" styleClass="root-admin" stylesheets="@../css/Estilo.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.ClienteController">
    <children>
 
+      <!-- MENÚ: las mismas acciones que los botones de la cabecera, más Salir y Acerca de -->
+      <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <menus>
+            <Menu mnemonicParsing="true" text="_Archivo">
+               <items>
+                  <MenuItem onAction="#btnMiPerfil" text="Mi perfil" />
+                  <MenuItem onAction="#btnCerrarSesion" text="Cerrar sesión" />
+                  <SeparatorMenuItem />
+                  <MenuItem onAction="#menuSalir" text="Salir" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="true" text="A_yuda">
+               <items>
+                  <MenuItem onAction="#menuAcercaDe" text="Acerca de Tel-ONDA" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+
       <!-- CABECERA: marca, nombre del cliente, Mi Perfil y opciones -->
-      <HBox alignment="CENTER_LEFT" prefHeight="70.0" spacing="15.0" styleClass="cabecera" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox alignment="CENTER_LEFT" prefHeight="70.0" spacing="15.0" styleClass="cabecera" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
          <padding>
             <Insets left="20.0" right="20.0" />
          </padding>
@@ -34,14 +57,26 @@
             </HBox>
             <Region HBox.hgrow="ALWAYS" />
             <Label fx:id="lblBienvenida" minWidth="-Infinity" styleClass="texto-cabecera" style="-fx-font-weight: bold;" />
-            <Button fx:id="btnMiPerfil" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnMiPerfil" styleClass="boton-cabecera" text="Mi Perfil" />
-            <ComboBox fx:id="cmbOpciones" minWidth="-Infinity" onAction="#cmbOpcionSeleccionada" prefWidth="215.0" styleClass="combo-admin" />
-            <Button fx:id="btnCerrarSesion" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnCerrarSesion" styleClass="boton-cerrar" text="Cerrar sesión" />
+            <Button fx:id="btnMiPerfil" minWidth="-Infinity" mnemonicParsing="true" onAction="#btnMiPerfil" styleClass="boton-cabecera" text="Mi _Perfil">
+               <tooltip>
+                  <Tooltip text="Ver y modificar tus datos (Alt+P)" />
+               </tooltip>
+            </Button>
+            <ComboBox fx:id="cmbOpciones" minWidth="-Infinity" onAction="#cmbOpcionSeleccionada" prefWidth="215.0" styleClass="combo-admin">
+               <tooltip>
+                  <Tooltip text="Elige el apartado que quieres ver" />
+               </tooltip>
+            </ComboBox>
+            <Button fx:id="btnCerrarSesion" minWidth="-Infinity" mnemonicParsing="true" onAction="#btnCerrarSesion" styleClass="boton-cerrar" text="Cerrar _sesión">
+               <tooltip>
+                  <Tooltip text="Volver a la pantalla de inicio de sesión (Alt+S)" />
+               </tooltip>
+            </Button>
          </children>
       </HBox>
 
       <!-- CONTENIDO: solo se ve uno de los paneles a la vez -->
-      <StackPane AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="90.0">
+      <StackPane AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="115.0">
          <children>
 
             <!-- MI PERFIL -->
@@ -64,14 +99,30 @@
                               <TextField fx:id="txtNombreUsuario" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
                               <Label styleClass="label-bold" text="DNI / NIE" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                              <TextField fx:id="txtDni" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="txtDni" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <tooltip>
+                                    <Tooltip text="DNI (12345678Z) o NIE (X1234567L), con la letra correcta" />
+                                 </tooltip>
+                              </TextField>
                               <Label styleClass="label-bold" text="Correo" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                              <TextField fx:id="txtCorreo" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <TextField fx:id="txtCorreo" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                 <tooltip>
+                                    <Tooltip text="Ejemplo: nombre@gmail.com" />
+                                 </tooltip>
+                              </TextField>
 
                               <Label styleClass="label-bold" text="Teléfono" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                              <TextField fx:id="txtTelefono" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField fx:id="txtTelefono" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <tooltip>
+                                    <Tooltip text="9 números, por ejemplo 666666666" />
+                                 </tooltip>
+                              </TextField>
                               <Label styleClass="label-bold" text="Cuenta" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                              <TextField fx:id="txtCuentaBancaria" promptText="ES + 22 números (opcional)" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <TextField fx:id="txtCuentaBancaria" promptText="ES + 22 números (opcional)" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                 <tooltip>
+                                    <Tooltip text="IBAN español: ES y 22 números. Se puede dejar vacía" />
+                                 </tooltip>
+                              </TextField>
 
                               <Label styleClass="label-bold" text="Dirección" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                               <TextField fx:id="txtDireccion" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
@@ -79,7 +130,11 @@
                         </GridPane>
                         <HBox alignment="CENTER_RIGHT">
                            <children>
-                              <Button fx:id="btnModificar" mnemonicParsing="false" onAction="#btnModificar" styleClass="btn-primary" text="Guardar cambios" />
+                              <Button fx:id="btnModificar" mnemonicParsing="true" onAction="#btnModificar" styleClass="btn-primary" text="_Guardar cambios">
+                                 <tooltip>
+                                    <Tooltip text="Guarda los cambios de tu perfil (Alt+G)" />
+                                 </tooltip>
+                              </Button>
                            </children>
                         </HBox>
                      </children>
@@ -116,8 +171,16 @@
                               </TableView>
                               <VBox minWidth="160.0" spacing="10.0">
                                  <children>
-                                    <Button fx:id="btnCambiarTarifa" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnCambiarTarifa" styleClass="btn-primary" text="Contratar tarifa" />
-                                    <Button fx:id="btnEliminarTarifa" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnEliminarTarifa" styleClass="btn-danger" text="Eliminar petición" />
+                                    <Button fx:id="btnCambiarTarifa" maxWidth="Infinity" mnemonicParsing="true" onAction="#btnCambiarTarifa" styleClass="btn-primary" text="_Contratar tarifa">
+                                       <tooltip>
+                                          <Tooltip text="Pide la tarifa seleccionada; un empleado la validará (Alt+C)" />
+                                       </tooltip>
+                                    </Button>
+                                    <Button fx:id="btnEliminarTarifa" maxWidth="Infinity" mnemonicParsing="true" onAction="#btnEliminarTarifa" styleClass="btn-danger" text="_Eliminar petición">
+                                       <tooltip>
+                                          <Tooltip text="Borra tu petición de la tarifa seleccionada si aún no está validada (Alt+E)" />
+                                       </tooltip>
+                                    </Button>
                                  </children>
                               </VBox>
                            </children>
@@ -156,8 +219,16 @@
                               </TableView>
                               <VBox minWidth="160.0" spacing="10.0">
                                  <children>
-                                    <Button fx:id="btnFirmarContrato" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnFirmarContrato" styleClass="btn-primary" text="Firmar contrato" />
-                                    <Button fx:id="btnRescindirContrato" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnRescindirContrato" styleClass="btn-danger" text="Rescindir contrato" />
+                                    <Button fx:id="btnFirmarContrato" maxWidth="Infinity" mnemonicParsing="true" onAction="#btnFirmarContrato" styleClass="btn-primary" text="_Firmar contrato">
+                                       <tooltip>
+                                          <Tooltip text="Muestra si el contrato seleccionado está firmado (Alt+F)" />
+                                       </tooltip>
+                                    </Button>
+                                    <Button fx:id="btnRescindirContrato" maxWidth="Infinity" mnemonicParsing="true" onAction="#btnRescindirContrato" styleClass="btn-danger" text="_Rescindir contrato">
+                                       <tooltip>
+                                          <Tooltip text="Pide la baja del contrato seleccionado (Alt+R)" />
+                                       </tooltip>
+                                    </Button>
                                  </children>
                               </VBox>
                            </children>
@@ -184,7 +255,11 @@
                               <TextField fx:id="txtSoporteAsunto" promptText="Ej.: Sin conexión a internet" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                               <Label styleClass="label-bold" text="Descripción" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                               <TextField fx:id="txtSoporteMensaje" promptText="Cuéntanos qué ocurre" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Button fx:id="btnEnviarTicket" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnEnviarTicket" styleClass="btn-primary" text="Enviar ticket" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <Button fx:id="btnEnviarTicket" maxWidth="Infinity" mnemonicParsing="true" onAction="#btnEnviarTicket" styleClass="btn-primary" text="E_nviar ticket" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <tooltip>
+                                    <Tooltip text="Envía tu consulta al servicio de soporte (Alt+N)" />
+                                 </tooltip>
+                              </Button>
                            </children>
                         </GridPane>
                         <Label styleClass="label-bold" text="Mis tickets" />
@@ -229,9 +304,21 @@
                               </TableView>
                               <VBox minWidth="160.0" spacing="10.0">
                                  <children>
-                                    <Button fx:id="btnValorar" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnValorar" styleClass="btn-primary" text="Valorar" />
-                                    <Button fx:id="btnEditarValoracion" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnEditarValoracion" styleClass="btn-secondary" text="Editar" />
-                                    <Button fx:id="btnEliminarValoracion" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnEliminarValoracion" styleClass="btn-danger" text="Eliminar" />
+                                    <Button fx:id="btnValorar" maxWidth="Infinity" mnemonicParsing="true" onAction="#btnValorar" styleClass="btn-primary" text="_Valorar">
+                                       <tooltip>
+                                          <Tooltip text="Publica una valoración nueva (Alt+V)" />
+                                       </tooltip>
+                                    </Button>
+                                    <Button fx:id="btnEditarValoracion" maxWidth="Infinity" mnemonicParsing="true" onAction="#btnEditarValoracion" styleClass="btn-secondary" text="E_ditar">
+                                       <tooltip>
+                                          <Tooltip text="Guarda los cambios de la valoración seleccionada (Alt+D)" />
+                                       </tooltip>
+                                    </Button>
+                                    <Button fx:id="btnEliminarValoracion" maxWidth="Infinity" mnemonicParsing="true" onAction="#btnEliminarValoracion" styleClass="btn-danger" text="E_liminar">
+                                       <tooltip>
+                                          <Tooltip text="Borra la valoración seleccionada (Alt+L)" />
+                                       </tooltip>
+                                    </Button>
                                  </children>
                               </VBox>
                            </children>
@@ -239,7 +326,11 @@
                         <HBox alignment="CENTER_LEFT" spacing="12.0">
                            <children>
                               <Label styleClass="label-bold" text="Puntuación" />
-                              <ComboBox fx:id="cmbPuntuacion" prefWidth="90.0" />
+                              <ComboBox fx:id="cmbPuntuacion" prefWidth="90.0">
+                                 <tooltip>
+                                    <Tooltip text="Puntuación de 1 a 5" />
+                                 </tooltip>
+                              </ComboBox>
                               <Label styleClass="label-bold" text="Opinión" />
                               <TextField fx:id="txtValoracion" promptText="Escribe tu opinión" HBox.hgrow="ALWAYS" />
                            </children>

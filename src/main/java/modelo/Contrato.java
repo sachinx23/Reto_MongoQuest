@@ -1,5 +1,7 @@
 package modelo;
 
+import java.util.Locale;
+
 public class Contrato {
 
     private String id;
@@ -80,12 +82,32 @@ public class Contrato {
         return fechaComienzo;
     }
 
+    // Fecha con formato para la tabla, por ejemplo "30/10/2026"
+    public String getFechaComienzoTexto() {
+        // En MongoDB se guarda como "2026-10-30" y en la tabla se enseña como "30/10/2026"
+        String[] partes = fechaComienzo.split("-");
+        if (partes.length != 3) {
+            return fechaComienzo;
+        }
+        return partes[2] + "/" + partes[1] + "/" + partes[0];
+    }
+
     public void setFechaComienzo(String fechaComienzo) {
         this.fechaComienzo = fechaComienzo;
     }
 
     public String getFechaFinalizacion() {
         return fechaFinalizacion;
+    }
+
+    // Fecha con formato para la tabla, por ejemplo "30/10/2027"
+    public String getFechaFinalizacionTexto() {
+        // En MongoDB se guarda como "2026-10-30" y en la tabla se enseña como "30/10/2026"
+        String[] partes = fechaFinalizacion.split("-");
+        if (partes.length != 3) {
+            return fechaFinalizacion;
+        }
+        return partes[2] + "/" + partes[1] + "/" + partes[0];
     }
 
     public void setFechaFinalizacion(String fechaFinalizacion) {
@@ -102,6 +124,11 @@ public class Contrato {
 
     public double getPrecio() {
         return precio;
+    }
+
+    // Precio con formato para la tabla, por ejemplo "40,00 €"
+    public String getPrecioTexto() {
+        return String.format(Locale.forLanguageTag("es-ES"), "%.2f €", precio);
     }
 
     public void setPrecio(double precio) {

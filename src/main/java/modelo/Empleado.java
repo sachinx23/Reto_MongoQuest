@@ -18,4 +18,9 @@ public class Empleado extends Usuario {
     public void setIdSucursal(String idSucursal) {
         this.idSucursal = idSucursal;
     }
+
+    // Puesto que se enseña en la tabla de la plantilla
+    public String getRol() {
+        return "Empleado";
+    }
 }

@@ -6,6 +6,7 @@ import exception.OurException;
 import exception.ShowAlert;
 import java.time.LocalDate;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -55,7 +56,7 @@ public class ClienteController {
 
     @FXML private TableView<Tarifa> tablaTarifas;
     @FXML private TableColumn<Tarifa, String> colTarifaNombre;
-    @FXML private TableColumn<Tarifa, Double> colTarifaPrecio;
+    @FXML private TableColumn<Tarifa, String> colTarifaPrecio;
     @FXML private TableColumn<Tarifa, String> colTarifaDetalles;
     @FXML private TableColumn<Tarifa, String> colTarifaTipo;
 
@@ -83,19 +84,20 @@ public class ClienteController {
         cmbOpciones.setItems(FXCollections.observableArrayList(OpcionCliente.values()));
         cmbPuntuacion.setItems(FXCollections.observableArrayList(1, 2, 3, 4, 5));
 
-        // PropertyValueFactory usa el getter: "nombreTarifa" llama a getNombreTarifa()
+        // PropertyValueFactory usa el getter: "nombreTarifa" llama a getNombreTarifa().
+        // Los "...Texto" devuelven el precio y las fechas ya con formato (40,00 €, 30/10/2026)
         colTarifaNombre.setCellValueFactory(new PropertyValueFactory<>("nombreTarifa"));
-        colTarifaPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
+        colTarifaPrecio.setCellValueFactory(new PropertyValueFactory<>("precioTexto"));
         colTarifaDetalles.setCellValueFactory(new PropertyValueFactory<>("detalles"));
         colTarifaTipo.setCellValueFactory(new PropertyValueFactory<>("tipoTarifa"));
 
         colContratoTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
         colContratoEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
-        colContratoFecha.setCellValueFactory(new PropertyValueFactory<>("fechaFinalizacion"));
+        colContratoFecha.setCellValueFactory(new PropertyValueFactory<>("fechaFinalizacionTexto"));
         colContratoIdTarifa.setCellValueFactory(new PropertyValueFactory<>("nombreTarifa"));
 
         colSoporteAsunto.setCellValueFactory(new PropertyValueFactory<>("asunto"));
-        colSoporteFecha.setCellValueFactory(new PropertyValueFactory<>("fechaCreacion"));
+        colSoporteFecha.setCellValueFactory(new PropertyValueFactory<>("fechaCreacionTexto"));
 
         colValoracionPuntuacion.setCellValueFactory(new PropertyValueFactory<>("puntuacion"));
         colValoracionTexto.setCellValueFactory(new PropertyValueFactory<>("texto"));
@@ -135,7 +137,7 @@ public class ClienteController {
         try {
             tablaTarifas.setItems(FXCollections.observableArrayList(dao.obtenerTarifas()));
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -143,7 +145,7 @@ public class ClienteController {
         try {
             tablaContratos.setItems(FXCollections.observableArrayList(dao.obtenerContratosCliente(cliente.getId())));
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -151,7 +153,7 @@ public class ClienteController {
         try {
             tablaSoporte.setItems(FXCollections.observableArrayList(dao.obtenerTicketsCliente(cliente.getId())));
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -159,7 +161,7 @@ public class ClienteController {
         try {
             tablaValoraciones.setItems(FXCollections.observableArrayList(dao.obtenerValoracionesCliente(cliente.getId())));
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -236,7 +238,7 @@ public class ClienteController {
             lblBienvenida.setText("Bienvenido/a " + cliente.getNombre());
             ShowAlert.info("Modificación exitosa", "Los datos se han actualizado correctamente.");
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
             cargarPerfil();
         }
     }
@@ -251,7 +253,7 @@ public class ClienteController {
         try {
             // No se puede pedir otra vez una tarifa que ya está pendiente o activa
             for (Contrato c : dao.obtenerContratosCliente(cliente.getId())) {
-                boolean mismaTarifa = c.getIdTarifa().equals(tarifa.getId());
+                boolean mismaTarifa = tarifa.getId().equals(c.getIdTarifa());
                 boolean enVigor = c.getEstado() == EstadoContrato.PENDIENTE
                         || c.getEstado() == EstadoContrato.ACTIVO;
                 if (mismaTarifa && enVigor) {
@@ -260,7 +262,7 @@ public class ClienteController {
                 }
             }
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
             return;
         }
         if (!ShowAlert.confirmar("Cambio de tarifa", "¿Estás seguro de que deseas contratar la tarifa " + tarifa.getNombreTarifa() + "?")) {
@@ -277,7 +279,7 @@ public class ClienteController {
             ShowAlert.info("Petición enviada", "Tu petición de la tarifa " + tarifa.getNombreTarifa()
                     + " está pendiente de validar por un empleado.");
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -300,7 +302,7 @@ public class ClienteController {
                 ShowAlert.info("Aviso", "No tienes ninguna petición pendiente de esa tarifa.");
             }
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -341,7 +343,7 @@ public class ClienteController {
             ShowAlert.info("Solicitud enviada", "Tu solicitud de baja está pendiente de aprobar por un empleado.");
             cargarContratos();
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -365,7 +367,7 @@ public class ClienteController {
             txtSoporteMensaje.clear();
             cargarTickets();
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -401,7 +403,7 @@ public class ClienteController {
             limpiarValoracion();
             cargarValoraciones();
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -443,7 +445,7 @@ public class ClienteController {
             ShowAlert.info("Modificación exitosa", "Tu valoración se ha actualizado.");
             limpiarValoracion();
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
         cargarValoraciones();
     }
@@ -464,7 +466,7 @@ public class ClienteController {
             limpiarValoracion();
             cargarValoraciones();
         } catch (OurException e) {
-            mostrarError(e);
+            ShowAlert.error(LOGGER, e);
         }
     }
 
@@ -473,9 +475,17 @@ public class ClienteController {
         txtValoracion.clear();
     }
 
-    // Apunta el error en el log y se lo enseña al usuario
-    private void mostrarError(OurException e) {
-        LOGGER.warning(e.getMessage());
-        ShowAlert.error(e.getMessage());
+    // Cierra la aplicación entera después de confirmar
+    @FXML
+    public void menuSalir(ActionEvent event) {
+        if (ShowAlert.confirmar("Salir", "¿Deseas cerrar la aplicación?")) {
+            LOGGER.info("Aplicación cerrada desde el menú");
+            Platform.exit();
+        }
+    }
+
+    @FXML
+    public void menuAcercaDe(ActionEvent event) {
+        ShowAlert.info("Acerca de", "Tel-ONDA 1.0\nReto MongoQuest\nSachin, Iñigo y Eneko Plaza");
     }
 }

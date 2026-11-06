@@ -17,12 +17,13 @@ db.createCollection("Clientes", {
         nombreUsuario: { bsonType: "string", minLength: 1 },
         nombre:        { bsonType: "string", minLength: 1 },
         contrasena:    { bsonType: "string", minLength: 4 },
-        DNI:           { bsonType: "string", pattern: "^[0-9]{8}[A-Z]$" },
+        DNI:           { bsonType: "string", pattern: "^([0-9]{8}|[XYZ][0-9]{7})[A-Z]$" },
         correo:        { bsonType: "string", pattern: "^.+@.+\\..+$" },
         telefono:      { bsonType: "string" },
         direccion:     { bsonType: "string" },
         cuentaBancaria:{ bsonType: "string" },
-        dadoDeBaja:    { bsonType: "bool" }
+        dadoDeBaja:    { bsonType: "bool" },
+        ticketSoporte: { bsonType: "array", items: { bsonType: "objectId" } }
       }
     }
   }
@@ -51,8 +52,16 @@ db.createCollection("Contratos", {
   validator: {
     $jsonSchema: {
       bsonType: "object",
-      required: ["telefono", "estado", "idCliente", "idTarifa", "fechaComienzo"],
+      required: ["telefono", "estado", "idCliente", "idTarifa", "fechaComienzo", "tarifa"],
       properties: {
+        tarifa: {
+          bsonType: "object",
+          required: ["nombreTarifa", "precio"],
+          properties: {
+            nombreTarifa: { bsonType: "string" },
+            precio:       { bsonType: ["int", "double"] }
+          }
+        },
         estado:    { enum: ["pendiente", "activo", "baja pendiente", "cancelado"] },
         idCliente: { bsonType: "objectId" },
         idTarifa:  { bsonType: "objectId" }
@@ -97,7 +106,7 @@ const idPablo = ObjectId();
 
 db.Sucursales.insertOne({
   _id: idSucursal, nombre: "Tel-ONDA Bilbao", horario: "Lunes a viernes: 09:00-20:00",
-  telefono: "987 687 654", empleado: [idPablo],
+  telefono: "987 687 654",
   Ubicacion: { Direccion: "Lonbo Kalea", Localidad: "Bilbao", CodigoPostal: 48480 }
 });
 
@@ -108,9 +117,9 @@ db.Empleados.insertOne({
 });
 
 db.Clientes.insertOne({
-  nombreUsuario: "PedroDiaz0", nombre: "Pedro", contrasena: "abcd", DNI: "12345678F",
+  nombreUsuario: "PedroDiaz0", nombre: "Pedro", contrasena: "abcd", DNI: "12345678Z",
   correo: "pedrodiaz@gmail.com", telefono: "666 666 666", direccion: "calle abando 2",
-  cuentaBancaria: "ES7921000813610123456789", dadoDeBaja: false
+  cuentaBancaria: "ES7921000813610123456789", dadoDeBaja: false, ticketSoporte: []
 });
 
 print("Base de datos Tel--ONDA creada");

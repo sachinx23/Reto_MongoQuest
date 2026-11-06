@@ -86,4 +86,18 @@ public class ValidarPerfil {
         }
         return null;
     }
+
+    // Mi Perfil de empleados y administradores: los datos de comprobar() y la cuenta bancaria
+    public static String comprobarEmpleado(String nombre, String nombreUsuario, String contrasena, String correo, String cuenta) {
+        String error = comprobar(nombre, nombreUsuario, contrasena, correo);
+        if (error == null && !cuentaValida(cuenta)) {
+            error = "La cuenta bancaria debe ser ES seguido de 22 números (o dejarla vacía).";
+        }
+        return error;
+    }
+
+    // 5 números, como 48480
+    public static boolean codigoPostalValido(String codigoPostal) {
+        return codigoPostal.trim().matches("[0-9]{5}");
+    }
 }

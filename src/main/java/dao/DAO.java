@@ -54,13 +54,22 @@ public interface DAO {
     // Sirve para empleados y administradores
     void actualizarEmpleado(Empleado empleado) throws OurException;
 
+    // ---------- ADMINISTRADOR ----------
+
+    // Empleados y administradores (el administrador ve toda la plantilla)
     List<Empleado> obtenerEmpleados() throws OurException;
 
     void insertarEmpleado(Empleado empleado) throws OurException;
 
+    // Pasa el empleado de la colección Empleados a Administradores
     void ascenderEmpleado(Empleado empleado) throws OurException;
 
     void borrarEmpleado(String idEmpleado) throws OurException;
+
+    List<Cliente> obtenerClientes() throws OurException;
+
+    // Borra la cuenta bancaria, el teléfono y la dirección de un cliente dado de baja
+    void borrarDatosSensiblesCliente(String idCliente) throws OurException;
 
     List<Sucursal> obtenerSucursales() throws OurException;
 
@@ -69,6 +78,29 @@ public interface DAO {
     void actualizarSucursal(Sucursal sucursal) throws OurException;
 
     void borrarSucursal(String idSucursal) throws OurException;
+
+    // Todas las tarifas, también las desactivadas
+    List<Tarifa> obtenerTodasLasTarifas() throws OurException;
+
+    void insertarTarifa(Tarifa tarifa) throws OurException;
+
+    void actualizarTarifa(Tarifa tarifa) throws OurException;
+
+    void borrarTarifa(String idTarifa) throws OurException;
+
+    List<Contrato> obtenerTodosLosContratos() throws OurException;
+
+    // Una petición pendiente que el empleado o administrador no acepta pasa a cancelado
+    void rechazarPeticion(String idContrato, String idEmpleado) throws OurException;
+
+    // Un contrato activo pasa a cancelado sin que el cliente lo pida
+    void rescindirContrato(String idContrato, String idEmpleado) throws OurException;
+
+    List<TicketSoporte> obtenerTodosLosTickets() throws OurException;
+
+    List<Valoracion> obtenerTodasLasValoraciones() throws OurException;
+
+    // ---------- VALORACIONES DEL CLIENTE ----------
 
     List<Valoracion> obtenerValoracionesCliente(String idCliente) throws OurException;
 

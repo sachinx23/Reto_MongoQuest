@@ -22,9 +22,11 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 
 /**
- * Acceso a MongoDB. Cada operación se apunta en el log con LOGGER. Un Document
- * es como un HashMap: se le meten campos con put() y se leen con get(). Se usa
- * para guardar datos, para buscar (filtro) y para modificar (cambios).
+ * Acceso a MongoDB. Cada operación se apunta en el log con LOGGER.
+ * MongoDB instalado en local (un solo servidor) no permite transacciones. Por eso, cuando una operación
+ * escribe en dos sitios y falla la segunda escritura, se deshace la primera para no dejar datos a medias.
+ * Un Document es como un HashMap: se le meten campos con put() y se leen con get().
+ * Se usa para guardar datos, para buscar (filtro) y para modificar (cambios).
  */
 public class DAOImplementacion implements DAO {
 
@@ -44,6 +46,7 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- LOGIN Y CLIENTES ----------
+
     @Override
     public Usuario login(String nombreUsuario, String contrasena) throws OurException {
         try {
@@ -54,8 +57,7 @@ public class DAOImplementacion implements DAO {
             Document d = coleccion(COL_ADMINISTRADORES).find(filtro).first();
             if (d != null) {
                 LOGGER.info("Login de administrador: " + nombreUsuario);
-                return new Administrador(idTexto(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"),
-                        texto(d, "contrasena"), texto(d, "correo"), texto(d, "cuentaBancaria"));
+                return documentoAAdministrador(d);
             }
 
             d = coleccion(COL_EMPLEADOS).find(filtro).first();
@@ -156,16 +158,16 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- TARIFAS ----------
+
     @Override
     public List<Tarifa> obtenerTarifas() throws OurException {
         List<Tarifa> tarifas = new ArrayList<>();
         try {
             for (Document d : coleccion(COL_TARIFAS).find()) {
                 // Solo se enseñan las tarifas activas (si no tiene el campo "activa", se considera activa)
-                boolean activa = d.getBoolean("activa", true);
+                boolean activa = booleano(d, "activa", true);
                 if (activa) {
-                    tarifas.add(new Tarifa(idTexto(d, "_id"), texto(d, "nombreTarifa"), numero(d, "precio"),
-                            texto(d, "detalles"), texto(d, "tipotarifa"), true));
+                    tarifas.add(documentoATarifa(d));
                 }
             }
             LOGGER.info("Consultadas " + tarifas.size() + " tarifas");
@@ -177,6 +179,7 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- CONTRATOS ----------
+
     @Override
     public List<Contrato> obtenerContratosCliente(String idCliente) throws OurException {
         try {
@@ -208,11 +211,11 @@ public class DAOImplementacion implements DAO {
                     idTexto(d, "idCliente"), idTexto(d, "idTarifa"), idTexto(d, "idEmpleado"),
                     texto(d, "fechaComienzo"), texto(d, "fechaFinalizacion"));
 
-            // La tarifa está embebida dentro del contrato
-            Document tarifa = (Document) d.get("tarifa");
-            if (tarifa != null) {
-                c.setNombreTarifa(texto(tarifa, "nombreTarifa"));
-                c.setPrecio(numero(tarifa, "precio"));
+            // La tarifa está embebida dentro del contrato (se comprueba que de verdad sea un documento)
+            Object tarifa = d.get("tarifa");
+            if (tarifa instanceof Document) {
+                c.setNombreTarifa(texto((Document) tarifa, "nombreTarifa"));
+                c.setPrecio(numero((Document) tarifa, "precio"));
             }
             // El nombre y el DNI del cliente se buscan en su colección
             Document cliente = buscarPorId(COL_CLIENTES, d.get("idCliente"));
@@ -278,14 +281,24 @@ public class DAOImplementacion implements DAO {
 
     @Override
     public void validarContrato(String idContrato, String idEmpleado) throws OurException {
-        cambiarEstadoContrato(idContrato, EstadoContrato.ACTIVO, idEmpleado, ErrorMessages.VALIDAR_CONTRATO);
-        LOGGER.info("Contrato " + idContrato + " validado por el empleado " + idEmpleado);
         try {
-            // Si el cliente estaba dado de baja, al tener otra vez un contrato activo deja de estarlo
             Document contrato = buscarPorId(COL_CONTRATOS, new ObjectId(idContrato));
-            modificar(COL_CLIENTES, idTexto(contrato, "idCliente"), new Document("dadoDeBaja", false));
+            if (contrato == null) {
+                throw new OurException(ErrorMessages.VALIDAR_CONTRATO);
+            }
+            // 1. El contrato pasa a activo
+            cambiarEstadoContrato(idContrato, EstadoContrato.ACTIVO, idEmpleado, ErrorMessages.VALIDAR_CONTRATO);
+            // 2. Si el cliente estaba dado de baja, al tener otra vez un contrato activo deja de estarlo
+            try {
+                modificar(COL_CLIENTES, idTexto(contrato, "idCliente"), new Document("dadoDeBaja", false));
+            } catch (MongoException e) {
+                // Si falla el paso 2, se deshace el 1: el contrato vuelve a pendiente
+                cambiarEstadoContrato(idContrato, EstadoContrato.PENDIENTE, null, ErrorMessages.VALIDAR_CONTRATO);
+                throw e;
+            }
+            LOGGER.info("Contrato " + idContrato + " validado por el empleado " + idEmpleado);
         } catch (MongoException e) {
-            LOGGER.log(Level.SEVERE, "Reactivar al cliente del contrato " + idContrato, e);
+            LOGGER.log(Level.SEVERE, "Error validando el contrato " + idContrato, e);
             throw new OurException(ErrorMessages.VALIDAR_CONTRATO);
         }
     }
@@ -333,25 +346,37 @@ public class DAOImplementacion implements DAO {
     @Override
     public void aprobarBaja(String idCliente, String idEmpleado) throws OurException {
         try {
-            // 1. Cancelar todos los contratos del cliente que están en "baja pendiente"
+            // 1. Mirar si después de la baja le quedará algún contrato (uno que no esté cancelado ni en baja pendiente)
+            boolean quedanContratos = false;
+            for (Contrato c : buscarContratos(new Document("idCliente", new ObjectId(idCliente)))) {
+                if (c.getEstado() != EstadoContrato.CANCELADO && c.getEstado() != EstadoContrato.BAJA_PENDIENTE) {
+                    quedanContratos = true;
+                }
+            }
+
+            // 2. Si no le queda ninguno, el cliente queda dado de baja (se mantiene su perfil)
+            if (!quedanContratos) {
+                modificar(COL_CLIENTES, idCliente, new Document("dadoDeBaja", true));
+            }
+
+            // 3. Cancelar todos los contratos del cliente que están en "baja pendiente"
             Document filtro = new Document();
             filtro.put("idCliente", new ObjectId(idCliente));
             filtro.put("estado", EstadoContrato.BAJA_PENDIENTE.toString());
             Document cambios = new Document();
             cambios.put("estado", EstadoContrato.CANCELADO.toString());
             cambios.put("idEmpleado", new ObjectId(idEmpleado));
-            long cancelados = coleccion(COL_CONTRATOS).updateMany(filtro, new Document("$set", cambios)).getModifiedCount();
-            LOGGER.info("Baja aprobada por el empleado " + idEmpleado + ": " + cancelados + " contratos cancelados del cliente " + idCliente);
-
-            // 2. Si ya no le queda ningún contrato sin cancelar, el cliente queda dado de baja (se mantiene su perfil)
-            boolean tieneContratos = false;
-            for (Contrato c : buscarContratos(new Document("idCliente", new ObjectId(idCliente)))) {
-                if (c.getEstado() != EstadoContrato.CANCELADO) {
-                    tieneContratos = true;
+            try {
+                coleccion(COL_CONTRATOS).updateMany(filtro, new Document("$set", cambios));
+            } catch (MongoException e) {
+                // Si falla el paso 3, se deshace el 2: el cliente deja de estar dado de baja
+                if (!quedanContratos) {
+                    modificar(COL_CLIENTES, idCliente, new Document("dadoDeBaja", false));
                 }
+                throw e;
             }
-            if (!tieneContratos) {
-                modificar(COL_CLIENTES, idCliente, new Document("dadoDeBaja", true));
+            LOGGER.info("Baja aprobada por el empleado " + idEmpleado + " del cliente " + idCliente);
+            if (!quedanContratos) {
                 LOGGER.info("Cliente " + idCliente + " dado de baja");
             }
         } catch (MongoException e) {
@@ -361,6 +386,7 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- TICKETS ----------
+
     @Override
     public List<TicketSoporte> obtenerTicketsCliente(String idCliente) throws OurException {
         try {
@@ -409,14 +435,21 @@ public class DAOImplementacion implements DAO {
             d.put("estado", ticket.getEstado());
             d.put("idCliente", new ObjectId(ticket.getIdCliente()));
             d.put("idEmpleado", null);
+            // 1. Guardar el ticket
             coleccion(COL_TICKETS).insertOne(d);
-            ticket.setId(idTexto(d, "_id"));
 
-            // Array de _id: el cliente guarda los _id de sus tickets en "ticketSoporte".
+            // 2. Array de _id: el cliente guarda los _id de sus tickets en "ticketSoporte".
             // "$push" añade un elemento al final del array
             Document filtroCliente = new Document("_id", new ObjectId(ticket.getIdCliente()));
             Document nuevoTicket = new Document("ticketSoporte", d.get("_id"));
-            coleccion(COL_CLIENTES).updateOne(filtroCliente, new Document("$push", nuevoTicket));
+            try {
+                coleccion(COL_CLIENTES).updateOne(filtroCliente, new Document("$push", nuevoTicket));
+            } catch (MongoException e) {
+                // Si falla el paso 2, se deshace el 1: se borra el ticket
+                coleccion(COL_TICKETS).deleteOne(new Document("_id", d.get("_id")));
+                throw e;
+            }
+            ticket.setId(idTexto(d, "_id"));
             LOGGER.info("Ticket creado: id " + ticket.getId() + ", cliente " + ticket.getIdCliente() + ", asunto \"" + ticket.getAsunto() + "\"");
         } catch (MongoException e) {
             LOGGER.log(Level.SEVERE, "Error creando un ticket del cliente " + ticket.getIdCliente(), e);
@@ -440,7 +473,8 @@ public class DAOImplementacion implements DAO {
         }
     }
 
-    // ---------- EMPLEADOS Y ADMINISTRADORES (los métodos vacíos son de la parte del administrador) ----------
+    // ---------- EMPLEADOS Y ADMINISTRADORES ----------
+
     @Override
     public void actualizarEmpleado(Empleado empleado) throws OurException {
         String nombreColeccion = COL_EMPLEADOS;
@@ -469,56 +503,364 @@ public class DAOImplementacion implements DAO {
 
     @Override
     public List<Empleado> obtenerEmpleados() throws OurException {
-        // TODO parte del administrador
-        return new ArrayList<>();
+        List<Empleado> plantilla = new ArrayList<>();
+        try {
+            for (Document d : coleccion(COL_ADMINISTRADORES).find()) {
+                plantilla.add(documentoAAdministrador(d));
+            }
+            for (Document d : coleccion(COL_EMPLEADOS).find()) {
+                plantilla.add(documentoAEmpleado(d));
+            }
+            LOGGER.info("Consultada la plantilla: " + plantilla.size() + " personas");
+            return plantilla;
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error consultando la plantilla", e);
+            throw new OurException(ErrorMessages.GET_EMPLEADOS);
+        }
     }
 
     @Override
     public void insertarEmpleado(Empleado empleado) throws OurException {
-        // TODO parte del administrador
+        try {
+            if (nombreUsuarioOcupado(empleado.getNombreUsuario(), null)) {
+                throw new OurException(ErrorMessages.USER_EXISTS);
+            }
+            Document d = new Document();
+            d.put("nombre", empleado.getNombre());
+            d.put("nombreUsuario", empleado.getNombreUsuario());
+            d.put("rol", "Empleado");
+            d.put("contrasena", empleado.getContrasena());
+            d.put("correo", empleado.getCorreo());
+            d.put("cuentaBancaria", empleado.getCuentaBancaria());
+            d.put("idSucursal", aObjectId(empleado.getIdSucursal()));
+            coleccion(COL_EMPLEADOS).insertOne(d);
+            empleado.setId(idTexto(d, "_id"));
+            LOGGER.info("Empleado dado de alta: " + empleado.getNombreUsuario() + " (id " + empleado.getId() + ")");
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error dando de alta al empleado " + empleado.getNombreUsuario(), e);
+            throw new OurException(ErrorMessages.INSERT_EMPLEADO);
+        }
     }
 
     @Override
     public void ascenderEmpleado(Empleado empleado) throws OurException {
-        // TODO parte del administrador
+        if (empleado instanceof Administrador) {
+            throw new OurException(ErrorMessages.YA_ES_ADMIN);
+        }
+        try {
+            Document d = buscarPorId(COL_EMPLEADOS, new ObjectId(empleado.getId()));
+            if (d == null) {
+                throw new OurException(ErrorMessages.ASCENDER_EMPLEADO);
+            }
+            // 1. Se copia a Administradores con el mismo _id (un administrador no tiene sucursal)
+            d.remove("idSucursal");
+            d.put("rol", "Admin");
+            coleccion(COL_ADMINISTRADORES).insertOne(d);
+            // 2. Se borra de Empleados. Si falla, se deshace el paso 1
+            try {
+                borrar(COL_EMPLEADOS, empleado.getId());
+            } catch (MongoException e) {
+                borrar(COL_ADMINISTRADORES, empleado.getId());
+                throw e;
+            }
+            LOGGER.info("Empleado ascendido a administrador: " + empleado.getNombreUsuario());
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error ascendiendo al empleado " + empleado.getNombreUsuario(), e);
+            throw new OurException(ErrorMessages.ASCENDER_EMPLEADO);
+        }
     }
 
     @Override
     public void borrarEmpleado(String idEmpleado) throws OurException {
-        // TODO parte del administrador
+        try {
+            if (!borrar(COL_EMPLEADOS, idEmpleado)) {
+                throw new OurException(ErrorMessages.DELETE_EMPLEADO);
+            }
+            LOGGER.info("Empleado borrado: id " + idEmpleado);
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error borrando al empleado " + idEmpleado, e);
+            throw new OurException(ErrorMessages.DELETE_EMPLEADO);
+        }
     }
 
-    // ---------- SUCURSALES (parte del administrador) ----------
+    @Override
+    public List<Cliente> obtenerClientes() throws OurException {
+        List<Cliente> clientes = new ArrayList<>();
+        try {
+            for (Document d : coleccion(COL_CLIENTES).find()) {
+                clientes.add(documentoACliente(d));
+            }
+            LOGGER.info("Consultados " + clientes.size() + " clientes");
+            return clientes;
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error consultando los clientes", e);
+            throw new OurException(ErrorMessages.GET_CLIENTES);
+        }
+    }
+
+    @Override
+    public void borrarDatosSensiblesCliente(String idCliente) throws OurException {
+        try {
+            Document d = buscarPorId(COL_CLIENTES, new ObjectId(idCliente));
+            if (d == null) {
+                throw new OurException(ErrorMessages.DATOS_SENSIBLES);
+            }
+            // Solo de clientes que ya no tienen contratos
+            if (!booleano(d, "dadoDeBaja", false)) {
+                throw new OurException(ErrorMessages.CLIENTE_ACTIVO);
+            }
+            Document cambios = new Document();
+            cambios.put("cuentaBancaria", "");
+            cambios.put("telefono", "");
+            cambios.put("direccion", "");
+            modificar(COL_CLIENTES, idCliente, cambios);
+            LOGGER.info("Borrados los datos sensibles del cliente " + idCliente);
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error borrando los datos del cliente " + idCliente, e);
+            throw new OurException(ErrorMessages.DATOS_SENSIBLES);
+        }
+    }
+
+    // ---------- SUCURSALES ----------
+
     @Override
     public List<Sucursal> obtenerSucursales() throws OurException {
-        // TODO parte del administrador
-        return new ArrayList<>();
+        List<Sucursal> sucursales = new ArrayList<>();
+        try {
+            for (Document d : coleccion(COL_SUCURSALES).find()) {
+                // La ubicación está embebida dentro de la sucursal
+                Document ubicacion = new Document();
+                Object u = d.get("Ubicacion");
+                if (u instanceof Document) {
+                    ubicacion = (Document) u;
+                }
+                sucursales.add(new Sucursal(idTexto(d, "_id"), texto(d, "nombre"), texto(d, "horario"), texto(d, "telefono"),
+                        texto(ubicacion, "Direccion"), texto(ubicacion, "Localidad"), (int) numero(ubicacion, "CodigoPostal")));
+            }
+            LOGGER.info("Consultadas " + sucursales.size() + " sucursales");
+            return sucursales;
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error consultando las sucursales", e);
+            throw new OurException(ErrorMessages.GET_SUCURSALES);
+        }
     }
 
     @Override
     public void insertarSucursal(Sucursal sucursal) throws OurException {
-        // TODO parte del administrador
+        try {
+            Document d = sucursalADocumento(sucursal);
+            coleccion(COL_SUCURSALES).insertOne(d);
+            sucursal.setId(idTexto(d, "_id"));
+            LOGGER.info("Sucursal creada: " + sucursal.getNombre() + " (id " + sucursal.getId() + ")");
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error creando la sucursal " + sucursal.getNombre(), e);
+            throw new OurException(ErrorMessages.SAVE_SUCURSAL);
+        }
     }
 
     @Override
     public void actualizarSucursal(Sucursal sucursal) throws OurException {
-        // TODO parte del administrador
+        try {
+            if (!modificar(COL_SUCURSALES, sucursal.getId(), sucursalADocumento(sucursal))) {
+                throw new OurException(ErrorMessages.SAVE_SUCURSAL);
+            }
+            LOGGER.info("Sucursal modificada: " + sucursal.getNombre() + " (id " + sucursal.getId() + ")");
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error modificando la sucursal " + sucursal.getId(), e);
+            throw new OurException(ErrorMessages.SAVE_SUCURSAL);
+        }
     }
 
     @Override
     public void borrarSucursal(String idSucursal) throws OurException {
-        // TODO parte del administrador
+        try {
+            // No se puede borrar una sucursal que tiene empleados
+            if (coleccion(COL_EMPLEADOS).find(new Document("idSucursal", new ObjectId(idSucursal))).first() != null) {
+                throw new OurException(ErrorMessages.SUCURSAL_CON_EMPLEADOS);
+            }
+            if (!borrar(COL_SUCURSALES, idSucursal)) {
+                throw new OurException(ErrorMessages.SAVE_SUCURSAL);
+            }
+            LOGGER.info("Sucursal borrada: id " + idSucursal);
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error borrando la sucursal " + idSucursal, e);
+            throw new OurException(ErrorMessages.SAVE_SUCURSAL);
+        }
+    }
+
+    // ---------- GESTIÓN DE TARIFAS, CONTRATOS, TICKETS Y VALORACIONES ----------
+
+    @Override
+    public List<Tarifa> obtenerTodasLasTarifas() throws OurException {
+        List<Tarifa> tarifas = new ArrayList<>();
+        try {
+            for (Document d : coleccion(COL_TARIFAS).find()) {
+                tarifas.add(documentoATarifa(d));
+            }
+            LOGGER.info("Consultadas todas las tarifas: " + tarifas.size());
+            return tarifas;
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error consultando todas las tarifas", e);
+            throw new OurException(ErrorMessages.GET_TARIFAS);
+        }
+    }
+
+    @Override
+    public void insertarTarifa(Tarifa tarifa) throws OurException {
+        try {
+            Document d = tarifaADocumento(tarifa);
+            coleccion(COL_TARIFAS).insertOne(d);
+            tarifa.setId(idTexto(d, "_id"));
+            LOGGER.info("Tarifa creada: " + tarifa.getNombreTarifa() + " (id " + tarifa.getId() + ")");
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error creando la tarifa " + tarifa.getNombreTarifa(), e);
+            throw new OurException(ErrorMessages.SAVE_TARIFA);
+        }
+    }
+
+    @Override
+    public void actualizarTarifa(Tarifa tarifa) throws OurException {
+        try {
+            if (!modificar(COL_TARIFAS, tarifa.getId(), tarifaADocumento(tarifa))) {
+                throw new OurException(ErrorMessages.SAVE_TARIFA);
+            }
+            LOGGER.info("Tarifa modificada: " + tarifa.getNombreTarifa() + " (activa: " + tarifa.isActiva() + ")");
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error modificando la tarifa " + tarifa.getId(), e);
+            throw new OurException(ErrorMessages.SAVE_TARIFA);
+        }
+    }
+
+    @Override
+    public void borrarTarifa(String idTarifa) throws OurException {
+        try {
+            // Una tarifa con contratos no se borra (se desactiva)
+            if (coleccion(COL_CONTRATOS).find(new Document("idTarifa", new ObjectId(idTarifa))).first() != null) {
+                throw new OurException(ErrorMessages.TARIFA_EN_USO);
+            }
+            if (!borrar(COL_TARIFAS, idTarifa)) {
+                throw new OurException(ErrorMessages.DELETE_TARIFA);
+            }
+            LOGGER.info("Tarifa borrada: id " + idTarifa);
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error borrando la tarifa " + idTarifa, e);
+            throw new OurException(ErrorMessages.DELETE_TARIFA);
+        }
+    }
+
+    @Override
+    public List<Contrato> obtenerTodosLosContratos() throws OurException {
+        try {
+            List<Contrato> contratos = buscarContratos(new Document());
+            LOGGER.info("Consultados todos los contratos: " + contratos.size());
+            return contratos;
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error consultando todos los contratos", e);
+            throw new OurException(ErrorMessages.GET_CONTRATOS);
+        }
+    }
+
+    @Override
+    public void rechazarPeticion(String idContrato, String idEmpleado) throws OurException {
+        try {
+            cambiarEstadoSi(idContrato, EstadoContrato.PENDIENTE, EstadoContrato.CANCELADO, idEmpleado);
+            LOGGER.info("Petición " + idContrato + " rechazada por " + idEmpleado);
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error rechazando la petición " + idContrato, e);
+            throw new OurException(ErrorMessages.CAMBIAR_CONTRATO);
+        }
+    }
+
+    @Override
+    public void rescindirContrato(String idContrato, String idEmpleado) throws OurException {
+        try {
+            Document contrato = buscarPorId(COL_CONTRATOS, new ObjectId(idContrato));
+            if (contrato == null) {
+                throw new OurException(ErrorMessages.CAMBIAR_CONTRATO);
+            }
+            String idCliente = idTexto(contrato, "idCliente");
+            // 1. El contrato activo pasa a cancelado
+            cambiarEstadoSi(idContrato, EstadoContrato.ACTIVO, EstadoContrato.CANCELADO, idEmpleado);
+            // 2. Si al cliente no le queda ningún contrato, queda dado de baja. Si falla, se deshace el paso 1
+            try {
+                boolean quedanContratos = false;
+                for (Contrato c : buscarContratos(new Document("idCliente", new ObjectId(idCliente)))) {
+                    if (c.getEstado() != EstadoContrato.CANCELADO) {
+                        quedanContratos = true;
+                    }
+                }
+                if (!quedanContratos) {
+                    modificar(COL_CLIENTES, idCliente, new Document("dadoDeBaja", true));
+                }
+            } catch (MongoException e) {
+                cambiarEstadoSi(idContrato, EstadoContrato.CANCELADO, EstadoContrato.ACTIVO, idEmpleado);
+                throw e;
+            }
+            LOGGER.info("Contrato " + idContrato + " rescindido por " + idEmpleado);
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error rescindiendo el contrato " + idContrato, e);
+            throw new OurException(ErrorMessages.CAMBIAR_CONTRATO);
+        }
+    }
+
+    // Cambia el estado solo si el contrato está en el estado esperado (si otro empleado ya lo cambió, da error)
+    private void cambiarEstadoSi(String idContrato, EstadoContrato actual, EstadoContrato nuevo, String idEmpleado) throws OurException {
+        Document filtro = new Document();
+        filtro.put("_id", new ObjectId(idContrato));
+        filtro.put("estado", actual.toString());
+        Document cambios = new Document();
+        cambios.put("estado", nuevo.toString());
+        cambios.put("idEmpleado", new ObjectId(idEmpleado));
+        long encontrados = coleccion(COL_CONTRATOS).updateOne(filtro, new Document("$set", cambios)).getMatchedCount();
+        if (encontrados == 0) {
+            throw new OurException(ErrorMessages.CAMBIAR_CONTRATO);
+        }
+    }
+
+    @Override
+    public List<TicketSoporte> obtenerTodosLosTickets() throws OurException {
+        try {
+            List<TicketSoporte> tickets = buscarTickets(new Document());
+            LOGGER.info("Consultados todos los tickets: " + tickets.size());
+            return tickets;
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error consultando todos los tickets", e);
+            throw new OurException(ErrorMessages.GET_TICKETS);
+        }
+    }
+
+    @Override
+    public List<Valoracion> obtenerTodasLasValoraciones() throws OurException {
+        try {
+            List<Valoracion> valoraciones = buscarValoraciones(new Document());
+            LOGGER.info("Consultadas todas las valoraciones: " + valoraciones.size());
+            return valoraciones;
+        } catch (MongoException e) {
+            LOGGER.log(Level.SEVERE, "Error consultando todas las valoraciones", e);
+            throw new OurException(ErrorMessages.GET_VALORACIONES);
+        }
+    }
+
+    private List<Valoracion> buscarValoraciones(Document filtro) throws OurException {
+        List<Valoracion> valoraciones = new ArrayList<>();
+        for (Document d : coleccion(COL_VALORACIONES).find(filtro)) {
+            Valoracion v = new Valoracion(idTexto(d, "_id"), (int) numero(d, "puntuacion"), texto(d, "texto"),
+                    idTexto(d, "idCliente"), idTexto(d, "idTarifa"));
+            Document cliente = buscarPorId(COL_CLIENTES, d.get("idCliente"));
+            if (cliente != null) {
+                v.setNombreCliente(texto(cliente, "nombre"));
+            }
+            valoraciones.add(v);
+        }
+        return valoraciones;
     }
 
     // ---------- VALORACIONES ----------
+
     @Override
     public List<Valoracion> obtenerValoracionesCliente(String idCliente) throws OurException {
-        List<Valoracion> valoraciones = new ArrayList<>();
         try {
-            for (Document d : coleccion(COL_VALORACIONES).find(new Document("idCliente", new ObjectId(idCliente)))) {
-                valoraciones.add(new Valoracion(idTexto(d, "_id"), (int) numero(d, "puntuacion"), texto(d, "texto"),
-                        idTexto(d, "idCliente"), idTexto(d, "idTarifa")));
-            }
+            List<Valoracion> valoraciones = buscarValoraciones(new Document("idCliente", new ObjectId(idCliente)));
             LOGGER.info("Consultadas " + valoraciones.size() + " valoraciones del cliente " + idCliente);
             return valoraciones;
         } catch (MongoException e) {
@@ -575,11 +917,47 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- DE DOCUMENT A OBJETO Y AL REVÉS ----------
+
     private Cliente documentoACliente(Document d) {
         Cliente c = new Cliente(idTexto(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"), texto(d, "contrasena"),
                 texto(d, "correo"), texto(d, "cuentaBancaria"), texto(d, "DNI"), texto(d, "telefono"), texto(d, "direccion"));
-        c.setDadoDeBaja(d.getBoolean("dadoDeBaja", false));
+        c.setDadoDeBaja(booleano(d, "dadoDeBaja", false));
         return c;
+    }
+
+    private Administrador documentoAAdministrador(Document d) {
+        return new Administrador(idTexto(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"), texto(d, "contrasena"),
+                texto(d, "correo"), texto(d, "cuentaBancaria"));
+    }
+
+    private Tarifa documentoATarifa(Document d) {
+        // Si no tiene el campo "activa", se considera activa
+        return new Tarifa(idTexto(d, "_id"), texto(d, "nombreTarifa"), numero(d, "precio"), texto(d, "detalles"),
+                texto(d, "tipotarifa"), booleano(d, "activa", true));
+    }
+
+    private Document tarifaADocumento(Tarifa tarifa) {
+        Document d = new Document();
+        d.put("nombreTarifa", tarifa.getNombreTarifa());
+        d.put("precio", tarifa.getPrecio());
+        d.put("detalles", tarifa.getDetalles());
+        d.put("tipotarifa", tarifa.getTipoTarifa());
+        d.put("activa", tarifa.isActiva());
+        return d;
+    }
+
+    private Document sucursalADocumento(Sucursal sucursal) {
+        // Documento embebido: la ubicación va dentro de la sucursal
+        Document ubicacion = new Document();
+        ubicacion.put("Direccion", sucursal.getDireccion());
+        ubicacion.put("Localidad", sucursal.getLocalidad());
+        ubicacion.put("CodigoPostal", sucursal.getCodigoPostal());
+        Document d = new Document();
+        d.put("nombre", sucursal.getNombre());
+        d.put("horario", sucursal.getHorario());
+        d.put("telefono", sucursal.getTelefono());
+        d.put("Ubicacion", ubicacion);
+        return d;
     }
 
     private Empleado documentoAEmpleado(Document d) {
@@ -588,6 +966,7 @@ public class DAOImplementacion implements DAO {
     }
 
     // ---------- AYUDANTES ----------
+
     // Busca un documento por su _id. Devuelve null si no existe
     private Document buscarPorId(String nombreColeccion, Object id) throws OurException {
         return coleccion(nombreColeccion).find(new Document("_id", id)).first();
@@ -632,6 +1011,15 @@ public class DAOImplementacion implements DAO {
             return null;
         }
         return valor.toString();
+    }
+
+    // Devuelve un campo true/false. Si no existe o no es true/false, devuelve el valor por defecto
+    private boolean booleano(Document d, String campo, boolean porDefecto) {
+        Object valor = d.get(campo);
+        if (valor instanceof Boolean) {
+            return (Boolean) valor;
+        }
+        return porDefecto;
     }
 
     // Devuelve un número (puede estar guardado como int o como double), o 0 si no existe

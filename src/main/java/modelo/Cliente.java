@@ -47,4 +47,12 @@ public class Cliente extends Usuario {
     public void setDadoDeBaja(boolean dadoDeBaja) {
         this.dadoDeBaja = dadoDeBaja;
     }
+
+    // Para la tabla del administrador
+    public String getBajaTexto() {
+        if (dadoDeBaja) {
+            return "Dado de baja";
+        }
+        return "Activo";
+    }
 }
