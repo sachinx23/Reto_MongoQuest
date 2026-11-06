@@ -23,7 +23,9 @@ public class LogApp extends Formatter {
     private static final Logger[] PAQUETES = {
         Logger.getLogger("com.mycompany.reto_1"),
         Logger.getLogger("controlador"),
-        Logger.getLogger("dao")
+        Logger.getLogger("dao"),
+        Logger.getLogger("daocliente"),
+        Logger.getLogger("daoempleado")
     };
 
     // Se llama una vez al arrancar la aplicación

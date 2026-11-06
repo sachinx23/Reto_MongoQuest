@@ -1,6 +1,6 @@
 package controlador;
 
-import dao.DAO;
+import daoempleado.EmpleadoDAO;
 import exception.OurException;
 import exception.ShowAlert;
 import java.util.logging.Logger;
@@ -17,7 +17,7 @@ public class PerfilAdminController {
 
     private static final Logger LOGGER = Logger.getLogger(PerfilAdminController.class.getName());
 
-    private final DAO dao = Sesion.getDao();
+    private final EmpleadoDAO dao = Sesion.getEmpleadoDao();
 
     private Administrador admin;
 

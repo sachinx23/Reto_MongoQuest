@@ -1,7 +1,7 @@
 package controlador;
 
 import com.mycompany.reto_1.Reto_1;
-import dao.DAO;
+import daoempleado.EmpleadoDAO;
 import exception.OurException;
 import exception.ShowAlert;
 import java.util.logging.Logger;
@@ -27,7 +27,7 @@ public class EmpleadoController {
 
     private static final Logger LOGGER = Logger.getLogger(EmpleadoController.class.getName());
 
-    private final DAO dao = Sesion.getDao();
+    private final EmpleadoDAO dao = Sesion.getEmpleadoDao();
 
     private Empleado empleado;
 

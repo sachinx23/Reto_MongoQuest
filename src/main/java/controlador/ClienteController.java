@@ -1,7 +1,7 @@
 package controlador;
 
 import com.mycompany.reto_1.Reto_1;
-import dao.DAO;
+import daocliente.ClienteDAO;
 import exception.OurException;
 import exception.ShowAlert;
 import java.time.LocalDate;
@@ -30,7 +30,7 @@ public class ClienteController {
 
     private static final Logger LOGGER = Logger.getLogger(ClienteController.class.getName());
 
-    private final DAO dao = Sesion.getDao();
+    private final ClienteDAO dao = Sesion.getClienteDao();
 
     private Cliente cliente;
 
