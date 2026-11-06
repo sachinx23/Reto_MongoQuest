@@ -1,12 +1,14 @@
 package controlador;
 
-import dao.DAO;
-import exception.OurException;
-import exception.ShowAlert;
-import java.util.logging.Logger;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
@@ -14,181 +16,231 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import modelo.Tarifa;
+import modeloadmin.Tarifa;
+import daoadmin.TarifaDAO;
+import daoadmin.implementacion.TarifaDaoImplementacion;
 
-/**
- * Gestión de tarifas: crear, modificar, activar/desactivar y borrar.
- */
-public class GestionTarifasController {
-
-    private static final Logger LOGGER = Logger.getLogger(GestionTarifasController.class.getName());
-
-    private final DAO dao = Sesion.getDao();
-
-    @FXML private TextField txtNombre;
-    @FXML private TextField txtPrecio;
-    @FXML private ComboBox<String> cmbTipo;
-    @FXML private TextArea txtDetalles;
-    @FXML private CheckBox chkActiva;
-
-    @FXML private TableView<Tarifa> tablaTarifas;
-    @FXML private TableColumn<Tarifa, String> colNombre;
-    @FXML private TableColumn<Tarifa, String> colPrecio;
-    @FXML private TableColumn<Tarifa, String> colTipo;
-    @FXML private TableColumn<Tarifa, String> colDetalles;
-    @FXML private TableColumn<Tarifa, String> colActiva;
+public class GestionTarifasController implements Initializable {
 
     @FXML
-    public void initialize() {
-        cmbTipo.setItems(FXCollections.observableArrayList("Fibra", "Móvil", "Fibra + Móvil", "Televisión"));
+    private TextField txtNombre;
+    @FXML
+    private TextField txtPrecio;
+    @FXML
+    private ComboBox<String> comboTipo;
+    @FXML
+    private TextArea txtDetalles;
+    @FXML
+    private CheckBox chkActiva;
+
+    @FXML
+    private Button btnGuardar;
+    @FXML
+    private Button btnActualizar;
+    @FXML
+    private Button btnEliminar;
+    @FXML
+    private Button btnLimpiar;
+
+    @FXML
+    private TableView<Tarifa> tablaTarifas;
+    @FXML
+    private TableColumn<Tarifa, String> colNombre;
+    @FXML
+    private TableColumn<Tarifa, Double> colPrecio;
+    @FXML
+    private TableColumn<Tarifa, String> colTipo;
+    @FXML
+    private TableColumn<Tarifa, String> colDetalles;
+    @FXML
+    private TableColumn<Tarifa, Boolean> colActiva;
+
+    private Tarifa tarifaSeleccionada;
+
+    private final TarifaDAO tarifaDAO = new TarifaDaoImplementacion();
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        comboTipo.setItems(FXCollections.observableArrayList("Fibra", "Móvil","Fibra + Móvil", "Convergente", "Televisión"));
+
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombreTarifa"));
-        colPrecio.setCellValueFactory(new PropertyValueFactory<>("precioTexto"));
+        colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
         colTipo.setCellValueFactory(new PropertyValueFactory<>("tipoTarifa"));
         colDetalles.setCellValueFactory(new PropertyValueFactory<>("detalles"));
-        colActiva.setCellValueFactory(new PropertyValueFactory<>("activaTexto"));
-        chkActiva.setSelected(true);
-        cargarTarifas();
+        colActiva.setCellValueFactory(new PropertyValueFactory<>("activa"));
+
+        cargarTabla();
+
+        tablaTarifas.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                tarifaSeleccionada = newSelection;
+                mostrarDatosEnFormulario(tarifaSeleccionada);
+            }
+        });
     }
 
-    private void cargarTarifas() {
-        try {
-            tablaTarifas.setItems(FXCollections.observableArrayList(dao.obtenerTodasLasTarifas()));
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
-        }
+    // Carga los datos de MongoDB en la TableView
+    private void cargarTabla() {
+        List<Tarifa> lista = tarifaDAO.listarTarifas();
+        System.out.println("Tarifas cargadas: " + lista.size());
+        ObservableList<Tarifa> datos = FXCollections.observableArrayList(lista);
+        tablaTarifas.setItems(datos);
     }
 
+    //  Pasa los datos de la fila seleccionada a los controles del formulario
+    private void mostrarDatosEnFormulario(Tarifa t) {
+        txtNombre.setText(t.getNombreTarifa());
+        txtPrecio.setText(String.valueOf(t.getPrecio()));
+        comboTipo.setValue(t.getTipoTarifa());
+        txtDetalles.setText(t.getDetalles());
+        chkActiva.setSelected(t.getActiva());
+    }
+
+    // guardar campos
     @FXML
-    public void seleccionarTarifa(MouseEvent event) {
-        Tarifa t = tablaTarifas.getSelectionModel().getSelectedItem();
-        if (t != null) {
-            txtNombre.setText(t.getNombreTarifa());
-            txtPrecio.setText(String.valueOf(t.getPrecio()));
-            cmbTipo.setValue(t.getTipoTarifa());
-            txtDetalles.setText(t.getDetalles());
-            chkActiva.setSelected(t.isActiva());
+    private void btnGuardarAccion() {
+        if (!validarCampos()) return;
+
+        String nombre = txtNombre.getText().trim();
+        double precio = Double.parseDouble(txtPrecio.getText().trim());
+        String tipo = comboTipo.getValue();
+        String detalles = txtDetalles.getText().trim();
+        boolean activa = chkActiva.isSelected();
+
+        Tarifa nueva = new Tarifa(nombre, precio, detalles, tipo, activa);
+
+        if (tarifaDAO.insertarTarifa(nueva)) {
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa guardada en MongoDB.");
+            cargarTabla();
+            btnLimpiarAccion();
+        } else {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo guardar la tarifa.");
         }
     }
 
-    // Devuelve el mensaje de error de los datos del formulario, o null si están bien
-    private String comprobarDatos() {
-        if (txtNombre.getText().trim().isEmpty() || txtPrecio.getText().trim().isEmpty() || cmbTipo.getValue() == null) {
-            return "Rellena el nombre, el precio y el tipo.";
-        }
-        // Se admite la coma decimal (12,5)
-        if (!txtPrecio.getText().trim().replace(",", ".").matches("[0-9]+(\\.[0-9]{1,2})?")) {
-            return "El precio debe ser un número, por ejemplo 29.99";
-        }
-        return null;
-    }
-
-    private Tarifa tarifaDelFormulario(String id) {
-        double precio = Double.parseDouble(txtPrecio.getText().trim().replace(",", "."));
-        return new Tarifa(id, txtNombre.getText().trim(), precio, txtDetalles.getText().trim(), cmbTipo.getValue(),
-                chkActiva.isSelected());
-    }
-
+    // catualizar tarifas
     @FXML
-    public void btnGuardar(ActionEvent event) {
-        String error = comprobarDatos();
-        if (error != null) {
-            ShowAlert.info("Datos inválidos", error);
+    private void btnActualizarAccion() {
+        if (tarifaSeleccionada == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa de la tabla.");
             return;
         }
-        if (!ShowAlert.confirmar("Nueva tarifa", "¿Deseas crear la tarifa " + txtNombre.getText().trim() + "?")) {
-            return;
-        }
-        try {
-            dao.insertarTarifa(tarifaDelFormulario(null));
-            ShowAlert.info("Tarifa creada", "La tarifa se ha guardado correctamente.");
-            limpiar();
-            cargarTarifas();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+
+        if (!validarCampos()) return;
+
+        tarifaSeleccionada.setNombreTarifa(txtNombre.getText().trim());
+        tarifaSeleccionada.setPrecio(Double.parseDouble(txtPrecio.getText().trim()));
+        tarifaSeleccionada.setTipoTarifa(comboTipo.getValue());
+        tarifaSeleccionada.setDetalles(txtDetalles.getText().trim());
+        tarifaSeleccionada.setActiva(chkActiva.isSelected());
+
+        if (tarifaDAO.actualizarTarifa(tarifaSeleccionada)) {
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa actualizada.");
+            cargarTabla();
+            btnLimpiarAccion();
+        } else {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo actualizar la tarifa.");
         }
     }
 
+    // eliminar tarifas
     @FXML
-    public void btnActualizar(ActionEvent event) {
-        Tarifa seleccionada = tablaTarifas.getSelectionModel().getSelectedItem();
-        if (seleccionada == null) {
-            ShowAlert.info("Aviso", "Selecciona una tarifa de la tabla primero.");
+    private void btnEliminarAccion() {
+        if (tarifaSeleccionada == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa para eliminar.");
             return;
         }
-        String error = comprobarDatos();
-        if (error != null) {
-            ShowAlert.info("Datos inválidos", error);
-            return;
+
+        if (tarifaDAO.eliminarTarifa(tarifaSeleccionada)) {
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa eliminada.");
+            cargarTabla();
+            btnLimpiarAccion();
+        } else {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo eliminar la tarifa.");
         }
-        if (!ShowAlert.confirmar("Confirmar cambios", "¿Seguro que deseas guardar los cambios de la tarifa?")) {
-            return;
-        }
-        guardar(tarifaDelFormulario(seleccionada.getId()));
+    }
+    
+// confirmar tarifa: pasa a activa
+@FXML
+private void confirmarTarifa() {
+    Tarifa seleccionada = tablaTarifas.getSelectionModel().getSelectedItem();
+    if (seleccionada == null) {
+        mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa de la tabla.");
+        return;
+    }
+    if (seleccionada.getActiva()) {
+        mostrarAlerta(Alert.AlertType.INFORMATION, "Aviso", "Esta tarifa ya está confirmada.");
+        return;
     }
 
-    // Activar o desactivar: una tarifa desactivada ya no la ven los clientes
+    seleccionada.setActiva(true);
+    if (tarifaDAO.actualizarTarifa(seleccionada)) {
+        mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa confirmada.");
+        cargarTabla();
+        btnLimpiarAccion();
+    } else {
+        seleccionada.setActiva(false);
+        mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo confirmar la tarifa.");
+    }
+}
+
+// rechazar tarifa: pasa a no activa
+@FXML
+private void rechazarTarifa() {
+    Tarifa seleccionada = tablaTarifas.getSelectionModel().getSelectedItem();
+    if (seleccionada == null) {
+        mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa de la tabla.");
+        return;
+    }
+    if (!seleccionada.getActiva()) {
+        mostrarAlerta(Alert.AlertType.INFORMATION, "Aviso", "Esta tarifa ya está rechazada.");
+        return;
+    }
+
+    seleccionada.setActiva(false);
+    if (tarifaDAO.actualizarTarifa(seleccionada)) {
+        mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa rechazada.");
+        cargarTabla();
+        btnLimpiarAccion();
+    } else {
+        seleccionada.setActiva(true);
+        mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rechazar la tarifa.");
+    }
+}
+    // limpiar formualario
     @FXML
-    public void btnActivar(ActionEvent event) {
-        Tarifa seleccionada = tablaTarifas.getSelectionModel().getSelectedItem();
-        if (seleccionada == null) {
-            ShowAlert.info("Aviso", "Selecciona una tarifa de la tabla primero.");
-            return;
-        }
-        String accion = "activar";
-        if (seleccionada.isActiva()) {
-            accion = "desactivar";
-        }
-        if (!ShowAlert.confirmar("Activar / desactivar", "¿Deseas " + accion + " la tarifa " + seleccionada.getNombreTarifa() + "?")) {
-            return;
-        }
-        Tarifa cambiada = new Tarifa(seleccionada.getId(), seleccionada.getNombreTarifa(), seleccionada.getPrecio(),
-                seleccionada.getDetalles(), seleccionada.getTipoTarifa(), !seleccionada.isActiva());
-        guardar(cambiada);
-    }
-
-    private void guardar(Tarifa tarifa) {
-        try {
-            dao.actualizarTarifa(tarifa);
-            ShowAlert.info("Modificación exitosa", "La tarifa se ha actualizado.");
-            limpiar();
-            cargarTarifas();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
-        }
-    }
-
-    @FXML
-    public void btnEliminar(ActionEvent event) {
-        Tarifa seleccionada = tablaTarifas.getSelectionModel().getSelectedItem();
-        if (seleccionada == null) {
-            ShowAlert.info("Aviso", "Selecciona una tarifa de la tabla primero.");
-            return;
-        }
-        if (!ShowAlert.confirmar("Confirmar eliminación", "¿Seguro que deseas eliminar la tarifa " + seleccionada.getNombreTarifa() + "?")) {
-            return;
-        }
-        try {
-            dao.borrarTarifa(seleccionada.getId());
-            ShowAlert.info("Tarifa eliminada", "La tarifa ha sido eliminada.");
-            limpiar();
-            cargarTarifas();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
-        }
-    }
-
-    @FXML
-    public void btnLimpiar(ActionEvent event) {
-        limpiar();
-    }
-
-    private void limpiar() {
+    private void btnLimpiarAccion() {
         txtNombre.clear();
         txtPrecio.clear();
-        cmbTipo.setValue(null);
+        comboTipo.setValue(null);
         txtDetalles.clear();
         chkActiva.setSelected(true);
+        tarifaSeleccionada = null;
         tablaTarifas.getSelectionModel().clearSelection();
+    }
+
+    private boolean validarCampos() {
+        if (txtNombre.getText().trim().isEmpty()) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Campo Vacío", "Introduce el nombre.");
+            return false;
+        }
+        if (comboTipo.getValue() == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Campo Vacío", "Selecciona un tipo.");
+            return false;
+        }
+        try {
+            Double.parseDouble(txtPrecio.getText().trim());
+        } catch (NumberFormatException e) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Formato Incorrecto", "El precio debe ser un número decimal válido.");
+            return false;
+        }
+        return true;
+    }
+
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

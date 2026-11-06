@@ -1,95 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<!-- GESTIONAR CONTRATOS -->
-<AnchorPane styleClass="panel-contenido" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.GestionarContratoController">
+<AnchorPane prefHeight="550.0" prefWidth="900.0" 
+            styleClass="fondo-pantalla" 
+            xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="controlador.GestionarContratoController">
+   <stylesheets>
+      <URL value="@../css/Estilos.css" />
+   </stylesheets>
    <children>
-      <VBox spacing="15.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
          <children>
-            <Label styleClass="titulo-principal" text="Contratos" />
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
+            
+            <!-- TARJETA SUPERIOR: CABECERA Y FILTROS -->
+            <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="card">
                <children>
-                  <Label styleClass="label-bold" text="Teléfono" />
-                  <TextField fx:id="txtFiltroTelefono" promptText="Buscar por teléfono" />
-                  <Label styleClass="label-bold" text="Estado" />
-                  <ComboBox fx:id="cmbFiltroEstado" prefWidth="160.0" />
-                  <Button fx:id="btnFiltrar" mnemonicParsing="true" onAction="#btnFiltrar" styleClass="btn-primary" text="_Filtrar">
-                     <tooltip>
-                        <Tooltip text="Enseña solo los contratos que cumplen el filtro (Alt+F)" />
-                     </tooltip>
-                  </Button>
-                  <Button fx:id="btnRefrescar" mnemonicParsing="true" onAction="#btnRefrescar" styleClass="btn-secondary" text="_Refrescar">
-                     <tooltip>
-                        <Tooltip text="Quita el filtro y vuelve a cargar (Alt+R)" />
-                     </tooltip>
-                  </Button>
+                  <Label styleClass="titulo-vista" text="Gestión de Contratos" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  
+                  <Label styleClass="label-bold" text="Teléfono:" />
+                  <TextField fx:id="txtFiltroTelefono" prefWidth="140.0" promptText="Buscar teléfono..." styleClass="text-field" />
+                  
+                  <Label styleClass="label-bold" text="Estado:" />
+                  <ComboBox fx:id="comboFiltroEstado" prefWidth="130.0" styleClass="combo-box" />
+                  
+                  <Button onAction="#filtrarContratos" styleClass="btn-filtrar" text="Filtrar" />
+                  <Button fx:id="btnRefrescar" onAction="#refrescarFiltro" styleClass="btn-refrescar" text="Refrescar" />
                </children>
             </HBox>
-            <HBox spacing="15.0" VBox.vgrow="ALWAYS">
+
+            <!-- TABLA DE CONTRATOS ENVOLTURA TARJETA -->
+            <VBox styleClass="card" VBox.vgrow="ALWAYS">
                <children>
-                  <TableView fx:id="tablaContratos" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                     <contextMenu>
-                        <ContextMenu>
-                           <items>
-                              <MenuItem mnemonicParsing="false" onAction="#btnAceptar" text="Aceptar petición" />
-                              <MenuItem mnemonicParsing="false" onAction="#btnRechazar" text="Rechazar petición" />
-                              <MenuItem mnemonicParsing="false" onAction="#btnRescindir" text="Rescindir contrato" />
-                           </items>
-                        </ContextMenu>
-                     </contextMenu>
+                  <TableView fx:id="tablaContratos" VBox.vgrow="ALWAYS">
                      <columns>
-                        <TableColumn fx:id="colCliente" text="Cliente" />
-                        <TableColumn fx:id="colTelefono" text="Teléfono" />
-                        <TableColumn fx:id="colTarifa" text="Tarifa" />
-                        <TableColumn fx:id="colPrecio" text="Precio" />
-                        <TableColumn fx:id="colEstado" text="Estado" />
-                        <TableColumn fx:id="colFechaInicio" text="Inicio" />
-                        <TableColumn fx:id="colFechaFin" text="Fin" />
+                        <TableColumn fx:id="colIdContrato" prefWidth="110.0" text="ID" />
+                        <TableColumn fx:id="colTelefono" prefWidth="110.0" text="Teléfono" />
+                        <TableColumn fx:id="colIdCliente" prefWidth="120.0" text="ID Cliente" />
+                        <TableColumn fx:id="colIdTarifa" prefWidth="120.0" text="ID Tarifa" />
+                        <TableColumn fx:id="colIdEmpleado" prefWidth="120.0" text="ID Empleado" />
+                        <TableColumn fx:id="colEstado" prefWidth="100.0" text="Estado" />
+                        <TableColumn fx:id="colFechaInicio" prefWidth="110.0" text="Fecha Inicio" />
+                        <TableColumn fx:id="colFechaFin" prefWidth="110.0" text="Fecha Fin" />
                      </columns>
                   </TableView>
-                  <VBox minWidth="170.0" spacing="10.0">
-                     <children>
-                        <Button fx:id="btnAceptar" maxWidth="Infinity" mnemonicParsing="true" onAction="#btnAceptar" styleClass="btn-primary" text="_Aceptar petición">
-                           <tooltip>
-                              <Tooltip text="Activa la petición pendiente seleccionada (Alt+A)" />
-                           </tooltip>
-                        </Button>
-                        <Button fx:id="btnRechazar" maxWidth="Infinity" mnemonicParsing="true" onAction="#btnRechazar" styleClass="btn-secondary" text="Re_chazar petición">
-                           <tooltip>
-                              <Tooltip text="Cancela la petición pendiente seleccionada (Alt+C)" />
-                           </tooltip>
-                        </Button>
-                        <Button fx:id="btnRescindir" maxWidth="Infinity" mnemonicParsing="true" onAction="#btnRescindir" styleClass="btn-danger" text="Resc_indir contrato">
-                           <tooltip>
-                              <Tooltip text="Cancela el contrato activo seleccionado (Alt+I)" />
-                           </tooltip>
-                        </Button>
-                     </children>
-                  </VBox>
+               </children>
+            </VBox>
+
+            <!-- TARJETA INFERIOR: BOTONES DE ACCIÓN -->
+            <HBox alignment="CENTER_RIGHT" spacing="12.0" styleClass="card">
+               <children>
+                  <Button fx:id="btnAceptarPeticion" onAction="#aceptarPeticion" styleClass="btn-aceptar" text="Aceptar Petición" />
+                  <Button fx:id="btnRechazarPeticion" onAction="#rechazarPeticion" styleClass="btn-rechazar" text="Rechazar Petición" />
+                  <Button fx:id="btnRescindirContrato" onAction="#rescindirContrato" styleClass="btn-rescindir" text="Rescindir Contrato" />
                </children>
             </HBox>
+
          </children>
       </VBox>
    </children>

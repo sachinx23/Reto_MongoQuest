@@ -1,94 +1,108 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package controlador;
 
-import dao.DAO;
-import exception.OurException;
-import exception.ShowAlert;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.logging.Logger;
+import com.mongodb.client.MongoDatabase;
+import java.util.Optional;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import modelo.Valoracion;
+import modeloadmin.Valoracion;
+import daoadmin.ValoracionDAO;
+import daoadmin.implementacion.ValoracionDAOImpl;
 
 /**
- * Valoraciones de todos los clientes, con filtro por puntuación y la media.
+ *
+ * @author eneko
  */
 public class ValoracionController {
 
-    private static final Logger LOGGER = Logger.getLogger(ValoracionController.class.getName());
-    private static final String TODAS = "Todas";
-
-    private final DAO dao = Sesion.getDao();
-
-    @FXML private ComboBox<String> cmbPuntuacion;
-    @FXML private TableView<Valoracion> tablaValoraciones;
-    @FXML private TableColumn<Valoracion, String> colCliente;
-    @FXML private TableColumn<Valoracion, Integer> colPuntuacion;
-    @FXML private TableColumn<Valoracion, String> colTexto;
-    @FXML private Label lblMedia;
+    @FXML
+    private ComboBox<String> cbPuntuacion;
+    @FXML
+    private TableView<Valoracion> tabla;
+    @FXML
+    private TableColumn<Valoracion, String> colCliente;
+    @FXML
+    private TableColumn<Valoracion, String> colTarifa;
+    @FXML
+    private TableColumn<Valoracion, Integer> colPuntuacion;
+    @FXML
+    private TableColumn<Valoracion, String> colTexto;
+    @FXML
+    private Label lblMedia;
+    private final ValoracionDAO valoracionDAO = new ValoracionDAOImpl();
 
     @FXML
     public void initialize() {
-        cmbPuntuacion.setItems(FXCollections.observableArrayList(TODAS, "1", "2", "3", "4", "5"));
-        cmbPuntuacion.setValue(TODAS);
         colCliente.setCellValueFactory(new PropertyValueFactory<>("nombreCliente"));
+        colTarifa.setCellValueFactory(new PropertyValueFactory<>("nombreTarifa"));
         colPuntuacion.setCellValueFactory(new PropertyValueFactory<>("puntuacion"));
         colTexto.setCellValueFactory(new PropertyValueFactory<>("texto"));
-        cargarValoraciones();
+
+        cbPuntuacion.getItems().addAll("Todas", "1", "2", "3", "4", "5");
+        cbPuntuacion.setValue("Todas");
+
+        cargarTabla();
     }
 
-    private void cargarValoraciones() {
-        List<Valoracion> todas = new ArrayList<>();
-        try {
-            todas = dao.obtenerTodasLasValoraciones();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+    private void cargarTabla() {
+        String filtro = cbPuntuacion.getValue();
+        ObservableList<Valoracion> lista;
+
+        if (filtro.equals("Todas")) {
+            lista = FXCollections.observableArrayList(valoracionDAO.listarValoraciones());
+        } else {
+            int puntuacion = Integer.parseInt(filtro);
+            lista = FXCollections.observableArrayList(valoracionDAO.listarValoracionesPorPuntuacion(puntuacion));
         }
-        // Filtro por puntuación y media de todas las valoraciones
-        List<Valoracion> filtradas = new ArrayList<>();
-        double suma = 0;
-        for (Valoracion v : todas) {
-            suma = suma + v.getPuntuacion();
-            if (TODAS.equals(cmbPuntuacion.getValue()) || String.valueOf(v.getPuntuacion()).equals(cmbPuntuacion.getValue())) {
-                filtradas.add(v);
+
+        tabla.setItems(lista);
+        lblMedia.setText("Media: " + String.format("%.2f", valoracionDAO.mediaValoraciones()) + " / 5");
+    }
+
+    @FXML
+    private void btnFiltro() {
+        cargarTabla();
+    }
+
+    @FXML
+    private void btnEliminar() {
+        Valoracion seleccionada = tabla.getSelectionModel().getSelectedItem();
+
+        if (seleccionada == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Selecciona una valoracion de la tabla para eliminarla");
+            return;
+        }
+
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Eliminar valoración");
+        confirmacion.setHeaderText(null);
+        confirmacion.setContentText("¿Seguro que quieres eliminar la valoracion de " + seleccionada.getNombreCliente() + "sobre la tarifa " + seleccionada.getNombreTarifa() + "?");
+
+        Optional<ButtonType> resultado = confirmacion.showAndWait();
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            if (valoracionDAO.eliminarValoracion(seleccionada)) {
+                cargarTabla();
+            } else {
+                mostrarAlerta(Alert.AlertType.ERROR, "No se ha podido eliminar la valoración.");
             }
         }
-        tablaValoraciones.setItems(FXCollections.observableArrayList(filtradas));
-        if (todas.isEmpty()) {
-            lblMedia.setText("Media: sin valoraciones");
-        } else {
-            lblMedia.setText("Media: " + String.format(Locale.forLanguageTag("es-ES"), "%.2f", suma / todas.size()) + " / 5");
-        }
     }
 
-    @FXML
-    public void cmbFiltrar(ActionEvent event) {
-        cargarValoraciones();
-    }
-
-    @FXML
-    public void btnEliminar(ActionEvent event) {
-        Valoracion v = tablaValoraciones.getSelectionModel().getSelectedItem();
-        if (v == null) {
-            ShowAlert.info("Aviso", "Selecciona una valoración de la tabla primero.");
-            return;
-        }
-        if (!ShowAlert.confirmar("Confirmar eliminación", "¿Seguro que deseas eliminar esta valoración?")) {
-            return;
-        }
-        try {
-            dao.borrarValoracion(v.getId());
-            ShowAlert.info("Valoración eliminada", "La valoración ha sido eliminada.");
-            cargarValoraciones();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
-        }
+    private void mostrarAlerta(Alert.AlertType tipo, String mensaje) {
+        Alert alerta = new Alert(tipo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
     }
 }

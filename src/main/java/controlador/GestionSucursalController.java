@@ -1,175 +1,239 @@
 package controlador;
 
-import com.mycompany.reto_1.Reto_1;
-import dao.DAO;
-import exception.OurException;
-import exception.ShowAlert;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.logging.Logger;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import javafx.concurrent.Worker;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
-import modelo.Sucursal;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import modeloadmin.Sucursal;
+import modeloadmin.Ubicacion;
+import daoadmin.SucursalDAO;
+import daoadmin.implementacion.SucursalDaoImplementacion;
 
 /**
- * Gestión de sucursales. El botón "Ver en el mapa" abre la dirección en OpenStreetMap, en el navegador.
+ * Controlador de Gestión de Sucursales.
+ *
+ * @author Eneko.Plaza
  */
-public class GestionSucursalController {
-
-    private static final Logger LOGGER = Logger.getLogger(GestionSucursalController.class.getName());
-
-    private final DAO dao = Sesion.getDao();
-
-    @FXML private ListView<Sucursal> listSucursales;
-    @FXML private TextField txtNombre;
-    @FXML private TextField txtHorario;
-    @FXML private TextField txtTelefono;
-    @FXML private TextField txtDireccion;
-    @FXML private TextField txtLocalidad;
-    @FXML private TextField txtCodigoPostal;
+public class GestionSucursalController implements Initializable {
 
     @FXML
-    public void initialize() {
-        cargarSucursales();
+    private TextField txtId;
+    @FXML
+    private TextField txtHorario;
+    @FXML
+    private TextField txtTelefono;
+    @FXML
+    private TextField txtUbicacion;
+    @FXML
+    private TextField txtCodigoPostal;
+    @FXML
+    private ListView<Sucursal> listSucursales;
+    @FXML
+    private WebView webViewMapa;
+
+    private final ObservableList<Sucursal> listaSucursalesData = FXCollections.observableArrayList();
+    private WebEngine engine;
+    private final SucursalDAO sucursalDAO = new SucursalDaoImplementacion();
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // Asignar lista a la interfaz
+        listSucursales.setItems(listaSucursalesData);
+
+        // Formato visual de los elementos en la lista
+        listSucursales.setCellFactory(param -> new ListCell<Sucursal>() {
+            @Override
+            protected void updateItem(Sucursal item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getId() + " - " + item.getHorario() + " - " + item.getTelefono());
+                }
+            }
+        });
+
+        // Evento al seleccionar un elemento de la lista
+        listSucursales.getSelectionModel().selectedItemProperty().addListener((obs, viejo, nuevo) -> {
+            if (nuevo != null) {
+                cargarCampos(nuevo);
+                actualizarMapa(nuevo.getUbicacion());
+            }
+        });
+
+        // Inicializar el mapa y cargar datos al arrancar
+        cargarMapa();
+        cargarSucursalesBD();
     }
 
-    private void cargarSucursales() {
+    private void cargarMapa() {
+        engine = webViewMapa.getEngine();
+        URL url = getClass().getResource("/html/mapa.html");
+
+        if (url != null) {
+            // Escuchamos el estado de carga del WebView
+            engine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+                // SOLO cuando finaliza la carga (SUCCEEDED) llamamos a las funciones JS
+                if (newState == Worker.State.SUCCEEDED) {
+                    engine.executeScript("refrescarMapa();");
+                    mostrarTodasLasSucursalesEnMapa();
+                }
+            });
+            engine.load(url.toExternalForm());
+        }
+    }
+
+    private void mostrarTodasLasSucursalesEnMapa() {
+        // Comprobación de seguridad: solo ejecutar si el engine y la página web están listos
+        if (engine != null && engine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
+            engine.executeScript("limpiarMapa();");
+            for (Sucursal s : listaSucursalesData) {
+                if (s.getUbicacion() != null) {
+                    String idStr = String.valueOf(s.getId());
+                    String dir = s.getUbicacion().getDireccion();
+                    String loc = s.getUbicacion().getLocalidad();
+                    engine.executeScript("agregarSucursal('" + idStr + "', '" + dir + "', '" + loc + "');");
+                }
+            }
+        }
+    }
+
+    // Centra el mapa en una ubicación concreta
+    private void actualizarMapa(Ubicacion ubicacion) {
+        if (engine != null && ubicacion != null) {
+            String dir = ubicacion.getDireccion();
+            String loc = ubicacion.getLocalidad();
+            engine.executeScript("enfocarUbicacion('" + dir + "', '" + loc + "');");
+        }
+    }
+
+    // Recupera la lista desde la BBDD y actualiza la GUI
+    private void cargarSucursalesBD() {
+        listaSucursalesData.clear();
+        List<Sucursal> sucursales = sucursalDAO.listarSucursales();
+        listaSucursalesData.addAll(sucursales);
+
+        mostrarTodasLasSucursalesEnMapa();
+    }
+
+    // Rellena los campos del formulario
+    private void cargarCampos(Sucursal sucursal) {
+        txtId.setText(String.valueOf(sucursal.getId()));
+        txtHorario.setText(sucursal.getHorario());
+        txtTelefono.setText(String.valueOf(sucursal.getTelefono()));
+        if (sucursal.getUbicacion() != null) {
+            txtUbicacion.setText(sucursal.getUbicacion().getDireccion());
+            txtCodigoPostal.setText(String.valueOf(sucursal.getUbicacion().getCodigoPostal()));
+        } else {
+            txtUbicacion.setText("");
+            txtCodigoPostal.setText("");
+        }
+
+    }
+
+    @FXML
+    public void añadirSucursal(ActionEvent event) {
+        String idTexto = txtId.getText().trim();
+        String horario = txtHorario.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String direccion = txtUbicacion.getText().trim();
+
+        if (idTexto.isEmpty() || horario.isEmpty() || telefono.isEmpty() || direccion.isEmpty()) {
+            mostrarAlerta("Atención", "Por favor, completa todos los campos.", Alert.AlertType.WARNING);
+            return;
+        }
+
         try {
-            listSucursales.setItems(FXCollections.observableArrayList(dao.obtenerSucursales()));
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+            int id = Integer.parseInt(idTexto);
+
+            // Objeto embebido Ubicacion con datos por defecto si solo meten la dirección
+            Ubicacion ubicacion = new Ubicacion(direccion, "Bilbao", 48480);
+            Sucursal nueva = new Sucursal(id, horario, Integer.parseInt(telefono.trim()), ubicacion);
+
+            if (sucursalDAO.insertarSucursal(nueva)) {
+                cargarSucursalesBD();
+                limpiar();
+                mostrarAlerta("Éxito", "Sucursal guardada correctamente.", Alert.AlertType.INFORMATION);
+            } else {
+                mostrarAlerta("Error", "No se pudo guardar la sucursal.", Alert.AlertType.ERROR);
+            }
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Error", "El ID debe ser un número entero.", Alert.AlertType.ERROR);
         }
     }
 
     @FXML
-    public void seleccionarSucursal(MouseEvent event) {
-        Sucursal s = listSucursales.getSelectionModel().getSelectedItem();
-        if (s == null) {
-            return;
-        }
-        txtNombre.setText(s.getNombre());
-        txtHorario.setText(s.getHorario());
-        txtTelefono.setText(s.getTelefono());
-        txtDireccion.setText(s.getDireccion());
-        txtLocalidad.setText(s.getLocalidad());
-        txtCodigoPostal.setText(String.valueOf(s.getCodigoPostal()));
-    }
-
-    // Abre la dirección de la sucursal seleccionada en OpenStreetMap
-    @FXML
-    public void btnVerMapa(ActionEvent event) {
-        Sucursal s = listSucursales.getSelectionModel().getSelectedItem();
-        if (s == null) {
-            ShowAlert.info("Aviso", "Selecciona una sucursal de la lista primero.");
-            return;
-        }
-        String direccion = s.getDireccion() + ", " + s.getCodigoPostal() + " " + s.getLocalidad() + ", España";
-        Reto_1.abrirEnNavegador("https://www.openstreetmap.org/search?query=" + URLEncoder.encode(direccion, StandardCharsets.UTF_8));
-        LOGGER.info("Mapa abierto para la sucursal " + s.getNombre());
-    }
-
-    // Devuelve el mensaje de error de los datos del formulario, o null si están bien
-    private String comprobarDatos() {
-        if (txtNombre.getText().trim().isEmpty() || txtHorario.getText().trim().isEmpty() || txtTelefono.getText().trim().isEmpty()
-                || txtDireccion.getText().trim().isEmpty() || txtLocalidad.getText().trim().isEmpty()) {
-            return "Por favor, rellena todos los campos.";
-        }
-        if (!ValidarPerfil.telefonoValido(txtTelefono.getText())) {
-            return "El teléfono debe tener 9 números.";
-        }
-        if (!ValidarPerfil.codigoPostalValido(txtCodigoPostal.getText())) {
-            return "El código postal debe tener 5 números.";
-        }
-        return null;
-    }
-
-    private Sucursal sucursalDelFormulario(String id) {
-        return new Sucursal(id, txtNombre.getText().trim(), txtHorario.getText().trim(), txtTelefono.getText().trim(),
-                txtDireccion.getText().trim(), txtLocalidad.getText().trim(), Integer.parseInt(txtCodigoPostal.getText().trim()));
-    }
-
-    @FXML
-    public void btnAnadir(ActionEvent event) {
-        String error = comprobarDatos();
-        if (error != null) {
-            ShowAlert.info("Datos inválidos", error);
-            return;
-        }
-        if (!ShowAlert.confirmar("Confirmar creación de sucursal", "¿Deseas crear esta nueva sucursal?")) {
-            return;
-        }
-        try {
-            dao.insertarSucursal(sucursalDelFormulario(null));
-            ShowAlert.info("Sucursal registrada", "La nueva sucursal ha sido dada de alta.");
-            limpiar();
-            cargarSucursales();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
-        }
-    }
-
-    @FXML
-    public void btnModificar(ActionEvent event) {
+    public void gestionarSucursal(ActionEvent event) {
         Sucursal seleccionada = listSucursales.getSelectionModel().getSelectedItem();
         if (seleccionada == null) {
-            ShowAlert.info("Aviso", "Selecciona una sucursal de la lista primero.");
+            mostrarAlerta("Atención", "Selecciona una sucursal de la lista.", Alert.AlertType.WARNING);
             return;
         }
-        String error = comprobarDatos();
-        if (error != null) {
-            ShowAlert.info("Datos inválidos", error);
-            return;
+
+        seleccionada.setHorario(txtHorario.getText().trim());
+        seleccionada.setTelefono(Integer.parseInt(txtTelefono.getText().trim()));
+        if (seleccionada.getUbicacion() != null) {
+            seleccionada.getUbicacion().setDireccion(txtUbicacion.getText().trim());
+            try {
+                int codigoPostal = Integer.parseInt(txtCodigoPostal.getText().trim());
+                seleccionada.getUbicacion().setCodigoPostal(codigoPostal);
+            } catch (NumberFormatException e) {
+                // Manejo de error: el usuario ingresó letras o caracteres inválidos
+                System.out.println("Por favor, introduce un código postal válido (solo números).");
+            }
         }
-        if (!ShowAlert.confirmar("Confirmar modificación de sucursal", "¿Deseas guardar los cambios de esta sucursal?")) {
-            return;
-        }
-        try {
-            dao.actualizarSucursal(sucursalDelFormulario(seleccionada.getId()));
-            ShowAlert.info("Sucursal modificada", "Los datos de la sucursal se han actualizado correctamente.");
+
+        if (sucursalDAO.actualizarSucursal(seleccionada)) {
+            cargarSucursalesBD();
             limpiar();
-            cargarSucursales();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+            mostrarAlerta("Éxito", "Sucursal actualizada correctamente.", Alert.AlertType.INFORMATION);
+        } else {
+            mostrarAlerta("Error", "No se pudo actualizar la sucursal.", Alert.AlertType.ERROR);
         }
     }
 
     @FXML
-    public void btnEliminar(ActionEvent event) {
+    public void eliminarSucursal(ActionEvent event) {
         Sucursal seleccionada = listSucursales.getSelectionModel().getSelectedItem();
         if (seleccionada == null) {
-            ShowAlert.info("Aviso", "Selecciona una sucursal de la lista primero.");
+            mostrarAlerta("Atención", "Selecciona una sucursal para borrar.", Alert.AlertType.WARNING);
             return;
         }
-        if (!ShowAlert.confirmar("Confirmar eliminación de sucursal", "Vas a eliminar definitivamente la sucursal "
-                + seleccionada.getNombre() + ". ¿Deseas continuar?")) {
-            return;
-        }
-        try {
-            dao.borrarSucursal(seleccionada.getId());
-            ShowAlert.info("Sucursal eliminada", "La sucursal ha sido eliminada del sistema.");
-            limpiar();
-            cargarSucursales();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
-        }
-    }
 
-    @FXML
-    public void btnLimpiar(ActionEvent event) {
-        limpiar();
+        if (sucursalDAO.eliminarSucursal(seleccionada.getId())) {
+            cargarSucursalesBD();
+            limpiar();
+            mostrarAlerta("Éxito", "Sucursal eliminada.", Alert.AlertType.INFORMATION);
+        } else {
+            mostrarAlerta("Error", "No se pudo eliminar la sucursal.", Alert.AlertType.ERROR);
+        }
     }
 
     private void limpiar() {
-        txtNombre.clear();
-        txtHorario.clear();
-        txtTelefono.clear();
-        txtDireccion.clear();
-        txtLocalidad.clear();
-        txtCodigoPostal.clear();
+        txtId.setText("");
+        txtHorario.setText("");
+        txtTelefono.setText("");
+        txtUbicacion.setText("");
+
         listSucursales.getSelectionModel().clearSelection();
+    }
+
+    private void mostrarAlerta(String titulo, String texto, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(texto);
+        alert.showAndWait();
     }
 }

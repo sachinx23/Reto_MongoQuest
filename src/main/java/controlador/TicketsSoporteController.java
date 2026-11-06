@@ -1,100 +1,163 @@
 package controlador;
 
-import dao.DAO;
-import exception.OurException;
-import exception.ShowAlert;
-import java.util.ArrayList;
+import daoadmin.TicketDAO;
+import daoadmin.implementacion.TikcetDAOImpl;
+import java.net.URL;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import modelo.TicketSoporte;
+import modeloadmin.TicketSoporte;
 
 /**
- * Tickets de soporte de todos los clientes, filtrados por estado.
+ * FXML Controller class para Tickets de Soporte
+ * @author Eneko.Plaza
  */
-public class TicketsSoporteController {
+public class TicketsSoporteController implements Initializable {
 
-    private static final Logger LOGGER = Logger.getLogger(TicketsSoporteController.class.getName());
-    private static final String TODOS = "Todos";
-
-    private final DAO dao = Sesion.getDao();
-
-    @FXML private ComboBox<String> cmbFiltroEstado;
-    @FXML private TableView<TicketSoporte> tablaTickets;
-    @FXML private TableColumn<TicketSoporte, String> colCliente;
-    @FXML private TableColumn<TicketSoporte, String> colAsunto;
-    @FXML private TableColumn<TicketSoporte, String> colFecha;
-    @FXML private TableColumn<TicketSoporte, String> colEstado;
-    @FXML private TextArea txtDescripcion;
+    private final TicketDAO ticketDAO = new TikcetDAOImpl();
 
     @FXML
-    public void initialize() {
-        cmbFiltroEstado.setItems(FXCollections.observableArrayList(TODOS, "pendiente", "resuelto"));
-        cmbFiltroEstado.setValue("pendiente");
-        colCliente.setCellValueFactory(new PropertyValueFactory<>("nombreCliente"));
+    private ComboBox<String> comboFiltroEstado;
+
+    @FXML
+    private TableView<TicketSoporte> tablaTickets;
+
+    @FXML
+    private TableColumn<TicketSoporte, String> colIdTicket;
+
+    @FXML
+    private TableColumn<TicketSoporte, String> colAsunto;
+
+    @FXML
+    private TableColumn<TicketSoporte, String> colFecha;
+
+    @FXML
+    private TableColumn<TicketSoporte, String> colEstado;
+
+    @FXML
+    private TableColumn<TicketSoporte, String> colIdCliente;
+
+    @FXML
+    private TableColumn<TicketSoporte, String> colIdEmpleado;
+
+    @FXML
+    private TextArea txtDescripcion;
+
+    @FXML
+    private ComboBox<String> comboNuevoEstado;
+
+    private final ObservableList<TicketSoporte> listaTickets = FXCollections.observableArrayList();
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // Enlace de columnas con la clase modelo TicketSoporte
+        colIdTicket.setCellValueFactory(new PropertyValueFactory<>("id"));
         colAsunto.setCellValueFactory(new PropertyValueFactory<>("asunto"));
-        colFecha.setCellValueFactory(new PropertyValueFactory<>("fechaCreacionTexto"));
+        colFecha.setCellValueFactory(new PropertyValueFactory<>("fechaCreacion"));
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        colIdCliente.setCellValueFactory(new PropertyValueFactory<>("idCliente"));
+        colIdEmpleado.setCellValueFactory(new PropertyValueFactory<>("idEmpleado"));
+
+        tablaTickets.setItems(listaTickets);
+
+        // Inicializar ComboBoxes
+        comboFiltroEstado.setItems(FXCollections.observableArrayList("Todos", "pendiente", "en proceso", "cerrado"));
+        comboFiltroEstado.getSelectionModel().select("Todos");
+
+        comboNuevoEstado.setItems(FXCollections.observableArrayList("pendiente", "en proceso", "cerrado"));
+
         cargarTickets();
     }
 
     private void cargarTickets() {
-        String estado = cmbFiltroEstado.getValue();
-        List<TicketSoporte> filtrados = new ArrayList<>();
-        try {
-            for (TicketSoporte t : dao.obtenerTodosLosTickets()) {
-                if (TODOS.equals(estado) || t.getEstado().equals(estado)) {
-                    filtrados.add(t);
-                }
-            }
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+        listaTickets.clear();
+        String estadoFiltro = comboFiltroEstado.getValue() != null ? comboFiltroEstado.getValue() : "Todos";
+        
+        List<TicketSoporte> tickets = ticketDAO.listarTicket(estadoFiltro);
+
+        if (tickets != null) {
+            listaTickets.addAll(tickets);
         }
-        tablaTickets.setItems(FXCollections.observableArrayList(filtrados));
-        txtDescripcion.clear();
     }
 
     @FXML
-    public void cmbFiltrar(ActionEvent event) {
+    public void filtrarTickets(ActionEvent event) {
+        cargarTickets();
+    }
+
+    @FXML
+    public void refrescar(ActionEvent event) {
         cargarTickets();
     }
 
     @FXML
     public void seleccionarTicket(MouseEvent event) {
-        TicketSoporte t = tablaTickets.getSelectionModel().getSelectedItem();
-        if (t != null) {
-            txtDescripcion.setText(t.getDescripcion());
+        TicketSoporte seleccionado = tablaTickets.getSelectionModel().getSelectedItem();
+        if (seleccionado != null) {
+            txtDescripcion.setText(seleccionado.getDescripcion());
+            comboNuevoEstado.getSelectionModel().select(seleccionado.getEstado());
         }
     }
 
     @FXML
-    public void btnResolver(ActionEvent event) {
-        TicketSoporte t = tablaTickets.getSelectionModel().getSelectedItem();
-        if (t == null) {
-            ShowAlert.info("Aviso", "Selecciona un ticket de la tabla primero.");
+    public void asignarTicket(ActionEvent event) {
+        TicketSoporte seleccionado = tablaTickets.getSelectionModel().getSelectedItem();
+        String idEmpleadoActual = IniciarSesionController.idUsuarioActual;
+
+        if (seleccionado != null) {
+            boolean asignado = ticketDAO.asignarTicket(seleccionado, idEmpleadoActual);
+            if (asignado) {
+                mostrarAlerta("Éxito", "Te has asignado el ticket correctamente.");
+                cargarTickets();
+            } else {
+                mostrarAlerta("Error", "No se pudo asignar el ticket.");
+            }
+        } else {
+            mostrarAlerta("Atención", "Selecciona primero un ticket de la tabla.");
+        }
+    }
+
+    @FXML
+    public void cambiarEstado(ActionEvent event) {
+        TicketSoporte seleccionado = tablaTickets.getSelectionModel().getSelectedItem();
+        String nuevoEstado = comboNuevoEstado.getValue();
+
+        if (seleccionado == null) {
+            mostrarAlerta("Atención", "Selecciona primero un ticket de la tabla.");
             return;
         }
-        if (!"pendiente".equals(t.getEstado())) {
-            ShowAlert.info("Aviso", "Ese ticket ya está resuelto.");
+
+        if (nuevoEstado == null || nuevoEstado.isEmpty()) {
+            mostrarAlerta("Atención", "Selecciona un nuevo estado en el desplegable.");
             return;
         }
-        if (!ShowAlert.confirmar("Actualizar ticket", "¿Deseas cambiar el estado de este ticket a 'Resuelto'?")) {
-            return;
-        }
-        try {
-            dao.resolverTicket(t.getId(), Sesion.getUsuario().getId());
-            ShowAlert.info("Ticket resuelto", "El ticket se ha marcado como resuelto.");
+
+        boolean cambiado = ticketDAO.cambiarEstadoTicket(seleccionado, nuevoEstado);
+        if (cambiado) {
+            mostrarAlerta("Éxito", "El estado del ticket ha sido actualizado a: " + nuevoEstado);
             cargarTickets();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+        } else {
+            mostrarAlerta("Error", "No se pudo cambiar el estado del ticket.");
         }
+    }
+
+    private void mostrarAlerta(String titulo, String texto) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(texto);
+        alert.showAndWait();
     }
 }

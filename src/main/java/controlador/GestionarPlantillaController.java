@@ -1,184 +1,225 @@
 package controlador;
 
-import dao.DAO;
-import exception.OurException;
-import exception.ShowAlert;
-import java.util.logging.Logger;
+import java.net.URL;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.PasswordField;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
-import modelo.Administrador;
-import modelo.Cliente;
-import modelo.Empleado;
-import modelo.Sucursal;
+import modeloadmin.Cliente;
+import modeloadmin.Empleado;
+import daoadmin.EmpleadoDAO;
+import daoadmin.ClienteDAO;
+import daoadmin.implementacion.EmpleadoDaoImplementacion;
+import daoadmin.implementacion.ClienteDaoImplementacion;
 
 /**
- * Gestión de la plantilla: alta, ascenso y baja de empleados, y borrado de datos de clientes dados de baja.
+ * Controlador para la vista GestionarPlantilla.fxml
+ *
+ * @author eneko
  */
-public class GestionarPlantillaController {
+public class GestionarPlantillaController implements Initializable {
 
-    private static final Logger LOGGER = Logger.getLogger(GestionarPlantillaController.class.getName());
-
-    private final DAO dao = Sesion.getDao();
-
-    @FXML private TableView<Empleado> tablaEmpleados;
-    @FXML private TableColumn<Empleado, String> colEmpNombre;
-    @FXML private TableColumn<Empleado, String> colEmpUsuario;
-    @FXML private TableColumn<Empleado, String> colEmpRol;
-    @FXML private TableColumn<Empleado, String> colEmpCorreo;
-    @FXML private TableColumn<Empleado, String> colEmpCuenta;
-
-    @FXML private TextField txtNombre;
-    @FXML private TextField txtNombreUsuario;
-    @FXML private PasswordField txtContrasena;
-    @FXML private TextField txtCorreo;
-    @FXML private ComboBox<Sucursal> cmbSucursal;
-
-    @FXML private TableView<Cliente> tablaClientes;
-    @FXML private TableColumn<Cliente, String> colCliNombre;
-    @FXML private TableColumn<Cliente, String> colCliUsuario;
-    @FXML private TableColumn<Cliente, String> colCliDni;
-    @FXML private TableColumn<Cliente, String> colCliTelefono;
-    @FXML private TableColumn<Cliente, String> colCliEstado;
-
+    // TABLA EMPLEADOS
     @FXML
-    public void initialize() {
+    private TableView<Empleado> tablaEmpleados;
+    @FXML
+    private TableColumn<Empleado, String> colEmpNombre;
+    @FXML
+    private TableColumn<Empleado, String> colEmpApellidos;
+    @FXML
+    private TableColumn<Empleado, String> colEmpUsuario;
+    @FXML
+    private TableColumn<Empleado, String> colEmpRol;
+    @FXML
+    private TableColumn<Empleado, String> colEmpEmail;
+    @FXML
+    private TableColumn<Empleado, String> colEmpIBAN;
+
+    // TABLA CLIENTES
+    @FXML
+    private TableView<Cliente> tablaClientes;
+    @FXML
+    private TableColumn<Cliente, String> colCliNombre;
+    @FXML
+    private TableColumn<Cliente, String> colCliApellidos;
+    @FXML
+    private TableColumn<Cliente, String> colCliUsuario;
+    @FXML
+    private TableColumn<Cliente, String> colCliEmail;
+    @FXML
+    private TableColumn<Cliente, String> colCliTelefono;
+
+    private final ObservableList<Empleado> listaEmpleados = FXCollections.observableArrayList();
+    private final ObservableList<Cliente> listaClientes = FXCollections.observableArrayList();
+    
+    private final EmpleadoDAO empleadoDAO = new EmpleadoDaoImplementacion();
+    private final ClienteDAO clienteDAO = new ClienteDaoImplementacion();
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // Mapeo de columnas con el POJO Empleado
         colEmpNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colEmpApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
         colEmpUsuario.setCellValueFactory(new PropertyValueFactory<>("nombreUsuario"));
         colEmpRol.setCellValueFactory(new PropertyValueFactory<>("rol"));
-        colEmpCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
-        colEmpCuenta.setCellValueFactory(new PropertyValueFactory<>("cuentaBancaria"));
+        colEmpEmail.setCellValueFactory(new PropertyValueFactory<>("correo"));
+        colEmpIBAN.setCellValueFactory(new PropertyValueFactory<>("cuentaBancaria"));
 
+        // Mapeo de columnas con el POJO Cliente
         colCliNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colCliApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
         colCliUsuario.setCellValueFactory(new PropertyValueFactory<>("nombreUsuario"));
-        colCliDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
+        colCliEmail.setCellValueFactory(new PropertyValueFactory<>("correo"));
         colCliTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
-        colCliEstado.setCellValueFactory(new PropertyValueFactory<>("bajaTexto"));
+
+        tablaEmpleados.setItems(listaEmpleados);
+        tablaClientes.setItems(listaClientes);
 
         cargarTablas();
-        try {
-            cmbSucursal.setItems(FXCollections.observableArrayList(dao.obtenerSucursales()));
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
-        }
     }
 
     private void cargarTablas() {
-        try {
-            tablaEmpleados.setItems(FXCollections.observableArrayList(dao.obtenerEmpleados()));
-            tablaClientes.setItems(FXCollections.observableArrayList(dao.obtenerClientes()));
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+        listaEmpleados.clear();
+        listaClientes.clear();
+
+        // Llamadas a los métodos estáticos del DAO
+        List<Empleado> empleados = empleadoDAO.listarEmpleados();
+        List<Cliente> clientes = clienteDAO.listarClientes();
+
+        if (empleados != null) {
+            listaEmpleados.addAll(empleados);
+        }
+        if (clientes != null) {
+            listaClientes.addAll(clientes);
+        }
+    }
+
+    // Ascender empleado a admin
+    @FXML
+    public void ascenderAAdmin(ActionEvent event) {
+        Empleado seleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
+
+        if (seleccionado != null) {
+            String usuario = seleccionado.getNombreUsuario();
+
+            boolean ok = empleadoDAO.ascenderEmpleado(usuario, "Admin");
+
+            if (ok) {
+                mostrarAlerta("Éxito", "El empleado " + usuario + " ahora es Administrador.");
+                cargarTablas();
+            } else {
+                mostrarAlerta("Error", "No se pudo ascender al empleado.");
+            }
+        } else {
+            mostrarAlerta("Atención", "Selecciona primero un empleado en la tabla.");
+        }
+    }
+
+    // Crear Empleado
+    @FXML
+    public void crearEmpleado(ActionEvent event) {
+        String nombre = pedirTexto("Introduce el Nombre:");
+        if (nombre == null) {
+            return;
+        }
+        String apellidos = pedirTexto("Introduce los Apellidos:");
+        if (apellidos == null) {
+            return;
+        }
+        String cuentaBancaria = pedirTexto("Introduce la Cuenta Bancaria (IBAN):");
+        if (cuentaBancaria == null) {
+            return;
+        }
+
+        // Generar nombreUsuario automáticamente (ejemplo: eneko.garcia)
+        String nombreN = nombre.toLowerCase().replaceAll("\\s+", "");
+        String primerApellido = apellidos.split("\\s+")[0].toLowerCase();
+        String usuario = nombreN + "." + primerApellido;
+
+        boolean ok = empleadoDAO.crearEmpleado(usuario, nombre, apellidos, "1234", usuario + "@telonda.com", cuentaBancaria);
+
+        if (ok) {
+            mostrarAlerta("Éxito", "Empleado " + nombre + " " + apellidos + " creado correctamente.");
+            cargarTablas();
+        } else {
+            mostrarAlerta("Error", "No se pudo crear el empleado (quizás el usuario ya existe).");
         }
     }
 
     @FXML
-    public void btnCrearEmpleado(ActionEvent event) {
-        String error = ValidarPerfil.comprobar(txtNombre.getText(), txtNombreUsuario.getText(),
-                txtContrasena.getText(), txtCorreo.getText());
-        if (error != null) {
-            ShowAlert.info("Datos inválidos", error);
-            return;
-        }
-        if (!ShowAlert.confirmar("Confirmar alta", "¿Deseas dar de alta a este nuevo empleado?")) {
-            return;
-        }
-        // La sucursal es opcional
-        String idSucursal = null;
-        if (cmbSucursal.getValue() != null) {
-            idSucursal = cmbSucursal.getValue().getId();
-        }
-        Empleado nuevo = new Empleado(null, txtNombre.getText().trim(), txtNombreUsuario.getText().trim(),
-                txtContrasena.getText().trim(), txtCorreo.getText().trim(), "", idSucursal);
-        try {
-            dao.insertarEmpleado(nuevo);
-            ShowAlert.info("Empleado registrado", "La cuenta del nuevo trabajador ha sido generada en el sistema.");
-            txtNombre.clear();
-            txtNombreUsuario.clear();
-            txtContrasena.clear();
-            txtCorreo.clear();
-            cmbSucursal.setValue(null);
-            cargarTablas();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+    public void eliminarEmpleado(ActionEvent event) {
+        Empleado seleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
+
+        if (seleccionado != null) {
+            String usuario = seleccionado.getNombreUsuario();
+
+            boolean ok = empleadoDAO.eliminarEmpleado(usuario);
+
+            if (ok) {
+                mostrarAlerta("Éxito", "El empleado " + usuario + " ha sido dado de baja.");
+                cargarTablas();
+            } else {
+                mostrarAlerta("Error", "No se pudo eliminar al empleado.");
+            }
+        } else {
+            mostrarAlerta("Atención", "Selecciona primero un empleado en la tabla.");
         }
     }
 
     @FXML
-    public void btnAscender(ActionEvent event) {
-        Empleado empleado = tablaEmpleados.getSelectionModel().getSelectedItem();
-        if (empleado == null) {
-            ShowAlert.info("Aviso", "Selecciona un empleado de la tabla primero.");
-            return;
-        }
-        if (empleado instanceof Administrador) {
-            ShowAlert.info("Aviso", "Ese usuario ya es administrador.");
-            return;
-        }
-        if (!ShowAlert.confirmar("Ascender empleado", "¿Estás seguro de ascender a " + empleado.getNombre()
-                + "? Pasará a tener privilegios totales de Administrador.")) {
-            return;
-        }
-        try {
-            dao.ascenderEmpleado(empleado);
-            ShowAlert.info("Empleado ascendido", "El empleado ahora tiene privilegios de Administrador.");
-            cargarTablas();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+    public void eliminarCliente(ActionEvent event) {
+        Cliente seleccionado = tablaClientes.getSelectionModel().getSelectedItem();
+
+        if (seleccionado != null) {
+            String usuario = seleccionado.getNombreUsuario();
+
+            Alert confirmacion = new Alert(AlertType.CONFIRMATION);
+            confirmacion.setTitle("Confirmar eliminación de datos sensibles");
+            confirmacion.setHeaderText(null);
+            confirmacion.setContentText("¿Desea eliminar permanentemente los datos sensibles del cliente " + usuario + "?");
+
+            Optional<ButtonType> res = confirmacion.showAndWait();
+            if (res.isPresent() && res.get() == ButtonType.OK) {
+                boolean ok = clienteDAO.eliminarDatosSensiblesCliente(usuario);
+                if (ok) {
+                    mostrarAlerta("Éxito", "Datos sensibles del cliente " + usuario + " eliminados.");
+                    cargarTablas();
+                } else {
+                    mostrarAlerta("Error", "No se pudieron borrar los datos.");
+                }
+            }
+        } else {
+            mostrarAlerta("Atención", "Selecciona primero un cliente de la tabla.");
         }
     }
 
-    @FXML
-    public void btnBorrarEmpleado(ActionEvent event) {
-        Empleado empleado = tablaEmpleados.getSelectionModel().getSelectedItem();
-        if (empleado == null) {
-            ShowAlert.info("Aviso", "Selecciona un empleado de la tabla primero.");
-            return;
+    private String pedirTexto(String mensaje) {
+        TextInputDialog dialogo = new TextInputDialog();
+        dialogo.setTitle("Nuevo Empleado");
+        dialogo.setContentText(mensaje);
+        Optional<String> res = dialogo.showAndWait();
+        if (!res.isPresent() || res.get().trim().isEmpty()) {
+            return null;
         }
-        if (empleado instanceof Administrador) {
-            ShowAlert.info("Aviso", "Solo se pueden borrar empleados, no administradores.");
-            return;
-        }
-        if (!ShowAlert.confirmar("Eliminar cuenta de empleado", "Vas a borrar definitivamente la cuenta de "
-                + empleado.getNombre() + ". Perderá su acceso al sistema. ¿Deseas continuar?")) {
-            return;
-        }
-        try {
-            dao.borrarEmpleado(empleado.getId());
-            ShowAlert.info("Empleado eliminado", "La cuenta del empleado ha sido eliminada del sistema.");
-            cargarTablas();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
-        }
+        return res.get().trim();
     }
 
-    @FXML
-    public void btnBorrarDatosCliente(ActionEvent event) {
-        Cliente cliente = tablaClientes.getSelectionModel().getSelectedItem();
-        if (cliente == null) {
-            ShowAlert.info("Aviso", "Selecciona un cliente de la tabla primero.");
-            return;
-        }
-        if (!cliente.isDadoDeBaja()) {
-            ShowAlert.info("Aviso", "Solo se pueden borrar los datos de un cliente dado de baja.");
-            return;
-        }
-        if (!ShowAlert.confirmar("Borrar datos sensibles", "¿Deseas borrar la cuenta bancaria, el teléfono y la dirección de "
-                + cliente.getNombre() + "?")) {
-            return;
-        }
-        try {
-            dao.borrarDatosSensiblesCliente(cliente.getId());
-            ShowAlert.info("Datos borrados", "Los datos sensibles del cliente se han borrado.");
-            cargarTablas();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
-        }
+    private void mostrarAlerta(String titulo, String texto) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(texto);
+        alert.showAndWait();
     }
 }

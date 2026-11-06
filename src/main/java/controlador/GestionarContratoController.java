@@ -1,156 +1,192 @@
 package controlador;
 
-import dao.DAO;
-import exception.OurException;
-import exception.ShowAlert;
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import modelo.Contrato;
-import modelo.EstadoContrato;
+import modeloadmin.Contrato;
+import daoadmin.ContratoDAO;
+import daoadmin.implementacion.ContratoDaoImpl;
 
 /**
- * Gestión de contratos: filtrar, aceptar o rechazar peticiones y rescindir contratos activos.
+ * Controlador para la gestión de contratos por parte de los empleados.
+ *
+ * @author eneko
  */
-public class GestionarContratoController {
+public class GestionarContratoController implements Initializable {
 
-    private static final Logger LOGGER = Logger.getLogger(GestionarContratoController.class.getName());
-    private static final String TODOS = "Todos";
-
-    private final DAO dao = Sesion.getDao();
-
-    private List<Contrato> todos = new ArrayList<>();
-
-    @FXML private TextField txtFiltroTelefono;
-    @FXML private ComboBox<String> cmbFiltroEstado;
-
-    @FXML private TableView<Contrato> tablaContratos;
-    @FXML private TableColumn<Contrato, String> colCliente;
-    @FXML private TableColumn<Contrato, String> colTelefono;
-    @FXML private TableColumn<Contrato, String> colTarifa;
-    @FXML private TableColumn<Contrato, String> colPrecio;
-    @FXML private TableColumn<Contrato, EstadoContrato> colEstado;
-    @FXML private TableColumn<Contrato, String> colFechaInicio;
-    @FXML private TableColumn<Contrato, String> colFechaFin;
-
+    // Filtros de Búsqueda
     @FXML
-    public void initialize() {
-        cmbFiltroEstado.getItems().add(TODOS);
-        for (EstadoContrato estado : EstadoContrato.values()) {
-            cmbFiltroEstado.getItems().add(estado.toString());
-        }
-        cmbFiltroEstado.setValue(TODOS);
-        colCliente.setCellValueFactory(new PropertyValueFactory<>("nombreCliente"));
+    private TextField txtFiltroTelefono;
+    @FXML
+    private ComboBox<String> comboFiltroEstado;
+
+    // Tabla de Contratos y Solicitudes 
+    @FXML
+    private TableView<Contrato> tablaContratos;
+    @FXML
+    private TableColumn<Contrato, String> colIdContrato;
+    @FXML
+    private TableColumn<Contrato, String> colTelefono;
+    @FXML
+    private TableColumn<Contrato, String> colIdCliente;
+    @FXML
+    private TableColumn<Contrato, String> colIdTarifa;
+    @FXML
+    private TableColumn<Contrato, String> colIdEmpleado;
+    @FXML
+    private TableColumn<Contrato, String> colEstado;
+    @FXML
+    private TableColumn<Contrato, String> colFechaInicio;
+    @FXML
+    private TableColumn<Contrato, String> colFechaFin;
+
+    // Botones de Acción 
+    @FXML
+    private Button btnAceptarPeticion;
+    @FXML
+    private Button btnRechazarPeticion;
+    @FXML
+    private Button btnRescindirContrato;
+    @FXML
+    private Button btnRefrescar;
+
+    private Contrato contratoSeleccionado;
+    private final ContratoDAO contratoDAO = new ContratoDaoImpl();
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // Configuración del ComboBox de filtro por estado
+        comboFiltroEstado.setItems(FXCollections.observableArrayList(
+                "Todos",
+                "pendiente",
+                "activo",
+                "rescindido",
+                "caducado",
+                "rechazado"
+        ));
+        comboFiltroEstado.setValue("Todos");
+
+        colIdContrato.setCellValueFactory(new PropertyValueFactory<>("id"));
         colTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
-        colTarifa.setCellValueFactory(new PropertyValueFactory<>("nombreTarifa"));
-        colPrecio.setCellValueFactory(new PropertyValueFactory<>("precioTexto"));
+        colIdCliente.setCellValueFactory(new PropertyValueFactory<>("idCliente"));
+        colIdTarifa.setCellValueFactory(new PropertyValueFactory<>("idTarifa"));
+        colIdEmpleado.setCellValueFactory(new PropertyValueFactory<>("idEmpleado"));
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
-        colFechaInicio.setCellValueFactory(new PropertyValueFactory<>("fechaComienzoTexto"));
-        colFechaFin.setCellValueFactory(new PropertyValueFactory<>("fechaFinalizacionTexto"));
+        colFechaInicio.setCellValueFactory(new PropertyValueFactory<>("fechaComienzo"));
+        colFechaFin.setCellValueFactory(new PropertyValueFactory<>("fechaFin"));
+
+        // Carga inicial de datos desde MongoDB
         cargarContratos();
+
+        // Listener para capturar la selección del usuario en la tabla
+        tablaContratos.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            contratoSeleccionado = newSel;
+            actualizarEstadoBotones();
+        });
     }
 
-    private void cargarContratos() {
-        try {
-            todos = dao.obtenerTodosLosContratos();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+    // Único método para cargar contratos en la tabla
+    public void cargarContratos() {
+        List<Contrato> lista = contratoDAO.listarContratos();
+        if (lista != null) {
+            ObservableList<Contrato> datos = FXCollections.observableArrayList(lista);
+            tablaContratos.setItems(datos);
         }
-        filtrar();
+        limpiarSeleccion();
     }
 
-    // Enseña solo los contratos que cumplen el filtro de teléfono y de estado
-    private void filtrar() {
-        String telefono = txtFiltroTelefono.getText().replace(" ", "");
-        String estado = cmbFiltroEstado.getValue();
-        List<Contrato> filtrados = new ArrayList<>();
-        for (Contrato c : todos) {
-            boolean telefonoOk = c.getTelefono().replace(" ", "").contains(telefono);
-            boolean estadoOk = TODOS.equals(estado) || (c.getEstado() != null && c.getEstado().toString().equals(estado));
-            if (telefonoOk && estadoOk) {
-                filtrados.add(c);
+    //filtrar contratos
+    @FXML
+    private void filtrarContratos(ActionEvent event) {
+        String tel = txtFiltroTelefono.getText();
+        String est = comboFiltroEstado.getValue();
+        List<Contrato> filtrados = contratoDAO.filtrarContratos(tel, est);
+        tablaContratos.setItems(FXCollections.observableArrayList(filtrados));
+        limpiarSeleccion();
+    }
+    
+    
+// aceptar peticiones
+    @FXML
+    private void aceptarPeticion(ActionEvent event) {
+        if (contratoSeleccionado != null) {
+            if (contratoDAO.aprobarContrato(contratoSeleccionado, IniciarSesionController.idUsuarioActual)) {
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Contrato aprobado correctamente.");
+                cargarContratos();
+            } else {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo aprobar el contrato.");
             }
         }
-        tablaContratos.setItems(FXCollections.observableArrayList(filtrados));
     }
 
+    // rechazar peticion
     @FXML
-    public void btnFiltrar(ActionEvent event) {
-        filtrar();
+    private void rechazarPeticion(ActionEvent event) {
+        if (contratoSeleccionado != null) {
+            if (contratoDAO.rechazarContratos(contratoSeleccionado)) {
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Contrato rechazado.");
+                cargarContratos();
+            } else {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rechazar el contrato.");
+            }
+        }
     }
 
+    // rescindir contrato
     @FXML
-    public void btnRefrescar(ActionEvent event) {
+    private void rescindirContrato(ActionEvent event) {
+        if (contratoSeleccionado != null) {
+            if (contratoDAO.rescindirContrato(contratoSeleccionado)) {
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Contrato rescindido correctamente.");
+                cargarContratos();
+            } else {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rescindir el contrato.");
+            }
+        }
+    }
+
+    // refrescar filrtro
+    @FXML
+    private void refrescarFiltro(ActionEvent event) {
         txtFiltroTelefono.clear();
-        cmbFiltroEstado.setValue(TODOS);
+        comboFiltroEstado.setValue("Todos");
         cargarContratos();
     }
 
-    // Devuelve el contrato seleccionado si está en el estado pedido; si no, avisa y devuelve null
-    private Contrato seleccionadoEn(EstadoContrato estado, String aviso) {
-        Contrato c = tablaContratos.getSelectionModel().getSelectedItem();
-        if (c == null) {
-            ShowAlert.info("Aviso", "Selecciona un contrato de la tabla primero.");
-            return null;
-        }
-        if (c.getEstado() != estado) {
-            ShowAlert.info("Aviso", aviso);
-            return null;
-        }
-        return c;
+    private void limpiarSeleccion() {
+        tablaContratos.getSelectionModel().clearSelection();
+        contratoSeleccionado = null;
+        actualizarEstadoBotones();
     }
 
-    @FXML
-    public void btnAceptar(ActionEvent event) {
-        Contrato c = seleccionadoEn(EstadoContrato.PENDIENTE, "Solo se pueden aceptar peticiones pendientes.");
-        if (c == null || !ShowAlert.confirmar("Validar tarifa", "¿Validar y activar esta tarifa para el cliente seleccionado?")) {
-            return;
-        }
-        try {
-            dao.validarContrato(c.getId(), Sesion.getUsuario().getId());
-            ShowAlert.info("Tarifa validada", "La tarifa se ha validado y el contrato está activo.");
-            cargarContratos();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
-        }
+    //acrualizar estado
+    private void actualizarEstadoBotones() {
+        boolean haySeleccion = contratoSeleccionado != null;
+        boolean pendiente = haySeleccion && "pendiente".equalsIgnoreCase(contratoSeleccionado.getEstado());
+        boolean activo = haySeleccion && "activo".equalsIgnoreCase(contratoSeleccionado.getEstado());
+
+        btnAceptarPeticion.setDisable(!pendiente);
+        btnRechazarPeticion.setDisable(!pendiente);
+        btnRescindirContrato.setDisable(!activo);
     }
 
-    @FXML
-    public void btnRechazar(ActionEvent event) {
-        Contrato c = seleccionadoEn(EstadoContrato.PENDIENTE, "Solo se pueden rechazar peticiones pendientes.");
-        if (c == null || !ShowAlert.confirmar("Rechazar petición", "¿Rechazar la petición de " + c.getNombreCliente() + "?")) {
-            return;
-        }
-        try {
-            dao.rechazarPeticion(c.getId(), Sesion.getUsuario().getId());
-            ShowAlert.info("Petición rechazada", "La petición ha quedado cancelada.");
-            cargarContratos();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
-        }
-    }
-
-    @FXML
-    public void btnRescindir(ActionEvent event) {
-        Contrato c = seleccionadoEn(EstadoContrato.ACTIVO, "Solo se pueden rescindir contratos activos.");
-        if (c == null || !ShowAlert.confirmar("Rescindir contrato", "¿Seguro que deseas rescindir el contrato de "
-                + c.getNombreCliente() + "?")) {
-            return;
-        }
-        try {
-            dao.rescindirContrato(c.getId(), Sesion.getUsuario().getId());
-            ShowAlert.info("Contrato rescindido", "El contrato ha quedado cancelado.");
-            cargarContratos();
-        } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
-        }
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

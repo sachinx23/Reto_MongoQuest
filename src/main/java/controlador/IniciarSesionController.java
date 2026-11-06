@@ -18,6 +18,9 @@ public class IniciarSesionController {
 
     private static final Logger LOGGER = Logger.getLogger(IniciarSesionController.class.getName());
 
+    // Id del usuario que ha iniciado sesión (lo usan las pantallas de administrador de Eneko)
+    public static String idUsuarioActual;
+
     private final DAO dao = Sesion.getDao();
 
     @FXML private TextField txtUsuario;
@@ -42,6 +45,7 @@ public class IniciarSesionController {
                 return;
             }
             Sesion.setUsuario(usuario);
+            idUsuarioActual = usuario.getId();
 
             // Administrador va antes que Empleado porque un Administrador también es un Empleado
             if (usuario instanceof Administrador) {

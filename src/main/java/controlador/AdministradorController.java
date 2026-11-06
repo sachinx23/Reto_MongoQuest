@@ -1,79 +1,122 @@
 package controlador;
 
-import com.mycompany.reto_1.Reto_1;
-import exception.ShowAlert;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.application.Platform;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
- * Panel de administrador: cada opción del desplegable carga su pantalla dentro de panelContenido.
+ * Controlador de Administrador (incluye funciones de Empleado por herencia).
+ * @author eneko
  */
-public class AdministradorController {
-
-    private static final Logger LOGGER = Logger.getLogger(AdministradorController.class.getName());
-
-    @FXML private Label lblBienvenida;
-    @FXML private ComboBox<OpcionAdmin> cmbOpciones;
-    @FXML private StackPane panelContenido;
+public class AdministradorController implements Initializable {
 
     @FXML
-    public void initialize() {
-        lblBienvenida.setText("Admin: " + Sesion.getUsuario().getNombre());
-        cmbOpciones.setItems(FXCollections.observableArrayList(OpcionAdmin.values()));
-        // Al entrar se muestra el perfil; el desplegable siempre indica en qué apartado estás
-        cmbOpciones.setValue(OpcionAdmin.PERFIL);
-        mostrar(OpcionAdmin.PERFIL);
+    private ComboBox<String> cbOpcionesAdmin;
+    @FXML
+    private StackPane contenidoDinamico;
+    @FXML 
+    private Label lblNombreAdmin;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // Opciones propias de Admin + Opciones heredadas de Empleado
+        cbOpcionesAdmin.setItems(FXCollections.observableArrayList(
+                "Gestionar Plantilla",
+                "Gestionar Sucursal",
+                "Gestionar Tarifas",
+                "Gestionar Contratos",
+                "Tickets de Soporte",
+                "Ver Valoraciones",
+                "Cerrar Sesión"
+        ));
+        
+        cbOpcionesAdmin.getSelectionModel().select("Gestionar Plantilla");
+        cargarSubvista("/vista/GestionarPlantilla.fxml");
     }
 
-    private void mostrar(OpcionAdmin opcion) {
+    @FXML
+    public void cambiarSubVista(ActionEvent event) {
+        String seleccion = cbOpcionesAdmin.getValue();
+        if (seleccion == null) {
+            return;
+        }
+
+        switch (seleccion) {
+            // --- Opciones de Administrador ---
+            case "Gestionar Plantilla":
+                cargarSubvista("/vista/GestionarPlantilla.fxml");
+                break;
+            case "Gestionar Sucursal":
+                cargarSubvista("/vista/Sucursal.fxml");
+                break;
+            case "Gestionar Tarifas":
+                cargarSubvista("/vista/GestionarTarifas.fxml");
+                break;
+
+            // --- Opciones heredadas de Empleado ---
+            case "Gestionar Contratos":
+                cargarSubvista("/vista/GestionarContrato.fxml");
+                break;
+            case "Tickets de Soporte":
+                cargarSubvista("/vista/GestionarTickets.fxml");
+                break;
+            case "Ver Valoraciones":
+                cargarSubvista("/vista/GestionarValoraciones.fxml");
+                break;
+
+            // --- Sistema ---
+            case "Cerrar Sesión":
+                cerrarSesion(event);
+                break;
+        }
+    }
+
+    @FXML
+    public void setNombreUsuario(String nombre) {
+        if (lblNombreAdmin != null && nombre != null) {
+            lblNombreAdmin.setText("Admin: " + nombre);
+        }
+    }
+
+    private void cerrarSesion(ActionEvent event) {
         try {
-            panelContenido.getChildren().setAll(Reto_1.loadFXML(opcion.getVista()));
+            URL url = getClass().getResource("/vista/IniciarSesion.fxml");
+            Parent loginView = FXMLLoader.load(url);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(loginView);
+            stage.setScene(scene);
+            stage.show();
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error al abrir la pantalla " + opcion.getVista(), e);
-            ShowAlert.error("No se pudo abrir la pantalla.");
+            System.err.println("Error al volver a la pantalla de login: " + e.getMessage());
         }
     }
 
-    @FXML
-    public void cmbOpcionSeleccionada(ActionEvent event) {
-        if (cmbOpciones.getValue() != null) {
-            mostrar(cmbOpciones.getValue());
+    private void cargarSubvista(String rutaFXML) {
+        try {
+            URL url = getClass().getResource(rutaFXML);
+            if (url != null) {
+                Parent vista = FXMLLoader.load(url);
+                contenidoDinamico.getChildren().clear();
+                contenidoDinamico.getChildren().add(vista);
+            } else {
+                System.err.println("No se encontró el FXML en la ruta: " + rutaFXML);
+            }
+        } catch (IOException e) {
+            System.err.println("Error al cargar la subvista: " + e.getMessage());
+            e.printStackTrace();
         }
-    }
-
-    @FXML
-    public void btnMiPerfil(ActionEvent event) {
-        cmbOpciones.setValue(OpcionAdmin.PERFIL);
-        mostrar(OpcionAdmin.PERFIL);
-    }
-
-    @FXML
-    public void btnCerrarSesion(ActionEvent event) {
-        if (ShowAlert.confirmar("Salir", "¿Deseas salir del panel de administrador?")) {
-            Sesion.cerrar();
-            Reto_1.setRoot("IniciarSesion");
-        }
-    }
-
-    // Cierra la aplicación entera después de confirmar
-    @FXML
-    public void menuSalir(ActionEvent event) {
-        if (ShowAlert.confirmar("Salir", "¿Deseas cerrar la aplicación?")) {
-            LOGGER.info("Aplicación cerrada desde el menú");
-            Platform.exit();
-        }
-    }
-
-    @FXML
-    public void menuAcercaDe(ActionEvent event) {
-        ShowAlert.info("Acerca de", "Tel-ONDA 1.0\nReto MongoQuest\nSachin, Iñigo y Eneko Plaza");
     }
 }
