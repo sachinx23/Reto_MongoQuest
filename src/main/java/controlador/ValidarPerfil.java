@@ -96,8 +96,4 @@ public class ValidarPerfil {
         return error;
     }
 
-    // 5 números, como 48480
-    public static boolean codigoPostalValido(String codigoPostal) {
-        return codigoPostal.trim().matches("[0-9]{5}");
-    }
 }

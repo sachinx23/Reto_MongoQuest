@@ -5,7 +5,7 @@ import java.util.List;
 import modelo.Cliente;
 import modelo.Contrato;
 import modelo.Empleado;
-import modelo.EstadoContrato;
+import modelo.Contrato.EstadoContrato;
 import modelo.TicketSoporte;
 
 /**

@@ -23,7 +23,6 @@ public class LogApp extends Formatter {
     private static final Logger[] PAQUETES = {
         Logger.getLogger("com.mycompany.reto_1"),
         Logger.getLogger("controlador"),
-        Logger.getLogger("dao"),
         Logger.getLogger("daocliente"),
         Logger.getLogger("daoempleado")
     };
@@ -35,7 +34,7 @@ public class LogApp extends Formatter {
             FileHandler fichero = new FileHandler(FICHERO_LOG, true);
             fichero.setEncoding("UTF-8");
             fichero.setFormatter(new LogApp());
-            // El LOGGER de cada clase pasa sus mensajes al de su paquete (dao.implementacion.DAOImplementacion -> dao)
+            // El LOGGER de cada clase pasa sus mensajes al de su paquete (daocliente.implementacion.ClienteDAOImplementacion -> daocliente)
             for (Logger paquete : PAQUETES) {
                 paquete.addHandler(fichero);
             }

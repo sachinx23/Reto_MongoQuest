@@ -48,11 +48,4 @@ public class Cliente extends Usuario {
         this.dadoDeBaja = dadoDeBaja;
     }
 
-    // Para la tabla del administrador
-    public String getBajaTexto() {
-        if (dadoDeBaja) {
-            return "Dado de baja";
-        }
-        return "Activo";
-    }
 }

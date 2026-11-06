@@ -1,7 +1,7 @@
 package daoempleado.implementacion;
 
 import com.mongodb.MongoException;
-import dao.implementacion.DAOImplementacion;
+import daocliente.implementacion.ClienteDAOImplementacion;
 import daoempleado.EmpleadoDAO;
 import exception.ErrorMessages;
 import exception.OurException;
@@ -13,7 +13,7 @@ import modelo.Administrador;
 import modelo.Cliente;
 import modelo.Contrato;
 import modelo.Empleado;
-import modelo.EstadoContrato;
+import modelo.Contrato.EstadoContrato;
 import modelo.TicketSoporte;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -21,7 +21,7 @@ import org.bson.types.ObjectId;
 /**
  * Operaciones de MongoDB de la parte de empleado: perfil, validar tarifas, bajas y tickets.
  */
-public class EmpleadoDAOImplementacion extends DAOImplementacion implements EmpleadoDAO {
+public class EmpleadoDAOImplementacion extends ClienteDAOImplementacion implements EmpleadoDAO {
 
     private static final Logger LOGGER = Logger.getLogger(EmpleadoDAOImplementacion.class.getName());
 

@@ -17,7 +17,6 @@ public class Contrato {
     private String nombreTarifa;
     private double precio;
     private String nombreCliente;
-    private String dniCliente;
 
     public Contrato(String id, String telefono, EstadoContrato estado, String idCliente, String idTarifa, String idEmpleado, String fechaComienzo, String fechaFinalizacion) {
         this.id = id;
@@ -82,16 +81,6 @@ public class Contrato {
         return fechaComienzo;
     }
 
-    // Fecha con formato para la tabla, por ejemplo "30/10/2026"
-    public String getFechaComienzoTexto() {
-        // En MongoDB se guarda como "2026-10-30" y en la tabla se enseña como "30/10/2026"
-        String[] partes = fechaComienzo.split("-");
-        if (partes.length != 3) {
-            return fechaComienzo;
-        }
-        return partes[2] + "/" + partes[1] + "/" + partes[0];
-    }
-
     public void setFechaComienzo(String fechaComienzo) {
         this.fechaComienzo = fechaComienzo;
     }
@@ -143,11 +132,33 @@ public class Contrato {
         this.nombreCliente = nombreCliente;
     }
 
-    public String getDniCliente() {
-        return dniCliente;
-    }
+    // Estados por los que pasa un contrato
+    public enum EstadoContrato {
+        PENDIENTE("pendiente"),
+        ACTIVO("activo"),
+        BAJA_PENDIENTE("baja pendiente"),
+        CANCELADO("cancelado");
 
-    public void setDniCliente(String dniCliente) {
-        this.dniCliente = dniCliente;
+        // Texto que se guarda en MongoDB y que se ve en la tabla
+        private final String texto;
+
+        EstadoContrato(String texto) {
+            this.texto = texto;
+        }
+
+        @Override
+        public String toString() {
+            return texto;
+        }
+
+        // Pasa el texto guardado en MongoDB ("baja pendiente") a su valor del enum (BAJA_PENDIENTE)
+        public static EstadoContrato desdeTexto(String texto) {
+            for (EstadoContrato estado : values()) {
+                if (estado.texto.equals(texto)) {
+                    return estado;
+                }
+            }
+            return null;
+        }
     }
 }

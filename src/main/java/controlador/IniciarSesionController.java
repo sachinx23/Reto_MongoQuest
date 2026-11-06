@@ -1,7 +1,7 @@
 package controlador;
 
 import com.mycompany.reto_1.Reto_1;
-import dao.DAO;
+import daocliente.ClienteDAO;
 import exception.OurException;
 import exception.ShowAlert;
 import java.util.logging.Logger;
@@ -21,7 +21,7 @@ public class IniciarSesionController {
     // Id del usuario que ha iniciado sesión (lo usan las pantallas de administrador de Eneko)
     public static String idUsuarioActual;
 
-    private final DAO dao = Sesion.getDao();
+    private final ClienteDAO dao = Sesion.getClienteDao();
 
     @FXML private TextField txtUsuario;
     @FXML private PasswordField txtContrasena;

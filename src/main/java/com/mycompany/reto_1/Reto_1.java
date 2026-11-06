@@ -1,6 +1,7 @@
 package com.mycompany.reto_1;
 
-import dao.MongoConnection;
+import controlador.Sesion;
+import daocliente.MongoConnection;
 import exception.OurException;
 import exception.ShowAlert;
 import java.io.IOException;
@@ -72,6 +73,27 @@ public class Reto_1 extends Application {
         stage.centerOnScreen();
         stage.setMinWidth(stage.getWidth());
         stage.setMinHeight(stage.getHeight());
+    }
+
+    // Cerrar sesión (lo usan los paneles de cliente y empleado): pide confirmación y vuelve al login
+    public static void cerrarSesion(String panel) {
+        if (ShowAlert.confirmar("Salir", "¿Deseas salir del panel de " + panel + "?")) {
+            Sesion.cerrar();
+            setRoot("IniciarSesion");
+        }
+    }
+
+    // Menú Archivo > Salir: cierra la aplicación entera después de confirmar
+    public static void salir() {
+        if (ShowAlert.confirmar("Salir", "¿Deseas cerrar la aplicación?")) {
+            LOGGER.info("Aplicación cerrada desde el menú");
+            Platform.exit();
+        }
+    }
+
+    // Menú Ayuda > Acerca de
+    public static void acercaDe() {
+        ShowAlert.info("Acerca de", "Tel-ONDA 1.0\nReto MongoQuest\nSachin, Iñigo y Eneko Plaza");
     }
 
     // Abre una página web en el navegador del ordenador (por ejemplo, el mapa de una sucursal)

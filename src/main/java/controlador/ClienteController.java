@@ -6,7 +6,6 @@ import exception.OurException;
 import exception.ShowAlert;
 import java.time.LocalDate;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,7 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import modelo.Cliente;
 import modelo.Contrato;
-import modelo.EstadoContrato;
+import modelo.Contrato.EstadoContrato;
 import modelo.Tarifa;
 import modelo.TicketSoporte;
 import modelo.Valoracion;
@@ -202,10 +201,7 @@ public class ClienteController {
 
     @FXML
     public void btnCerrarSesion(ActionEvent event) {
-        if (ShowAlert.confirmar("Salir", "¿Deseas salir del panel de cliente?")) {
-            Sesion.cerrar();
-            Reto_1.setRoot("IniciarSesion");
-        }
+        Reto_1.cerrarSesion("cliente");
     }
 
     @FXML
@@ -475,17 +471,14 @@ public class ClienteController {
         txtValoracion.clear();
     }
 
-    // Cierra la aplicación entera después de confirmar
+    // Menú Archivo > Salir y Ayuda > Acerca de
     @FXML
     public void menuSalir(ActionEvent event) {
-        if (ShowAlert.confirmar("Salir", "¿Deseas cerrar la aplicación?")) {
-            LOGGER.info("Aplicación cerrada desde el menú");
-            Platform.exit();
-        }
+        Reto_1.salir();
     }
 
     @FXML
     public void menuAcercaDe(ActionEvent event) {
-        ShowAlert.info("Acerca de", "Tel-ONDA 1.0\nReto MongoQuest\nSachin, Iñigo y Eneko Plaza");
+        Reto_1.acercaDe();
     }
 }

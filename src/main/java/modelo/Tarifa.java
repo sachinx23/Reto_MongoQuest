@@ -69,14 +69,6 @@ public class Tarifa {
         return activa;
     }
 
-    // Para la tabla del administrador: "Sí" o "No"
-    public String getActivaTexto() {
-        if (activa) {
-            return "Sí";
-        }
-        return "No";
-    }
-
     public void setActiva(boolean activa) {
         this.activa = activa;
     }

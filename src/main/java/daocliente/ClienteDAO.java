@@ -6,12 +6,18 @@ import modelo.Cliente;
 import modelo.Contrato;
 import modelo.Tarifa;
 import modelo.TicketSoporte;
+import modelo.Usuario;
 import modelo.Valoracion;
 
 /**
- * Operaciones con la base de datos de la parte de cliente.
+ * Operaciones con la base de datos de la parte de cliente, más el login y el registro (comunes a todos).
  */
 public interface ClienteDAO {
+
+    // Devuelve un Cliente, Empleado o Administrador, o null si los datos no son correctos
+    Usuario login(String nombreUsuario, String contrasena) throws OurException;
+
+    void insertarCliente(Cliente cliente) throws OurException;
 
     void actualizarCliente(Cliente cliente) throws OurException;
 
