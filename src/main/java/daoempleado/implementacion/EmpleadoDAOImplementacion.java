@@ -114,10 +114,10 @@ public class EmpleadoDAOImplementacion extends ClienteDAOImplementacion implemen
     @Override
     public void aprobarBaja(String idCliente, String idEmpleado) throws OurException {
         try {
-            // 1. Mirar si después de la baja le quedará algún contrato (uno que no esté cancelado ni en baja pendiente)
+            // 1. Mirar si después de la baja le quedará algún contrato en vigor (activo o pendiente de validar)
             boolean quedanContratos = false;
             for (Contrato c : buscarContratos(new Document("idCliente", new ObjectId(idCliente)))) {
-                if (c.getEstado() != EstadoContrato.CANCELADO && c.getEstado() != EstadoContrato.BAJA_PENDIENTE) {
+                if (c.getEstado() == EstadoContrato.ACTIVO || c.getEstado() == EstadoContrato.PENDIENTE) {
                     quedanContratos = true;
                 }
             }
@@ -169,7 +169,7 @@ public class EmpleadoDAOImplementacion extends ClienteDAOImplementacion implemen
     public void resolverTicket(String idTicket, String idEmpleado) throws OurException {
         try {
             Document cambios = new Document();
-            cambios.put("estado", "resuelto");
+            cambios.put("estado", "cerrado");
             cambios.put("idEmpleado", new ObjectId(idEmpleado));
             if (!modificar(COL_TICKETS, idTicket, cambios)) {
                 throw new OurException(ErrorMessages.RESOLVER_TICKET);

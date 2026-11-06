@@ -137,7 +137,10 @@ public class Contrato {
         PENDIENTE("pendiente"),
         ACTIVO("activo"),
         BAJA_PENDIENTE("baja pendiente"),
-        CANCELADO("cancelado");
+        CANCELADO("cancelado"),
+        // Estados que pone la parte de administrador
+        RECHAZADO("rechazado"),
+        RESCINDIDO("rescindido");
 
         // Texto que se guarda en MongoDB y que se ve en la tabla
         private final String texto;

@@ -38,7 +38,7 @@ public class ClienteDAOImplementacion implements ClienteDAO {
     protected static final String COL_CLIENTES = "Clientes";
     protected static final String COL_TARIFAS = "Tarifas";
     protected static final String COL_CONTRATOS = "Contratos";
-    protected static final String COL_TICKETS = "TicketsSoportes";
+    protected static final String COL_TICKETS = "TicketsSoporte";
     protected static final String COL_VALORACIONES = "Valoraciones";
 
     protected MongoCollection<Document> coleccion(String nombre) throws OurException {
@@ -94,7 +94,7 @@ public class ClienteDAOImplementacion implements ClienteDAO {
     @Override
     public void insertarCliente(Cliente cliente) throws OurException {
         try {
-            if (coleccion(COL_CLIENTES).find(new Document("DNI", cliente.getDni())).first() != null) {
+            if (coleccion(COL_CLIENTES).find(new Document("dni", cliente.getDni())).first() != null) {
                 LOGGER.info("Registro rechazado, DNI repetido: " + cliente.getDni());
                 throw new OurException(ErrorMessages.DNI_EXISTS);
             }
@@ -106,8 +106,10 @@ public class ClienteDAOImplementacion implements ClienteDAO {
             Document d = new Document();
             d.put("nombreUsuario", cliente.getNombreUsuario());
             d.put("nombre", cliente.getNombre());
+            d.put("apellidos", "");
+            d.put("rol", "Cliente");
             d.put("contrasena", cliente.getContrasena());
-            d.put("DNI", cliente.getDni());
+            d.put("dni", cliente.getDni());
             d.put("correo", cliente.getCorreo());
             d.put("telefono", cliente.getTelefono());
             d.put("direccion", cliente.getDireccion());
@@ -134,6 +136,10 @@ public class ClienteDAOImplementacion implements ClienteDAO {
 
             // La tarifa está embebida dentro del contrato (se comprueba que de verdad sea un documento)
             Object tarifa = d.get("tarifa");
+            if (!(tarifa instanceof Document)) {
+                // Los contratos sin la tarifa embebida (por ejemplo los de la parte de administrador) la buscan en Tarifas
+                tarifa = buscarPorId(COL_TARIFAS, d.get("idTarifa"));
+            }
             if (tarifa instanceof Document) {
                 c.setNombreTarifa(texto((Document) tarifa, "nombreTarifa"));
                 c.setPrecio(numero((Document) tarifa, "precio"));
@@ -180,7 +186,7 @@ public class ClienteDAOImplementacion implements ClienteDAO {
 
     protected Cliente documentoACliente(Document d) {
         Cliente c = new Cliente(idTexto(d, "_id"), texto(d, "nombre"), texto(d, "nombreUsuario"), texto(d, "contrasena"),
-                texto(d, "correo"), texto(d, "cuentaBancaria"), texto(d, "DNI"), texto(d, "telefono"), texto(d, "direccion"));
+                texto(d, "correo"), texto(d, "cuentaBancaria"), texto(d, "dni"), texto(d, "telefono"), texto(d, "direccion"));
         c.setDadoDeBaja(booleano(d, "dadoDeBaja", false));
         return c;
     }
@@ -193,7 +199,7 @@ public class ClienteDAOImplementacion implements ClienteDAO {
     protected Tarifa documentoATarifa(Document d) {
         // Si no tiene el campo "activa", se considera activa
         return new Tarifa(idTexto(d, "_id"), texto(d, "nombreTarifa"), numero(d, "precio"), texto(d, "detalles"),
-                texto(d, "tipotarifa"), booleano(d, "activa", true));
+                texto(d, "tipoTarifa"), booleano(d, "activa", true));
     }
 
     protected Empleado documentoAEmpleado(Document d) {
@@ -278,14 +284,14 @@ public class ClienteDAOImplementacion implements ClienteDAO {
                 throw new OurException(ErrorMessages.USER_EXISTS);
             }
             // El DNI tampoco puede ser el de otro cliente
-            Document otro = coleccion(COL_CLIENTES).find(new Document("DNI", cliente.getDni())).first();
+            Document otro = coleccion(COL_CLIENTES).find(new Document("dni", cliente.getDni())).first();
             if (otro != null && !idTexto(otro, "_id").equals(cliente.getId())) {
                 throw new OurException(ErrorMessages.DNI_EXISTS);
             }
             Document cambios = new Document();
             cambios.put("nombre", cliente.getNombre());
             cambios.put("nombreUsuario", cliente.getNombreUsuario());
-            cambios.put("DNI", cliente.getDni());
+            cambios.put("dni", cliente.getDni());
             cambios.put("correo", cliente.getCorreo());
             cambios.put("direccion", cliente.getDireccion());
             cambios.put("telefono", cliente.getTelefono());
@@ -399,6 +405,8 @@ public class ClienteDAOImplementacion implements ClienteDAO {
     public void insertarTicket(TicketSoporte ticket) throws OurException {
         try {
             Document d = new Document();
+            // "incidencia": así lo ve también la pantalla de tickets del administrador
+            d.put("tipo", "incidencia");
             d.put("asunto", ticket.getAsunto());
             d.put("descripcion", ticket.getDescripcion());
             d.put("fechaCreacion", ticket.getFechaCreacion());

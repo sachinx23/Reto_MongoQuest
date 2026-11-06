@@ -21,7 +21,7 @@ public class Reto_1 extends Application {
 
     // Dirección de MongoDB y nombre de la base de datos
     private static final String URI = "mongodb://localhost:27017/?serverSelectionTimeoutMS=5000";
-    private static final String BASE_DATOS = "Tel--ONDA";
+    private static final String BASE_DATOS = "Tel-ONDA";
 
     private static final Logger LOGGER = Logger.getLogger(Reto_1.class.getName());
 
