@@ -1,61 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="500.0" prefWidth="640.0" spacing="10.0" stylesheets="@../css/Estilos.css" styleClass="fondo-pantalla" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.IniciarSesionController">
-   <padding>
-      <Insets bottom="25.0" left="40.0" right="40.0" top="25.0" />
-   </padding>
+<AnchorPane prefHeight="550.0" prefWidth="800.0" 
+            styleClass="fondo-pantalla" 
+            xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="controlador.IniciarSesionController">
+   <stylesheets>
+      <URL value="@../css/Estilos.css" />
+   </stylesheets>
    <children>
-      <!-- Tarjeta blanca con el formulario (mismo estilo que las pantallas de administrador) -->
-      <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" spacing="10.0" styleClass="card">
-         <padding>
-            <Insets bottom="25.0" left="40.0" right="40.0" top="25.0" />
-         </padding>
+      
+      <!-- CONTENEDOR CENTRADO RESPONSIVO -->
+      <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <ImageView fitHeight="80.0" preserveRatio="true" smooth="true">
-               <image>
-                  <Image url="@../img/logo.png" />
-               </image>
-            </ImageView>
-            <Label style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #093B7B;" text="Tel-ONDA" />
-            <Label text="Usuario">
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="txtUsuario" maxWidth="250.0">
-               <tooltip>
-                  <Tooltip text="Tu nombre de usuario" />
-               </tooltip>
-            </TextField>
-            <Label text="Contraseña" />
-            <PasswordField fx:id="txtContrasena" maxWidth="250.0" />
-            <Label fx:id="lblMensajeError" textFill="RED" wrapText="true" />
-            <HBox alignment="CENTER" spacing="40.0">
+            
+            <!-- TARJETA DE LOGIN -->
+            <VBox alignment="CENTER" maxWidth="420.0" spacing="16.0" styleClass="card">
                <children>
-                  <Button styleClass="btn-primary" fx:id="btnIniciarSesion" defaultButton="true" mnemonicParsing="true" onAction="#btnIniciarSesion" prefWidth="170.0" text="_Iniciar sesión">
-                     <tooltip>
-                        <Tooltip text="Entrar con tu usuario y contraseña (Enter o Alt+I)" />
-                     </tooltip>
-                  </Button>
-                  <Button styleClass="btn-secondary" fx:id="btnRegistrarse" mnemonicParsing="true" onAction="#btnRegistrarse" prefWidth="170.0" text="_Registrarse">
-                     <tooltip>
-                        <Tooltip text="Crear una cuenta de cliente nueva (Alt+R)" />
-                     </tooltip>
-                  </Button>
+                  
+                  <!-- LOGOTIPO Y MENSAJE DE BIENVENIDA -->
+                  <VBox alignment="CENTER" spacing="6.0">
+                     <children>
+                        <Label styleClass="titulo-vista" text="Tel-ONDA" />
+                        <Label styleClass="label" text="Acceso al portal de gestión y servicios" />
+                     </children>
+                  </VBox>
+
+                  <!-- CAMPOS DE ENTRADA -->
+                  <VBox spacing="12.0" styleClass="form-box">
+                     <children>
+                        <VBox spacing="4.0">
+                           <children>
+                              <Label styleClass="label-bold" text="Usuario:" />
+                              <TextField fx:id="txtUsuario" promptText="Introduce tu usuario" styleClass="text-field" />
+                           </children>
+                        </VBox>
+
+                        <VBox spacing="4.0">
+                           <children>
+                              <Label styleClass="label-bold" text="Contraseña:" />
+                              <PasswordField fx:id="txtContrasena" promptText="Introduce tu contraseña" styleClass="password-field" />
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
+                  </VBox>
+
+                  <!-- MENSAJE DE ERROR -->
+                  <Label fx:id="lblMensajeError" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="label-bold" textFill="#e11d48" wrapText="true" />
+
+                  <!-- BOTONES DE ACCIÓN -->
+                  <HBox alignment="CENTER" spacing="12.0">
+                     <children>
+                        <Button maxWidth="1.7976931348623157E308" onAction="#btnIniciarSesion" styleClass="btn-primary" text="Iniciar Sesión" HBox.hgrow="ALWAYS" />
+                        <Button maxWidth="1.7976931348623157E308" onAction="#btnRegistrarse" styleClass="btn-secondary" text="Registrarse" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+
                </children>
-            </HBox>
+               <padding>
+                  <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+               </padding>
+            </VBox>
+
          </children>
-      </VBox>
+      </StackPane>
+
    </children>
-</VBox>
+</AnchorPane>

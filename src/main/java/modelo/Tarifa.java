@@ -1,9 +1,15 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package modelo;
 
-import java.util.Locale;
-
+/**
+ *
+ * @author eneko
+ */
 public class Tarifa {
-
+    
     private String id;
     private String nombreTarifa;
     private double precio;
@@ -13,6 +19,14 @@ public class Tarifa {
 
     public Tarifa(String id, String nombreTarifa, double precio, String detalles, String tipoTarifa, boolean activa) {
         this.id = id;
+        this.nombreTarifa = nombreTarifa;
+        this.precio = precio;
+        this.detalles = detalles;
+        this.tipoTarifa = tipoTarifa;
+        this.activa = activa;
+    }
+    
+        public Tarifa(String nombreTarifa, double precio, String detalles, String tipoTarifa, boolean activa) {
         this.nombreTarifa = nombreTarifa;
         this.precio = precio;
         this.detalles = detalles;
@@ -40,11 +54,6 @@ public class Tarifa {
         return precio;
     }
 
-    // Precio con formato para la tabla, por ejemplo "40,00 €"
-    public String getPrecioTexto() {
-        return String.format(Locale.forLanguageTag("es-ES"), "%.2f €", precio);
-    }
-
     public void setPrecio(double precio) {
         this.precio = precio;
     }
@@ -65,7 +74,7 @@ public class Tarifa {
         this.tipoTarifa = tipoTarifa;
     }
 
-    public boolean isActiva() {
+    public boolean getActiva() {
         return activa;
     }
 
@@ -73,12 +82,8 @@ public class Tarifa {
         this.activa = activa;
     }
 
-    // Tarifa nueva (todavía sin id): la usa la parte de administrador
-    public Tarifa(String nombreTarifa, double precio, String detalles, String tipoTarifa, boolean activa) {
-        this(null, nombreTarifa, precio, detalles, tipoTarifa, activa);
-    }
-
-    public boolean getActiva() {
-        return activa;
+    @Override
+    public String toString() {
+        return "Tarifa{" + "id=" + id + ", nombreTarifa=" + nombreTarifa + ", precio=" + precio + ", detalles=" + detalles + ", tipoTarifa=" + tipoTarifa + ", activa=" + activa + '}';
     }
 }

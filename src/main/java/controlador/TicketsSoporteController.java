@@ -1,7 +1,7 @@
 package controlador;
 
-import daoadmin.TicketDAO;
-import daoadmin.implementacion.TikcetDAOImpl;
+import DAO.TicketDAO;
+import DAO.implementacion.TikcetDAOImpl;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;

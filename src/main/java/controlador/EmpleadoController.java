@@ -1,86 +1,112 @@
 package controlador;
 
-import com.mycompany.reto_1.Reto_1;
-import exception.ShowAlert;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
- * Panel de empleado: cabecera con el desplegable. Cada apartado es una pantalla (FXML) con su controlador
- * que se carga dentro de panelContenido, igual que en el panel de administrador.
+ * Controlador de Empleado (subconjunto de las funciones del Administrador).
+ *
+ * @author eneko
  */
-public class EmpleadoController {
-
-    private static final Logger LOGGER = Logger.getLogger(EmpleadoController.class.getName());
-
-    // La guarda para que Mi Perfil pueda cambiar el nombre de la cabecera después de modificarlo
-    private static Label bienvenida;
-
-    @FXML private Label lblBienvenida;
-    @FXML private ComboBox<OpcionEmpleado> cmbOpciones;
-    @FXML private StackPane panelContenido;
+public class EmpleadoController implements Initializable {
 
     @FXML
-    public void initialize() {
-        bienvenida = lblBienvenida;
-        actualizarBienvenida();
-        cmbOpciones.setItems(FXCollections.observableArrayList(OpcionEmpleado.values()));
-        // Al entrar se muestra el perfil; el desplegable siempre indica en qué apartado estás
-        cmbOpciones.setValue(OpcionEmpleado.PERFIL);
-        mostrar(OpcionEmpleado.PERFIL);
+    private ComboBox<String> cbOpcionesEmpleado;
+    @FXML
+    private StackPane contenidoDinamico;
+    @FXML
+    private Label lblNombreEmpleado;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        cbOpcionesEmpleado.setItems(FXCollections.observableArrayList(
+                "Crear Cliente",
+                "Gestionar Contratos",
+                "Tickets de Soporte",
+                "Ver Sucursales",
+                "Ver Valoraciones",
+                "Cerrar Sesión"
+        ));
+
+        cbOpcionesEmpleado.getSelectionModel().select("Gestionar Contratos");
+        cargarSubvista("/vista/GestionarContrato.fxml");
     }
 
-    public static void actualizarBienvenida() {
-        bienvenida.setText("Bienvenido/a " + Sesion.getUsuario().getNombre());
+    @FXML
+    public void cambiarSubVista(ActionEvent event) {
+        String seleccion = cbOpcionesEmpleado.getValue();
+        if (seleccion == null) {
+            return;
+        }
+
+        switch (seleccion) {
+            case "Crear Cliente":
+                cargarSubvista("/vista/Registrarse.fxml");
+                break;
+            case "Gestionar Contratos":
+                cargarSubvista("/vista/GestionarContrato.fxml");
+                break;
+            case "Tickets de Soporte":
+                cargarSubvista("/vista/GestionarTickets.fxml");
+                break;
+            case "Ver Sucursales":
+                cargarSubvista("/vista/Sucursal.fxml");
+                break;
+            case "Ver Valoraciones":
+                cargarSubvista("/vista/GestionarValoraciones.fxml");
+                break;
+            case "Cerrar Sesión":
+                cerrarSesion(event);
+                break;
+        }
     }
 
-    // Carga la pantalla del apartado dentro del panel
-    private void mostrar(OpcionEmpleado opcion) {
+    public void setNombreUsuario(String nombre) {
+        if (lblNombreEmpleado != null && nombre != null) {
+            lblNombreEmpleado.setText("Empleado: " + nombre);
+        }
+    }
+
+    private void cerrarSesion(ActionEvent event) {
         try {
-            panelContenido.getChildren().setAll(Reto_1.loadFXML(opcion.getVista()));
+            URL url = getClass().getResource("/vista/IniciarSesion.fxml");
+            Parent loginView = FXMLLoader.load(url);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(loginView);
+            stage.setScene(scene);
+            stage.show();
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error al abrir la pantalla " + opcion.getVista(), e);
-            ShowAlert.error("No se pudo abrir la pantalla.");
+            System.err.println("Error al volver a la pantalla de login: " + e.getMessage());
         }
     }
 
-    @FXML
-    public void cmbOpcionSeleccionada(ActionEvent event) {
-        if (cmbOpciones.getValue() != null) {
-            mostrar(cmbOpciones.getValue());
+    private void cargarSubvista(String rutaFXML) {
+        try {
+            URL url = getClass().getResource(rutaFXML);
+            if (url != null) {
+                Parent vista = FXMLLoader.load(url);
+                contenidoDinamico.getChildren().clear();
+                contenidoDinamico.getChildren().add(vista);
+            } else {
+                System.err.println("No se encontró el FXML en la ruta: " + rutaFXML);
+            }
+        } catch (IOException e) {
+            System.err.println("Error al cargar la subvista: " + e.getMessage());
+            e.printStackTrace();
         }
-    }
-
-    @FXML
-    public void btnMiPerfil(ActionEvent event) {
-        if (cmbOpciones.getValue() == OpcionEmpleado.PERFIL) {
-            // Ya estaba elegido: el desplegable no avisa, así que se vuelve a cargar a mano
-            mostrar(OpcionEmpleado.PERFIL);
-        } else {
-            cmbOpciones.setValue(OpcionEmpleado.PERFIL);
-        }
-    }
-
-    @FXML
-    public void btnCerrarSesion(ActionEvent event) {
-        Reto_1.cerrarSesion("empleado");
-    }
-
-    // Menú Archivo > Salir y Ayuda > Acerca de
-    @FXML
-    public void menuSalir(ActionEvent event) {
-        Reto_1.salir();
-    }
-
-    @FXML
-    public void menuAcercaDe(ActionEvent event) {
-        Reto_1.acercaDe();
     }
 }

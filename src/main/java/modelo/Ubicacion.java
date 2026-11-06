@@ -45,7 +45,7 @@ public class Ubicacion {
 
     @Override
     public String toString() {
-        return "Ubicacion{" + "direccion=" + direccion + ", localidad=" + localidad + ", codigoPostal=" + codigoPostal + '}';
+        return  direccion ;
     }
     
     

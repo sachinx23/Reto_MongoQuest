@@ -7,25 +7,21 @@ import daocliente.implementacion.TarifaDAOImplementacion;
 import exception.OurException;
 import exception.ShowAlert;
 import java.time.LocalDate;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import modelo.Cliente;
-import modelo.Contrato;
-import modelo.Contrato.EstadoContrato;
-import modelo.Tarifa;
+import modelocliente.Cliente;
+import modelocliente.Contrato;
+import modelocliente.Contrato.EstadoContrato;
+import modelocliente.Tarifa;
 
 /**
  * Mis Tarifas: contratar una tarifa o borrar la petición.
  */
 public class ClienteTarifasController {
-
-    private static final Logger LOGGER = Logger.getLogger(ClienteTarifasController.class.getName());
-
     private final TarifaDAO tarifaDAO = new TarifaDAOImplementacion();
     private final ContratoDAO contratoDAO = new ContratoDAOImplementacion();
     private Cliente cliente;
@@ -36,6 +32,9 @@ public class ClienteTarifasController {
     @FXML private TableColumn<Tarifa, String> colTarifaDetalles;
     @FXML private TableColumn<Tarifa, String> colTarifaTipo;
 
+    /**
+     * Se ejecuta al abrir la pantalla: prepara la tabla y carga los datos.
+     */
     @FXML
     public void initialize() {
         cliente = (Cliente) Sesion.getUsuario();
@@ -46,14 +45,22 @@ public class ClienteTarifasController {
         cargarTarifas();
     }
 
+    /**
+     * Recarga la tabla con las tarifas activas.
+     */
     private void cargarTarifas() {
         try {
             tablaTarifas.setItems(FXCollections.observableArrayList(tarifaDAO.obtenerTarifas()));
         } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+            ShowAlert.error(e.getMessage());
         }
     }
 
+    /**
+     * Pide la tarifa elegida: crea un contrato pendiente de validar por un empleado.
+     *
+     * @param event evento de la acción (botón, menú o desplegable)
+     */
     @FXML
     public void btnCambiarTarifa(ActionEvent event) {
         Tarifa tarifa = tablaTarifas.getSelectionModel().getSelectedItem();
@@ -66,6 +73,7 @@ public class ClienteTarifasController {
             for (Contrato c : contratoDAO.obtenerContratosCliente(cliente.getId())) {
                 boolean mismaTarifa = tarifa.getId().equals(c.getIdTarifa());
                 boolean enVigor = c.getEstado() == EstadoContrato.PENDIENTE
+                        || c.getEstado() == EstadoContrato.PENDIENTE_FIRMA
                         || c.getEstado() == EstadoContrato.ACTIVO;
                 if (mismaTarifa && enVigor) {
                     ShowAlert.info("Aviso", "Ya tienes la tarifa " + tarifa.getNombreTarifa() + " pedida o contratada.");
@@ -73,7 +81,7 @@ public class ClienteTarifasController {
                 }
             }
         } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+            ShowAlert.error(e.getMessage());
             return;
         }
         if (!ShowAlert.confirmar("Cambio de tarifa", "¿Estás seguro de que deseas contratar la tarifa " + tarifa.getNombreTarifa() + "?")) {
@@ -90,10 +98,15 @@ public class ClienteTarifasController {
             ShowAlert.info("Petición enviada", "Tu petición de la tarifa " + tarifa.getNombreTarifa()
                     + " está pendiente de validar por un empleado.");
         } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+            ShowAlert.error(e.getMessage());
         }
     }
 
+    /**
+     * Borra la petición pendiente de la tarifa elegida, después de confirmarlo.
+     *
+     * @param event evento de la acción (botón, menú o desplegable)
+     */
     @FXML
     public void btnEliminarTarifa(ActionEvent event) {
         Tarifa tarifa = tablaTarifas.getSelectionModel().getSelectedItem();
@@ -113,7 +126,7 @@ public class ClienteTarifasController {
                 ShowAlert.info("Aviso", "No tienes ninguna petición pendiente de esa tarifa.");
             }
         } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+            ShowAlert.error(e.getMessage());
         }
     }
 }

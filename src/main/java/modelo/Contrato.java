@@ -1,24 +1,25 @@
 package modelo;
 
-import java.util.Locale;
-
+/**
+ * Modelo de datos para la entidad Contrato en la aplicación Tel-ONDA.
+ * @author eneko
+ */
 public class Contrato {
-
     private String id;
     private String telefono;
-    private EstadoContrato estado;
+    private String estado;
     private String idCliente;
     private String idTarifa;
     private String idEmpleado;
     private String fechaComienzo;
-    private String fechaFinalizacion;
+    private String fechaFin;
 
-    // Datos de la tarifa embebida y del cliente, para enseñarlos en las tablas
-    private String nombreTarifa;
-    private double precio;
-    private String nombreCliente;
+    // --- Constructor por defecto (OBLIGATORIO para el mapeo del DAO) ---
+    public Contrato() {
+    }
 
-    public Contrato(String id, String telefono, EstadoContrato estado, String idCliente, String idTarifa, String idEmpleado, String fechaComienzo, String fechaFinalizacion) {
+    // --- Constructor completo ---
+    public Contrato(String id, String telefono, String estado, String idCliente, String idTarifa, String idEmpleado, String fechaComienzo, String fechaFin) {
         this.id = id;
         this.telefono = telefono;
         this.estado = estado;
@@ -26,8 +27,10 @@ public class Contrato {
         this.idTarifa = idTarifa;
         this.idEmpleado = idEmpleado;
         this.fechaComienzo = fechaComienzo;
-        this.fechaFinalizacion = fechaFinalizacion;
+        this.fechaFin = fechaFin;
     }
+
+    // --- Getters y Setters ---
 
     public String getId() {
         return id;
@@ -45,11 +48,11 @@ public class Contrato {
         this.telefono = telefono;
     }
 
-    public EstadoContrato getEstado() {
+    public String getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoContrato estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 
@@ -85,99 +88,16 @@ public class Contrato {
         this.fechaComienzo = fechaComienzo;
     }
 
-    public String getFechaFinalizacion() {
-        return fechaFinalizacion;
-    }
-
-    // Fecha con formato para la tabla, por ejemplo "30/10/2027"
-    public String getFechaFinalizacionTexto() {
-        // En MongoDB se guarda como "2026-10-30" y en la tabla se enseña como "30/10/2026"
-        String[] partes = fechaFinalizacion.split("-");
-        if (partes.length != 3) {
-            return fechaFinalizacion;
-        }
-        return partes[2] + "/" + partes[1] + "/" + partes[0];
-    }
-
-    public void setFechaFinalizacion(String fechaFinalizacion) {
-        this.fechaFinalizacion = fechaFinalizacion;
-    }
-
-    public String getNombreTarifa() {
-        return nombreTarifa;
-    }
-
-    public void setNombreTarifa(String nombreTarifa) {
-        this.nombreTarifa = nombreTarifa;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    // Precio con formato para la tabla, por ejemplo "40,00 €"
-    public String getPrecioTexto() {
-        return String.format(Locale.forLanguageTag("es-ES"), "%.2f €", precio);
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
-    }
-
-    public String getNombreCliente() {
-        return nombreCliente;
-    }
-
-    public void setNombreCliente(String nombreCliente) {
-        this.nombreCliente = nombreCliente;
-    }
-
-    public Contrato() {
-    }
-
-    // La parte de administrador trabaja con el estado como texto ("pendiente", "activo"...)
-    public void setEstado(String estado) {
-        this.estado = EstadoContrato.desdeTexto(estado);
-    }
-
     public String getFechaFin() {
-        return fechaFinalizacion;
+        return fechaFin;
     }
 
     public void setFechaFin(String fechaFin) {
-        this.fechaFinalizacion = fechaFin;
+        this.fechaFin = fechaFin;
     }
 
-    // Estados por los que pasa un contrato
-    public enum EstadoContrato {
-        PENDIENTE("pendiente"),
-        ACTIVO("activo"),
-        BAJA_PENDIENTE("baja pendiente"),
-        CANCELADO("cancelado"),
-        // Estados que pone la parte de administrador
-        RECHAZADO("rechazado"),
-        RESCINDIDO("rescindido");
-
-        // Texto que se guarda en MongoDB y que se ve en la tabla
-        private final String texto;
-
-        EstadoContrato(String texto) {
-            this.texto = texto;
-        }
-
-        @Override
-        public String toString() {
-            return texto;
-        }
-
-        // Pasa el texto guardado en MongoDB ("baja pendiente") a su valor del enum (BAJA_PENDIENTE)
-        public static EstadoContrato desdeTexto(String texto) {
-            for (EstadoContrato estado : values()) {
-                if (estado.texto.equals(texto)) {
-                    return estado;
-                }
-            }
-            return null;
-        }
+    @Override
+    public String toString() {
+        return "Contrato{" + "id=" + id + ", telefono=" + telefono + ", estado=" + estado + ", idCliente=" + idCliente + ", idTarifa=" + idTarifa + ", idEmpleado=" + idEmpleado + ", fechaComienzo=" + fechaComienzo + ", fechaFin=" + fechaFin + '}';
     }
 }

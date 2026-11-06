@@ -21,7 +21,7 @@
               <shadedClassifierName>ejecutable</shadedClassifierName>
               <transformers>
                 <transformer>
-                  <mainClass>com.mycompany.reto_1.Launcher</mainClass>
+                  <mainClass>com.mycompany.reto_1.App</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -41,6 +41,6 @@
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <exec.mainClass>com.mycompany.reto_1.Reto_1</exec.mainClass>
+    <exec.mainClass>com.mycompany.reto_1.App</exec.mainClass>
   </properties>
 </project>

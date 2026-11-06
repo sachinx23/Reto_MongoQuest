@@ -15,24 +15,19 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import modelo.Contrato;
-import daoadmin.ContratoDAO;
-import daoadmin.implementacion.ContratoDaoImpl;
+import DAO.ContratoDAO;
+import DAO.implementacion.ContratoDaoImpl;
 
-/**
- * Controlador para la gestión de contratos por parte de los empleados.
- *
- * @author eneko
- */
 public class GestionarContratoController implements Initializable {
 
-    // Filtros de Búsqueda
     @FXML
     private TextField txtFiltroTelefono;
     @FXML
     private ComboBox<String> comboFiltroEstado;
 
-    // Tabla de Contratos y Solicitudes 
     @FXML
     private TableView<Contrato> tablaContratos;
     @FXML
@@ -52,7 +47,6 @@ public class GestionarContratoController implements Initializable {
     @FXML
     private TableColumn<Contrato, String> colFechaFin;
 
-    // Botones de Acción 
     @FXML
     private Button btnAceptarPeticion;
     @FXML
@@ -67,15 +61,16 @@ public class GestionarContratoController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Configuración del ComboBox de filtro por estado
-        comboFiltroEstado.setItems(FXCollections.observableArrayList(
+        ObservableList<String> estados = FXCollections.observableArrayList(
                 "Todos",
                 "pendiente",
+                "pendiente de firma",
                 "activo",
                 "rescindido",
                 "caducado",
                 "rechazado"
-        ));
+        );
+        comboFiltroEstado.setItems(estados);
         comboFiltroEstado.setValue("Todos");
 
         colIdContrato.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -87,17 +82,17 @@ public class GestionarContratoController implements Initializable {
         colFechaInicio.setCellValueFactory(new PropertyValueFactory<>("fechaComienzo"));
         colFechaFin.setCellValueFactory(new PropertyValueFactory<>("fechaFin"));
 
-        // Carga inicial de datos desde MongoDB
         cargarContratos();
 
-        // Listener para capturar la selección del usuario en la tabla
-        tablaContratos.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
-            contratoSeleccionado = newSel;
-            actualizarEstadoBotones();
+        tablaContratos.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Contrato>() {
+            @Override
+            public void changed(ObservableValue<? extends Contrato> obs, Contrato oldSel, Contrato newSel) {
+                contratoSeleccionado = newSel;
+                actualizarEstadoBotones();
+            }
         });
     }
 
-    // Único método para cargar contratos en la tabla
     public void cargarContratos() {
         List<Contrato> lista = contratoDAO.listarContratos();
         if (lista != null) {
@@ -107,7 +102,6 @@ public class GestionarContratoController implements Initializable {
         limpiarSeleccion();
     }
 
-    //filtrar contratos
     @FXML
     private void filtrarContratos(ActionEvent event) {
         String tel = txtFiltroTelefono.getText();
@@ -116,22 +110,19 @@ public class GestionarContratoController implements Initializable {
         tablaContratos.setItems(FXCollections.observableArrayList(filtrados));
         limpiarSeleccion();
     }
-    
-    
-// aceptar peticiones
+
     @FXML
     private void aceptarPeticion(ActionEvent event) {
         if (contratoSeleccionado != null) {
             if (contratoDAO.aprobarContrato(contratoSeleccionado, IniciarSesionController.idUsuarioActual)) {
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Contrato aprobado correctamente.");
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa confirmada. Contrato pendiente de firma por el cliente.");
                 cargarContratos();
             } else {
-                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo aprobar el contrato.");
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo confirmar la tarifa.");
             }
         }
     }
 
-    // rechazar peticion
     @FXML
     private void rechazarPeticion(ActionEvent event) {
         if (contratoSeleccionado != null) {
@@ -144,7 +135,6 @@ public class GestionarContratoController implements Initializable {
         }
     }
 
-    // rescindir contrato
     @FXML
     private void rescindirContrato(ActionEvent event) {
         if (contratoSeleccionado != null) {
@@ -157,7 +147,6 @@ public class GestionarContratoController implements Initializable {
         }
     }
 
-    // refrescar filrtro
     @FXML
     private void refrescarFiltro(ActionEvent event) {
         txtFiltroTelefono.clear();
@@ -171,11 +160,19 @@ public class GestionarContratoController implements Initializable {
         actualizarEstadoBotones();
     }
 
-    //acrualizar estado
     private void actualizarEstadoBotones() {
         boolean haySeleccion = contratoSeleccionado != null;
-        boolean pendiente = haySeleccion && "pendiente".equalsIgnoreCase(String.valueOf(contratoSeleccionado.getEstado()));
-        boolean activo = haySeleccion && "activo".equalsIgnoreCase(String.valueOf(contratoSeleccionado.getEstado()));
+        boolean pendiente = false;
+        boolean activo = false;
+
+        if (haySeleccion) {
+            if ("pendiente".equalsIgnoreCase(contratoSeleccionado.getEstado())) {
+                pendiente = true;
+            }
+            if ("activo".equalsIgnoreCase(contratoSeleccionado.getEstado())) {
+                activo = true;
+            }
+        }
 
         btnAceptarPeticion.setDisable(!pendiente);
         btnRechazarPeticion.setDisable(!pendiente);

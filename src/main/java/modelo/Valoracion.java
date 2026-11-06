@@ -1,25 +1,32 @@
 package modelo;
 
+
+/**
+ *
+ * @author eneko
+ */
 public class Valoracion {
-
-    private String id;
-    private int puntuacion;
-    private String texto;
-    private String idCliente;
-    private String idTarifa;
-
-    // No se guarda en Valoraciones: se rellena al consultar, para la tabla del administrador
+    private String id;           
+    private int puntuacion;      
+    private String texto;        
+    private String idCliente;    
+    private String idTarifa;  
     private String nombreCliente;
     private String nombreTarifa;
 
-    public Valoracion(String id, int puntuacion, String texto, String idCliente, String idTarifa) {
+    public Valoracion() {}
+
+    public Valoracion(String id, int puntuacion, String texto, String idCliente, String idTarifa, String nombreCliente, String nombreTarifa) {
         this.id = id;
         this.puntuacion = puntuacion;
         this.texto = texto;
         this.idCliente = idCliente;
         this.idTarifa = idTarifa;
+        this.nombreCliente = nombreCliente;
+        this.nombreTarifa = nombreTarifa;
     }
 
+    
     public String getId() {
         return id;
     }
@@ -68,14 +75,18 @@ public class Valoracion {
         this.nombreCliente = nombreCliente;
     }
 
-    public Valoracion() {
-    }
-
     public String getNombreTarifa() {
         return nombreTarifa;
     }
 
     public void setNombreTarifa(String nombreTarifa) {
         this.nombreTarifa = nombreTarifa;
+    }
+
+   
+
+    @Override
+    public String toString() {
+        return puntuacion + "/5 ⭐ - " + texto;
     }
 }

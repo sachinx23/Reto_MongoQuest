@@ -10,25 +10,25 @@ package modelo;
  */
 public class Sucursal {
 
-    private int id;
+    private String nombre;
     private String horario;
     private int telefono;
 
     private Ubicacion ubicacion;
 
-    public Sucursal(int id, String horario, int telefono, Ubicacion ubicacion) {
-        this.id = id;
+    public Sucursal(String nombre, String horario, int telefono, Ubicacion ubicacion) {
+        this.nombre = nombre;
         this.horario = horario;
         this.telefono = telefono;
         this.ubicacion = ubicacion;
     }
 
-    public int getId() {
-        return id;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getHorario() {
@@ -57,7 +57,7 @@ public class Sucursal {
 
     @Override
     public String toString() {
-        return "Sucursal #" + id + " (" + telefono + ")";
+        return "Sucursal #" + nombre + " (" + telefono + ")";
     }
 
 }

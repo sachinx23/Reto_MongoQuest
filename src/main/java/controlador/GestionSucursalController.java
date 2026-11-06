@@ -1,11 +1,9 @@
 package controlador;
 
-import com.mycompany.reto_1.Reto_1;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.concurrent.Worker;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,20 +13,20 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.util.Callback;
 import modelo.Sucursal;
 import modelo.Ubicacion;
-import daoadmin.SucursalDAO;
-import daoadmin.implementacion.SucursalDaoImplementacion;
+import DAO.SucursalDAO;
+import DAO.implementacion.SucursalDaoImplementacion;
 
-/**
- * Controlador de Gestión de Sucursales.
- *
- * @author Eneko.Plaza
- */
 public class GestionSucursalController implements Initializable {
 
     @FXML
-    private TextField txtId;
+    private TextField txtNombre;
     @FXML
     private TextField txtHorario;
     @FXML
@@ -39,62 +37,107 @@ public class GestionSucursalController implements Initializable {
     private TextField txtCodigoPostal;
     @FXML
     private ListView<Sucursal> listSucursales;
+    @FXML
+    private WebView webViewMapa;
 
     private final ObservableList<Sucursal> listaSucursalesData = FXCollections.observableArrayList();
+    private WebEngine engine;
     private final SucursalDAO sucursalDAO = new SucursalDaoImplementacion();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Asignar lista a la interfaz
         listSucursales.setItems(listaSucursalesData);
 
-        // Formato visual de los elementos en la lista
-        listSucursales.setCellFactory(param -> new ListCell<Sucursal>() {
+        listSucursales.setCellFactory(new Callback<ListView<Sucursal>, ListCell<Sucursal>>() {
             @Override
-            protected void updateItem(Sucursal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getId() + " - " + item.getHorario() + " - " + item.getTelefono());
+            public ListCell<Sucursal> call(ListView<Sucursal> param) {
+                return new ListCell<Sucursal>() {
+                    @Override
+                    protected void updateItem(Sucursal item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            if (item == null) {
+                                setText(null);
+                            } else {
+                                setText(item.getNombre() + " - " + item.getHorario() + " - " + item.getTelefono());
+                            }
+                        }
+                    }
+                };
+            }
+        });
+
+        listSucursales.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Sucursal>() {
+            @Override
+            public void changed(ObservableValue<? extends Sucursal> obs, Sucursal viejo, Sucursal nuevo) {
+                if (nuevo != null) {
+                    cargarCampos(nuevo);
+                    actualizarMapa(nuevo.getUbicacion());
                 }
             }
         });
 
-        // Evento al seleccionar un elemento de la lista
-        listSucursales.getSelectionModel().selectedItemProperty().addListener((obs, viejo, nuevo) -> {
-            if (nuevo != null) {
-                cargarCampos(nuevo);
-            }
-        });
-
-        // Cargar datos al arrancar
+        cargarMapa();
         cargarSucursalesBD();
     }
 
-    // Abre la sucursal seleccionada en Google Maps, en el navegador del ordenador
-    @FXML
-    public void verEnMapa(ActionEvent event) {
-        Sucursal seleccionada = listSucursales.getSelectionModel().getSelectedItem();
-        if (seleccionada == null || seleccionada.getUbicacion() == null) {
-            mostrarAlerta("Atención", "Selecciona una sucursal de la lista primero.", Alert.AlertType.WARNING);
-            return;
+    private void cargarMapa() {
+        engine = webViewMapa.getEngine();
+        URL url = getClass().getResource("/html/mapa.html");
+
+        if (url != null) {
+            engine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
+                @Override
+                public void changed(ObservableValue<? extends Worker.State> obs, Worker.State oldState, Worker.State newState) {
+                    if (newState == Worker.State.SUCCEEDED) {
+                        engine.executeScript("refrescarMapa();");
+                        mostrarTodasLasSucursalesEnMapa();
+                    }
+                }
+            });
+            engine.load(url.toExternalForm());
         }
-        Ubicacion u = seleccionada.getUbicacion();
-        String direccion = u.getDireccion() + ", " + u.getCodigoPostal() + " " + u.getLocalidad() + ", España";
-        Reto_1.abrirEnNavegador("https://www.google.com/maps/search/?api=1&query=" + URLEncoder.encode(direccion, StandardCharsets.UTF_8));
     }
 
-    // Recupera la lista desde la BBDD y actualiza la GUI
+    private void mostrarTodasLasSucursalesEnMapa() {
+        if (engine != null) {
+            if (engine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
+                engine.executeScript("limpiarMapa();");
+                for (int i = 0; i < listaSucursalesData.size(); i++) {
+                    Sucursal s = listaSucursalesData.get(i);
+                    if (s.getUbicacion() != null) {
+                        String nomb = String.valueOf(s.getNombre());
+                        String dir = s.getUbicacion().getDireccion();
+                        String loc = s.getUbicacion().getLocalidad();
+                        engine.executeScript("agregarSucursal('" + nomb + "', '" + dir + "', '" + loc + "');");
+                    }
+                }
+            }
+        }
+    }
+
+    private void actualizarMapa(Ubicacion ubicacion) {
+        if (engine != null) {
+            if (ubicacion != null) {
+                String dir = ubicacion.getDireccion();
+                String loc = ubicacion.getLocalidad();
+                engine.executeScript("enfocarUbicacion('" + dir + "', '" + loc + "');");
+            }
+        }
+    }
+
     private void cargarSucursalesBD() {
         listaSucursalesData.clear();
         List<Sucursal> sucursales = sucursalDAO.listarSucursales();
         listaSucursalesData.addAll(sucursales);
+
+        mostrarTodasLasSucursalesEnMapa();
     }
 
-    // Rellena los campos del formulario
     private void cargarCampos(Sucursal sucursal) {
-        txtId.setText(String.valueOf(sucursal.getId()));
+        txtNombre.setText(String.valueOf(sucursal.getNombre()));
         txtHorario.setText(sucursal.getHorario());
         txtTelefono.setText(String.valueOf(sucursal.getTelefono()));
         if (sucursal.getUbicacion() != null) {
@@ -104,27 +147,35 @@ public class GestionSucursalController implements Initializable {
             txtUbicacion.setText("");
             txtCodigoPostal.setText("");
         }
-
     }
 
     @FXML
     public void añadirSucursal(ActionEvent event) {
-        String idTexto = txtId.getText().trim();
+        String nombre = txtNombre.getText().trim();
         String horario = txtHorario.getText().trim();
         String telefono = txtTelefono.getText().trim();
         String direccion = txtUbicacion.getText().trim();
 
-        if (idTexto.isEmpty() || horario.isEmpty() || telefono.isEmpty() || direccion.isEmpty()) {
+        if (nombre.isEmpty()) {
+            mostrarAlerta("Atención", "Por favor, completa todos los campos.", Alert.AlertType.WARNING);
+            return;
+        }
+        if (horario.isEmpty()) {
+            mostrarAlerta("Atención", "Por favor, completa todos los campos.", Alert.AlertType.WARNING);
+            return;
+        }
+        if (telefono.isEmpty()) {
+            mostrarAlerta("Atención", "Por favor, completa todos los campos.", Alert.AlertType.WARNING);
+            return;
+        }
+        if (direccion.isEmpty()) {
             mostrarAlerta("Atención", "Por favor, completa todos los campos.", Alert.AlertType.WARNING);
             return;
         }
 
         try {
-            int id = Integer.parseInt(idTexto);
-
-            // Objeto embebido Ubicacion con datos por defecto si solo meten la dirección
             Ubicacion ubicacion = new Ubicacion(direccion, "Bilbao", 48480);
-            Sucursal nueva = new Sucursal(id, horario, Integer.parseInt(telefono.trim()), ubicacion);
+            Sucursal nueva = new Sucursal(nombre, horario, Integer.parseInt(telefono.trim()), ubicacion);
 
             if (sucursalDAO.insertarSucursal(nueva)) {
                 cargarSucursalesBD();
@@ -134,7 +185,7 @@ public class GestionSucursalController implements Initializable {
                 mostrarAlerta("Error", "No se pudo guardar la sucursal.", Alert.AlertType.ERROR);
             }
         } catch (NumberFormatException e) {
-            mostrarAlerta("Error", "El ID debe ser un número entero.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "El teléfono debe ser un número entero.", Alert.AlertType.ERROR);
         }
     }
 
@@ -154,8 +205,7 @@ public class GestionSucursalController implements Initializable {
                 int codigoPostal = Integer.parseInt(txtCodigoPostal.getText().trim());
                 seleccionada.getUbicacion().setCodigoPostal(codigoPostal);
             } catch (NumberFormatException e) {
-                // Manejo de error: el usuario ingresó letras o caracteres inválidos
-                System.out.println("Por favor, introduce un código postal válido (solo números).");
+                System.out.println("Por favor, introduce un código postal válido.");
             }
         }
 
@@ -176,7 +226,7 @@ public class GestionSucursalController implements Initializable {
             return;
         }
 
-        if (sucursalDAO.eliminarSucursal(seleccionada.getId())) {
+        if (sucursalDAO.eliminarSucursal(seleccionada.getNombre())) {
             cargarSucursalesBD();
             limpiar();
             mostrarAlerta("Éxito", "Sucursal eliminada.", Alert.AlertType.INFORMATION);
@@ -186,7 +236,7 @@ public class GestionSucursalController implements Initializable {
     }
 
     private void limpiar() {
-        txtId.setText("");
+        txtNombre.setText("");
         txtHorario.setText("");
         txtTelefono.setText("");
         txtUbicacion.setText("");

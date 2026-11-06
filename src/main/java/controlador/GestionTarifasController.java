@@ -17,8 +17,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import modelo.Tarifa;
-import daoadmin.TarifaDAO;
-import daoadmin.implementacion.TarifaDaoImplementacion;
+import DAO.TarifaDAO;
+import DAO.implementacion.TarifaDaoImplementacion;
 
 public class GestionTarifasController implements Initializable {
 

@@ -1,19 +1,111 @@
 package modelo;
 
-public class Cliente extends Usuario {
+import java.util.List;
 
+/**
+ * Modelo de datos para la entidad Cliente.
+ * @author eneko
+ */
+public class Cliente {
+    private String id;
+    private String cuentaBancaria;
+    private String nombreUsuario;
+    private String nombre;
+    private String apellidos;
+    private String contrasena;
+    private String correo;
     private String dni;
     private String telefono;
     private String direccion;
-    private boolean dadoDeBaja;
+    private List<String> ticketSoporte;
+    private List<Contrato> contrato;
+    private List<Valoracion> valoraciones;
 
-    public Cliente(String id, String nombre, String nombreUsuario, String contrasena, String correo,
-            String cuentaBancaria, String dni, String telefono, String direccion) {
-        super(id, nombre, nombreUsuario, contrasena, correo, cuentaBancaria);
+    // --- Constructor Vacío (Obligatorio para el DAO) ---
+    public Cliente() {
+    }
+
+    // --- Constructor para el método listarClientes() ---
+    public Cliente(String nombreUsuario, String nombre, String apellidos, String correo, String dni, String telefono, String direccion) {
+        this.nombreUsuario = nombreUsuario;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.correo = correo;
         this.dni = dni;
         this.telefono = telefono;
         this.direccion = direccion;
-        this.dadoDeBaja = false;
+    }
+
+    // --- Constructor Completo ---
+    public Cliente(String id, String cuentaBancaria, String nombreUsuario, String nombre, String apellidos, String contrasena, String correo, String dni, String telefono, String direccion) {
+        this.id = id;
+        this.cuentaBancaria = cuentaBancaria;
+        this.nombreUsuario = nombreUsuario;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.contrasena = contrasena;
+        this.correo = correo;
+        this.dni = dni;
+        this.telefono = telefono;
+        this.direccion = direccion;
+    }
+
+    // --- Getters y Setters ---
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCuentaBancaria() {
+        return cuentaBancaria;
+    }
+
+    public void setCuentaBancaria(String cuentaBancaria) {
+        this.cuentaBancaria = cuentaBancaria;
+    }
+
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
     public String getDni() {
@@ -40,25 +132,32 @@ public class Cliente extends Usuario {
         this.direccion = direccion;
     }
 
-    public boolean isDadoDeBaja() {
-        return dadoDeBaja;
+    public List<String> getTicketSoporte() {
+        return ticketSoporte;
     }
 
-    public void setDadoDeBaja(boolean dadoDeBaja) {
-        this.dadoDeBaja = dadoDeBaja;
+    public void setTicketSoporte(List<String> ticketSoporte) {
+        this.ticketSoporte = ticketSoporte;
     }
 
-    public Cliente() {
+    public List<Contrato> getContrato() {
+        return contrato;
     }
 
-    // Constructor que usa la parte de administrador (listado de clientes)
-    public Cliente(String nombreUsuario, String nombre, String apellidos, String correo, String dni, String telefono, String direccion) {
-        setNombreUsuario(nombreUsuario);
-        setNombre(nombre);
-        setApellidos(apellidos);
-        setCorreo(correo);
-        this.dni = dni;
-        this.telefono = telefono;
-        this.direccion = direccion;
+    public void setContrato(List<Contrato> contrato) {
+        this.contrato = contrato;
+    }
+
+    public List<Valoracion> getValoraciones() {
+        return valoraciones;
+    }
+
+    public void setValoraciones(List<Valoracion> valoraciones) {
+        this.valoraciones = valoraciones;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" + "nombreUsuario=" + nombreUsuario + ", nombre=" + nombre + ", correo=" + correo + '}';
     }
 }

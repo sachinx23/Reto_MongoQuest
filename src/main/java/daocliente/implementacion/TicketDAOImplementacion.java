@@ -5,9 +5,7 @@ import daocliente.TicketDAO;
 import exception.ErrorMessages;
 import exception.OurException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import modelo.TicketSoporte;
+import modelocliente.TicketSoporte;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -15,17 +13,12 @@ import org.bson.types.ObjectId;
  * Operaciones de la colección TicketsSoporte (parte de cliente).
  */
 public class TicketDAOImplementacion extends DAOBase implements TicketDAO {
-
-    private static final Logger LOGGER = Logger.getLogger(TicketDAOImplementacion.class.getName());
-
     @Override
     public List<TicketSoporte> obtenerTicketsCliente(String idCliente) throws OurException {
         try {
             List<TicketSoporte> tickets = buscarTickets(new Document("idCliente", new ObjectId(idCliente)));
-            LOGGER.info("Consultados " + tickets.size() + " tickets del cliente " + idCliente);
             return tickets;
         } catch (MongoException e) {
-            LOGGER.log(Level.SEVERE, "Error consultando tickets del cliente " + idCliente, e);
             throw new OurException(ErrorMessages.GET_TICKETS);
         }
     }
@@ -57,9 +50,7 @@ public class TicketDAOImplementacion extends DAOBase implements TicketDAO {
                 throw e;
             }
             ticket.setId(idTexto(d, "_id"));
-            LOGGER.info("Ticket creado: id " + ticket.getId() + ", cliente " + ticket.getIdCliente() + ", asunto \"" + ticket.getAsunto() + "\"");
         } catch (MongoException e) {
-            LOGGER.log(Level.SEVERE, "Error creando un ticket del cliente " + ticket.getIdCliente(), e);
             throw new OurException(ErrorMessages.INSERT_TICKET);
         }
     }

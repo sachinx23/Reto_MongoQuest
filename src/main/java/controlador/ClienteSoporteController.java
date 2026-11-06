@@ -5,7 +5,6 @@ import daocliente.implementacion.TicketDAOImplementacion;
 import exception.OurException;
 import exception.ShowAlert;
 import java.time.LocalDate;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,16 +12,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import modelo.Cliente;
-import modelo.TicketSoporte;
+import modelocliente.Cliente;
+import modelocliente.TicketSoporte;
 
 /**
  * Soporte: enviar un ticket y ver los míos.
  */
 public class ClienteSoporteController {
-
-    private static final Logger LOGGER = Logger.getLogger(ClienteSoporteController.class.getName());
-
     private final TicketDAO ticketDAO = new TicketDAOImplementacion();
     private Cliente cliente;
 
@@ -32,6 +28,9 @@ public class ClienteSoporteController {
     @FXML private TableColumn<TicketSoporte, String> colSoporteAsunto;
     @FXML private TableColumn<TicketSoporte, String> colSoporteFecha;
 
+    /**
+     * Se ejecuta al abrir la pantalla: prepara la tabla y carga los datos.
+     */
     @FXML
     public void initialize() {
         cliente = (Cliente) Sesion.getUsuario();
@@ -40,14 +39,22 @@ public class ClienteSoporteController {
         cargarTickets();
     }
 
+    /**
+     * Recarga la tabla con los tickets del cliente.
+     */
     private void cargarTickets() {
         try {
             tablaSoporte.setItems(FXCollections.observableArrayList(ticketDAO.obtenerTicketsCliente(cliente.getId())));
         } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+            ShowAlert.error(e.getMessage());
         }
     }
 
+    /**
+     * Comprueba el asunto y la descripción, pide confirmación y envía el ticket.
+     *
+     * @param event evento de la acción (botón, menú o desplegable)
+     */
     @FXML
     public void btnEnviarTicket(ActionEvent event) {
         String asunto = txtSoporteAsunto.getText().trim();
@@ -68,7 +75,7 @@ public class ClienteSoporteController {
             txtSoporteMensaje.clear();
             cargarTickets();
         } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+            ShowAlert.error(e.getMessage());
         }
     }
 }

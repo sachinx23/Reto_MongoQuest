@@ -4,19 +4,15 @@ import daocliente.ClienteDAO;
 import daocliente.implementacion.ClienteDAOImplementacion;
 import exception.OurException;
 import exception.ShowAlert;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import modelo.Cliente;
+import modelocliente.Cliente;
 
 /**
  * Mi Perfil del cliente: ver y modificar sus datos.
  */
 public class ClientePerfilController {
-
-    private static final Logger LOGGER = Logger.getLogger(ClientePerfilController.class.getName());
-
     private final ClienteDAO clienteDAO = new ClienteDAOImplementacion();
     private Cliente cliente;
 
@@ -28,12 +24,18 @@ public class ClientePerfilController {
     @FXML private TextField txtCuentaBancaria;
     @FXML private TextField txtDireccion;
 
+    /**
+     * Se ejecuta al abrir la pantalla: rellena el formulario con los datos del cliente.
+     */
     @FXML
     public void initialize() {
         cliente = (Cliente) Sesion.getUsuario();
         cargarPerfil();
     }
 
+    /**
+     * Rellena el formulario con los datos del cliente de la sesión.
+     */
     private void cargarPerfil() {
         txtNombre.setText(cliente.getNombre());
         txtNombreUsuario.setText(cliente.getNombreUsuario());
@@ -44,6 +46,11 @@ public class ClientePerfilController {
         txtCuentaBancaria.setText(cliente.getCuentaBancaria());
     }
 
+    /**
+     * Comprueba los datos, pide confirmación y guarda el perfil.
+     *
+     * @param event evento de la acción (botón, menú o desplegable)
+     */
     @FXML
     public void btnModificar(ActionEvent event) {
         String nombre = txtNombre.getText().trim();
@@ -74,7 +81,7 @@ public class ClientePerfilController {
             ClienteController.actualizarBienvenida();
             ShowAlert.info("Modificación exitosa", "Los datos se han actualizado correctamente.");
         } catch (OurException e) {
-            ShowAlert.error(LOGGER, e);
+            ShowAlert.error(e.getMessage());
             cargarPerfil();
         }
     }

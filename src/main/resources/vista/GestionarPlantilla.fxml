@@ -47,7 +47,7 @@
                               <TextField fx:id="txtApellidos" promptText="Apellidos" prefWidth="130.0" />
                               <TextField fx:id="txtDireccion" promptText="Dirección" HBox.hgrow="ALWAYS" />
                               <!-- Sustituido TextField por ComboBox -->
-                              <ComboBox fx:id="cmbIdSucursal" promptText="ID Sucursal" prefWidth="120.0" />
+                              <ComboBox fx:id="cmbIdSucursal" promptText="Ubicacion" prefWidth="120.0" />
                               <TextField fx:id="txtIban" promptText="IBAN" prefWidth="150.0" />
                               <Button onAction="#crearEmpleado" styleClass="btn-aceptar" text="Guardar" />
                               <Button onAction="#cancelarFormulario" styleClass="btn-danger" text="Cancelar" />

@@ -21,14 +21,14 @@ import javafx.scene.layout.VBox;
 import modelo.Cliente;
 import modelo.Empleado;
 import modelo.Sucursal;
-import daoadmin.EmpleadoDAO;
-import daoadmin.ClienteDAO;
-import daoadmin.AdministradorDAO;
-import daoadmin.SucursalDAO;
-import daoadmin.implementacion.EmpleadoDaoImplementacion;
-import daoadmin.implementacion.ClienteDaoImplementacion;
-import daoadmin.implementacion.AdministradorDAOImpl;
-import daoadmin.implementacion.SucursalDaoImplementacion;
+import DAO.EmpleadoDAO;
+import DAO.ClienteDAO;
+import DAO.AdministradorDAO;
+import DAO.SucursalDAO;
+import DAO.implementacion.EmpleadoDaoImplementacion;
+import DAO.implementacion.ClienteDaoImplementacion;
+import DAO.implementacion.AdministradorDAOImpl;
+import DAO.implementacion.SucursalDaoImplementacion;
 
 public class GestionarPlantillaController implements Initializable {
 
@@ -142,7 +142,7 @@ public class GestionarPlantillaController implements Initializable {
         List<Sucursal> sucursales = sucursalDAO.listarSucursales();
         if (sucursales != null) {
             for (Sucursal s : sucursales) {
-                cmbIdSucursal.getItems().add(String.valueOf(s.getId()));
+                cmbIdSucursal.getItems().add(String.valueOf(s.getUbicacion()));
             }
         }
     }

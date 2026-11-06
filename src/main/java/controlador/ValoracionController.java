@@ -17,8 +17,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import modelo.Valoracion;
-import daoadmin.ValoracionDAO;
-import daoadmin.implementacion.ValoracionDAOImpl;
+import DAO.ValoracionDAO;
+import DAO.implementacion.ValoracionDAOImpl;
 
 /**
  *
@@ -57,16 +57,25 @@ public class ValoracionController {
 
     private void cargarTabla() {
         String filtro = cbPuntuacion.getValue();
-        ObservableList<Valoracion> lista;
 
-        if (filtro.equals("Todas")) {
-            lista = FXCollections.observableArrayList(valoracionDAO.listarValoraciones());
+        ObservableList<Valoracion> listaCompleta = FXCollections.observableArrayList(valoracionDAO.listarValoraciones());
+
+        if (filtro == null || filtro.equals("Todas")) {
+            tabla.setItems(listaCompleta);
         } else {
             int puntuacion = Integer.parseInt(filtro);
-            lista = FXCollections.observableArrayList(valoracionDAO.listarValoracionesPorPuntuacion(puntuacion));
+            ObservableList<Valoracion> listaFiltrada = FXCollections.observableArrayList();
+
+            for (int i = 0; i < listaCompleta.size(); i++) {
+                Valoracion v = listaCompleta.get(i);
+                if (v.getPuntuacion() == puntuacion) {
+                    listaFiltrada.add(v);
+                }
+            }
+
+            tabla.setItems(listaFiltrada);
         }
 
-        tabla.setItems(lista);
         lblMedia.setText("Media: " + String.format("%.2f", valoracionDAO.mediaValoraciones()) + " / 5");
     }
 

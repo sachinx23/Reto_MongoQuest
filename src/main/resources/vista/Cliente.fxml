@@ -1,65 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="620.0" prefWidth="950.0" styleClass="fondo-pantalla" stylesheets="@../css/Estilos.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.ClienteController">
+<AnchorPane prefHeight="600.0" prefWidth="950.0" 
+            stylesheets="@../css/Estilos.css" 
+            styleClass="fondo-pantalla"
+            xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="controlador.ClienteController">
    <children>
-
-      <!-- MENÚ: las mismas acciones que los botones de la cabecera, más Salir y Acerca de -->
-      <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <menus>
-            <Menu mnemonicParsing="true" text="_Archivo">
-               <items>
-                  <MenuItem onAction="#btnMiPerfil" text="Mi perfil" />
-                  <MenuItem onAction="#btnCerrarSesion" text="Cerrar sesión" />
-                  <SeparatorMenuItem />
-                  <MenuItem onAction="#menuSalir" text="Salir" />
-               </items>
-            </Menu>
-            <Menu mnemonicParsing="true" text="A_yuda">
-               <items>
-                  <MenuItem onAction="#menuAcercaDe" text="Acerca de Tel-ONDA" />
-               </items>
-            </Menu>
-         </menus>
-      </MenuBar>
-
-      <!-- CABECERA (mismo estilo que el panel de administrador): apartado, nombre, Mi Perfil y Cerrar sesión -->
-      <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="barra-superior" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="40.0">
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
          <children>
-            <Label minWidth="-Infinity" styleClass="titulo-barra" text="Panel Cliente:" />
-            <ComboBox fx:id="cmbOpciones" minWidth="180.0" onAction="#cmbOpcionSeleccionada" prefWidth="260.0" styleClass="combo-empleado">
-               <tooltip>
-                  <Tooltip text="Elige el apartado que quieres ver" />
-               </tooltip>
-            </ComboBox>
-            <Region HBox.hgrow="ALWAYS" />
-            <Label fx:id="lblBienvenida" minWidth="-Infinity" styleClass="nombre-usuario" />
-            <Button fx:id="btnMiPerfil" minWidth="-Infinity" mnemonicParsing="true" onAction="#btnMiPerfil" styleClass="btn-secondary" text="Mi _Perfil">
-               <tooltip>
-                  <Tooltip text="Ver y modificar tus datos (Alt+P)" />
-               </tooltip>
-            </Button>
-            <Button fx:id="btnCerrarSesion" minWidth="-Infinity" mnemonicParsing="true" onAction="#btnCerrarSesion" styleClass="btn-danger" text="Cerrar _sesión">
-               <tooltip>
-                  <Tooltip text="Volver a la pantalla de inicio de sesión (Alt+S)" />
-               </tooltip>
-            </Button>
-         </children>
-      </HBox>
+            
+            <!-- BARRA SUPERIOR: DEGRADADO DEL LOGO -->
+            <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="barra-superior">
+               <children>
+                  <Label minWidth="-Infinity" styleClass="titulo-barra" text="Panel Cliente:" />
+                  
+                  <!-- DESPLEGABLE CON ESTILO REDONDEADO (Cerrar Sesión es una opción más, como en el admin) -->
+                  <ComboBox fx:id="cmbOpciones" onAction="#cmbOpcionSeleccionada" prefWidth="250.0" promptText="Seleccionar sección..." styleClass="combo-empleado" />
+                  
+                  <Region HBox.hgrow="ALWAYS" />
+                  
+                  <Label fx:id="lblBienvenida" minWidth="-Infinity" styleClass="nombre-usuario" text="Cliente: Usuario" />
+               </children>
+            </HBox>
 
-      <!-- CONTENIDO: aquí se carga la pantalla del apartado elegido (como en el panel de administrador) -->
-      <StackPane fx:id="panelContenido" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="115.0" />
+            <!-- FRANJA SEPARADORA TURQUESA DECORATIVA -->
+            <AnchorPane minHeight="3.0" prefHeight="3.0" styleClass="franja-turquesa" />
+
+            <!-- CONTENEDOR DINÁMICO DE SUBVISTAS -->
+            <StackPane fx:id="panelContenido" styleClass="panel-contenido" VBox.vgrow="ALWAYS" />
+
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

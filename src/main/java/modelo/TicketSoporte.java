@@ -1,28 +1,32 @@
 package modelo;
 
+/**
+ *
+ * @author eneko
+ */
 public class TicketSoporte {
-
-    private String id;
+    private String id;          
     private String asunto;
     private String descripcion;
+    private String tipo; // incidencia o contrato
     private String fechaCreacion;
-    private String estado;
-    private String idCliente;
-    private String idEmpleado;
-
-    // No se guarda en TicketsSoportes: se rellena al consultar con $lookup
-    private String nombreCliente;
-    private String tipo;
+    private String estado;       // "pendiente", "en proceso", "resuelto"
+    private String idCliente;  
+    private String idEmpleado;  
     private String idContrato;
 
-    public TicketSoporte(String id, String asunto, String descripcion, String fechaCreacion, String estado, String idCliente, String idEmpleado) {
+    public TicketSoporte() {}
+
+    public TicketSoporte(String id, String asunto, String descripcion, String tipo, String fechaCreacion, String estado, String idCliente, String idEmpleado, String idContrato) {
         this.id = id;
         this.asunto = asunto;
         this.descripcion = descripcion;
+        this.tipo = tipo;
         this.fechaCreacion = fechaCreacion;
         this.estado = estado;
         this.idCliente = idCliente;
         this.idEmpleado = idEmpleado;
+        this.idContrato = idContrato;
     }
 
     public String getId() {
@@ -49,18 +53,16 @@ public class TicketSoporte {
         this.descripcion = descripcion;
     }
 
-    public String getFechaCreacion() {
-        return fechaCreacion;
+    public String getTipo() {
+        return tipo;
     }
 
-    // Fecha con formato para la tabla, por ejemplo "30/10/2026"
-    public String getFechaCreacionTexto() {
-        // En MongoDB se guarda como "2026-10-30" y en la tabla se enseña como "30/10/2026"
-        String[] partes = fechaCreacion.split("-");
-        if (partes.length != 3) {
-            return fechaCreacion;
-        }
-        return partes[2] + "/" + partes[1] + "/" + partes[0];
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getFechaCreacion() {
+        return fechaCreacion;
     }
 
     public void setFechaCreacion(String fechaCreacion) {
@@ -91,25 +93,6 @@ public class TicketSoporte {
         this.idEmpleado = idEmpleado;
     }
 
-    public String getNombreCliente() {
-        return nombreCliente;
-    }
-
-    public void setNombreCliente(String nombreCliente) {
-        this.nombreCliente = nombreCliente;
-    }
-
-    public TicketSoporte() {
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
     public String getIdContrato() {
         return idContrato;
     }
@@ -117,4 +100,11 @@ public class TicketSoporte {
     public void setIdContrato(String idContrato) {
         this.idContrato = idContrato;
     }
+
+    @Override
+    public String toString() {
+        return "TicketSoporte{" + "id=" + id + ", asunto=" + asunto + ", descripcion=" + descripcion + ", tipo=" + tipo + ", fechaCreacion=" + fechaCreacion + ", estado=" + estado + ", idCliente=" + idCliente + ", idEmpleado=" + idEmpleado + ", idContrato=" + idContrato + '}';
+    }
+
+    
 }

@@ -6,9 +6,7 @@ import exception.ErrorMessages;
 import exception.OurException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import modelo.Valoracion;
+import modelocliente.Valoracion;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -16,17 +14,12 @@ import org.bson.types.ObjectId;
  * Operaciones de la colección Valoraciones.
  */
 public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDAO {
-
-    private static final Logger LOGGER = Logger.getLogger(ValoracionDAOImplementacion.class.getName());
-
     @Override
     public List<Valoracion> obtenerValoracionesCliente(String idCliente) throws OurException {
         try {
             List<Valoracion> valoraciones = buscarValoraciones(new Document("idCliente", new ObjectId(idCliente)));
-            LOGGER.info("Consultadas " + valoraciones.size() + " valoraciones del cliente " + idCliente);
             return valoraciones;
         } catch (MongoException e) {
-            LOGGER.log(Level.SEVERE, "Error consultando valoraciones del cliente " + idCliente, e);
             throw new OurException(ErrorMessages.GET_VALORACIONES);
         }
     }
@@ -42,9 +35,7 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
             coleccion(COL_VALORACIONES).insertOne(d);
 
             valoracion.setId(idTexto(d, "_id"));
-            LOGGER.info("Valoración publicada: id " + valoracion.getId() + ", puntuación " + valoracion.getPuntuacion());
         } catch (MongoException e) {
-            LOGGER.log(Level.SEVERE, "Error publicando una valoración del cliente " + valoracion.getIdCliente(), e);
             throw new OurException(ErrorMessages.SAVE_VALORACION);
         }
     }
@@ -58,9 +49,7 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
             if (!modificar(COL_VALORACIONES, valoracion.getId(), cambios)) {
                 throw new OurException(ErrorMessages.SAVE_VALORACION);
             }
-            LOGGER.info("Valoración modificada: id " + valoracion.getId());
         } catch (MongoException e) {
-            LOGGER.log(Level.SEVERE, "Error modificando la valoración " + valoracion.getId(), e);
             throw new OurException(ErrorMessages.SAVE_VALORACION);
         }
     }
@@ -71,13 +60,18 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
             if (!borrar(COL_VALORACIONES, idValoracion)) {
                 throw new OurException(ErrorMessages.SAVE_VALORACION);
             }
-            LOGGER.info("Valoración borrada: id " + idValoracion);
         } catch (MongoException e) {
-            LOGGER.log(Level.SEVERE, "Error borrando la valoración " + idValoracion, e);
             throw new OurException(ErrorMessages.SAVE_VALORACION);
         }
     }
 
+    /**
+     * Valoraciones que cumplen el filtro, con el nombre de su tarifa.
+     *
+     * @param filtro filtro de la búsqueda
+     * @return valoraciones encontradas
+     * @throws OurException si falla la operación en la base de datos (su mensaje es el que ve el usuario)
+     */
     private List<Valoracion> buscarValoraciones(Document filtro) throws OurException {
         List<Valoracion> valoraciones = new ArrayList<>();
         for (Document d : coleccion(COL_VALORACIONES).find(filtro)) {
