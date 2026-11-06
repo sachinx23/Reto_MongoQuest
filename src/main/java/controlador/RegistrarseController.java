@@ -2,6 +2,7 @@ package controlador;
 
 import com.mycompany.reto_1.Reto_1;
 import daocliente.ClienteDAO;
+import daocliente.implementacion.ClienteDAOImplementacion;
 import exception.OurException;
 import exception.ShowAlert;
 import java.util.logging.Logger;
@@ -16,7 +17,7 @@ public class RegistrarseController {
 
     private static final Logger LOGGER = Logger.getLogger(RegistrarseController.class.getName());
 
-    private final ClienteDAO dao = Sesion.getClienteDao();
+    private final ClienteDAO dao = new ClienteDAOImplementacion();
 
     @FXML private TextField txtUsuario;
     @FXML private TextField txtNombre;
