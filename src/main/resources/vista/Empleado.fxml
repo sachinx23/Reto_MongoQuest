@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="620.0" prefWidth="950.0" styleClass="root-admin" stylesheets="@../css/Estilo.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.EmpleadoController">
+<AnchorPane prefHeight="620.0" prefWidth="950.0" styleClass="fondo-pantalla" stylesheets="@../css/Estilos.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.EmpleadoController">
    <children>
 
       <!-- MENÚ: las mismas acciones que los botones de la cabecera, más Salir y Acerca de -->
@@ -44,31 +44,23 @@
          </menus>
       </MenuBar>
 
-      <!-- CABECERA: marca, nombre del empleado, Mi Perfil y opciones -->
-      <HBox alignment="CENTER_LEFT" prefHeight="70.0" spacing="15.0" styleClass="cabecera" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
-         <padding>
-            <Insets left="20.0" right="20.0" />
-         </padding>
+      <!-- CABECERA (mismo estilo que el panel de administrador): apartado, nombre, Mi Perfil y Cerrar sesión -->
+      <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="barra-superior" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="40.0">
          <children>
-            <HBox alignment="CENTER_LEFT">
-               <children>
-                  <Label minWidth="-Infinity" styleClass="marca-tel" text="Tel" />
-                  <Label minWidth="-Infinity" styleClass="marca-onda" text="-ONDA" />
-               </children>
-            </HBox>
-            <Region HBox.hgrow="ALWAYS" />
-            <Label fx:id="lblBienvenida" minWidth="-Infinity" styleClass="texto-cabecera" style="-fx-font-weight: bold;" />
-            <Button fx:id="btnMiPerfil" minWidth="-Infinity" mnemonicParsing="true" onAction="#btnMiPerfil" styleClass="boton-cabecera" text="Mi _Perfil">
-               <tooltip>
-                  <Tooltip text="Ver y modificar tus datos (Alt+P)" />
-               </tooltip>
-            </Button>
-            <ComboBox fx:id="cmbOpciones" minWidth="-Infinity" onAction="#cmbOpcionSeleccionada" prefWidth="215.0" styleClass="combo-admin">
+            <Label minWidth="-Infinity" styleClass="titulo-barra" text="Panel Empleado:" />
+            <ComboBox fx:id="cmbOpciones" minWidth="180.0" onAction="#cmbOpcionSeleccionada" prefWidth="260.0" styleClass="combo-empleado">
                <tooltip>
                   <Tooltip text="Elige el apartado que quieres ver" />
                </tooltip>
             </ComboBox>
-            <Button fx:id="btnCerrarSesion" minWidth="-Infinity" mnemonicParsing="true" onAction="#btnCerrarSesion" styleClass="boton-cerrar" text="Cerrar _sesión">
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="lblBienvenida" minWidth="-Infinity" styleClass="nombre-usuario" />
+            <Button fx:id="btnMiPerfil" minWidth="-Infinity" mnemonicParsing="true" onAction="#btnMiPerfil" styleClass="btn-secondary" text="Mi _Perfil">
+               <tooltip>
+                  <Tooltip text="Ver y modificar tus datos (Alt+P)" />
+               </tooltip>
+            </Button>
+            <Button fx:id="btnCerrarSesion" minWidth="-Infinity" mnemonicParsing="true" onAction="#btnCerrarSesion" styleClass="btn-danger" text="Cerrar _sesión">
                <tooltip>
                   <Tooltip text="Volver a la pantalla de inicio de sesión (Alt+S)" />
                </tooltip>
@@ -77,11 +69,11 @@
       </HBox>
 
       <!-- CONTENIDO: solo se ve uno de los paneles a la vez -->
-      <StackPane AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="115.0">
+      <StackPane AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="115.0">
          <children>
 
             <!-- MI PERFIL -->
-            <AnchorPane fx:id="panelPerfil" styleClass="panel-contenido">
+            <AnchorPane fx:id="panelPerfil" styleClass="card">
                <children>
                   <VBox spacing="20.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
                      <children>
@@ -135,7 +127,7 @@
             </AnchorPane>
 
             <!-- TICKETS PENDIENTES -->
-            <AnchorPane fx:id="panelTickets" styleClass="panel-contenido" visible="false">
+            <AnchorPane fx:id="panelTickets" styleClass="card" visible="false">
                <children>
                   <VBox spacing="15.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
                      <children>
@@ -177,7 +169,7 @@
             </AnchorPane>
 
             <!-- SOLICITUDES DE BAJA -->
-            <AnchorPane fx:id="panelBajas" styleClass="panel-contenido" visible="false">
+            <AnchorPane fx:id="panelBajas" styleClass="card" visible="false">
                <children>
                   <VBox spacing="15.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
                      <children>
@@ -217,7 +209,7 @@
             </AnchorPane>
 
             <!-- VALIDAR TARIFAS -->
-            <AnchorPane fx:id="panelValidar" styleClass="panel-contenido" visible="false">
+            <AnchorPane fx:id="panelValidar" styleClass="card" visible="false">
                <children>
                   <VBox spacing="15.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
                      <children>

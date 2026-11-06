@@ -43,7 +43,7 @@ public class Reto_1 extends Application {
 
         scene = new Scene(loadFXML("IniciarSesion"));
         // La hoja de estilos se pone en la escena, así sirve para todas las pantallas
-        scene.getStylesheets().add(Reto_1.class.getResource("/css/Estilo.css").toExternalForm());
+        scene.getStylesheets().add(Reto_1.class.getResource("/css/Estilos.css").toExternalForm());
         stage.getIcons().add(new Image(Reto_1.class.getResource("/img/logo.png").toExternalForm()));
         stage.setTitle("Tel-ONDA");
         stage.setScene(scene);

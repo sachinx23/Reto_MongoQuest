@@ -3,10 +3,18 @@
 <head>
     <title>Mapa de sucursales</title>
     <meta charset="UTF-8">
+    <!-- OpenStreetMap con Leaflet: gratis y sin clave (Google Maps pide una clave de pago) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         html, body, #mapa {
             height: 100%;
             margin: 0;
+        }
+        #aviso {
+            font-family: "Segoe UI", sans-serif;
+            color: #64748B;
+            padding: 20px;
         }
     </style>
 </head>
@@ -14,71 +22,83 @@
     <div id="mapa"></div>
 
     <script>
-        var mapa;
-        var geocoder;
+        var mapa = null;
         var marcadores = [];
 
-        // Se ejecuta cuando Google Maps termina de cargar
+        // Crea el mapa centrado en España
         function initMap() {
-            mapa = new google.maps.Map(document.getElementById("mapa"), {
-                center: { lat: 40.4, lng: -3.7 },
-                zoom: 6
-            });
-            geocoder = new google.maps.Geocoder();
+            if (typeof L === "undefined") {
+                // Sin internet no se puede cargar Leaflet
+                document.getElementById("mapa").innerHTML = "<div id='aviso'>No se pudo cargar el mapa (comprueba la conexión a internet).</div>";
+                return;
+            }
+            mapa = L.map("mapa").setView([40.4, -3.7], 6);
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 19,
+                attribution: "&copy; OpenStreetMap"
+            }).addTo(mapa);
         }
 
-        // Borrar todos los marcadores
+        // La llama Java cuando termina de cargar la página: deja el mapa listo
+        function refrescarMapa() {
+            if (mapa === null) {
+                initMap();
+            }
+            if (mapa !== null) {
+                mapa.invalidateSize();
+            }
+        }
+
+        // Busca las coordenadas de una dirección en OpenStreetMap (Nominatim)
+        function buscarDireccion(texto, alEncontrar) {
+            var peticion = new XMLHttpRequest();
+            peticion.open("GET", "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + encodeURIComponent(texto));
+            peticion.onload = function () {
+                if (peticion.status === 200) {
+                    var resultados = JSON.parse(peticion.responseText);
+                    if (resultados.length > 0) {
+                        alEncontrar([parseFloat(resultados[0].lat), parseFloat(resultados[0].lon)]);
+                    }
+                }
+            };
+            peticion.send();
+        }
+
+        // Borra todos los marcadores
         function limpiarMapa() {
+            if (mapa === null) {
+                return;
+            }
             for (var i = 0; i < marcadores.length; i++) {
-                marcadores[i].setMap(null);
+                mapa.removeLayer(marcadores[i]);
             }
             marcadores = [];
         }
 
-        // Añadir una sucursal buscando su dirección
+        // Añade una sucursal buscando su dirección
         function agregarSucursal(id, direccion, localidad) {
-            var texto = direccion + ", " + localidad + ", España";
-
-            geocoder.geocode({ address: texto }, function (resultados, estado) {
-                if (estado === "OK") {
-                    var posicion = resultados[0].geometry.location;
-
-                    var marcador = new google.maps.Marker({
-                        position: posicion,
-                        map: mapa,
-                        title: "Sucursal " + id
-                    });
-
-                    var ventana = new google.maps.InfoWindow({
-                        content: "<b>Sucursal " + id + "</b><br>" + direccion
-                    });
-                    marcador.addListener("click", function () {
-                        ventana.open(mapa, marcador);
-                    });
-
-                    marcadores.push(marcador);
-                    mapa.setCenter(posicion);
-                    mapa.setZoom(13);
-                } else {
-                    console.log("No se encontró: " + texto);
-                }
+            if (mapa === null) {
+                return;
+            }
+            buscarDireccion(direccion + ", " + localidad + ", España", function (posicion) {
+                var marcador = L.marker(posicion).addTo(mapa);
+                marcador.bindPopup("<b>Sucursal " + id + "</b><br>" + direccion + ", " + localidad);
+                marcadores.push(marcador);
+                mapa.setView(posicion, 13);
             });
         }
 
-        // Centrar el mapa en una dirección
+        // Centra el mapa en una dirección
         function enfocarUbicacion(direccion, localidad) {
-            var texto = direccion + ", " + localidad + ", España";
-
-            geocoder.geocode({ address: texto }, function (resultados, estado) {
-                if (estado === "OK") {
-                    mapa.setCenter(resultados[0].geometry.location);
-                    mapa.setZoom(15);
-                }
+            if (mapa === null) {
+                return;
+            }
+            buscarDireccion(direccion + ", " + localidad + ", España", function (posicion) {
+                mapa.setView(posicion, 16);
             });
         }
-    </script>
 
-    <!-- Cambia TU_API_KEY por tu clave de Google Maps -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&callback=initMap"></script>
+        initMap();
+    </script>
 </body>
 </html>

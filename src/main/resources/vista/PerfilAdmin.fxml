@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <!-- MI PERFIL DEL ADMINISTRADOR -->
-<AnchorPane styleClass="panel-contenido" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.PerfilAdminController">
+<AnchorPane styleClass="card" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.PerfilAdminController">
    <children>
       <VBox spacing="20.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
          <children>

@@ -11,12 +11,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="470.0" prefWidth="600.0" spacing="15.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.RegistrarseController">
+<VBox alignment="CENTER" prefHeight="470.0" prefWidth="600.0" spacing="15.0" stylesheets="@../css/Estilos.css" styleClass="fondo-pantalla" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.RegistrarseController">
    <padding>
       <Insets bottom="25.0" left="40.0" right="40.0" top="25.0" />
    </padding>
    <children>
-      <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1f6fb2;" text="Registro de cliente" />
+      <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #093B7B;" text="Registro de cliente" />
       <GridPane alignment="CENTER" hgap="15.0" vgap="10.0">
          <columnConstraints>
             <ColumnConstraints halignment="RIGHT" />
@@ -58,12 +58,12 @@
       <Label fx:id="lblMensajeError" textFill="RED" wrapText="true" />
       <HBox alignment="CENTER" spacing="20.0">
          <children>
-            <Button fx:id="btnRegistrarse" defaultButton="true" mnemonicParsing="true" onAction="#btnRegistrarse" prefWidth="120.0" text="_Registrarse">
+            <Button styleClass="btn-primary" fx:id="btnRegistrarse" defaultButton="true" mnemonicParsing="true" onAction="#btnRegistrarse" prefWidth="170.0" text="_Registrarse">
                <tooltip>
                   <Tooltip text="Crea tu cuenta (Enter o Alt+R)" />
                </tooltip>
             </Button>
-            <Button fx:id="btnSalir" cancelButton="true" mnemonicParsing="true" onAction="#btnSalir" prefWidth="120.0" text="_Salir">
+            <Button styleClass="btn-secondary" fx:id="btnSalir" cancelButton="true" mnemonicParsing="true" onAction="#btnSalir" prefWidth="170.0" text="_Salir">
                <tooltip>
                   <Tooltip text="Volver sin registrarte (Esc o Alt+S)" />
                </tooltip>
