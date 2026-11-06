@@ -112,7 +112,7 @@ public class GestionarPlantillaController implements Initializable {
         colCliUsuario.setCellValueFactory(new PropertyValueFactory<>("nombreUsuario"));
         colCliEmail.setCellValueFactory(new PropertyValueFactory<>("correo"));
         colCliTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
-        colCliDni.setCellValueFactory(new PropertyValueFactory<>("DNI"));
+        colCliDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
         colCliDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion"));
 
         tablaEmpleados.setItems(listaEmpleados);

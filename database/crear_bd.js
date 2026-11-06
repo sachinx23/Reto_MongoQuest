@@ -104,7 +104,8 @@ const idContratoActivo = ObjectId();
 
 db.Sucursales.insertOne({
   _id: idSucursal, id: NumberInt(1), horario: "Lunes a viernes: 09:00-20:00", telefono: 944123456,
-  ubicacion: { direccion: "Gran Via 20", localidad: "Bilbao", codigoPostal: NumberInt(48001) }
+  ubicacion: { direccion: "Gran Via 20", localidad: "Bilbao", codigoPostal: NumberInt(48001) },
+  empleados: ["Pablodiaz0"]
 });
 
 db.Administradores.insertOne({
@@ -115,7 +116,9 @@ db.Administradores.insertOne({
 db.Empleados.insertOne({
   _id: idPablo, nombreUsuario: "Pablodiaz0", nombre: "Pablo diaz", apellidos: "Diaz", rol: "Empleado",
   contrasena: "abcd", correo: "pablodiaz@gmail.com", cuentaBancaria: "ES7921000813610123456789",
-  idSucursal: idSucursal
+  direccion: "Calle Ercilla 5, Bilbao",
+  // Número de la sucursal (su campo "id"), igual que guarda el formulario de nuevo empleado
+  idSucursal: "1"
 });
 
 db.Clientes.insertOne({
