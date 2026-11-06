@@ -48,15 +48,15 @@ public class AdministradorDAOImpl implements AdministradorDAO{
         return null;
     }
 
-    @Override
-    public boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria) {
+   @Override
+    public boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria, String direccion, String idSucursal) {
         try {
             MongoDatabase db = MongoConnection.getDatabase();
             MongoCollection<Document> colEmp = db.getCollection("Empleados");
 
             Document filtroBusqueda = new Document("nombreUsuario", usuario);
             if (colEmp.find(filtroBusqueda).first() != null) {
-                return false;
+                return false; // El usuario ya existe
             }
 
             Document nuevoEmp = new Document("nombreUsuario", usuario);
@@ -65,6 +65,8 @@ public class AdministradorDAOImpl implements AdministradorDAO{
             nuevoEmp.append("contrasena", contrasena);
             nuevoEmp.append("correo", correo);
             nuevoEmp.append("cuentaBancaria", cuentaBancaria);
+            nuevoEmp.append("direccion", direccion);       
+            nuevoEmp.append("idSucursal", idSucursal);     
             nuevoEmp.append("rol", "Empleado");
 
             colEmp.insertOne(nuevoEmp);
@@ -74,7 +76,6 @@ public class AdministradorDAOImpl implements AdministradorDAO{
             return false;
         }
     }
-
     @Override
     public boolean eliminarEmpleado(String nombreUsuario) {
         try {
@@ -150,4 +151,21 @@ public class AdministradorDAOImpl implements AdministradorDAO{
         }
         return todos;
     }
+    
+    @Override
+public boolean agregarEmpleadoASucursal(int idSucursal, String nombreUsuarioEmpleado) {
+    try {
+        MongoDatabase db = MongoConnection.getDatabase();
+        MongoCollection<Document> colSucursales = db.getCollection("Sucursales");
+        
+        colSucursales.updateOne(
+            Filters.eq("id", idSucursal),
+            new Document("$push", new Document("empleados", nombreUsuarioEmpleado))
+        );
+        return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+}
 }

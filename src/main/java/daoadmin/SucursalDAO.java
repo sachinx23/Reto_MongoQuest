@@ -16,4 +16,5 @@ public interface SucursalDAO {
     boolean actualizarSucursal(Sucursal s);
     boolean eliminarSucursal(int id);
     List<Sucursal> listarSucursales();
+    
 }

@@ -12,25 +12,27 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import modelo.Cliente;
 import modelo.Empleado;
+import modelo.Sucursal;
 import daoadmin.EmpleadoDAO;
 import daoadmin.ClienteDAO;
+import daoadmin.AdministradorDAO;
+import daoadmin.SucursalDAO;
 import daoadmin.implementacion.EmpleadoDaoImplementacion;
 import daoadmin.implementacion.ClienteDaoImplementacion;
+import daoadmin.implementacion.AdministradorDAOImpl;
+import daoadmin.implementacion.SucursalDaoImplementacion;
 
-/**
- * Controlador para la vista GestionarPlantilla.fxml
- *
- * @author eneko
- */
 public class GestionarPlantillaController implements Initializable {
 
-    // TABLA EMPLEADOS
+    // Tabla empleado
     @FXML
     private TableView<Empleado> tablaEmpleados;
     @FXML
@@ -44,9 +46,13 @@ public class GestionarPlantillaController implements Initializable {
     @FXML
     private TableColumn<Empleado, String> colEmpEmail;
     @FXML
+    private TableColumn<Empleado, String> colEmpDireccion;
+    @FXML
+    private TableColumn<Empleado, String> colEmpSucursal;
+    @FXML
     private TableColumn<Empleado, String> colEmpIBAN;
 
-    // TABLA CLIENTES
+    // Tabla Clientes
     @FXML
     private TableView<Cliente> tablaClientes;
     @FXML
@@ -59,41 +65,67 @@ public class GestionarPlantillaController implements Initializable {
     private TableColumn<Cliente, String> colCliEmail;
     @FXML
     private TableColumn<Cliente, String> colCliTelefono;
+    @FXML
+    private TableColumn<Cliente, String> colCliDni;
+    @FXML
+    private TableColumn<Cliente, String> colCliDireccion;
+
+    // CAMPOS DEL FORMULARIO INTEGRADO (EMPLEADOS)
+    @FXML
+    private VBox panelFormulario;
+    @FXML
+    private TextField txtNombre;
+    @FXML
+    private TextField txtApellidos;
+    @FXML
+    private TextField txtDireccion;
+    @FXML
+    private ComboBox<String> cmbIdSucursal;
+    @FXML
+    private TextField txtIban;
 
     private final ObservableList<Empleado> listaEmpleados = FXCollections.observableArrayList();
     private final ObservableList<Cliente> listaClientes = FXCollections.observableArrayList();
-    
+
     private final EmpleadoDAO empleadoDAO = new EmpleadoDaoImplementacion();
     private final ClienteDAO clienteDAO = new ClienteDaoImplementacion();
+    private final AdministradorDAO administradorDAO = new AdministradorDAOImpl();
+    private final SucursalDAO sucursalDAO = new SucursalDaoImplementacion();
+    
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Mapeo de columnas con el POJO Empleado
+        // Mapeo columnas Empleados
         colEmpNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colEmpApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
         colEmpUsuario.setCellValueFactory(new PropertyValueFactory<>("nombreUsuario"));
         colEmpRol.setCellValueFactory(new PropertyValueFactory<>("rol"));
         colEmpEmail.setCellValueFactory(new PropertyValueFactory<>("correo"));
+        colEmpDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion"));
+        colEmpSucursal.setCellValueFactory(new PropertyValueFactory<>("idSucursal"));
         colEmpIBAN.setCellValueFactory(new PropertyValueFactory<>("cuentaBancaria"));
 
-        // Mapeo de columnas con el POJO Cliente
+        // Mapeo columnas Clientes
         colCliNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colCliApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
         colCliUsuario.setCellValueFactory(new PropertyValueFactory<>("nombreUsuario"));
         colCliEmail.setCellValueFactory(new PropertyValueFactory<>("correo"));
         colCliTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
+        colCliDni.setCellValueFactory(new PropertyValueFactory<>("DNI"));
+        colCliDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion"));
 
         tablaEmpleados.setItems(listaEmpleados);
         tablaClientes.setItems(listaClientes);
 
         cargarTablas();
+        cargarComboSucursales();
     }
 
     private void cargarTablas() {
         listaEmpleados.clear();
         listaClientes.clear();
 
-        // Llamadas a los métodos estáticos del DAO
         List<Empleado> empleados = empleadoDAO.listarEmpleados();
         List<Cliente> clientes = clienteDAO.listarClientes();
 
@@ -105,18 +137,78 @@ public class GestionarPlantillaController implements Initializable {
         }
     }
 
-    // Ascender empleado a admin
+    private void cargarComboSucursales() {
+        cmbIdSucursal.getItems().clear();
+        List<Sucursal> sucursales = sucursalDAO.listarSucursales();
+        if (sucursales != null) {
+            for (Sucursal s : sucursales) {
+                cmbIdSucursal.getItems().add(String.valueOf(s.getId()));
+            }
+        }
+    }
+
+    @FXML
+    public void alternarFormulario(ActionEvent event) {
+        boolean visible = panelFormulario.isVisible();
+        panelFormulario.setVisible(!visible);
+        panelFormulario.setManaged(!visible);
+        if (!visible) {
+            cargarComboSucursales();
+        }
+    }
+
+    @FXML
+    public void cancelarFormulario() {
+        limpiarCampos();
+        panelFormulario.setVisible(false);
+        panelFormulario.setManaged(false);
+    }
+
+    @FXML
+    public void crearEmpleado(ActionEvent event) {
+        String nombre = txtNombre.getText().trim();
+        String apellidos = txtApellidos.getText().trim();
+        String direccion = txtDireccion.getText().trim();
+        String idSucursal = cmbIdSucursal.getValue();
+        String cuentaBancaria = txtIban.getText().trim();
+
+        if (nombre.isEmpty() || apellidos.isEmpty() || direccion.isEmpty() || idSucursal == null || idSucursal.isEmpty() || cuentaBancaria.isEmpty()) {
+            mostrarAlerta("Error", "Por favor, rellena todos los campos y selecciona una sucursal.");
+            return;
+        }
+
+        String nombreN = nombre.toLowerCase().replaceAll("\\s+", "");
+        String primerApellido = apellidos.split("\\s+")[0].toLowerCase();
+        String usuario = nombreN + "." + primerApellido;
+
+        boolean ok = administradorDAO.crearEmpleado(usuario, nombre, apellidos, "1234", usuario + "@telonda.com", cuentaBancaria, direccion, idSucursal);
+
+        if (ok) {
+            administradorDAO.agregarEmpleadoASucursal(Integer.parseInt(idSucursal), usuario);
+
+            mostrarAlerta("Éxito", "Empleado creado y metido en la sucursal.");
+            cargarTablas();
+            cancelarFormulario();
+        } else {
+            mostrarAlerta("Error", "No se pudo crear el empleado (quizás el usuario ya existe).");
+        }
+    }
+
+    private void limpiarCampos() {
+        txtNombre.clear();
+        txtApellidos.clear();
+        txtDireccion.clear();
+        cmbIdSucursal.getSelectionModel().clearSelection();
+        txtIban.clear();
+    }
+
     @FXML
     public void ascenderAAdmin(ActionEvent event) {
         Empleado seleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
-
         if (seleccionado != null) {
-            String usuario = seleccionado.getNombreUsuario();
-
-            boolean ok = empleadoDAO.ascenderEmpleado(usuario, "Admin");
-
+            boolean ok = empleadoDAO.ascenderEmpleado(seleccionado.getNombreUsuario(), "Admin");
             if (ok) {
-                mostrarAlerta("Éxito", "El empleado " + usuario + " ahora es Administrador.");
+                mostrarAlerta("Éxito", "El empleado ahora es Administrador.");
                 cargarTablas();
             } else {
                 mostrarAlerta("Error", "No se pudo ascender al empleado.");
@@ -126,48 +218,13 @@ public class GestionarPlantillaController implements Initializable {
         }
     }
 
-    // Crear Empleado
-    @FXML
-    public void crearEmpleado(ActionEvent event) {
-        String nombre = pedirTexto("Introduce el Nombre:");
-        if (nombre == null) {
-            return;
-        }
-        String apellidos = pedirTexto("Introduce los Apellidos:");
-        if (apellidos == null) {
-            return;
-        }
-        String cuentaBancaria = pedirTexto("Introduce la Cuenta Bancaria (IBAN):");
-        if (cuentaBancaria == null) {
-            return;
-        }
-
-        // Generar nombreUsuario automáticamente (ejemplo: eneko.garcia)
-        String nombreN = nombre.toLowerCase().replaceAll("\\s+", "");
-        String primerApellido = apellidos.split("\\s+")[0].toLowerCase();
-        String usuario = nombreN + "." + primerApellido;
-
-        boolean ok = empleadoDAO.crearEmpleado(usuario, nombre, apellidos, "1234", usuario + "@telonda.com", cuentaBancaria);
-
-        if (ok) {
-            mostrarAlerta("Éxito", "Empleado " + nombre + " " + apellidos + " creado correctamente.");
-            cargarTablas();
-        } else {
-            mostrarAlerta("Error", "No se pudo crear el empleado (quizás el usuario ya existe).");
-        }
-    }
-
     @FXML
     public void eliminarEmpleado(ActionEvent event) {
         Empleado seleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
-
         if (seleccionado != null) {
-            String usuario = seleccionado.getNombreUsuario();
-
-            boolean ok = empleadoDAO.eliminarEmpleado(usuario);
-
+            boolean ok = empleadoDAO.eliminarEmpleado(seleccionado.getNombreUsuario());
             if (ok) {
-                mostrarAlerta("Éxito", "El empleado " + usuario + " ha sido dado de baja.");
+                mostrarAlerta("Éxito", "El empleado ha sido dado de baja.");
                 cargarTablas();
             } else {
                 mostrarAlerta("Error", "No se pudo eliminar al empleado.");
@@ -180,20 +237,17 @@ public class GestionarPlantillaController implements Initializable {
     @FXML
     public void eliminarCliente(ActionEvent event) {
         Cliente seleccionado = tablaClientes.getSelectionModel().getSelectedItem();
-
         if (seleccionado != null) {
-            String usuario = seleccionado.getNombreUsuario();
-
             Alert confirmacion = new Alert(AlertType.CONFIRMATION);
-            confirmacion.setTitle("Confirmar eliminación de datos sensibles");
+            confirmacion.setTitle("Confirmar eliminación");
             confirmacion.setHeaderText(null);
-            confirmacion.setContentText("¿Desea eliminar permanentemente los datos sensibles del cliente " + usuario + "?");
+            confirmacion.setContentText("¿Desea eliminar los datos sensibles del cliente?");
 
             Optional<ButtonType> res = confirmacion.showAndWait();
             if (res.isPresent() && res.get() == ButtonType.OK) {
-                boolean ok = clienteDAO.eliminarDatosSensiblesCliente(usuario);
+                boolean ok = clienteDAO.eliminarDatosSensiblesCliente(seleccionado.getNombreUsuario());
                 if (ok) {
-                    mostrarAlerta("Éxito", "Datos sensibles del cliente " + usuario + " eliminados.");
+                    mostrarAlerta("Éxito", "Datos sensibles eliminados.");
                     cargarTablas();
                 } else {
                     mostrarAlerta("Error", "No se pudieron borrar los datos.");
@@ -202,17 +256,6 @@ public class GestionarPlantillaController implements Initializable {
         } else {
             mostrarAlerta("Atención", "Selecciona primero un cliente de la tabla.");
         }
-    }
-
-    private String pedirTexto(String mensaje) {
-        TextInputDialog dialogo = new TextInputDialog();
-        dialogo.setTitle("Nuevo Empleado");
-        dialogo.setContentText(mensaje);
-        Optional<String> res = dialogo.showAndWait();
-        if (!res.isPresent() || res.get().trim().isEmpty()) {
-            return null;
-        }
-        return res.get().trim();
     }
 
     private void mostrarAlerta(String titulo, String texto) {

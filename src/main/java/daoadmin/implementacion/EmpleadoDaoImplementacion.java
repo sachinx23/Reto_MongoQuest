@@ -60,6 +60,10 @@ public class EmpleadoDaoImplementacion implements EmpleadoDAO{
                 String nombre = doc.getString("nombre") != null ? doc.getString("nombre") : "";
                 String apellidos = doc.getString("apellidos") != null ? doc.getString("apellidos") : "";
                 String contrasena = doc.getString("contrasena") != null ? doc.getString("contrasena") : "";
+                
+                // 1. Añadir la lectura de la dirección de MongoDB
+                String direccion = doc.getString("direccion") != null ? doc.getString("direccion") : "";
+                
                 String correo = doc.getString("correo") != null ? doc.getString("correo") : "";
                 String rol = doc.getString("rol") != null ? doc.getString("rol") : "Empleado";
                 String iban = doc.getString("cuentaBancaria") != null ? doc.getString("cuentaBancaria") : "";
@@ -67,7 +71,8 @@ public class EmpleadoDaoImplementacion implements EmpleadoDAO{
                 Object idSucObj = doc.get("idSucursal");
                 String idSucursal = idSucObj != null ? idSucObj.toString() : "";
 
-                lista.add(new Empleado(id, usuario, nombre, apellidos, contrasena, correo, rol, iban, idSucursal));
+                // 2. Pasar 'direccion' con su coma separadora correspondiente (los 10 parámetros)
+                lista.add(new Empleado(id, usuario, nombre, apellidos, contrasena, direccion, correo, rol, iban, idSucursal));
             }
         } catch (Exception e) {
             e.printStackTrace();

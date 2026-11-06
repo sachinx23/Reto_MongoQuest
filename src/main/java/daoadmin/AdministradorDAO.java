@@ -6,14 +6,22 @@ package daoadmin;
 
 import org.bson.Document;
 import java.util.List;
+
 /**
  *
  * @author Eneko.Plaza
  */
 public interface AdministradorDAO {
+
     Document comprobarUsuarios(String usuario, String contrasena);
-    boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria);
+
+    boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria, String direccion, String idSucursal);
+
     boolean eliminarEmpleado(String nombreUsuario);
+
     boolean ascenderEmpleado(String nombreUsuario, String nuevoRol);
+
     List<Document> obtenerPlantilla();
+    
+    boolean agregarEmpleadoASucursal(int idSucursal, String nombreUsuarioEmpleado);
 }
