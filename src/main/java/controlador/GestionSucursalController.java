@@ -1,9 +1,11 @@
 package controlador;
 
+import com.mycompany.reto_1.Reto_1;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.concurrent.Worker;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,8 +15,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import modeloadmin.Sucursal;
 import modeloadmin.Ubicacion;
 import daoadmin.SucursalDAO;
@@ -39,11 +39,8 @@ public class GestionSucursalController implements Initializable {
     private TextField txtCodigoPostal;
     @FXML
     private ListView<Sucursal> listSucursales;
-    @FXML
-    private WebView webViewMapa;
 
     private final ObservableList<Sucursal> listaSucursalesData = FXCollections.observableArrayList();
-    private WebEngine engine;
     private final SucursalDAO sucursalDAO = new SucursalDaoImplementacion();
 
     @Override
@@ -68,54 +65,24 @@ public class GestionSucursalController implements Initializable {
         listSucursales.getSelectionModel().selectedItemProperty().addListener((obs, viejo, nuevo) -> {
             if (nuevo != null) {
                 cargarCampos(nuevo);
-                actualizarMapa(nuevo.getUbicacion());
             }
         });
 
-        // Inicializar el mapa y cargar datos al arrancar
-        cargarMapa();
+        // Cargar datos al arrancar
         cargarSucursalesBD();
     }
 
-    private void cargarMapa() {
-        engine = webViewMapa.getEngine();
-        URL url = getClass().getResource("/html/mapa.html");
-
-        if (url != null) {
-            // Escuchamos el estado de carga del WebView
-            engine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
-                // SOLO cuando finaliza la carga (SUCCEEDED) llamamos a las funciones JS
-                if (newState == Worker.State.SUCCEEDED) {
-                    engine.executeScript("refrescarMapa();");
-                    mostrarTodasLasSucursalesEnMapa();
-                }
-            });
-            engine.load(url.toExternalForm());
+    // Abre la sucursal seleccionada en Google Maps, en el navegador del ordenador
+    @FXML
+    public void verEnMapa(ActionEvent event) {
+        Sucursal seleccionada = listSucursales.getSelectionModel().getSelectedItem();
+        if (seleccionada == null || seleccionada.getUbicacion() == null) {
+            mostrarAlerta("Atención", "Selecciona una sucursal de la lista primero.", Alert.AlertType.WARNING);
+            return;
         }
-    }
-
-    private void mostrarTodasLasSucursalesEnMapa() {
-        // Comprobación de seguridad: solo ejecutar si el engine y la página web están listos
-        if (engine != null && engine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
-            engine.executeScript("limpiarMapa();");
-            for (Sucursal s : listaSucursalesData) {
-                if (s.getUbicacion() != null) {
-                    String idStr = String.valueOf(s.getId());
-                    String dir = s.getUbicacion().getDireccion();
-                    String loc = s.getUbicacion().getLocalidad();
-                    engine.executeScript("agregarSucursal('" + idStr + "', '" + dir + "', '" + loc + "');");
-                }
-            }
-        }
-    }
-
-    // Centra el mapa en una ubicación concreta
-    private void actualizarMapa(Ubicacion ubicacion) {
-        if (engine != null && ubicacion != null) {
-            String dir = ubicacion.getDireccion();
-            String loc = ubicacion.getLocalidad();
-            engine.executeScript("enfocarUbicacion('" + dir + "', '" + loc + "');");
-        }
+        Ubicacion u = seleccionada.getUbicacion();
+        String direccion = u.getDireccion() + ", " + u.getCodigoPostal() + " " + u.getLocalidad() + ", España";
+        Reto_1.abrirEnNavegador("https://www.google.com/maps/search/?api=1&query=" + URLEncoder.encode(direccion, StandardCharsets.UTF_8));
     }
 
     // Recupera la lista desde la BBDD y actualiza la GUI
@@ -123,8 +90,6 @@ public class GestionSucursalController implements Initializable {
         listaSucursalesData.clear();
         List<Sucursal> sucursales = sucursalDAO.listarSucursales();
         listaSucursalesData.addAll(sucursales);
-
-        mostrarTodasLasSucursalesEnMapa();
     }
 
     // Rellena los campos del formulario

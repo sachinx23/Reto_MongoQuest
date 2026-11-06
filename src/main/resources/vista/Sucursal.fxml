@@ -9,7 +9,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.web.WebView?>
 
 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" 
             styleClass="scroll-subvista" 
@@ -27,7 +26,7 @@
          <children>
 
             <!-- TARJETA IZQUIERDA: FORMULARIO Y LISTA DE SUCURSALES -->
-            <VBox maxWidth="440.0" minWidth="360.0" prefWidth="400.0" spacing="10.0" styleClass="card">
+            <VBox minWidth="360.0" prefWidth="400.0" spacing="10.0" styleClass="card" HBox.hgrow="ALWAYS">
                <children>
                   <Label styleClass="titulo-vista" text="Gestión de Sucursales" />
 
@@ -75,6 +74,7 @@
                         <Button fx:id="btnAnadir" maxWidth="1.7976931348623157E308" minWidth="90.0" onAction="#añadirSucursal" styleClass="btn-primary" text="Añadir" HBox.hgrow="ALWAYS" />
                         <Button fx:id="btnGestionar" maxWidth="1.7976931348623157E308" minWidth="90.0" onAction="#gestionarSucursal" styleClass="btn-filtrar" text="Modificar" HBox.hgrow="ALWAYS" />
                         <Button fx:id="btnEliminar" maxWidth="1.7976931348623157E308" minWidth="90.0" onAction="#eliminarSucursal" styleClass="btn-danger" text="Eliminar" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="btnVerMapa" maxWidth="1.7976931348623157E308" minWidth="150.0" onAction="#verEnMapa" styleClass="btn-secondary" text="Ver en Google Maps" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
 
@@ -90,13 +90,6 @@
                </children>
             </VBox>
 
-            <!-- TARJETA DERECHA: MAPA WEBVIEW -->
-            <VBox minWidth="320.0" spacing="10.0" styleClass="card" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label styleClass="titulo-vista" text="Ubicación en Mapa" />
-                  <WebView fx:id="webViewMapa" minHeight="300.0" VBox.vgrow="ALWAYS" />
-               </children>
-            </VBox>
 
          </children>
       </HBox>
