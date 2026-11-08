@@ -1,0 +1,148 @@
+package controlador;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import exception.ShowAlert;
+import exception.OurException;
+import DAO.ClienteDAO;
+import DAO.implementacion.ClienteDAOImplementacion;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+/**
+ * FXML Controller class para la ventana Registrarse
+ *
+ * @author Eneko.Plaza
+ */
+public class RegistrarseController implements Initializable {
+
+    private static final Logger LOGGER = Logger.getLogger(RegistrarseController.class.getName());
+
+    // Instancia del DAO
+    private final ClienteDAO clienteDAO = new ClienteDAOImplementacion();
+
+    @FXML
+    private TextField txtUsuario;
+
+    @FXML
+    private TextField txtNombre;
+
+    @FXML
+    private TextField txtApellidos;
+
+    @FXML
+    private PasswordField txtContrasena;
+
+    @FXML
+    private TextField txtCorreo;
+
+    @FXML
+    private TextField txtDni;
+
+    @FXML
+    private TextField txtTelefono;
+
+    @FXML
+    private TextField txtDireccion;
+
+    @FXML
+    private Label lblMensajeError;
+
+    @FXML
+    private Button btnRegistrarse;
+
+    @FXML
+    private Button btnVolver;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        if (lblMensajeError != null) {
+            lblMensajeError.setText("");
+        }
+    }
+
+    @FXML
+    public void btnRegistrarse(ActionEvent event) {
+        try {
+            String usuario = txtUsuario.getText().trim();
+            String nombre = txtNombre.getText().trim();
+            String apellidos = txtApellidos.getText().trim();
+            String contrasena = txtContrasena.getText().trim();
+            String correo = txtCorreo.getText().trim();
+            String dni = txtDni.getText().trim();
+            String telefono = txtTelefono.getText().trim();
+            String direccion = txtDireccion.getText().trim();
+
+            // Validar que no haya campos vacíos
+            if (usuario.isEmpty() || nombre.isEmpty() || apellidos.isEmpty() || contrasena.isEmpty()
+                    || correo.isEmpty() || dni.isEmpty() || telefono.isEmpty() || direccion.isEmpty()) {
+                lblMensajeError.setText("Rellena todos los campos.");
+                return;
+            }
+            // Validar correo
+            if (!correo.contains("@") || !correo.contains(".")) {
+                lblMensajeError.setText("El correo no es válido.");
+                return;
+            }
+            // Validar dni
+            if (!dni.matches("[0-9]{8}[A-Z]")) {
+                lblMensajeError.setText("DNI introducido incorrectamente.");
+                return;
+            }
+            // Validar contraseña
+            if (contrasena.length() < 6) {
+                lblMensajeError.setText("La contraseña debe tener mínimo 6 caracteres.");
+                return;
+            }
+
+            lblMensajeError.setText("");
+
+            // Llamada a la instancia del DAO
+            boolean registrado = clienteDAO.registrarCliente(usuario, nombre, apellidos, contrasena, correo, dni, telefono, direccion);
+
+            if (registrado) {
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setContentText("¡Usuario registrado correctamente!");
+                alert.showAndWait();
+
+                // Volver automáticamente a la pantalla de Inicio de Sesión
+                volverAIniciarSesion(event);
+            } else {
+                lblMensajeError.setText("No se pudo registrar el usuario. Comprueba los datos.");
+            }
+    
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
+        }
+    }
+
+    // Método para que vuelva a iniciar sesión
+    @FXML
+    private void volverAIniciarSesion(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/vista/IniciarSesion.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error al volver al login", e);
+            lblMensajeError.setText("Error al cargar la pantalla de inicio de sesión.");
+        }
+    }
+}

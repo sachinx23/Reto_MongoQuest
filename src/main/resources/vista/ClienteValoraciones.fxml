@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane stylesheets="@../css/Estilos.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.ClienteValoracionesController">
+   <children>
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="card">
+               <children>
+                  <Label styleClass="titulo-vista" text="Mis valoraciones" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnValorar" mnemonicParsing="true" onAction="#btnValorar" styleClass="btn-aceptar" text="_Valorar">
+                     <tooltip>
+                        <Tooltip text="Publica una valoración nueva (Alt+V)" />
+                     </tooltip>
+                  </Button>
+                  <Button fx:id="btnEditarValoracion" mnemonicParsing="true" onAction="#btnEditarValoracion" styleClass="btn-filtrar" text="E_ditar">
+                     <tooltip>
+                        <Tooltip text="Guarda los cambios de la valoración seleccionada (Alt+D)" />
+                     </tooltip>
+                  </Button>
+                  <Button fx:id="btnEliminarValoracion" mnemonicParsing="true" onAction="#btnEliminarValoracion" styleClass="btn-danger" text="E_liminar">
+                     <tooltip>
+                        <Tooltip text="Borra la valoración seleccionada (Alt+L)" />
+                     </tooltip>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox styleClass="card" alignment="CENTER_LEFT" spacing="12.0">
+               <children>
+                  <Label styleClass="label-bold" text="Tarifa" />
+                  <ComboBox fx:id="cmbTarifa" prefWidth="180.0" promptText="Elige la tarifa">
+                     <tooltip>
+                        <Tooltip text="Tarifa que quieres valorar" />
+                     </tooltip>
+                  </ComboBox>
+                  <Label styleClass="label-bold" text="Puntuación" />
+                  <ComboBox fx:id="cmbPuntuacion" prefWidth="90.0">
+                     <tooltip>
+                        <Tooltip text="Puntuación de 1 a 5" />
+                     </tooltip>
+                  </ComboBox>
+                  <Label styleClass="label-bold" text="Opinión" />
+                  <TextField fx:id="txtValoracion" promptText="Escribe tu opinión" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <VBox styleClass="card" VBox.vgrow="ALWAYS">
+               <children>
+                  <TableView fx:id="tablaValoraciones" editable="true" onMouseClicked="#seleccionarValoracion" VBox.vgrow="ALWAYS">
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                     <contextMenu>
+                        <ContextMenu>
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#btnEditarValoracion" text="Editar" />
+                              <MenuItem mnemonicParsing="false" onAction="#btnEliminarValoracion" text="Eliminar" />
+                           </items>
+                        </ContextMenu>
+                     </contextMenu>
+                     <columns>
+                        <TableColumn fx:id="colValoracionPuntuacion" editable="false" maxWidth="120.0" minWidth="90.0" text="Puntuación" />
+                        <TableColumn fx:id="colValoracionTexto" onEditCommit="#editarTextoValoracion" text="Opinión (doble clic para editar)" />
+                     </columns>
+                  </TableView>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

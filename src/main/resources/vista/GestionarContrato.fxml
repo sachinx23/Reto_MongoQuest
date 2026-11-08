@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="550.0" prefWidth="900.0" 
+            styleClass="fondo-pantalla" 
+            xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="controlador.GestionarContratoController">
+   <stylesheets>
+      <URL value="@../css/Estilos.css" />
+   </stylesheets>
+   <children>
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <children>
+            
+            <!-- TARJETA SUPERIOR: CABECERA Y FILTROS -->
+            <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="card">
+               <children>
+                  <Label styleClass="titulo-vista" text="Gestión de Contratos" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  
+                  <Label styleClass="label-bold" text="Teléfono:" />
+                  <TextField fx:id="txtFiltroTelefono" prefWidth="140.0" promptText="Buscar teléfono..." styleClass="text-field" />
+                  
+                  <Label styleClass="label-bold" text="Estado:" />
+                  <ComboBox fx:id="comboFiltroEstado" prefWidth="130.0" styleClass="combo-box" />
+                  
+                  <Button fx:id="btnFiltrar" onAction="#filtrarContratos" styleClass="btn-filtrar" text="Filtrar" />
+                  <Button fx:id="btnRefrescar" onAction="#refrescarFiltro" styleClass="btn-refrescar" text="Refrescar" />
+               </children>
+            </HBox>
+
+            <!-- TABLA DE CONTRATOS ENVOLTURA TARJETA -->
+            <VBox styleClass="card" VBox.vgrow="ALWAYS">
+               <children>
+                  <TableView fx:id="tablaContratos" VBox.vgrow="ALWAYS">
+                     <columns>
+                        <TableColumn fx:id="colIdContrato" prefWidth="110.0" text="ID" />
+                        <TableColumn fx:id="colTelefono" prefWidth="110.0" text="Teléfono" />
+                        <TableColumn fx:id="colIdCliente" prefWidth="120.0" text="ID Cliente" />
+                        <TableColumn fx:id="colIdTarifa" prefWidth="120.0" text="ID Tarifa" />
+                        <TableColumn fx:id="colIdEmpleado" prefWidth="120.0" text="ID Empleado" />
+                        <TableColumn fx:id="colEstado" prefWidth="100.0" text="Estado" />
+                        <TableColumn fx:id="colFechaInicio" prefWidth="110.0" text="Fecha Inicio" />
+                        <TableColumn fx:id="colFechaFin" prefWidth="110.0" text="Fecha Fin" />
+                     </columns>
+                  </TableView>
+               </children>
+            </VBox>
+
+            <!-- TARJETA INFERIOR: BOTONES DE ACCIÓN -->
+            <HBox alignment="CENTER_RIGHT" spacing="12.0" styleClass="card">
+               <children>
+                  <Button fx:id="btnAceptarPeticion" onAction="#aceptarPeticion" styleClass="btn-aceptar" text="Aceptar Petición" />
+                  <Button fx:id="btnRechazarPeticion" onAction="#rechazarPeticion" styleClass="btn-rechazar" text="Rechazar Petición" />
+                  <Button fx:id="btnRescindirContrato" onAction="#rescindirContrato" styleClass="btn-rescindir" text="Rescindir Contrato" />
+               </children>
+            </HBox>
+
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

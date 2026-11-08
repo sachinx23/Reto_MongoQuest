@@ -1,0 +1,406 @@
+/* =====================================================
+   Tel-ONDA - UI Enterprise Professional Edition (JavaFX)
+   ===================================================== */
+
+/* ---------- PALETA ELEGANTE Y SUAVE ---------- */
+.root {
+    /* Colores Marca Nobles */
+    -azul-marino:    #093B7B; /* Color corporativo principal */
+    -azul-oceano:    #0052A3; /* Color secundario para botones de acción */
+    -azul-seleccion: #E0F2FE; /* Selección suave en tablas y listas */
+    -turquesa-foco:  #00A38F; /* Borde discreto al enfocar inputs */
+    
+    /* Superficies Neutras */
+    -bg-app:         #F4F7FA; /* Fondo ártico claro */
+    -bg-card:        #FFFFFF;
+    -border-card:    #E2E8F0;
+    
+    /* Textos */
+    -text-title:     #0F172A;
+    -text-body:      #334155;
+    -text-muted:     #64748B;
+
+    -fx-font-family: "Segoe UI", "Inter", -apple-system, sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: -bg-app;
+}
+
+/* ---------- ESTRUCTURA GENERAL ---------- */
+.fondo-pantalla,
+.panel-principal,
+.panel-contenido,
+.scroll-subvista {
+    -fx-background-color: -bg-app !important;
+}
+
+.label {
+    -fx-text-fill: -text-body;
+}
+
+/* ---------- BARRA SUPERIOR (HEADER SOBRIO) ---------- */
+.barra-superior {
+    -fx-background-color: -azul-marino;
+    -fx-padding: 12px 20px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(9, 59, 123, 0.15), 8, 0, 0, 2);
+}
+
+.titulo-barra {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+}
+
+.nombre-usuario {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #E2E8F0;
+}
+
+.franja-turquesa {
+    -fx-background-color: -azul-marino;
+}
+
+/* ---------- COMBOBOX DE CABECERA (ADMIN, EMPLEADO, CLIENTE) ---------- */
+.combo-empleado,
+.combo-admin,
+#cbOpcionesAdmin,
+#cbOpcionesEmpleado,
+#cmbOpciones {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 6px;
+    -fx-border-color: transparent;
+    -fx-padding: 2px 8px;
+    -fx-font-weight: 600;
+}
+
+/* Quita el fondo azul/sombra interior de las celdas de cabecera */
+.combo-empleado .list-cell,
+.combo-admin .list-cell,
+#cbOpcionesAdmin .list-cell,
+#cbOpcionesEmpleado .list-cell,
+#cmbOpciones .list-cell {
+    -fx-background-color: transparent !important;
+    -fx-text-fill: -azul-marino !important;
+}
+
+/* ---------- COMBOBOX GENERALES Y FORMULARIOS ---------- */
+.combo-box {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 6px;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 6px;
+    -fx-border-width: 1px;
+    -fx-padding: 2px 6px;
+    -fx-cursor: hand;
+}
+
+/* Quita el fondo interno en los ComboBox estándar */
+.combo-box .list-cell {
+    -fx-background-color: transparent !important;
+    -fx-text-fill: -text-title;
+    -fx-font-weight: 500;
+}
+
+.combo-box:focused {
+    -fx-border-color: -azul-oceano;
+}
+
+/* Menú desplegable emergente al hacer clic */
+.combo-box-popup .list-view {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: -border-card;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.1), 8, 0, 0, 2);
+}
+
+.combo-box-popup .list-cell {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: -text-title;
+}
+
+.combo-box-popup .list-cell:hover, 
+.combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: -azul-seleccion !important;
+    -fx-text-fill: -azul-marino !important;
+    -fx-font-weight: bold;
+}
+
+/* ---------- TARJETAS ESTRUCTURALES ---------- */
+.card {
+    -fx-background-color: -bg-card;
+    -fx-background-radius: 10px;
+    -fx-border-color: -border-card;
+    -fx-border-radius: 10px;
+    -fx-border-width: 1px;
+    -fx-padding: 18px;
+    -fx-spacing: 12px;
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 10, 0, 0, 2);
+}
+
+.form-box {
+    -fx-spacing: 10px;
+}
+
+/* ---------- TÍTULOS Y ETIQUETAS ---------- */
+.titulo-principal, .titulo-vista {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -azul-marino;
+}
+
+.label-bold, .form-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -text-title;
+}
+
+/* ---------- CAMPOS DE ENTRADA ---------- */
+.text-field, .password-field, .text-area {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 6px;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 6px;
+    -fx-border-width: 1px;
+    -fx-padding: 8px 12px;
+    -fx-prompt-text-fill: -text-muted;
+    -fx-text-fill: -text-title;
+}
+
+.text-field:focused, .password-field:focused, .text-area:focused {
+    -fx-border-color: -azul-oceano;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 82, 163, 0.15), 4, 0, 0, 0);
+}
+
+/* ---------- TABLAS LIMPIAS Y SUAVES ---------- */
+.table-view {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8px;
+    -fx-border-color: -border-card;
+    -fx-border-radius: 8px;
+}
+
+/* Cabecera Azul Marino Nobre */
+.table-view .column-header-background {
+    -fx-background-color: -azul-marino;
+    -fx-background-radius: 7px 7px 0 0;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 38px;
+    -fx-border-color: transparent transparent #CBD5E1 transparent;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #FFFFFF !important;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-alignment: center-left;
+    -fx-padding: 0 12px;
+}
+
+/* Filas de la Tabla */
+.table-row-cell {
+    -fx-cell-size: 36px;
+    -fx-border-color: transparent transparent #F1F5F9 transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #F8FAFC;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #F1F5F9;
+    -fx-cursor: hand;
+}
+
+/* Selección Suave en Azul Claro */
+.table-row-cell:selected, .table-row-cell:odd:selected {
+    -fx-background-color: -azul-seleccion;
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: -azul-marino !important;
+    -fx-font-weight: bold;
+}
+
+.table-cell {
+    -fx-alignment: center-left;
+    -fx-padding: 0 12px;
+    -fx-text-fill: -text-body;
+}
+
+/* ---------- LISTVIEW ---------- */
+.list-view {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 6px;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 6px;
+}
+
+.list-cell {
+    -fx-padding: 8px 12px;
+    -fx-text-fill: -text-body;
+}
+
+.list-cell:odd {
+    -fx-background-color: #F8FAFC;
+}
+
+.list-cell:hover {
+    -fx-background-color: #F1F5F9;
+    -fx-cursor: hand;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: -azul-seleccion;
+    -fx-text-fill: -azul-marino;
+    -fx-font-weight: bold;
+}
+
+/* ---------- BOTONES ELEGANTES Y MÁS MATE ---------- */
+.button {
+    -fx-padding: 8px 18px;
+    -fx-min-height: 36px;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 4, 0, 0, 1);
+}
+
+.btn-primary {
+    -fx-background-color: -azul-marino;
+}
+.btn-primary:hover {
+    -fx-background-color: #062854;
+}
+
+.btn-secondary, .btn-filtrar {
+    -fx-background-color: -azul-oceano;
+}
+.btn-secondary:hover, .btn-filtrar:hover {
+    -fx-background-color: #003D7A;
+}
+
+.btn-aceptar {
+    -fx-background-color: #10B981;
+}
+.btn-aceptar:hover {
+    -fx-background-color: #059669;
+}
+
+.btn-rechazar, .btn-danger {
+    -fx-background-color: #E11D48;
+}
+.btn-rechazar:hover, .btn-danger:hover {
+    -fx-background-color: #BE123C;
+}
+
+.btn-rescindir {
+    -fx-background-color: #D97706;
+}
+.btn-rescindir:hover {
+    -fx-background-color: #B45309;
+}
+
+.btn-refrescar {
+    -fx-background-color: #64748B;
+}
+.btn-refrescar:hover {
+    -fx-background-color: #475569;
+}
+
+.button:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* ---------- SCROLLBARS ---------- */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+.scroll-bar .thumb {
+    -fx-background-color: #CBD5E1;
+    -fx-background-radius: 8px;
+}
+.scroll-bar .thumb:hover {
+    -fx-background-color: #94A3B8;
+}
+/* =====================================================
+   TARJETAS DE TARIFAS FLOTANTES (DIVS DINÁMICOS)
+   ===================================================== */
+
+/* Contenedor tipo div flotante para cada tarifa */
+.tarjeta-tarifa {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12px;
+    -fx-border-color: -border-card;
+    -fx-border-radius: 12px;
+    -fx-border-width: 1.5px;
+    -fx-padding: 18px;
+    -fx-spacing: 10px;
+    -fx-min-width: 250px;
+    -fx-pref-width: 280px;
+    -fx-max-width: 310px;
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.05), 8, 0, 0, 2);
+    -fx-cursor: hand;
+}
+
+.tarjeta-tarifa:hover {
+    -fx-border-color: -azul-oceano;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 82, 163, 0.15), 14, 0, 0, 4);
+    -fx-translate-y: -3px;
+}
+
+/* Estado al seleccionar una tarjeta con el clic */
+.tarjeta-tarifa-seleccionada {
+    -fx-border-color: -azul-marino;
+    -fx-border-width: 2px;
+    -fx-background-color: -azul-seleccion;
+}
+
+/* Badge del tipo de tarifa */
+.badge-tipo-tarifa {
+    -fx-background-color: #E0F2FE;
+    -fx-text-fill: -azul-marino;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3px 8px;
+    -fx-background-radius: 12px;
+}
+
+/* Título de la tarifa */
+.titulo-tarifa-card {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-title;
+}
+
+/* Bloque del precio */
+.precio-tarifa-card {
+    -fx-font-size: 22px;
+    -fx-font-weight: 800;
+    -fx-text-fill: -azul-marino;
+}
+
+.precio-periodo {
+    -fx-font-size: 12px;
+    -fx-text-fill: -text-muted;
+}
+
+/* Detalles */
+.detalles-tarifa-card {
+    -fx-font-size: 12px;
+    -fx-text-fill: -text-body;
+    -fx-wrap-text: true;
+}

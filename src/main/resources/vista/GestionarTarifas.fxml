@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="scroll-subvista" stylesheets="@../css/Estilos.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.GestionTarifasController">
+   <content>
+      <VBox spacing="15.0" styleClass="fondo-pantalla">
+         <children>
+
+            <!-- FORMULARIO DE EDICIÓN Y CREACIÓN -->
+            <VBox spacing="12.0" styleClass="card">
+               <children>
+                  <Label styleClass="titulo-vista" text="Gestión de Tarifas" />
+
+                  <!-- PRIMERA FILA DE CAMPOS -->
+                  <HBox spacing="12.0">
+                     <children>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="label-bold" text="Nombre de la tarifa:" />
+                              <TextField fx:id="txtNombre" promptText="Ej: Onda Fibra 600Mb" styleClass="text-field" />
+                           </children>
+                        </VBox>
+                        
+                        <VBox spacing="4.0">
+                           <children>
+                              <Label styleClass="label-bold" text="Precio (€):" />
+                              <TextField fx:id="txtPrecio" prefWidth="130.0" promptText="0.00" styleClass="text-field" />
+                           </children>
+                        </VBox>
+
+                        <VBox spacing="4.0">
+                           <children>
+                              <Label styleClass="label-bold" text="Tipo de servicio:" />
+                              <ComboBox fx:id="comboTipo" prefWidth="190.0" promptText="Seleccionar..." styleClass="combo-box" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+
+                  <!-- DETALLES DE LA TARIFA -->
+                  <VBox spacing="4.0">
+                     <children>
+                        <Label styleClass="label-bold" text="Detalles del paquete:" />
+                        <TextArea fx:id="txtDetalles" prefRowCount="3" promptText="Descripción detallada de la velocidad, gigas, minutos..." styleClass="text-area" wrapText="true" />
+                     </children>
+                  </VBox>
+
+                  <CheckBox fx:id="chkActiva" selected="true" styleClass="label-bold" text="Tarifa activa para contratación" />
+
+                  <!-- BOTONES DEL FORMULARIO -->
+                  <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                     <children>
+                        <Button fx:id="btnLimpiar" onAction="#btnLimpiarAccion" styleClass="btn-refrescar" text="Limpiar Formulario" />
+                        <Button fx:id="btnEliminar" onAction="#btnEliminarAccion" styleClass="btn-danger" text="Eliminar" />
+                        <Button fx:id="btnActualizar" onAction="#btnActualizarAccion" styleClass="btn-filtrar" text="Actualizar" />
+                        <Button fx:id="btnGuardar" onAction="#btnGuardarAccion" styleClass="btn-primary" text="Guardar Tarifa" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+
+            <!-- TABLA Y ACCIONES DE CONFIRMACIÓN -->
+            <VBox spacing="12.0" styleClass="card" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label styleClass="titulo-vista" text="Listado de Tarifas" />
+
+                  <TableView fx:id="tablaTarifas" minHeight="220.0" prefHeight="260.0" VBox.vgrow="ALWAYS">
+                     <columns>
+                        <TableColumn fx:id="colNombre" prefWidth="180.0" text="Nombre" />
+                        <TableColumn fx:id="colPrecio" prefWidth="90.0" text="Precio (€)" />
+                        <TableColumn fx:id="colTipo" prefWidth="130.0" text="Tipo" />
+                        <TableColumn fx:id="colDetalles" prefWidth="320.0" text="Detalles" />
+                        <TableColumn fx:id="colActiva" prefWidth="80.0" text="Activa" />
+                     </columns>
+                  </TableView>
+
+                  <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                     <children>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button fx:id="btnRechazar" onAction="#rechazarTarifa" styleClass="btn-danger" text="Rechazar" />
+                        <Button fx:id="btnConfirmar" onAction="#confirmarTarifa" styleClass="btn-aceptar" text="Confirmar Tarifa" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+      </VBox>
+   </content>
+</ScrollPane>
