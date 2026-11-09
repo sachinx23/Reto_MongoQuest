@@ -45,6 +45,7 @@ public class AdministradorController implements Initializable {
                 "Gestionar Contratos",
                 "Tickets de Soporte",
                 "Ver Valoraciones",
+                "Ver Log",
                 "Cerrar Sesión"
         ));
         
@@ -70,7 +71,9 @@ public class AdministradorController implements Initializable {
             case "Gestionar Tarifas":
                 cargarSubvista("/vista/GestionarTarifas.fxml");
                 break;
-
+            case "Ver Log":
+                cargarSubvista("/vista/GestionLogs.fxml");
+                break;
             // --- Opciones heredadas de Empleado ---
             case "Gestionar Contratos":
                 cargarSubvista("/vista/GestionarContrato.fxml");
