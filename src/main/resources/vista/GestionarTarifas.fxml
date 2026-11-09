@@ -30,7 +30,7 @@
                         <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label styleClass="label-bold" text="Nombre de la tarifa:" />
-                              <TextField fx:id="txtNombre" promptText="Ej: Onda Fibra 600Mb" styleClass="text-field" />
+                              <TextField fx:id="txtNombre" promptText="Onda Fibra 600Mb" styleClass="text-field" />
                            </children>
                         </VBox>
                         

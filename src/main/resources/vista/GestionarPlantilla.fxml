@@ -46,7 +46,7 @@
                               <TextField fx:id="txtNombre" promptText="Nombre" prefWidth="110.0" />
                               <TextField fx:id="txtApellidos" promptText="Apellidos" prefWidth="130.0" />
                               <TextField fx:id="txtDireccion" promptText="Dirección" HBox.hgrow="ALWAYS" />
-                              <ComboBox fx:id="cmbDireccionSucursal" promptText="Ubicacion" prefWidth="120.0" />
+                              <ComboBox fx:id="cmbDireccionSucursal" promptText="Lonbo kalea" prefWidth="120.0" />
                               <TextField fx:id="txtIban" promptText="IBAN" prefWidth="150.0" />
                               <Button fx:id="btnGuardarEmpleado" onAction="#btnCrearEmpleado" styleClass="btn-aceptar" text="Guardar" />
                               <Button fx:id="btnCancelarFormulario" onAction="#btnCancelarFormulario" styleClass="btn-danger" text="Cancelar" />
@@ -71,7 +71,7 @@
                </children>
             </VBox>
 
-            <!-- SECCIÓN 2: GESTIÓN DE CLIENTES -->
+            <!--  GESTIÓN DE CLIENTES -->
             <VBox spacing="10.0" styleClass="card" VBox.vgrow="ALWAYS">
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="10.0">

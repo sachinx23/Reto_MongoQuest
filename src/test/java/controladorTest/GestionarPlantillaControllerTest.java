@@ -11,6 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.matcher.control.ComboBoxMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 
 import static org.testfx.api.FxAssert.verifyThat;
@@ -134,12 +135,13 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
      */
     @Test
     public void testEscrituraDeCamposFormulario() {
-        // Abrir panel del formulario
         clickOn("#btnCrearEmpleado");
 
         clickOn("#txtNombre").write("Eneko");
         clickOn("#txtApellidos").write("Plaza Vallejo");
         clickOn("#txtDireccion").write("Lonbo kalea 1,4A");
+        clickOn("#cmbDireccionSucursal");
+        clickOn("Lonbo kalea");
         clickOn("#txtIban").write("ES9876543210987654201098");
 
        
@@ -148,7 +150,7 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
         
         verifyThat("#txtDireccion", TextInputControlMatchers.hasText("Lonbo kalea 1,4A"));
         
-        verifyThat("#cmbDireccionSucursal", isVisible());
+        verifyThat("#cmbDireccionSucursal", ComboBoxMatchers.hasSelectedItem("Lonbo kalea"));
         
         verifyThat("#txtIban", TextInputControlMatchers.hasText("ES9876543210987654201098"));
                 

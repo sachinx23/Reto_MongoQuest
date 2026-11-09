@@ -199,7 +199,7 @@ public class GestionarContratosTest extends ApplicationTest {
     }
 
     // ==========================================
-    // SECCIÓN 4: PRUEBAS DE INTERACCIÓN Y ENTRADA DE DATOS
+    //  PRUEBAS DE INTERACCIÓN Y ENTRADA DE DATOS
     // ==========================================
 
     /**

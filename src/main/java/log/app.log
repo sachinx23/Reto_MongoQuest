@@ -113,3 +113,15 @@
 2026-11-07 11:26:05 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.AdministradorDAOImpl.agregarEmpleadoASucursal: Añadir el empleado carlos.garcia a la sucursal Alameda de Urquijo
 2026-11-07 11:26:07 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
 2026-11-07 11:26:07 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 11:49:36 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitrofernandez12
+2026-11-09 11:49:37 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-09 11:49:37 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: Aitrofernandez12
+2026-11-09 11:49:37 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: Aitrofernandez12
+2026-11-09 11:49:47 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez12
+2026-11-09 11:49:47 [INFO] [Aitorfernandez12 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-09 11:49:48 [INFO] [Aitorfernandez12 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-09 11:49:48 [INFO] [Aitorfernandez12 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 11:49:48 [INFO] [Aitorfernandez12 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-09 11:49:51 [WARNING] [Aitorfernandez12 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-09 11:49:51 [INFO] [Aitorfernandez12 (Admin)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-09 11:49:51 [INFO] [Aitorfernandez12 (Admin)] controlador.GestionTarifasController.cargarTabla: Tarifas cargadas: 2
