@@ -64,7 +64,7 @@ db.createCollection("Contratos", {
             precio:       { bsonType: ["int", "double"] }
           }
         },
-        estado:    { enum: ["pendiente", "activo", "baja pendiente", "cancelado", "rechazado", "rescindido"] },
+        estado:    { enum: ["pendiente", "pendiente de firma", "activo", "baja pendiente", "cancelado", "rechazado", "rescindido"] },
         idCliente: { bsonType: "objectId" },
         idTarifa:  { bsonType: "objectId" }
       }

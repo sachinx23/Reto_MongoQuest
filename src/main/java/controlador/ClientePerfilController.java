@@ -30,6 +30,7 @@ public class ClientePerfilController {
         cargarPerfil();
     }
 
+    // Rellena los campos con los datos del cliente
     private void cargarPerfil() {
         txtNombre.setText(cliente.getNombre());
         txtNombreUsuario.setText(cliente.getNombreUsuario());
@@ -40,6 +41,7 @@ public class ClientePerfilController {
         txtCuentaBancaria.setText(cliente.getCuentaBancaria());
     }
 
+    // Valida los datos y guarda los cambios del perfil
     @FXML
     public void btnModificar(ActionEvent event) {
         String nombre = txtNombre.getText().trim();

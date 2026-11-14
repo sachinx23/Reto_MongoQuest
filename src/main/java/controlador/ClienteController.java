@@ -36,6 +36,7 @@ public class ClienteController {
     // Apartado actual
     private String actual;
 
+    // Carga el cliente que ha iniciado sesión y abre Mi Perfil
     @FXML
     public void initialize() {
         bienvenida = lblBienvenida;
@@ -75,6 +76,7 @@ public class ClienteController {
         bienvenida.setText("Cliente: " + cliente.getNombre());
     }
 
+    // Abre el apartado elegido en el menú
     @FXML
     public void cmbOpcionSeleccionada(ActionEvent event) {
         String seleccion = cmbOpciones.getValue();
@@ -103,6 +105,7 @@ public class ClienteController {
         }
     }
 
+    // Muestra una pantalla dentro del panel central
     private void cargarSubvista(String apartado, String fxml) {
         try {
             Parent vista = FXMLLoader.load(getClass().getResource("/vista/" + fxml + ".fxml"));
@@ -113,6 +116,7 @@ public class ClienteController {
         }
     }
 
+    // Pide confirmación y vuelve al login
     private void cerrarSesion() {
         if (!ShowAlert.confirmar("Salir", "¿Deseas salir del panel de cliente?")) {
             cmbOpciones.setValue(actual);

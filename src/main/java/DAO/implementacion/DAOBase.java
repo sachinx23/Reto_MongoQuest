@@ -22,10 +22,12 @@ public abstract class DAOBase {
     protected static final String COL_CONTRATOS = "Contratos";
     protected static final String COL_VALORACIONES = "Valoraciones";
 
+    // Colección de MongoDB con la conexión única
     protected MongoCollection<Document> coleccion(String nombre) throws OurException {
         return MongoDBConexion.getColeccion(nombre);
     }
 
+    // Comprueba el usuario en las tres colecciones de usuarios
     protected boolean nombreUsuarioOcupado(String nombreUsuario, String idPropio) throws OurException {
         String[] colecciones = {"Administradores", "Empleados", COL_CLIENTES};
         for (String nombreColeccion : colecciones) {
@@ -64,6 +66,7 @@ public abstract class DAOBase {
         }
     }
 
+    // Pasa un documento de MongoDB al modelo
     protected Cliente documentoACliente(Document d) {
         return new Cliente(idTexto(d, "_id"), texto(d, "cuentaBancaria"), texto(d, "nombreUsuario"), texto(d, "nombre"),
                 texto(d, "apellidos"), texto(d, "contrasena"), texto(d, "correo"), texto(d, "dni"), texto(d, "telefono"),
@@ -79,6 +82,7 @@ public abstract class DAOBase {
         return coleccion(nombreColeccion).find(new Document("_id", id)).first();
     }
 
+    // Actualiza solo los campos indicados
     protected boolean modificar(String nombreColeccion, String id, Document cambios) throws OurException {
         Document filtro = new Document("_id", new ObjectId(id));
         long encontrados = coleccion(nombreColeccion).updateOne(filtro, new Document("$set", cambios)).getMatchedCount();
@@ -98,6 +102,7 @@ public abstract class DAOBase {
         return new ObjectId(id);
     }
 
+    // Lee un campo como texto sin dar null
     protected String texto(Document d, String campo) {
         Object valor = d.get(campo);
         if (valor == null) {

@@ -1,2 +1,4 @@
 /target/
 telonda.log*
+
+src/main/java/log/app.log*

@@ -55,6 +55,7 @@ public class ClienteContratosController {
         cargarContratos();
     }
 
+    // Muestra los contratos del cliente con el nombre de su tarifa
     private void cargarContratos() {
         try {
             List<Contrato> contratos = contratoDAO.obtenerContratosCliente(cliente.getId());
@@ -70,6 +71,7 @@ public class ClienteContratosController {
         }
     }
 
+    // Solo se firma un contrato validado por un empleado
     @FXML
     public void btnFirmarContrato(ActionEvent event) {
         Contrato contrato = tablaContratos.getSelectionModel().getSelectedItem();
@@ -103,6 +105,7 @@ public class ClienteContratosController {
         }
     }
 
+    // Pide la baja de un contrato activo
     @FXML
     public void btnRescindirContrato(ActionEvent event) {
         Contrato contrato = tablaContratos.getSelectionModel().getSelectedItem();

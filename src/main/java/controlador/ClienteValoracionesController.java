@@ -74,6 +74,7 @@ public class ClienteValoracionesController {
         }
     }
 
+    // Al pulsar una fila se cargan sus datos para editarla
     @FXML
     public void seleccionarValoracion(MouseEvent event) {
         Valoracion valoracion = tablaValoraciones.getSelectionModel().getSelectedItem();
@@ -83,6 +84,7 @@ public class ClienteValoracionesController {
         }
     }
 
+    // Puntuación y texto obligatorios
     private boolean valoracionValida() {
         if (cmbPuntuacion.getValue() == null || txtValoracion.getText().trim().isEmpty()) {
             ShowAlert.info("Aviso", "Elige una puntuación y escribe tu opinión.");
@@ -91,6 +93,7 @@ public class ClienteValoracionesController {
         return true;
     }
 
+    // Publica una valoración nueva de la tarifa elegida
     @FXML
     public void btnValorar(ActionEvent event) {
         int posicion = cmbTarifa.getSelectionModel().getSelectedIndex();
@@ -136,6 +139,7 @@ public class ClienteValoracionesController {
         guardarValoracion(valoracion);
     }
 
+    // Guarda el texto editado directamente en la tabla
     @FXML
     public void editarTextoValoracion(TableColumn.CellEditEvent<Valoracion, String> event) {
         Valoracion valoracion = event.getRowValue();
@@ -161,6 +165,7 @@ public class ClienteValoracionesController {
         cargarValoraciones();
     }
 
+    // Borra la valoración seleccionada
     @FXML
     public void btnEliminarValoracion(ActionEvent event) {
         Valoracion valoracion = tablaValoraciones.getSelectionModel().getSelectedItem();

@@ -35,6 +35,7 @@ public class ClienteSoporteController {
         cargarTickets();
     }
 
+    // Muestra los tickets del cliente
     private void cargarTickets() {
         try {
             tablaSoporte.setItems(FXCollections.observableArrayList(ticketDAO.listarTicketsCliente(cliente.getId())));
@@ -44,6 +45,7 @@ public class ClienteSoporteController {
         }
     }
 
+    // Crea un ticket nuevo de incidencia
     @FXML
     public void btnEnviarTicket(ActionEvent event) {
         String asunto = txtSoporteAsunto.getText().trim();

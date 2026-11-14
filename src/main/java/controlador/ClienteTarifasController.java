@@ -41,6 +41,7 @@ public class ClienteTarifasController {
         cargarTarifas();
     }
 
+    // Muestra solo las tarifas activas
     private void cargarTarifas() {
         try {
             tablaTarifas.setItems(FXCollections.observableArrayList(tarifaDAO.tarifasActivas()));
@@ -50,6 +51,7 @@ public class ClienteTarifasController {
         }
     }
 
+    // Pide la tarifa elegida si el cliente no la tiene ya
     @FXML
     public void btnCambiarTarifa(ActionEvent event) {
         Tarifa tarifa = tablaTarifas.getSelectionModel().getSelectedItem();
@@ -91,6 +93,7 @@ public class ClienteTarifasController {
         }
     }
 
+    // Borra la petición pendiente de la tarifa elegida
     @FXML
     public void btnEliminarTarifa(ActionEvent event) {
         Tarifa tarifa = tablaTarifas.getSelectionModel().getSelectedItem();
