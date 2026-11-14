@@ -133,7 +133,7 @@ public class GestionarTarifasControllerTest extends ApplicationTest {
      * Comprueba que los botones del formulario contengan los textos descriptivos correspondientes.
      */
     @Test
-    public void testtextoBotones() {
+    public void testTextoBotones() {
         verifyThat("#btnLimpiar", LabeledMatchers.hasText("Limpiar Formulario"));
         verifyThat("#btnEliminar", LabeledMatchers.hasText("Eliminar"));
         verifyThat("#btnActualizar", LabeledMatchers.hasText("Actualizar"));

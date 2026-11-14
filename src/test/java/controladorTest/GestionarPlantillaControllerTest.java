@@ -59,7 +59,6 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
     }
 
     
-    //  VISIBILIDAD DE TABLAS Y PANELES
 
     /**
      * Comprueba que la tabla principal de empleados sea visible.
@@ -85,7 +84,6 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
         verifyThat("#panelFormulario", isInvisible());
     }
 
-    // TEXTO DE BOTONES DE ACCIÓN
 
     /**
      * Comprueba el texto del botón para crear un nuevo empleado.
@@ -119,7 +117,6 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
         verifyThat("#btnEliminarCliente", hasText("Eliminar Datos Sensibles"));
     }
 
-    // INTERACCIÓN CON EL FORMULARIO INTEGRADO
 
     /**
      * Verifica que al pulsar en "+ Crear Empleado" el panel del formulario pase a estar visible.
@@ -168,7 +165,6 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
         verifyThat("#panelFormulario", isInvisible());
     }
 
-    //  COLUMNAS DE LA TABLA EMPLEADOS
 
     /**
      * Verifica la visibilidad de la columna Nombre de la tabla de empleados.
@@ -234,7 +230,6 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
         verifyThat("#colEmpIBAN", isVisible());
     }
 
-    // COLUMNAS DE LA TABLA CLIENTES
 
     /**
      * Verifica la visibilidad de la columna Nombre de la tabla de clientes.

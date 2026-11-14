@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    =======================================================================
+    Configuración del Proyecto Maven - Tel-ONDA (Reto 1)
+    =======================================================================
+    Este archivo (pom.xml) define las dependencias del proyecto, la versión 
+    de Java, las librerías de prueba (JUnit y TestFX), la base de datos 
+    (MongoDB) y los plugins de compilación y empaquetado (Fat JAR).
+    =======================================================================
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Información y coordenadas del artefacto Maven -->
     <groupId>com.mycompany</groupId>
     <artifactId>Reto_1</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -12,51 +22,77 @@
 
     <name>Tel-ONDA</name>
 
+    <!-- Propiedades globales del proyecto -->
     <properties>
+        <!-- Codificación de caracteres para la compilación -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Versión del JDK utilizada (Java 21) -->
         <maven.compiler.release>21</maven.compiler.release>
+        <!-- Clase principal de la aplicación JavaFX -->
         <exec.mainClass>com.mycompany.reto_1.App</exec.mainClass>
     </properties>
 
+    <!-- Dependencias de la aplicación -->
     <dependencies>
+
+        <!-- =============================================================== -->
+        <!-- DEPENDENCIAS DE JAVAFX (Interfaz de Usuario)                   -->
+        <!-- =============================================================== -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>17.0.2</version>
         </dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>17.0.2</version>
         </dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
             <version>17.0.2</version>  
         </dependency>  
+
+        <!-- =============================================================== -->
+        <!-- BASE DE DATOS (Driver Síncrono de MongoDB)                      -->
+        <!-- =============================================================== -->
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
             <version>4.11.1</version>
         </dependency>
+
+        <!-- =============================================================== -->
+        <!-- DEPENDENCIAS DE PRUEBAS (JUnit 5, TestFX, Hamcrest)             -->
+        <!-- =============================================================== -->
+        <!-- Framework para pruebas unitarias JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Núcleo de TestFX para pruebas de interfaz de usuario -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
             <version>4.0.18</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Extensión de TestFX compatible con JUnit 5 -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit5</artifactId>
             <version>4.0.18</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Librería de aserciones complejas para testing -->
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
@@ -65,8 +101,11 @@
         </dependency>
     </dependencies>
 
+    <!-- Plugins de compilación, generación de Javadoc y empaquetado -->
     <build>
         <plugins>
+
+            <!-- Plugin Maven Shade: Genera un archivo JAR ejecutable con todas las dependencias incluidas (Fat JAR) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -90,6 +129,7 @@
                 </executions>
             </plugin>
 
+            <!-- Plugin JavaFX: Permite ejecutar la aplicación directamente desde Maven mediante "mvn javafx:run" -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -98,12 +138,25 @@
                     <mainClass>${exec.mainClass}</mainClass>
                 </configuration>
             </plugin>
+
+            <!-- Plugin Surefire: Ejecuta las pruebas unitarias e integración durante la fase de test -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
                     <useModulePath>false</useModulePath>
+                </configuration>
+            </plugin>
+
+            <!-- Plugin Javadoc: Genera la documentación HTML de todo el proyecto Java mediante "mvn javadoc:javadoc" -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <show>private</show>
+                    <nohelp>true</nohelp>
                 </configuration>
             </plugin>
 

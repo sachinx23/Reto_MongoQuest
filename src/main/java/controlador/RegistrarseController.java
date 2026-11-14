@@ -25,50 +25,74 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class para la ventana Registrarse
+ * Controlador de la ventana de registro de nuevos clientes en JavaFX ({@code Registrarse.fxml}).
+ * Valida el formato de los datos personales y credenciales introducidos en el formulario,
+ * registra el nuevo cliente en MongoDB mediante {@link ClienteDAO} y redirige de vuelta
+ * a la pantalla de inicio de sesión.
  *
  * @author Eneko.Plaza
  */
 public class RegistrarseController implements Initializable {
 
+    /**
+     * Registrador de eventos (Logger) para trazar advertencias y errores de navegación del controlador.
+     */
     private static final Logger LOGGER = Logger.getLogger(RegistrarseController.class.getName());
 
-    // Instancia del DAO
+    /** Objeto de acceso a datos para persistir el alta del nuevo cliente en MongoDB. */
     private final ClienteDAO clienteDAO = new ClienteDAOImplementacion();
 
+    /** Campo de texto para el nombre de usuario elegido por el cliente. */
     @FXML
     private TextField txtUsuario;
 
+    /** Campo de texto para el nombre de pila del cliente. */
     @FXML
     private TextField txtNombre;
 
+    /** Campo de texto para los apellidos del cliente. */
     @FXML
     private TextField txtApellidos;
 
+    /** Campo de contraseña enmascarada para la clave de acceso (mínimo 6 caracteres). */
     @FXML
     private PasswordField txtContrasena;
 
+    /** Campo de texto para la dirección de correo electrónico del cliente. */
     @FXML
     private TextField txtCorreo;
 
+    /** Campo de texto para el Documento Nacional de Identidad (8 dígitos y letra mayúscula). */
     @FXML
     private TextField txtDni;
 
+    /** Campo de texto para el número de teléfono de contacto del cliente. */
     @FXML
     private TextField txtTelefono;
 
+    /** Campo de texto para la dirección postal del cliente. */
     @FXML
     private TextField txtDireccion;
 
+    /** Etiqueta utilizada para mostrar mensajes de validación o error en el formulario. */
     @FXML
     private Label lblMensajeError;
 
+    /** Botón principal que dispara el proceso de validación y registro del cliente. */
     @FXML
     private Button btnRegistrarse;
 
+    /** Botón para cancelar el registro y regresar a la vista de inicio de sesión. */
     @FXML
     private Button btnVolver;
 
+    /**
+     * Inicializa el controlador tras cargar su archivo FXML, limpiando cualquier
+     * texto previo en la etiqueta de mensajes de error.
+     *
+     * @param url Ubicación utilizada para resolver rutas relativas del objeto raíz, o {@code null} si no se conoce.
+     * @param rb  Recursos utilizados para localizar el objeto raíz, o {@code null} si no se localizó.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         if (lblMensajeError != null) {
@@ -76,6 +100,15 @@ public class RegistrarseController implements Initializable {
         }
     }
 
+    /**
+     * Manejador del botón de registro.
+     * Comprueba que ningún campo esté vacío y valida el formato del correo electrónico,
+     * el DNI ({@code [0-9]{8}[A-Z]}) y la longitud mínima de la contraseña (6 caracteres).
+     * Si la validación es correcta, registra al cliente mediante {@link ClienteDAO#registrarCliente},
+     * muestra una confirmación y redirige a la pantalla de inicio de sesión.
+     *
+     * @param event Evento de acción disparado al pulsar el botón de registrarse.
+     */
     @FXML
     public void btnRegistrarse(ActionEvent event) {
         try {
@@ -88,23 +121,19 @@ public class RegistrarseController implements Initializable {
             String telefono = txtTelefono.getText().trim();
             String direccion = txtDireccion.getText().trim();
 
-            // Validar que no haya campos vacíos
             if (usuario.isEmpty() || nombre.isEmpty() || apellidos.isEmpty() || contrasena.isEmpty()
                     || correo.isEmpty() || dni.isEmpty() || telefono.isEmpty() || direccion.isEmpty()) {
                 lblMensajeError.setText("Rellena todos los campos.");
                 return;
             }
-            // Validar correo
             if (!correo.contains("@") || !correo.contains(".")) {
                 lblMensajeError.setText("El correo no es válido.");
                 return;
             }
-            // Validar dni
             if (!dni.matches("[0-9]{8}[A-Z]")) {
                 lblMensajeError.setText("DNI introducido incorrectamente.");
                 return;
             }
-            // Validar contraseña
             if (contrasena.length() < 6) {
                 lblMensajeError.setText("La contraseña debe tener mínimo 6 caracteres.");
                 return;
@@ -112,7 +141,6 @@ public class RegistrarseController implements Initializable {
 
             lblMensajeError.setText("");
 
-            // Llamada a la instancia del DAO
             boolean registrado = clienteDAO.registrarCliente(usuario, nombre, apellidos, contrasena, correo, dni, telefono, direccion);
 
             if (registrado) {
@@ -120,7 +148,6 @@ public class RegistrarseController implements Initializable {
                 alert.setContentText("¡Usuario registrado correctamente!");
                 alert.showAndWait();
 
-                // Volver automáticamente a la pantalla de Inicio de Sesión
                 volverAIniciarSesion(event);
             } else {
                 lblMensajeError.setText("No se pudo registrar el usuario. Comprueba los datos.");
@@ -132,7 +159,12 @@ public class RegistrarseController implements Initializable {
         }
     }
 
-    // Método para que vuelva a iniciar sesión
+    /**
+     * Sustituye la escena de la ventana ({@link Stage}) actual por la vista de inicio
+     * de sesión ({@code /vista/IniciarSesion.fxml}).
+     *
+     * @param event Evento de acción utilizado para obtener la ventana actual.
+     */
     @FXML
     private void volverAIniciarSesion(ActionEvent event) {
         try {

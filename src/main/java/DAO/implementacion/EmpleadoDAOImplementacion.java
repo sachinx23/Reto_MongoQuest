@@ -18,14 +18,37 @@ import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
+ * Implementación de la interfaz {@link EmpleadoDAO} encargada de gestionar las
+ * operaciones de autenticación, consulta, alta, baja y promoción de empleados
+ * en MongoDB.
  *
  * @author Eneko.Plaza
  */
-public class EmpleadoDAOImplementacion implements EmpleadoDAO{
+public class EmpleadoDAOImplementacion implements EmpleadoDAO {
 
+    /**
+     * Registrador de eventos (Logger) para trazar las operaciones y errores de
+     * la clase.
+     */
     private static final Logger LOGGER = Logger.getLogger(EmpleadoDAOImplementacion.class.getName());
-@Override
+
+    /**
+     * Verifica las credenciales de inicio de sesión buscando secuencialmente en
+     * las colecciones {@code Administradores}, {@code Empleados} y
+     * {@code Clientes}. Si encuentra coincidencia, añade el campo {@code rol}
+     * correspondiente al documento devuelto.
+     *
+     * @param usuario Nombre de usuario utilizado para autenticarse.
+     * @param contrasena Contraseña asociada al usuario.
+     * @return El {@link Document} del usuario autenticado con su respectivo rol
+     * asignado, o {@code null} si las credenciales no coinciden en ninguna
+     * colección.
+     * @throws OurException Si ocurre un error durante la consulta a la base de
+     * datos.
+     */
+    @Override
     public Document comprobarUsuarios(String usuario, String contrasena) throws OurException {
         try {
             LOGGER.info("Buscar en Empleados al usuario: " + usuario);
@@ -56,6 +79,16 @@ public class EmpleadoDAOImplementacion implements EmpleadoDAO{
         return null;
     }
 
+    /**
+     * Recupera todos los documentos de la colección {@code Empleados} y los
+     * mapea a instancias del modelo {@link Empleado}, asignando valores por
+     * defecto ante campos nulos.
+     *
+     * @return Una {@link List} con todos los objetos {@link Empleado}
+     * registrados en MongoDB.
+     * @throws OurException Si ocurre un error al consultar o mapear los datos
+     * de los empleados.
+     */
     @Override
     public List<Empleado> listarEmpleados() throws OurException {
         LOGGER.info("Listar empleados");
@@ -69,10 +102,9 @@ public class EmpleadoDAOImplementacion implements EmpleadoDAO{
                 String nombre = doc.getString("nombre") != null ? doc.getString("nombre") : "";
                 String apellidos = doc.getString("apellidos") != null ? doc.getString("apellidos") : "";
                 String contrasena = doc.getString("contrasena") != null ? doc.getString("contrasena") : "";
-                
-                // 1. Añadir la lectura de la dirección de MongoDB
+
                 String direccion = doc.getString("direccion") != null ? doc.getString("direccion") : "";
-                
+
                 String correo = doc.getString("correo") != null ? doc.getString("correo") : "";
                 String rol = doc.getString("rol") != null ? doc.getString("rol") : "Empleado";
                 String iban = doc.getString("cuentaBancaria") != null ? doc.getString("cuentaBancaria") : "";
@@ -80,7 +112,6 @@ public class EmpleadoDAOImplementacion implements EmpleadoDAO{
                 Object idSucObj = doc.get("idSucursal");
                 String idSucursal = idSucObj != null ? idSucObj.toString() : "";
 
-                // 2. Pasar 'direccion' con su coma separadora correspondiente (los 10 parámetros)
                 lista.add(new Empleado(id, usuario, nombre, apellidos, contrasena, direccion, correo, rol, iban, idSucursal));
             }
         } catch (Exception e) {
@@ -90,6 +121,22 @@ public class EmpleadoDAOImplementacion implements EmpleadoDAO{
         return lista;
     }
 
+    /**
+     * Registra un nuevo empleado en la colección {@code Empleados} con el rol
+     * {@code "Empleado"} por defecto, siempre que el nombre de usuario no esté
+     * ya ocupado.
+     *
+     * @param usuario Nombre de usuario único para el empleado.
+     * @param nombre Nombre de pila del empleado.
+     * @param apellidos Apellidos del empleado.
+     * @param contrasena Contraseña de acceso al sistema.
+     * @param correo Dirección de correo electrónico del empleado.
+     * @param cuentaBancaria Número de cuenta bancaria (IBAN) del empleado.
+     * @return {@code true} si el empleado se insertó correctamente;
+     * {@code false} si ya existía un registro con ese nombre de usuario.
+     * @throws OurException Si ocurre un error al insertar el documento en la
+     * base de datos.
+     */
     @Override
     public boolean crearEmpleado(String usuario, String nombre, String apellidos, String contrasena, String correo, String cuentaBancaria) throws OurException {
         try {
@@ -117,6 +164,17 @@ public class EmpleadoDAOImplementacion implements EmpleadoDAO{
         }
     }
 
+    /**
+     * Elimina un empleado de la colección {@code Empleados} filtrando por su
+     * nombre de usuario.
+     *
+     * @param nombreUsuario Nombre de usuario del empleado que se desea dar de
+     * baja.
+     * @return {@code true} si se eliminó el empleado; {@code false} si no se
+     * encontró el registro.
+     * @throws OurException Si se produce un error durante la operación de
+     * borrado en MongoDB.
+     */
     @Override
     public boolean eliminarEmpleado(String nombreUsuario) throws OurException {
         try {
@@ -129,6 +187,18 @@ public class EmpleadoDAOImplementacion implements EmpleadoDAO{
         }
     }
 
+    /**
+     * Asciende a un empleado transfiriendo su documento desde la colección
+     * {@code Empleados} hacia la colección {@code Administradores} y
+     * actualizando su atributo {@code rol}.
+     *
+     * @param nombreUsuario Nombre de usuario del empleado que será ascendido.
+     * @param nuevoRol Nuevo rol que se le asignará al usuario tras el ascenso.
+     * @return {@code true} si el empleado existía y fue movido correctamente;
+     * {@code false} si no se encontró al empleado.
+     * @throws OurException Si ocurre un error durante la transferencia entre
+     * colecciones.
+     */
     @Override
     public boolean ascenderEmpleado(String nombreUsuario, String nuevoRol) throws OurException {
         try {

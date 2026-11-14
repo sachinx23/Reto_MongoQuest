@@ -62,7 +62,6 @@ public class GestionarContratosTest extends ApplicationTest {
         release(new MouseButton[]{});
     }
 
-    //  VISIBILIDAD DE CONTROLES GENERALES
     
 
     /**
@@ -106,7 +105,6 @@ public class GestionarContratosTest extends ApplicationTest {
         verifyThat("#btnRefrescar", hasText("Refrescar"));
     }
 
-    // ESTRUCTURA DE COLUMNAS DE LA TABLA
 
     /**
      * Verifica que la columna del ID de contrato sea visible en la tabla.
@@ -172,7 +170,6 @@ public class GestionarContratosTest extends ApplicationTest {
         verifyThat("#colFechaFin", isVisible());
     }
 
-    //ESTADO INICIAL DE BOTONES DE ACCIÓN
 
     /**
      * Verifica que el botón para aceptar una petición inicie deshabilitado al no haber filas seleccionadas.
@@ -198,9 +195,6 @@ public class GestionarContratosTest extends ApplicationTest {
         verifyThat("#btnRescindirContrato", isDisabled());
     }
 
-    // ==========================================
-    //  PRUEBAS DE INTERACCIÓN Y ENTRADA DE DATOS
-    // ==========================================
 
     /**
      * Simula la escritura de un número telefónico en el campo de texto de filtro

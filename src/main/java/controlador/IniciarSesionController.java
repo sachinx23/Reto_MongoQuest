@@ -34,32 +34,56 @@ import javafx.stage.Stage;
 import org.bson.Document;
 
 /**
- * Controlador de Iniciar Sesión con soporte para Admin, Empleado y Cliente
+ * Controlador de la pantalla de inicio de sesión en JavaFX.
+ * Valida las credenciales introducidas consultando secuencialmente las colecciones de
+ * Administradores, Empleados y Clientes en MongoDB, deduce o recupera el rol del usuario,
+ * registra la sesión activa en {@link LogApp} y redirige a la vista principal correspondiente
+ * o a la pantalla de registro de nuevos clientes.
+ *
  * @author Eneko.Plaza
  */
 public class IniciarSesionController implements Initializable {
 
+    /**
+     * Registrador de eventos (Logger) para trazar inicios de sesión y errores de navegación.
+     */
     private static final Logger LOGGER = Logger.getLogger(IniciarSesionController.class.getName());
 
+    /** Objeto de acceso a datos para verificar credenciales de administradores. */
     private final AdministradorDAO administradorDAO = new AdministradorDAOImpl();
+
+    /** Objeto de acceso a datos para verificar credenciales de empleados. */
     private final EmpleadoDAO empleadoDAO = new EmpleadoDAOImplementacion();
+
+    /** Objeto de acceso a datos para verificar credenciales de clientes. */
     private final ClienteDAO clienteDAO = new ClienteDAOImplementacion();
 
+    /** Identificador hexadecimal ({@code _id}) del usuario que ha iniciado sesión en la aplicación. */
     public static String idUsuarioActual;
 
+    /** Campo de texto para introducir el nombre de usuario de acceso. */
     @FXML
     private TextField txtUsuario;
 
+    /** Campo de contraseña enmascarada para introducir la clave de acceso. */
     @FXML
     private PasswordField txtContrasena;
 
+    /** Etiqueta utilizada para mostrar mensajes de validación o error en el formulario. */
     @FXML
     private Label lblMensajeError;
 
-    
+    /** Botón principal que dispara la comprobación de credenciales e inicio de sesión. */
     @FXML
     private Button txtIniciarSesion;
 
+    /**
+     * Inicializa el controlador tras cargar su archivo FXML, limpiando cualquier
+     * texto previo en la etiqueta de mensajes de error.
+     *
+     * @param url Ubicación utilizada para resolver rutas relativas del objeto raíz, o {@code null} si no se conoce.
+     * @param rb  Recursos utilizados para localizar el objeto raíz, o {@code null} si no se localizó.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         if (lblMensajeError != null) {
@@ -67,6 +91,14 @@ public class IniciarSesionController implements Initializable {
         }
     }
 
+    /**
+     * Manejador del botón de inicio de sesión.
+     * Comprueba que usuario y contraseña no estén vacíos y busca coincidencias en orden
+     * en administradores, empleados y clientes. Si la autenticación tiene éxito, guarda
+     * {@link #idUsuarioActual}, registra el usuario en {@link LogApp}, muestra un diálogo
+     * de bienvenida y redirige a la interfaz correspondiente al rol ({@code Admin.fxml},
+     * {@code Empleado.fxml} o {@code Cliente.fxml}).
+     */
     @FXML
     public void btnIniciarSesion() {
         try {
@@ -82,13 +114,11 @@ public class IniciarSesionController implements Initializable {
 
             String rolDeducido = null;
 
-            // 1. Busca en Administradores
             Document usuarioObtenido = administradorDAO.comprobarUsuarios(usuario, contrasena);
             if (usuarioObtenido != null) {
                 rolDeducido = "Admin";
             }
 
-            // 2. Si no lo encuentra, busca en Empleados
             if (usuarioObtenido == null) {
                 usuarioObtenido = empleadoDAO.comprobarUsuarios(usuario, contrasena);
                 if (usuarioObtenido != null) {
@@ -96,7 +126,6 @@ public class IniciarSesionController implements Initializable {
                 }
             }
 
-            // 3. Si tampoco lo encuentra, busca en Clientes
             if (usuarioObtenido == null) {
                 usuarioObtenido = clienteDAO.comprobarUsuarios(usuario, contrasena);
                 if (usuarioObtenido != null) {
@@ -112,7 +141,6 @@ public class IniciarSesionController implements Initializable {
                     nombre = usuarioObtenido.getString("nombreUsuario");
                 }
 
-                // Si el documento de MongoDB tiene un campo "rol", lo usamos; si no, usamos el deducido por el DAO
                 String rolBD = usuarioObtenido.getString("rol");
                 String rolFinal = (rolBD != null && !rolBD.isEmpty()) ? rolBD : rolDeducido;
                 LogApp.setUsuario(usuario + " (" + rolFinal + ")");
@@ -124,7 +152,6 @@ public class IniciarSesionController implements Initializable {
                 alert.setContentText("¡Bienvenido/a " + (nombre != null ? nombre : usuario) + "!\nRol: " + rolFinal);
                 alert.showAndWait();
 
-                // Redirección según el rol correspondiente
                 if (rolFinal != null) {
                     if (rolFinal.equalsIgnoreCase("Admin")) {
                         cambiarPantalla("/vista/Admin.fxml");
@@ -149,6 +176,12 @@ public class IniciarSesionController implements Initializable {
         }
     }
 
+    /**
+     * Sustituye la escena de la ventana ({@link Stage}) actual por la vista FXML indicada
+     * en la ruta proporcionada.
+     *
+     * @param ruta Ruta relativa dentro de los recursos del proyecto hacia el archivo {@code .fxml}.
+     */
     @FXML
     public void cambiarPantalla(String ruta) {
         try {
@@ -168,6 +201,12 @@ public class IniciarSesionController implements Initializable {
         }
     }
 
+    /**
+     * Manejador del botón o enlace de registro que redirige al usuario a la vista
+     * de alta de nuevos clientes ({@code /vista/Registrarse.fxml}).
+     *
+     * @param event Evento de acción disparado al pulsar el botón de registrarse.
+     */
     @FXML
     public void btnRegistrarse(ActionEvent event) {
         try {

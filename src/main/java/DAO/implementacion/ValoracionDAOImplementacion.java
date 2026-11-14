@@ -20,18 +20,37 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.util.List;
 import com.mongodb.MongoException;
+
 /**
+ * Implementación de la interfaz {@link ValoracionDAO} que extiende {@link DAOBase} para
+ * gestionar las operaciones CRUD, el filtrado por puntuación y el cálculo de estadísticas
+ * de las valoraciones de los clientes en MongoDB.
  *
  * @author Eneko.Plaza
  */
 public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDAO {
 
+    /**
+     * Registrador de eventos (Logger) para trazar las operaciones y errores de la clase.
+     */
     private static final Logger LOGGER = Logger.getLogger(ValoracionDAOImplementacion.class.getName());
 
+    /**
+     * Obtiene la referencia directa a la colección {@code Valoraciones} en MongoDB.
+     *
+     * @return Instancia de {@link MongoCollection} tipada con {@link Document}.
+     */
     private MongoCollection<Document> getColeccion() {
         return MongoDBConexion.getColeccion("Valoraciones");
     }
 
+    /**
+     * Construye un documento de filtro para buscar por el campo {@code _id},
+     * intentando convertir la cadena a {@link ObjectId} o usándola como {@link String} si no es válida.
+     *
+     * @param idStr Identificador del documento en formato texto.
+     * @return Un {@link Document} configurado con la clave {@code _id}.
+     */
     private Document getFiltroId(String idStr) {
         try {
             return new Document("_id", new ObjectId(idStr));
@@ -40,6 +59,13 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
         }
     }
 
+    /**
+     * Convierte un {@link Document} de la colección {@code Valoraciones} en una instancia
+     * del modelo {@link Valoracion}.
+     *
+     * @param d Documento BSON recuperado de MongoDB.
+     * @return Objeto {@link Valoracion} poblado con los datos básicos del documento.
+     */
     @Override
     public Valoracion mapearValoracion(Document d) {
         Valoracion v = new Valoracion();
@@ -51,6 +77,14 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
         return v;
     }
 
+    /**
+     * Recupera todas las valoraciones registradas en MongoDB y enriquece cada objeto
+     * consultando los nombres asociados del cliente y de la tarifa (asignando textos de
+     * respaldo si alguno de ellos hubiera sido eliminado).
+     *
+     * @return Una {@link List} con todas las instancias de {@link Valoracion} completas.
+     * @throws OurException Si ocurre un error durante la consulta o el cruce de colecciones.
+     */
     @Override
     public List<Valoracion> listarValoraciones() throws OurException {
         try {
@@ -85,6 +119,13 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
         }
     }
 
+    /**
+     * Filtra y recupera las valoraciones que coinciden exactamente con una puntuación numérica.
+     *
+     * @param puntuacion Valor numérico de estrellas/puntuación por el cual filtrar.
+     * @return Una {@link List} de objetos {@link Valoracion} con dicha puntuación.
+     * @throws OurException Si ocurre un error al consultar la base de datos.
+     */
     @Override
     public List<Valoracion> listarValoracionesPorPuntuacion(int puntuacion) throws OurException {
         try {
@@ -104,6 +145,12 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
         }
     }
 
+    /**
+     * Calcula la puntuación media aritmética de todas las valoraciones almacenadas en el sistema.
+     *
+     * @return El promedio de puntuación como {@code double}, o {@code 0} si no existen valoraciones.
+     * @throws OurException Si se produce un fallo al leer las valoraciones desde MongoDB.
+     */
     @Override
     public double mediaValoraciones() throws OurException {
         try {
@@ -124,6 +171,13 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
         }
     }
 
+    /**
+     * Elimina una valoración de la colección {@code Valoraciones} a partir de su identificador.
+     *
+     * @param v Objeto {@link Valoracion} que contiene el identificador del registro a borrar.
+     * @return {@code true} si se eliminó el documento; {@code false} si no existía.
+     * @throws OurException Si ocurre un error durante la operación de borrado en MongoDB.
+     */
     @Override
     public boolean eliminarValoracion(Valoracion v) throws OurException {
         try {
@@ -142,6 +196,13 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
 
     // Parte cliente
 
+    /**
+     * Recupera todas las valoraciones realizadas por un cliente específico.
+     *
+     * @param idCliente Identificador hexadecimal ({@link ObjectId}) del cliente.
+     * @return Una {@link List} con las {@link Valoracion} publicadas por dicho cliente.
+     * @throws OurException Si ocurre un error de MongoDB durante la búsqueda.
+     */
     @Override
     public List<Valoracion> obtenerValoracionesCliente(String idCliente) throws OurException {
         LOGGER.info("Listar valoraciones del cliente " + idCliente);
@@ -154,6 +215,13 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
         }
     }
 
+    /**
+     * Inserta una nueva valoración en la colección {@code Valoraciones} y actualiza
+     * el identificador {@code _id} generado en el objeto {@link Valoracion} recibido.
+     *
+     * @param valoracion Objeto {@link Valoracion} con la puntuación, comentario, cliente y tarifa asociados.
+     * @throws OurException Si se produce un error de MongoDB al guardar la valoración.
+     */
     @Override
     public void insertarValoracion(Valoracion valoracion) throws OurException {
         LOGGER.info("Insertar valoración de " + valoracion.getPuntuacion() + " estrellas del cliente " + valoracion.getIdCliente() + " para la tarifa " + valoracion.getIdTarifa());
@@ -172,6 +240,12 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
         }
     }
 
+    /**
+     * Actualiza la puntuación y el texto de comentario de una valoración existente.
+     *
+     * @param valoracion Objeto {@link Valoracion} con el identificador del registro y los nuevos datos.
+     * @throws OurException Si no se encuentra la valoración a modificar o falla la operación en MongoDB.
+     */
     @Override
     public void actualizarValoracion(Valoracion valoracion) throws OurException {
         LOGGER.info("Actualizar valoración " + valoracion.getId() + " a " + valoracion.getPuntuacion() + " estrellas");
@@ -188,6 +262,14 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
         }
     }
 
+    /**
+     * Método auxiliar que busca valoraciones según un filtro BSON dado y completa
+     * el nombre del autor consultando la colección {@code Clientes}.
+     *
+     * @param filtro Documento BSON con los criterios de búsqueda.
+     * @return Una {@link List} de objetos {@link Valoracion} coincidentes.
+     * @throws OurException Si ocurre un error al consultar las colecciones en MongoDB.
+     */
     private List<Valoracion> buscarValoraciones(Document filtro) throws OurException {
         List<Valoracion> valoraciones = new ArrayList<>();
         for (Document d : coleccion(COL_VALORACIONES).find(filtro)) {

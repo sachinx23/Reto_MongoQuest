@@ -26,29 +26,66 @@ import modelo.Ubicacion;
 import DAO.SucursalDAO;
 import DAO.implementacion.SucursalDAOImplementacion;
 
+/**
+ * Controlador de la vista de gestión y consulta de sucursales en JavaFX.
+ * Administra el listado de sucursales mediante un {@link ListView}, permite realizar
+ * operaciones CRUD (alta, modificación y eliminación) sobre las mismas e integra un
+ * mapa interactivo en un {@link WebView} para visualizar y enfocar sus ubicaciones.
+ *
+ * @author Eneko.Plaza
+ */
 public class GestionSucursalController implements Initializable {
 
+    /**
+     * Registrador de eventos (Logger) para trazar advertencias y operaciones del controlador.
+     */
     private static final Logger LOGGER = Logger.getLogger(GestionSucursalController.class.getName());
 
+    /** Campo de texto para el nombre identificador de la sucursal. */
     @FXML
     private TextField txtNombre;
+
+    /** Campo de texto para el horario de atención al público de la sucursal. */
     @FXML
     private TextField txtHorario;
+
+    /** Campo de texto para el número de teléfono de contacto de la sucursal. */
     @FXML
     private TextField txtTelefono;
+
+    /** Campo de texto para la dirección física de la sucursal. */
     @FXML
     private TextField txtUbicacion;
+
+    /** Campo de texto para el código postal de la ubicación. */
     @FXML
     private TextField txtCodigoPostal;
+
+    /** Componente visual de lista que muestra las sucursales registradas. */
     @FXML
     private ListView<Sucursal> listSucursales;
+
+    /** Componente web embebido donde se renderiza el mapa interactivo ({@code mapa.html}). */
     @FXML
     private WebView webViewMapa;
 
+    /** Lista observable que respalda los elementos mostrados en {@code listSucursales}. */
     private final ObservableList<Sucursal> listaSucursalesData = FXCollections.observableArrayList();
+
+    /** Motor web asociado a {@code webViewMapa} para ejecutar funciones JavaScript del mapa. */
     private WebEngine engine;
+
+    /** Objeto de acceso a datos para gestionar la persistencia de las sucursales en MongoDB. */
     private final SucursalDAO sucursalDAO = new SucursalDAOImplementacion();
 
+    /**
+     * Inicializa el controlador tras cargar su archivo FXML.
+     * Configura la celda personalizada y el listener de selección de {@code listSucursales},
+     * inicializa el motor del mapa HTML y carga las sucursales desde la base de datos.
+     *
+     * @param url Ubicación utilizada para resolver rutas relativas del objeto raíz, o {@code null} si no se conoce.
+     * @param rb  Recursos utilizados para localizar el objeto raíz, o {@code null} si no se localizó.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         listSucursales.setItems(listaSucursalesData);
@@ -88,6 +125,11 @@ public class GestionSucursalController implements Initializable {
         cargarSucursalesBD();
     }
 
+    /**
+     * Carga el recurso local {@code /html/mapa.html} en el {@link WebEngine} del {@link WebView}
+     * y registra un listener que refresca el mapa y dibuja todos los marcadores de sucursales
+     * una vez que la página ha terminado de cargarse ({@link Worker.State#SUCCEEDED}).
+     */
     private void cargarMapa() {
         engine = webViewMapa.getEngine();
         URL url = getClass().getResource("/html/mapa.html");
@@ -106,6 +148,10 @@ public class GestionSucursalController implements Initializable {
         }
     }
 
+    /**
+     * Limpia los marcadores existentes en el mapa web e invoca la función JavaScript
+     * {@code agregarSucursal} para posicionar cada sucursal de {@code listaSucursalesData}.
+     */
     private void mostrarTodasLasSucursalesEnMapa() {
         if (engine != null) {
             if (engine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
@@ -123,6 +169,12 @@ public class GestionSucursalController implements Initializable {
         }
     }
 
+    /**
+     * Centra y enfoca el mapa web en la dirección y localidad de una ubicación concreta
+     * ejecutando la función JavaScript {@code enfocarUbicacion}.
+     *
+     * @param ubicacion Objeto {@link Ubicacion} hacia el cual se desplazará la vista del mapa.
+     */
     private void actualizarMapa(Ubicacion ubicacion) {
         if (engine != null) {
             if (ubicacion != null) {
@@ -133,6 +185,10 @@ public class GestionSucursalController implements Initializable {
         }
     }
 
+    /**
+     * Recupera el listado actualizado de sucursales desde MongoDB, actualiza la lista
+     * observable de la interfaz y vuelve a pintar todos los marcadores en el mapa.
+     */
     private void cargarSucursalesBD() {
         try {
             listaSucursalesData.clear();
@@ -147,6 +203,11 @@ public class GestionSucursalController implements Initializable {
         }
     }
 
+    /**
+     * Rellena los campos de texto del formulario con los datos de la sucursal seleccionada.
+     *
+     * @param sucursal Objeto {@link Sucursal} cuyos atributos se mostrarán en los controles.
+     */
     private void cargarCampos(Sucursal sucursal) {
         txtNombre.setText(String.valueOf(sucursal.getNombre()));
         txtHorario.setText(sucursal.getHorario());
@@ -160,6 +221,14 @@ public class GestionSucursalController implements Initializable {
         }
     }
 
+    /**
+     * Manejador del botón para registrar una nueva sucursal.
+     * Valida que los campos obligatorios no estén vacíos, construye el objeto {@link Sucursal}
+     * con ubicación por defecto en Bilbao (CP 48480), lo persiste mediante
+     * {@link SucursalDAO#insertarSucursal(Sucursal)} y refresca la vista.
+     *
+     * @param event Evento de acción disparado al pulsar el botón de añadir sucursal.
+     */
     @FXML
     public void añadirSucursal(ActionEvent event) {
         try {
@@ -206,6 +275,13 @@ public class GestionSucursalController implements Initializable {
         }
     }
 
+    /**
+     * Manejador del botón para modificar los datos de la sucursal seleccionada en la lista.
+     * Actualiza el horario, teléfono, dirección y código postal del objeto {@link Sucursal}
+     * seleccionado y guarda los cambios mediante {@link SucursalDAO#actualizarSucursal(Sucursal)}.
+     *
+     * @param event Evento de acción disparado al pulsar el botón de actualizar/gestionar sucursal.
+     */
     @FXML
     public void gestionarSucursal(ActionEvent event) {
         try {
@@ -241,6 +317,12 @@ public class GestionSucursalController implements Initializable {
         }
     }
 
+    /**
+     * Manejador del botón para eliminar la sucursal seleccionada en {@code listSucursales}
+     * a través de {@link SucursalDAO#eliminarSucursal(String)}, recargando el listado y el mapa.
+     *
+     * @param event Evento de acción disparado al pulsar el botón de eliminar sucursal.
+     */
     @FXML
     public void eliminarSucursal(ActionEvent event) {
         try {
@@ -264,6 +346,10 @@ public class GestionSucursalController implements Initializable {
         }
     }
 
+    /**
+     * Limpia el contenido de los campos de texto del formulario y deselecciona cualquier
+     * elemento marcado en {@code listSucursales}.
+     */
     private void limpiar() {
         txtNombre.setText("");
         txtHorario.setText("");
@@ -273,6 +359,13 @@ public class GestionSucursalController implements Initializable {
         listSucursales.getSelectionModel().clearSelection();
     }
 
+    /**
+     * Muestra un cuadro de diálogo modal de tipo {@link Alert} con el título, mensaje y severidad indicados.
+     *
+     * @param titulo Título de la ventana de alerta.
+     * @param texto  Mensaje descriptivo que se mostrará al usuario.
+     * @param tipo   Tipo de alerta JavaFX ({@link Alert.AlertType}).
+     */
     private void mostrarAlerta(String titulo, String texto, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

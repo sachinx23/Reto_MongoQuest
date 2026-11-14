@@ -18,10 +18,31 @@ import java.util.List;
 import com.mongodb.MongoException;
 import modelo.Tarifa;
 
+/**
+ * Implementación de la interfaz {@link ContratoDAO} que extiende
+ * {@link DAOBase} para gestionar el ciclo de vida completo de los contratos
+ * (creación, aprobación, firma, rechazo, rescisión, consulta y filtrado) en la
+ * base de datos MongoDB.
+ *
+ * @author Eneko.Plaza
+ */
 public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
 
+    /**
+     * Registrador de eventos (Logger) para trazar las operaciones y errores de
+     * la clase.
+     */
     private static final Logger LOGGER = Logger.getLogger(ContratoDAOImplementacion.class.getName());
 
+    /**
+     * Construye un documento de filtro para buscar por el campo {@code _id},
+     * convirtiendo la cadena a {@link ObjectId} si tiene un formato hexadecimal
+     * válido.
+     *
+     * @param idStr Identificador en formato {@link String}.
+     * @return Un {@link Document} configurado con la clave {@code _id} lista
+     * para consultar en MongoDB.
+     */
     private Document getFiltroId(String idStr) {
         if (idStr != null) {
             if (ObjectId.isValid(idStr)) {
@@ -31,6 +52,16 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
         return new Document("_id", idStr);
     }
 
+    /**
+     * Transforma un {@link Document} de MongoDB perteneciente a la colección
+     * {@code Contratos} en una instancia del modelo {@link Contrato},
+     * gestionando valores nulos y referencias almacenadas tanto como valores
+     * simples como listas.
+     *
+     * @param doc Documento BSON recuperado de la base de datos.
+     * @return El objeto {@link Contrato} mapeado, o {@code null} si el
+     * documento de entrada es nulo.
+     */
     private Contrato mapearContrato(Document doc) {
         if (doc == null) {
             return null;
@@ -122,6 +153,15 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
         return c;
     }
 
+    /**
+     * Recupera todos los contratos existentes en la colección
+     * {@code Contratos}.
+     *
+     * @return Una {@link List} con todos los objetos {@link Contrato}
+     * registrados en el sistema.
+     * @throws OurException Si ocurre un error durante la lectura de la
+     * colección en MongoDB.
+     */
     @Override
     public List<Contrato> listarContratos() throws OurException {
         LOGGER.info("Listar contratos");
@@ -145,6 +185,20 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
         return lista;
     }
 
+    /**
+     * Aprueba una solicitud de contrato asignándole el empleado gestor
+     * correspondiente y cambiando su estado a {@code "pendiente de firma"} para
+     * que pueda ser validado por el cliente.
+     *
+     * @param c Objeto {@link Contrato} que se va a aprobar.
+     * @param idGestor Identificador del empleado que gestiona y aprueba el
+     * contrato.
+     * @return {@code true} si el estado del contrato fue actualizado
+     * correctamente; {@code false} si no se encontró o no se modificó el
+     * documento.
+     * @throws OurException Si se produce un fallo al actualizar el contrato en
+     * la base de datos.
+     */
     @Override
     public boolean aprobarContrato(Contrato c, String idGestor) throws OurException {
         try {
@@ -157,7 +211,6 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
                 idEmp = new ObjectId(idGestor);
             }
 
-            // Al confirmar la tarifa, se marca como pendiente de firma para enviarlo al cliente
             Document camposNuevos = new Document("estado", "pendiente de firma")
                     .append("idEmpleado", idEmp);
 
@@ -171,6 +224,18 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
         }
     }
 
+    /**
+     * Formaliza la firma del contrato por parte del cliente, actualizando su
+     * estado a {@code "activo"}, estableciendo la fecha actual como fecha de
+     * comienzo y generando automáticamente un ticket cerrado en la colección
+     * {@code TicketsSoporte} como comprobante de la operación.
+     *
+     * @param c Objeto {@link Contrato} que el cliente procede a firmar.
+     * @return {@code true} si el contrato pasó a estado activo; {@code false}
+     * en caso contrario.
+     * @throws OurException Si ocurre un error al actualizar el contrato o al
+     * registrar el ticket de soporte.
+     */
     @Override
     public boolean firmarContrato(Contrato c) throws OurException {
         try {
@@ -178,7 +243,6 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Contratos");
 
-            // Al firmar el cliente, el contrato pasa a activo y se registra la fecha de comienzo
             Document camposNuevos = new Document("estado", "activo")
                     .append("fechaComienzo", LocalDate.now().toString());
 
@@ -202,7 +266,6 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
                     idCon = new ObjectId(c.getId());
                 }
 
-                // Generar el ticket de soporte con los detalles de la compra al firmar
                 Document ticket = new Document()
                         .append("tipo", "contrato")
                         .append("asunto", "Detalles de Compra y Firma de Contrato")
@@ -222,6 +285,15 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
         }
     }
 
+    /**
+     * Marca un contrato como {@code "rechazado"} en la base de datos.
+     *
+     * @param c Objeto {@link Contrato} que será rechazado.
+     * @return {@code true} si el contrato fue actualizado correctamente;
+     * {@code false} si no se modificó.
+     * @throws OurException Si ocurre un error al actualizar el estado del
+     * contrato.
+     */
     @Override
     public boolean rechazarContratos(Contrato c) throws OurException {
         try {
@@ -239,6 +311,17 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
         }
     }
 
+    /**
+     * Finaliza anticipadamente o da de baja un contrato, cambiando su estado a
+     * {@code "rescindido"} y registrando la fecha actual como
+     * {@code fechaFinalizacion}.
+     *
+     * @param c Objeto {@link Contrato} que se desea rescindir.
+     * @return {@code true} si la rescisión se aplicó correctamente;
+     * {@code false} si no se encontró el contrato.
+     * @throws OurException Si se produce un fallo durante la actualización en
+     * MongoDB.
+     */
     @Override
     public boolean rescindirContrato(Contrato c) throws OurException {
         try {
@@ -258,6 +341,20 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
         }
     }
 
+    /**
+     * Busca contratos aplicando filtros opcionales por número de teléfono
+     * (búsqueda parcial insensible a mayúsculas) y por estado (ignorando el
+     * filtro si el valor es {@code "Todos"}).
+     *
+     * @param telefono Número o fragmento de teléfono a buscar; puede ser
+     * {@code null} o vacío.
+     * @param estado Estado exacto del contrato por el cual filtrar, o
+     * {@code "Todos"} para no filtrar por estado.
+     * @return Una {@link List} de objetos {@link Contrato} que cumplen con los
+     * criterios especificados.
+     * @throws OurException Si ocurre un error al ejecutar la consulta filtrada
+     * en MongoDB.
+     */
     @Override
     public List<Contrato> filtrarContratos(String telefono, String estado) throws OurException {
         LOGGER.info("Filtrar contratos, teléfono: " + telefono + ", estado: " + estado);
@@ -296,7 +393,17 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
     }
 
     // Parte cliente
-
+    /**
+     * Obtiene todos los contratos asociados a un cliente específico a partir de
+     * su identificador.
+     *
+     * @param idCliente Identificador hexadecimal ({@link ObjectId}) del
+     * cliente.
+     * @return Una {@link List} con los {@link Contrato} pertenecientes al
+     * cliente indicado.
+     * @throws OurException Si ocurre un error de MongoDB al consultar los
+     * contratos del cliente.
+     */
     @Override
     public List<Contrato> obtenerContratosCliente(String idCliente) throws OurException {
         LOGGER.info("Listar contratos del cliente " + idCliente);
@@ -309,6 +416,18 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
         }
     }
 
+    /**
+     * Inserta un nuevo contrato en la colección {@code Contratos} incluyendo
+     * los datos embebidos de la {@link Tarifa} contratada, y asigna al objeto
+     * {@link Contrato} el {@code _id} generado.
+     *
+     * @param contrato Objeto {@link Contrato} con los datos de la nueva
+     * contratación.
+     * @param tarifa Objeto {@link Tarifa} cuyos datos básicos (nombre y precio)
+     * se embeberán en el documento.
+     * @throws OurException Si se produce un error de MongoDB durante la
+     * inserción.
+     */
     @Override
     public void insertarContrato(Contrato contrato, Tarifa tarifa) throws OurException {
         LOGGER.info("Pedir contrato de la tarifa " + tarifa.getNombreTarifa() + " para la línea " + contrato.getTelefono() + ", cliente: " + contrato.getIdCliente());
@@ -320,7 +439,6 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
             d.put("idTarifa", new ObjectId(contrato.getIdTarifa()));
             d.put("idEmpleado", aObjectId(contrato.getIdEmpleado()));
 
-            // Tarifa embebida
             Document datosTarifa = new Document();
             datosTarifa.put("nombreTarifa", tarifa.getNombreTarifa());
             datosTarifa.put("precio", tarifa.getPrecio());
@@ -337,6 +455,17 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
         }
     }
 
+    /**
+     * Elimina una solicitud de contratación realizada por un cliente siempre
+     * que aún se encuentre en estado {@code "pendiente"}.
+     *
+     * @param idCliente Identificador del cliente que realizó la petición.
+     * @param idTarifa Identificador de la tarifa solicitada.
+     * @return {@code true} si la petición pendiente fue eliminada;
+     * {@code false} si no existía o ya no estaba pendiente.
+     * @throws OurException Si ocurre un error en MongoDB al intentar borrar el
+     * documento.
+     */
     @Override
     public boolean borrarPeticion(String idCliente, String idTarifa) throws OurException {
         LOGGER.info("Cancelar petición del cliente " + idCliente + " para la tarifa " + idTarifa);
@@ -353,6 +482,15 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
         }
     }
 
+    /**
+     * Registra la solicitud de baja de un contrato activo cambiando su estado a
+     * {@code "baja pendiente"}.
+     *
+     * @param idContrato Identificador del contrato sobre el que se solicita la
+     * baja.
+     * @throws OurException Si se produce un error al actualizar el estado del
+     * contrato.
+     */
     @Override
     public void solicitarBaja(String idContrato) throws OurException {
         LOGGER.info("Solicitar baja del contrato " + idContrato);

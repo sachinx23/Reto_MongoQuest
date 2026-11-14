@@ -25,46 +25,96 @@ import modelo.Tarifa;
 import DAO.TarifaDAO;
 import DAO.implementacion.TarifaDAOImplementacion;
 
+/**
+ * Controlador de la vista de administración de tarifas en JavaFX.
+ * Gestiona las operaciones CRUD (creación, consulta, actualización y eliminación)
+ * sobre el catálogo de tarifas, así como la activación o desactivación directa
+ * de las mismas y la sincronización entre la tabla y el formulario de edición.
+ *
+ * @author Eneko.Plaza
+ */
 public class GestionTarifasController implements Initializable {
 
+    /**
+     * Registrador de eventos (Logger) para trazar advertencias y operaciones del controlador.
+     */
     private static final Logger LOGGER = Logger.getLogger(GestionTarifasController.class.getName());
 
+    /** Campo de texto para el nombre comercial de la tarifa. */
     @FXML
     private TextField txtNombre;
+
+    /** Campo de texto para el precio mensual de la tarifa. */
     @FXML
     private TextField txtPrecio;
+
+    /** Selector desplegable con las categorías de tarifa disponibles (Fibra, Móvil, etc.). */
     @FXML
     private ComboBox<String> comboTipo;
+
+    /** Área de texto para describir las características y condiciones de la tarifa. */
     @FXML
     private TextArea txtDetalles;
+
+    /** Casilla de verificación que indica si la tarifa está activa y visible para los clientes. */
     @FXML
     private CheckBox chkActiva;
 
+    /** Botón para registrar una nueva tarifa en la base de datos. */
     @FXML
     private Button btnGuardar;
+
+    /** Botón para guardar los cambios realizados sobre una tarifa seleccionada. */
     @FXML
     private Button btnActualizar;
+
+    /** Botón para eliminar de la base de datos la tarifa seleccionada. */
     @FXML
     private Button btnEliminar;
+
+    /** Botón para restablecer los campos del formulario y limpiar la selección. */
     @FXML
     private Button btnLimpiar;
 
+    /** Tabla principal donde se listan todas las tarifas registradas. */
     @FXML
     private TableView<Tarifa> tablaTarifas;
+
+    /** Columna de la tabla que muestra el nombre de la tarifa. */
     @FXML
     private TableColumn<Tarifa, String> colNombre;
+
+    /** Columna de la tabla que muestra el precio de la tarifa. */
     @FXML
     private TableColumn<Tarifa, Double> colPrecio;
+
+    /** Columna de la tabla que muestra la categoría o tipo de la tarifa. */
     @FXML
     private TableColumn<Tarifa, String> colTipo;
+
+    /** Columna de la tabla que muestra los detalles descriptivos de la tarifa. */
     @FXML
     private TableColumn<Tarifa, String> colDetalles;
+
+    /** Columna de la tabla que indica mediante un booleano si la tarifa está activa. */
     @FXML
     private TableColumn<Tarifa, Boolean> colActiva;
 
+    /** Referencia a la {@link Tarifa} actualmente seleccionada en {@code tablaTarifas}. */
     private Tarifa tarifaSeleccionada;
 
+    /** Objeto de acceso a datos para gestionar la persistencia de las tarifas en MongoDB. */
     private final TarifaDAO tarifaDAO = new TarifaDAOImplementacion();
+
+    /**
+     * Inicializa el controlador tras cargar su archivo FXML.
+     * Rellena el desplegable de tipos de tarifa, configura las factorías de celdas
+     * de {@code tablaTarifas}, carga los datos desde MongoDB y registra un listener
+     * para volcar en el formulario la fila seleccionada.
+     *
+     * @param url Ubicación utilizada para resolver rutas relativas del objeto raíz, o {@code null} si no se conoce.
+     * @param rb  Recursos utilizados para localizar el objeto raíz, o {@code null} si no se localizó.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         comboTipo.setItems(FXCollections.observableArrayList("Fibra", "Móvil","Fibra + Móvil", "Convergente", "Televisión"));
@@ -88,7 +138,10 @@ public class GestionTarifasController implements Initializable {
         });
     }
 
-    // Carga los datos de MongoDB en la TableView
+    /**
+     * Recupera el listado completo de tarifas desde MongoDB y actualiza los elementos
+     * mostrados en {@code tablaTarifas}.
+     */
     private void cargarTabla() {
         try {
             List<Tarifa> lista = tarifaDAO.listarTarifas();
@@ -102,7 +155,11 @@ public class GestionTarifasController implements Initializable {
         }
     }
 
-    //  Pasa los datos de la fila seleccionada a los controles del formulario
+    /**
+     * Rellena los controles del formulario con los atributos de la tarifa recibida.
+     *
+     * @param t Objeto {@link Tarifa} cuyos datos se mostrarán para consulta o edición.
+     */
     private void mostrarDatosEnFormulario(Tarifa t) {
         txtNombre.setText(t.getNombreTarifa());
         txtPrecio.setText(String.valueOf(t.getPrecio()));
@@ -111,7 +168,11 @@ public class GestionTarifasController implements Initializable {
         chkActiva.setSelected(t.getActiva());
     }
 
-    // guardar campos
+    /**
+     * Manejador del botón para guardar una nueva tarifa.
+     * Valida los campos del formulario, construye una nueva instancia de {@link Tarifa},
+     * la inserta mediante {@link TarifaDAO#insertarTarifa(Tarifa)} y refresca la interfaz.
+     */
     @FXML
     private void btnGuardarAccion() {
         try {
@@ -139,7 +200,11 @@ public class GestionTarifasController implements Initializable {
         }
     }
 
-    // catualizar tarifas
+    /**
+     * Manejador del botón para actualizar la tarifa seleccionada en la tabla.
+     * Verifica que haya una selección activa y que los campos sean válidos, actualiza
+     * los atributos de {@code tarifaSeleccionada} y persiste los cambios en MongoDB.
+     */
     @FXML
     private void btnActualizarAccion() {
         try {
@@ -170,7 +235,10 @@ public class GestionTarifasController implements Initializable {
         }
     }
 
-    // eliminar tarifas
+    /**
+     * Manejador del botón para eliminar la tarifa seleccionada en {@code tablaTarifas}
+     * a través de {@link TarifaDAO#eliminarTarifa(Tarifa)}, recargando la tabla y limpiando el formulario.
+     */
     @FXML
     private void btnEliminarAccion() {
         try {
@@ -193,64 +261,74 @@ public class GestionTarifasController implements Initializable {
         }
     }
     
-// confirmar tarifa: pasa a activa
-@FXML
-private void confirmarTarifa() {
-    try {
-        Tarifa seleccionada = tablaTarifas.getSelectionModel().getSelectedItem();
-        if (seleccionada == null) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa de la tabla.");
-            return;
-        }
-        if (seleccionada.getActiva()) {
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Aviso", "Esta tarifa ya está confirmada.");
-            return;
-        }
+    /**
+     * Activa la tarifa seleccionada en la tabla estableciendo su propiedad {@code activa} a {@code true}
+     * y guardando el cambio en MongoDB. Revierte el estado en memoria si la actualización falla.
+     */
+    @FXML
+    private void confirmarTarifa() {
+        try {
+            Tarifa seleccionada = tablaTarifas.getSelectionModel().getSelectedItem();
+            if (seleccionada == null) {
+                mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa de la tabla.");
+                return;
+            }
+            if (seleccionada.getActiva()) {
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Aviso", "Esta tarifa ya está confirmada.");
+                return;
+            }
 
-        seleccionada.setActiva(true);
-        if (tarifaDAO.actualizarTarifa(seleccionada)) {
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa confirmada.");
-            cargarTabla();
-            btnLimpiarAccion();
-        } else {
-            seleccionada.setActiva(false);
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo confirmar la tarifa.");
-        }
-    } catch (OurException e) {
-        LOGGER.warning(e.getMessage());
-        ShowAlert.error(e.getMessage());
-    }
-}
-
-// rechazar tarifa: pasa a no activa
-@FXML
-private void rechazarTarifa() {
-    try {
-        Tarifa seleccionada = tablaTarifas.getSelectionModel().getSelectedItem();
-        if (seleccionada == null) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa de la tabla.");
-            return;
-        }
-        if (!seleccionada.getActiva()) {
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Aviso", "Esta tarifa ya está rechazada.");
-            return;
-        }
-
-        seleccionada.setActiva(false);
-        if (tarifaDAO.actualizarTarifa(seleccionada)) {
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa rechazada.");
-            cargarTabla();
-            btnLimpiarAccion();
-        } else {
             seleccionada.setActiva(true);
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rechazar la tarifa.");
+            if (tarifaDAO.actualizarTarifa(seleccionada)) {
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa confirmada.");
+                cargarTabla();
+                btnLimpiarAccion();
+            } else {
+                seleccionada.setActiva(false);
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo confirmar la tarifa.");
+            }
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
         }
-    } catch (OurException e) {
-        LOGGER.warning(e.getMessage());
-        ShowAlert.error(e.getMessage());
     }
-}
-    // limpiar formualario
+
+    /**
+     * Desactiva la tarifa seleccionada en la tabla estableciendo su propiedad {@code activa} a {@code false}
+     * y guardando el cambio en MongoDB. Revierte el estado en memoria si la actualización falla.
+     */
+    @FXML
+    private void rechazarTarifa() {
+        try {
+            Tarifa seleccionada = tablaTarifas.getSelectionModel().getSelectedItem();
+            if (seleccionada == null) {
+                mostrarAlerta(Alert.AlertType.WARNING, "Atención", "Selecciona una tarifa de la tabla.");
+                return;
+            }
+            if (!seleccionada.getActiva()) {
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Aviso", "Esta tarifa ya está rechazada.");
+                return;
+            }
+
+            seleccionada.setActiva(false);
+            if (tarifaDAO.actualizarTarifa(seleccionada)) {
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa rechazada.");
+                cargarTabla();
+                btnLimpiarAccion();
+            } else {
+                seleccionada.setActiva(true);
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rechazar la tarifa.");
+            }
+        } catch (OurException e) {
+            LOGGER.warning(e.getMessage());
+            ShowAlert.error(e.getMessage());
+        }
+    }
+
+    /**
+     * Limpia todos los campos del formulario, marca {@code chkActiva} por defecto
+     * y deselecciona cualquier tarifa activa en {@code tablaTarifas}.
+     */
     @FXML
     private void btnLimpiarAccion() {
         txtNombre.clear();
@@ -262,6 +340,12 @@ private void rechazarTarifa() {
         tablaTarifas.getSelectionModel().clearSelection();
     }
 
+    /**
+     * Comprueba que el nombre no esté vacío, que se haya seleccionado un tipo de tarifa
+     * y que el precio introducido pueda convertirse correctamente a {@code double}.
+     *
+     * @return {@code true} si todos los campos cumplen con el formato requerido; {@code false} en caso contrario.
+     */
     private boolean validarCampos() {
         if (txtNombre.getText().trim().isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Campo Vacío", "Introduce el nombre.");
@@ -280,6 +364,13 @@ private void rechazarTarifa() {
         return true;
     }
 
+    /**
+     * Muestra un cuadro de diálogo modal de tipo {@link Alert} con la severidad, título y mensaje especificados.
+     *
+     * @param tipo    Tipo de alerta JavaFX ({@link Alert.AlertType}).
+     * @param titulo  Título de la ventana de diálogo.
+     * @param mensaje Contenido textual que se mostrará al usuario.
+     */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

@@ -20,14 +20,31 @@ import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
 import com.mongodb.MongoException;
+
 /**
+ * Implementación de la interfaz {@link ClienteDAO} que extiende {@link DAOBase} para
+ * gestionar las operaciones CRUD y de autenticación de los clientes en MongoDB.
  *
  * @author Eneko.Plaza
  */
 public class ClienteDAOImplementacion extends DAOBase implements ClienteDAO {
 
+    /**
+     * Registrador de eventos (Logger) para trazar las operaciones y errores de la clase.
+     */
     private static final Logger LOGGER = Logger.getLogger(ClienteDAOImplementacion.class.getName());
 
+    /**
+     * Verifica las credenciales de inicio de sesión de un cliente en la colección {@code Clientes}.
+     * Si el usuario existe y la contraseña coincide, añade el atributo {@code rol} con valor
+     * {@code "Cliente"} al documento devuelto.
+     *
+     * @param usuario    Nombre de usuario utilizado para autenticarse.
+     * @param contrasena Contraseña asociada a la cuenta del cliente.
+     * @return El {@link Document} del cliente autenticado con el rol asignado,
+     *         o {@code null} si las credenciales son incorrectas o no existen.
+     * @throws OurException Si ocurre un error durante la consulta a la base de datos.
+     */
     @Override
     public Document comprobarUsuarios(String usuario, String contrasena) throws OurException {
         try {
@@ -47,11 +64,20 @@ public class ClienteDAOImplementacion extends DAOBase implements ClienteDAO {
         return null;
     }
 
+    /**
+     * Actualiza los datos personales y bancarios de un cliente existente en MongoDB,
+     * validando previamente que el nuevo nombre de usuario y el DNI no pertenezcan a otro registro.
+     *
+     * @param c Objeto {@link Cliente} que contiene el identificador y los nuevos datos a actualizar.
+     * @return {@code true} si se modificó al menos un documento en la base de datos;
+     *         {@code false} si no se realizaron cambios o no se encontró el ID.
+     * @throws OurException Si el nombre de usuario o el DNI ya están en uso por otro cliente,
+     *                      o si se produce un error durante la actualización.
+     */
     @Override
     public boolean actualizarCliente(Cliente c) throws OurException {
         try {
             LOGGER.info("Actualizar cliente " + c.getId() + ", usuario: " + c.getNombreUsuario() + ", DNI: " + c.getDni() + ", correo: " + c.getCorreo());
-            // Usuario o DNI repetidos
             if (nombreUsuarioOcupado(c.getNombreUsuario(), c.getId())) {
                 throw new OurException(ErrorMessages.USER_EXISTS);
             }
@@ -62,13 +88,11 @@ public class ClienteDAOImplementacion extends DAOBase implements ClienteDAO {
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Clientes");
 
-            // Comprobar si el ID es un ObjectId válido de MongoDB
             Object idFiltro = c.getId();
             if (ObjectId.isValid(c.getId())) {
                 idFiltro = new ObjectId(c.getId());
             }
 
-            // Mapeamos todos los atributos de tu modelo Cliente al Documento de MongoDB
             Document camposNuevos = new Document("cuentaBancaria", c.getCuentaBancaria())
                     .append("nombreUsuario", c.getNombreUsuario())
                     .append("nombre", c.getNombre())
@@ -81,7 +105,6 @@ public class ClienteDAOImplementacion extends DAOBase implements ClienteDAO {
 
             Document sentenciaUpdate = new Document("$set", camposNuevos);
 
-            // Ejecutar la actualización en la colección "Clientes"
             long modificados = col.updateOne(new Document("_id", idFiltro), sentenciaUpdate).getModifiedCount();
             
             return modificados > 0;
@@ -92,6 +115,23 @@ public class ClienteDAOImplementacion extends DAOBase implements ClienteDAO {
             throw new OurException(ErrorMessages.UPDATE_USER);
         }
     }
+
+    /**
+     * Registra un nuevo cliente en la colección {@code Clientes} con el rol asignado por defecto,
+     * comprobando antes que el nombre de usuario no esté registrado.
+     *
+     * @param usuario    Nombre de usuario único para la cuenta.
+     * @param nombre     Nombre de pila del cliente.
+     * @param apellidos  Apellidos del cliente.
+     * @param contrasena Contraseña de acceso.
+     * @param correo     Dirección de correo electrónico.
+     * @param dni        Documento Nacional de Identidad del cliente.
+     * @param telefono   Número de teléfono de contacto.
+     * @param direccion  Dirección postal del cliente.
+     * @return {@code true} si el cliente fue registrado con éxito;
+     *         {@code false} si ya existía un usuario con ese nombre.
+     * @throws OurException Si ocurre un fallo al insertar el documento en la base de datos.
+     */
     @Override
     public boolean registrarCliente(String usuario, String nombre, String apellidos, String contrasena, String correo, String dni, String telefono, String direccion) throws OurException {
         try {
@@ -121,6 +161,14 @@ public class ClienteDAOImplementacion extends DAOBase implements ClienteDAO {
         }
     }
 
+    /**
+     * Elimina completamente el registro y los datos sensibles de un cliente en la colección
+     * {@code Clientes} filtrando por su nombre de usuario.
+     *
+     * @param nombreUsuario Nombre de usuario del cliente cuyos datos se desean eliminar.
+     * @return {@code true} si se eliminó el documento del cliente; {@code false} si no se encontró.
+     * @throws OurException Si se produce un error durante la operación de borrado.
+     */
     @Override
     public boolean eliminarDatosSensiblesCliente(String nombreUsuario) throws OurException {
         try {
@@ -133,6 +181,13 @@ public class ClienteDAOImplementacion extends DAOBase implements ClienteDAO {
         }
     }
 
+    /**
+     * Obtiene todos los clientes registrados en la base de datos y los mapea a una lista
+     * de objetos del modelo {@link Cliente}.
+     *
+     * @return Una {@link List} con todos los objetos {@link Cliente} encontrados.
+     * @throws OurException Si ocurre un error al consultar o mapear los documentos de MongoDB.
+     */
     @Override
     public List<Cliente> listarClientes() throws OurException {
         LOGGER.info("Listar clientes");
@@ -160,8 +215,14 @@ public class ClienteDAOImplementacion extends DAOBase implements ClienteDAO {
         return lista;
     }
 
-    // Parte cliente
 
+    /**
+     * Busca y recupera un cliente específico mediante su identificador único de MongoDB ({@link ObjectId}).
+     *
+     * @param id Cadena hexadecimal que representa el {@link ObjectId} del cliente.
+     * @return El objeto {@link Cliente} correspondiente al identificador, o {@code null} si no existe.
+     * @throws OurException Si el formato del {@code id} no es un {@link ObjectId} válido o si falla la consulta.
+     */
     @Override
     public Cliente obtenerCliente(String id) throws OurException {
         LOGGER.info("Cargar cliente con id: " + id);

@@ -19,23 +19,48 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import modelo.Cliente;
 
+/**
+ * Controlador principal del panel del Cliente en JavaFX.
+ * Gestiona el estado de la sesión del cliente autenticado, el saludo de cabecera,
+ * la navegación dinámica entre sus subvistas (perfil, tarifas, contratos, soporte
+ * y valoraciones) y el cierre de sesión.
+ *
+ * @author Eneko.Plaza
+ */
 public class ClienteController {
 
+    /**
+     * Registrador de eventos (Logger) para trazar las acciones y advertencias del controlador.
+     */
     private static final Logger LOGGER = Logger.getLogger(ClienteController.class.getName());
-    // Cliente con sesión iniciada
+
+    /** Instancia estática del cliente con la sesión iniciada actualmente. */
     private static Cliente cliente;
 
+    /** Referencia estática a la etiqueta de bienvenida para actualizarla desde subcontroladores. */
     private static Label bienvenida;
 
+    /** Objeto de acceso a datos para recuperar la información del cliente. */
     private final ClienteDAO clienteDAO = new ClienteDAOImplementacion();
 
+    /** Etiqueta de cabecera que muestra el saludo con el nombre del cliente. */
     @FXML private Label lblBienvenida;
+
+    /** Selector desplegable con las secciones disponibles en el área de cliente. */
     @FXML private ComboBox<String> cmbOpciones;
+
+    /** Contenedor central donde se cargan dinámicamente las distintas vistas FXML del cliente. */
     @FXML private StackPane panelContenido;
 
-    // Apartado actual
+    /** Nombre del apartado que se encuentra cargado actualmente en pantalla. */
     private String actual;
 
+    /**
+     * Inicializa el controlador tras cargar la vista FXML del panel de cliente.
+     * Carga los datos del cliente autenticado mediante {@link IniciarSesionController#idUsuarioActual},
+     * actualiza el mensaje de bienvenida, rellena el selector de navegación y muestra por defecto
+     * la subvista de {@code "Mi Perfil"}.
+     */
     @FXML
     public void initialize() {
         bienvenida = lblBienvenida;
@@ -63,18 +88,37 @@ public class ClienteController {
         }
     }
 
+    /**
+     * Obtiene la instancia del cliente que tiene la sesión iniciada actualmente.
+     *
+     * @return Objeto {@link Cliente} autenticado, o {@code null} si no hay sesión activa.
+     */
     public static Cliente getCliente() {
         return cliente;
     }
 
+    /**
+     * Actualiza la referencia estática del cliente autenticado (por ejemplo, tras editar su perfil).
+     *
+     * @param nuevo Nueva instancia de {@link Cliente} con los datos actualizados.
+     */
     public static void setCliente(Cliente nuevo) {
         cliente = nuevo;
     }
 
+    /**
+     * Refresca el texto de la etiqueta de bienvenida superior utilizando el nombre actual del cliente.
+     */
     public static void actualizarBienvenida() {
         bienvenida.setText("Cliente: " + cliente.getNombre());
     }
 
+    /**
+     * Manejador de eventos del desplegable {@code cmbOpciones} que carga la subvista
+     * correspondiente a la sección elegida o inicia el proceso de cierre de sesión.
+     *
+     * @param event Evento de acción disparado al seleccionar una opción en el {@link ComboBox}.
+     */
     @FXML
     public void cmbOpcionSeleccionada(ActionEvent event) {
         String seleccion = cmbOpciones.getValue();
@@ -103,6 +147,13 @@ public class ClienteController {
         }
     }
 
+    /**
+     * Carga un archivo FXML ubicado en {@code /vista/} dentro del contenedor {@code panelContenido}
+     * y registra el nombre del apartado activo.
+     *
+     * @param apartado Nombre de la sección que se va a mostrar.
+     * @param fxml     Nombre base del archivo FXML (sin ruta ni extensión {@code .fxml}).
+     */
     private void cargarSubvista(String apartado, String fxml) {
         try {
             Parent vista = FXMLLoader.load(getClass().getResource("/vista/" + fxml + ".fxml"));
@@ -113,6 +164,11 @@ public class ClienteController {
         }
     }
 
+    /**
+     * Solicita confirmación al cliente para abandonar el panel y, si acepta, limpia los datos
+     * de sesión en memoria y en {@link LogApp}, redirigiendo a la pantalla de inicio de sesión.
+     * Si cancela, restaura la selección anterior en el {@link ComboBox}.
+     */
     private void cerrarSesion() {
         if (!ShowAlert.confirmar("Salir", "¿Deseas salir del panel de cliente?")) {
             cmbOpciones.setValue(actual);
