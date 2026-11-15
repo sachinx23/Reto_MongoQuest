@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-  Vista principal del panel de Administrador en JavaFX.
-  Define la estructura general de la pantalla con una barra superior de navegación
-  (selector de módulos administrativos y etiqueta con el nombre del administrador activo)
-  y un contenedor central dinámico donde se cargan las distintas subvistas de gestión.
-
-  Controlador asociado: controlador.AdministradorController
-  Hoja de estilos: ../css/Estilos.css
-  @author Eneko.Plaza
--->
-
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
