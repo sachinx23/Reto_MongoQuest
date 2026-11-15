@@ -26,7 +26,6 @@
             </padding>
             <children>
 
-                <!-- TARJETA IZQUIERDA: FORMULARIO Y LISTA DE SUCURSALES -->
                 <VBox maxWidth="440.0" minWidth="360.0" prefWidth="400.0" spacing="10.0" styleClass="card">
                     <children>
                         <Label styleClass="titulo-vista" text="Gestión de Sucursales" />
@@ -66,7 +65,6 @@
                             </children>
                         </VBox>
 
-                        <!-- BOTONERA DE ACCIÓN -->
                         <HBox fx:id="boxBotones" spacing="8.0">
                             <padding>
                                 <Insets top="4.0" />
@@ -90,7 +88,6 @@
                     </children>
                 </VBox>
 
-                <!-- TARJETA DERECHA: MAPA WEBVIEW -->
                 <VBox minWidth="320.0" spacing="10.0" styleClass="card" HBox.hgrow="ALWAYS">
                     <children>
                         <Label styleClass="titulo-vista" text="Ubicación en Mapa" />

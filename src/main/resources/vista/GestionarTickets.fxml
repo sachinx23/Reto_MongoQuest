@@ -24,7 +24,6 @@
         <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
             <children>
 
-                <!-- TARJETA SUPERIOR: CABECERA Y FILTRO DE ESTADO -->
                 <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="card">
                     <children>
                         <Label styleClass="titulo-vista" text="Tickets de Soporte" />
@@ -37,7 +36,6 @@
                     </children>
                 </HBox>
 
-                <!-- TABLA PRINCIPAL DE TICKETS -->
                 <VBox styleClass="card" VBox.vgrow="ALWAYS">
                     <children>
                         <TableView fx:id="tablaTickets" onMouseClicked="#seleccionarTicket" VBox.vgrow="ALWAYS">
@@ -53,7 +51,6 @@
                     </children>
                 </VBox>
 
-                <!-- DETALLE Y DESCRIPCIÓN DEL TICKET SELECCIONADO -->
                 <VBox spacing="6.0" styleClass="card">
                     <children>
                         <Label styleClass="label-bold" text="Descripción del Incidente:" />
@@ -61,7 +58,6 @@
                     </children>
                 </VBox>
 
-                <!-- ACCIONES: ASIGNACIÓN Y CAMBIO DE ESTADO -->
                 <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="card">
                     <children>
                         <Button onAction="#asignarTicket" styleClass="btn-aceptar" text="Asignar (Me hago cargo)" />

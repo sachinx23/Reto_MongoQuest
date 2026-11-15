@@ -14,31 +14,27 @@
             xmlns="http://javafx.com/javafx/21" 
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="controlador.EmpleadoController">
-   <children>
-      <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
-         <children>
+    <children>
+        <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+            <children>
             
-            <!-- BARRA SUPERIOR: DEGRADADO DEL LOGO -->
-            <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="barra-superior">
-               <children>
-                  <Label styleClass="titulo-barra" text="Panel Empleado:" />
+                <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="barra-superior">
+                    <children>
+                        <Label styleClass="titulo-barra" text="Panel Empleado:" />
                   
-                  <!-- DESPLEGABLE CON ESTILO REDONDEADO -->
-                  <ComboBox fx:id="cbOpcionesEmpleado" onAction="#cambiarSubVista" prefWidth="250.0" promptText="Seleccionar sección..." styleClass="combo-empleado" />
+                        <ComboBox fx:id="cbOpcionesEmpleado" onAction="#cambiarSubVista" prefWidth="250.0" promptText="Seleccionar sección..." styleClass="combo-empleado" />
                   
-                  <Region HBox.hgrow="ALWAYS" />
+                        <Region HBox.hgrow="ALWAYS" />
                   
-                  <Label fx:id="lblNombreEmpleado" styleClass="nombre-usuario" text="Empleado: Usuario" />
-               </children>
-            </HBox>
+                        <Label fx:id="lblNombreEmpleado" styleClass="nombre-usuario" text="Empleado: Usuario" />
+                    </children>
+                </HBox>
 
-            <!-- FRANJA SEPARADORA TURQUESA DECORATIVA -->
-            <AnchorPane prefHeight="3.0" styleClass="franja-turquesa" />
+                <AnchorPane prefHeight="3.0" styleClass="franja-turquesa" />
 
-            <!-- CONTENEDOR DINÁMICO DE SUBVISTAS -->
-            <StackPane fx:id="contenidoDinamico" styleClass="panel-contenido" VBox.vgrow="ALWAYS" />
+                <StackPane fx:id="contenidoDinamico" styleClass="panel-contenido" VBox.vgrow="ALWAYS" />
 
-         </children>
-      </VBox>
-   </children>
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>
