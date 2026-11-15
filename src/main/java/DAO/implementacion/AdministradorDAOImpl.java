@@ -100,7 +100,7 @@ public class AdministradorDAOImpl implements AdministradorDAO {
 
             Document filtroBusqueda = new Document("nombreUsuario", usuario);
             if (colEmp.find(filtroBusqueda).first() != null) {
-                return false; // El usuario ya existe
+                return false; 
             }
 
             Document nuevoEmp = new Document("nombreUsuario", usuario);
