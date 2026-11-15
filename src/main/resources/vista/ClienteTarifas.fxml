@@ -15,7 +15,6 @@
    <children>
       <VBox spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <!-- Cabecera de botones superior -->
             <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="card">
                <children>
                   <Label styleClass="titulo-vista" text="Tarifas disponibles" />
@@ -33,7 +32,6 @@
                </children>
             </HBox>
 
-            <!-- Contenedor con Scroll y FlowPane para las tarjetas flotantes -->
             <VBox styleClass="card" VBox.vgrow="ALWAYS">
                <children>
                   <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
