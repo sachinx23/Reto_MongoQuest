@@ -1,0 +1,567 @@
+2026-11-06 13:40:01 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: sachin
+2026-11-06 13:40:01 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-06 13:40:02 [INFO] [sachin (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-06 13:40:02 [INFO] [sachin (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 6aeae2470d8c9312c4bb5f42
+2026-11-06 13:40:05 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-06 13:40:05 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-06 13:40:06 [INFO] [sachin (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 6aeae2470d8c9312c4bb5f42
+2026-11-06 13:40:06 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 6aeae08420bce10958ba7b68
+2026-11-06 13:40:06 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 6aeae08420bce10958ba7b69
+2026-11-06 13:40:06 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 6aeb0ebbf34a8c5a476ec752
+2026-11-06 13:40:08 [INFO] [sachin (Cliente)] DAO.implementacion.TikcetDAOImpl.listarTicketsCliente: Listar tickets del cliente 6aeae2470d8c9312c4bb5f42
+2026-11-06 13:40:11 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-06 13:40:11 [INFO] [sachin (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-06 13:40:11 [INFO] [sachin (Cliente)] DAO.implementacion.ValoracionDAOImplementacion.obtenerValoracionesCliente: Listar valoraciones del cliente 6aeae2470d8c9312c4bb5f42
+2026-11-06 13:40:18 [INFO] [sachin (Cliente)] controlador.ClienteController.cerrarSesion: Sesión cerrada
+2026-11-07 10:38:46 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: ElenaMartin99
+2026-11-07 10:38:46 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-07 10:38:46 [INFO] [ElenaMartin99 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-07 10:38:46 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 6ad0fe9c3cf0fed2d9798a88
+2026-11-07 10:38:51 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 6ad0fe9c3cf0fed2d9798a88
+2026-11-07 10:38:51 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 6ad0fe9c3cf0fed2d9798a8c
+2026-11-07 10:38:53 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-07 10:38:53 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-07 10:46:45 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: ElenaMartin99
+2026-11-07 10:46:45 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-07 10:46:45 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: ElenaMartin99
+2026-11-07 10:46:45 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: ElenaMartin99
+2026-11-07 10:46:56 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: ElenaMartin99
+2026-11-07 10:46:56 [INFO] [ElenaMartin99 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-07 10:46:57 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 6ad0fe9c3cf0fed2d9798a88
+2026-11-07 10:46:59 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-07 10:46:59 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-07 10:47:54 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 6ad0fe9c3cf0fed2d9798a88
+2026-11-07 10:47:54 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 6ad0fe9c3cf0fed2d9798a8c
+2026-11-07 10:48:03 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-07 10:48:03 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-07 10:48:03 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.ValoracionDAOImplementacion.obtenerValoracionesCliente: Listar valoraciones del cliente 6ad0fe9c3cf0fed2d9798a88
+2026-11-07 10:48:38 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.ValoracionDAOImplementacion.insertarValoracion: Insertar valoración de 2 estrellas del cliente 6ad0fe9c3cf0fed2d9798a88 para la tarifa 6ad0fe4a3cf0fed2d9798a84
+2026-11-07 10:48:39 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.ValoracionDAOImplementacion.obtenerValoracionesCliente: Listar valoraciones del cliente 6ad0fe9c3cf0fed2d9798a88
+2026-11-07 10:48:42 [INFO] [ElenaMartin99 (Cliente)] controlador.ClienteController.cerrarSesion: Sesión cerrada
+2026-11-07 10:48:54 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-07 10:48:54 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-07 10:48:55 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-07 10:48:55 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-07 10:48:55 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-07 10:48:56 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-07 10:48:59 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.listarValoraciones: Listar valoraciones
+2026-11-07 10:48:59 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.mediaValoraciones: Calcular la media de las valoraciones
+2026-11-07 10:49:18 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.listarValoraciones: Listar valoraciones
+2026-11-07 10:49:18 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.mediaValoraciones: Calcular la media de las valoraciones
+2026-11-07 10:49:20 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-07 10:49:20 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-07 10:49:20 [INFO] [Aitorfernandez0 (Admin)] controlador.GestionTarifasController.cargarTabla: Tarifas cargadas: 3
+2026-11-07 10:51:02 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TarifaDAOImplementacion.insertarTarifa: Insertar tarifa Fibra Pro Max 2GB + Móvil 600, precio: 60.0, tipo: Fibra + Móvil
+2026-11-07 10:51:04 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-07 10:51:04 [INFO] [Aitorfernandez0 (Admin)] controlador.GestionTarifasController.cargarTabla: Tarifas cargadas: 4
+2026-11-07 10:51:07 [INFO] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cerrarSesion: Sesión cerrada
+2026-11-07 10:51:33 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: ElenaMartin99
+2026-11-07 10:51:33 [INFO] [ElenaMartin99 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-07 10:51:33 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 6ad0fe9c3cf0fed2d9798a88
+2026-11-07 10:51:35 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-07 10:51:35 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-07 10:52:06 [INFO] [ElenaMartin99 (Cliente)] controlador.ClienteController.cerrarSesion: Sesión cerrada
+2026-11-07 10:52:13 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-07 10:52:13 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-07 10:52:14 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-07 10:52:14 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-07 10:52:14 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-07 10:52:15 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-07 10:53:04 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.AdministradorDAOImpl.crearEmpleado: Crear empleado, usuario: monica.vallejo, nombre: Monica Vallejo Sanchez, correo: monica.vallejo@telonda.com, sucursal: Arrigorriaga, Lonbo Kalea
+2026-11-07 10:53:05 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.AdministradorDAOImpl.crearEmpleado: Crear empleado, usuario: monica.vallejo, nombre: Monica Vallejo Sanchez, correo: monica.vallejo@telonda.com, sucursal: Arrigorriaga, Lonbo Kalea
+2026-11-07 11:00:01 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitrofernandez0
+2026-11-07 11:00:01 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-07 11:00:01 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: Aitrofernandez0
+2026-11-07 11:00:01 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: Aitrofernandez0
+2026-11-07 11:00:01 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitrofernandez0
+2026-11-07 11:00:01 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: Aitrofernandez0
+2026-11-07 11:00:01 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: Aitrofernandez0
+2026-11-07 11:00:09 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-07 11:00:09 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-07 11:00:09 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-07 11:00:09 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-07 11:00:09 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-07 11:00:11 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-07 11:00:43 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.AdministradorDAOImpl.crearEmpleado: Crear empleado, usuario: monica.vallejo, nombre: Monica Vallejo Sanchez, correo: monica.vallejo@telonda.com, sucursal: Arrigorriaga, Lonbo Kalea
+2026-11-07 11:06:19 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.AdministradorDAOImpl.crearEmpleado: Crear empleado, usuario: monica.vallejo, nombre: Monica Vallejo Sanchez, correo: monica.vallejo@telonda.com, sucursal: Arrigorriaga, Lonbo Kalea
+2026-11-07 11:07:32 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.AdministradorDAOImpl.crearEmpleado: Crear empleado, usuario: carlos.garcia, nombre: Carlos Garcia Gomez, correo: carlos.garcia@telonda.com, sucursal: Alameda de Urquijo
+2026-11-07 11:12:53 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitrofernandez0
+2026-11-07 11:12:53 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-07 11:12:53 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: Aitrofernandez0
+2026-11-07 11:12:53 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: Aitrofernandez0
+2026-11-07 11:13:02 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-07 11:13:02 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-07 11:13:02 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-07 11:13:02 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-07 11:13:02 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-07 11:13:07 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.eliminarEmpleado: Eliminar empleado, usuario: carlos.garcia
+2026-11-07 11:13:08 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-07 11:13:08 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-07 11:13:09 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-07 11:13:43 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.AdministradorDAOImpl.crearEmpleado: Crear empleado, usuario: carlos.garcia, nombre: Carlos garcia Fernandez, correo: carlos.garcia@telonda.com, sucursal: Alameda de Urquijo
+2026-11-07 11:13:43 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.AdministradorDAOImpl.agregarEmpleadoASucursal: Añadir el empleado carlos.garcia a la sucursal 1
+2026-11-07 11:13:44 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-07 11:13:44 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-07 11:25:41 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-07 11:25:41 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-07 11:25:41 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-07 11:25:42 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-07 11:25:42 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-07 11:25:42 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-07 11:25:43 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-07 11:26:05 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.AdministradorDAOImpl.crearEmpleado: Crear empleado, usuario: carlos.garcia, nombre: Carlos Garcia Fernandez, correo: carlos.garcia@telonda.com, sucursal: Alameda de Urquijo
+2026-11-07 11:26:05 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.AdministradorDAOImpl.agregarEmpleadoASucursal: Añadir el empleado carlos.garcia a la sucursal Alameda de Urquijo
+2026-11-07 11:26:07 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-07 11:26:07 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 11:49:36 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitrofernandez12
+2026-11-09 11:49:37 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-09 11:49:37 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: Aitrofernandez12
+2026-11-09 11:49:37 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: Aitrofernandez12
+2026-11-09 11:49:47 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez12
+2026-11-09 11:49:47 [INFO] [Aitorfernandez12 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-09 11:49:48 [INFO] [Aitorfernandez12 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-09 11:49:48 [INFO] [Aitorfernandez12 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 11:49:48 [INFO] [Aitorfernandez12 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-09 11:49:51 [WARNING] [Aitorfernandez12 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-09 11:49:51 [INFO] [Aitorfernandez12 (Admin)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-09 11:49:51 [INFO] [Aitorfernandez12 (Admin)] controlador.GestionTarifasController.cargarTabla: Tarifas cargadas: 2
+2026-11-09 17:56:34 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-09 17:56:34 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-09 17:56:34 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-09 17:56:34 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-09 17:56:34 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 17:56:34 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-09 17:58:07 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-09 17:58:07 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-09 17:58:07 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-09 17:58:07 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-09 17:58:07 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 17:58:07 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-09 17:58:10 [SEVERE] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cargarSubvista: No existe la pantalla /vista/GestionLog.fxml
+2026-11-09 17:59:59 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-09 17:59:59 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-09 18:00:00 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-09 18:00:00 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-09 18:00:00 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 18:00:00 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-09 18:00:02 [SEVERE] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cargarSubvista: No existe la pantalla /vista/GestionLog.fxml
+2026-11-09 18:00:50 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-09 18:00:50 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-09 18:00:50 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-09 18:00:50 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-09 18:00:50 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 18:00:50 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-09 18:00:52 [SEVERE] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cargarSubvista: Error al abrir /vista/GestionLogs.fxml
+javafx.fxml.LoadException: 
+/C:/Users/eneko/Escritorio/DAM/RetoDam/Tel-ONDA/target/classes/vista/GestionLogs.fxml:15
+
+	at javafx.fxml/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2707)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:933)
+	at javafx.fxml/javafx.fxml.FXMLLoader$InstanceDeclarationElement.processAttribute(FXMLLoader.java:981)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processStartElement(FXMLLoader.java:230)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ValueElement.processStartElement(FXMLLoader.java:755)
+	at javafx.fxml/javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2808)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2634)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2548)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3331)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3287)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3255)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3227)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3203)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:3196)
+	at controlador.AdministradorController.cargarSubvista(AdministradorController.java:123)
+	at controlador.AdministradorController.cambiarSubVista(AdministradorController.java:75)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.skin.ComboBoxListViewSkin.lambda$new$7(ComboBoxListViewSkin.java:187)
+	at java.base/java.util.function.Consumer.lambda$andThen$0(Consumer.java:65)
+	at javafx.controls/com.sun.javafx.scene.control.LambdaMultiplePropertyChangeListenerHandler.lambda$new$1(LambdaMultiplePropertyChangeListenerHandler.java:88)
+	at javafx.base/javafx.beans.value.WeakChangeListener.changed(WeakChangeListener.java:86)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper$Generic.fireValueChangedEvent(ExpressionHelper.java:360)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper.fireValueChangedEvent(ExpressionHelper.java:80)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.fireValueChangedEvent(ObjectPropertyBase.java:106)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.markInvalid(ObjectPropertyBase.java:113)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.set(ObjectPropertyBase.java:147)
+	at javafx.controls/javafx.scene.control.ComboBoxBase.setValue(ComboBoxBase.java:151)
+	at javafx.controls/javafx.scene.control.ComboBox.updateValue(ComboBox.java:516)
+	at javafx.controls/javafx.scene.control.ComboBox$3.changed(ComboBox.java:499)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper$Generic.fireValueChangedEvent(ExpressionHelper.java:360)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper.fireValueChangedEvent(ExpressionHelper.java:80)
+	at javafx.base/javafx.beans.property.ReadOnlyObjectPropertyBase.fireValueChangedEvent(ReadOnlyObjectPropertyBase.java:80)
+	at javafx.base/javafx.beans.property.ReadOnlyObjectWrapper.fireValueChangedEvent(ReadOnlyObjectWrapper.java:102)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.markInvalid(ObjectPropertyBase.java:113)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.set(ObjectPropertyBase.java:147)
+	at javafx.controls/javafx.scene.control.SelectionModel.setSelectedItem(SelectionModel.java:105)
+	at javafx.controls/javafx.scene.control.ComboBox$ComboBoxSelectionModel.lambda$new$0(ComboBox.java:556)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper$SingleInvalidation.fireValueChangedEvent(ExpressionHelper.java:136)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper.fireValueChangedEvent(ExpressionHelper.java:80)
+	at javafx.base/javafx.beans.property.ReadOnlyIntegerPropertyBase.fireValueChangedEvent(ReadOnlyIntegerPropertyBase.java:78)
+	at javafx.base/javafx.beans.property.ReadOnlyIntegerWrapper.fireValueChangedEvent(ReadOnlyIntegerWrapper.java:102)
+	at javafx.base/javafx.beans.property.IntegerPropertyBase.markInvalid(IntegerPropertyBase.java:114)
+	at javafx.base/javafx.beans.property.IntegerPropertyBase.set(IntegerPropertyBase.java:148)
+	at javafx.controls/javafx.scene.control.SelectionModel.setSelectedIndex(SelectionModel.java:69)
+	at javafx.controls/javafx.scene.control.SingleSelectionModel.updateSelectedIndex(SingleSelectionModel.java:215)
+	at javafx.controls/javafx.scene.control.SingleSelectionModel.select(SingleSelectionModel.java:149)
+	at javafx.controls/javafx.scene.control.skin.ComboBoxListViewSkin.lambda$createListView$10(ComboBoxListViewSkin.java:558)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper$Generic.fireValueChangedEvent(ExpressionHelper.java:348)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper.fireValueChangedEvent(ExpressionHelper.java:80)
+	at javafx.base/javafx.beans.property.ReadOnlyIntegerPropertyBase.fireValueChangedEvent(ReadOnlyIntegerPropertyBase.java:78)
+	at javafx.base/javafx.beans.property.ReadOnlyIntegerWrapper.fireValueChangedEvent(ReadOnlyIntegerWrapper.java:102)
+	at javafx.base/javafx.beans.property.IntegerPropertyBase.markInvalid(IntegerPropertyBase.java:114)
+	at javafx.base/javafx.beans.property.IntegerPropertyBase.set(IntegerPropertyBase.java:148)
+	at javafx.controls/javafx.scene.control.SelectionModel.setSelectedIndex(SelectionModel.java:69)
+	at javafx.controls/javafx.scene.control.MultipleSelectionModelBase.select(MultipleSelectionModelBase.java:413)
+	at javafx.controls/javafx.scene.control.MultipleSelectionModelBase.clearAndSelect(MultipleSelectionModelBase.java:360)
+	at javafx.controls/javafx.scene.control.ListView$ListViewBitSetSelectionModel.clearAndSelect(ListView.java:1451)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.CellBehaviorBase.simpleSelect(CellBehaviorBase.java:282)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.CellBehaviorBase.doSelect(CellBehaviorBase.java:246)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.CellBehaviorBase.mousePressed(CellBehaviorBase.java:176)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: java.lang.ClassNotFoundException: controlador.GestionLogsController
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:580)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:490)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:931)
+	... 111 more
+2026-11-09 18:01:51 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-09 18:01:51 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-09 18:01:51 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-09 18:01:51 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-09 18:01:52 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 18:01:52 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-09 18:01:53 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-09 18:02:43 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-09 18:02:43 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-09 18:02:43 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-09 18:02:44 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-09 18:02:44 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 18:02:44 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-09 18:02:46 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-09 18:04:21 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-09 18:04:21 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-09 18:04:21 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-09 18:04:21 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-09 18:04:21 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 18:04:21 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-09 18:04:24 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-09 18:05:34 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-09 18:05:34 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-09 18:05:34 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-09 18:05:35 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-09 18:05:35 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 18:05:35 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-09 18:05:37 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.listarValoraciones: Listar valoraciones
+2026-11-09 18:05:37 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.mediaValoraciones: Calcular la media de las valoraciones
+2026-11-09 18:05:40 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-09 18:06:30 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-09 18:06:30 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-09 18:06:30 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-09 18:06:31 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-09 18:06:31 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 18:06:31 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-09 18:06:32 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-09 18:07:53 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-09 18:07:53 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-09 18:07:54 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-09 18:07:54 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-09 18:07:54 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 18:07:54 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-09 18:07:56 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-09 18:11:08 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-09 18:11:08 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-09 18:11:08 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-09 18:11:08 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-09 18:11:08 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-09 18:11:08 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-09 18:11:11 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-09 18:11:32 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.listarValoraciones: Listar valoraciones
+2026-11-09 18:11:32 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.mediaValoraciones: Calcular la media de las valoraciones
+2026-11-09 18:11:35 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-10 17:51:40 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-10 17:51:40 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-10 17:51:40 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-10 17:51:40 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-10 17:51:40 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-10 17:51:40 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-10 17:51:43 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-10 17:51:43 [SEVERE] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cargarSubvista: Error al abrir /vista/GestionLogs.fxml
+javafx.fxml.LoadException: 
+/C:/Users/eneko/Escritorio/DAM/RetoDam/Tel-ONDA/target/classes/vista/GestionLogs.fxml
+
+	at javafx.fxml/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2707)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2685)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2548)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3331)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3287)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3255)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3227)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3203)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:3196)
+	at controlador.AdministradorController.cargarSubvista(AdministradorController.java:123)
+	at controlador.AdministradorController.cambiarSubVista(AdministradorController.java:75)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.skin.ComboBoxListViewSkin.lambda$new$7(ComboBoxListViewSkin.java:187)
+	at java.base/java.util.function.Consumer.lambda$andThen$0(Consumer.java:65)
+	at javafx.controls/com.sun.javafx.scene.control.LambdaMultiplePropertyChangeListenerHandler.lambda$new$1(LambdaMultiplePropertyChangeListenerHandler.java:88)
+	at javafx.base/javafx.beans.value.WeakChangeListener.changed(WeakChangeListener.java:86)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper$Generic.fireValueChangedEvent(ExpressionHelper.java:360)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper.fireValueChangedEvent(ExpressionHelper.java:80)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.fireValueChangedEvent(ObjectPropertyBase.java:106)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.markInvalid(ObjectPropertyBase.java:113)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.set(ObjectPropertyBase.java:147)
+	at javafx.controls/javafx.scene.control.ComboBoxBase.setValue(ComboBoxBase.java:151)
+	at javafx.controls/javafx.scene.control.ComboBox.updateValue(ComboBox.java:516)
+	at javafx.controls/javafx.scene.control.ComboBox$3.changed(ComboBox.java:499)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper$Generic.fireValueChangedEvent(ExpressionHelper.java:360)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper.fireValueChangedEvent(ExpressionHelper.java:80)
+	at javafx.base/javafx.beans.property.ReadOnlyObjectPropertyBase.fireValueChangedEvent(ReadOnlyObjectPropertyBase.java:80)
+	at javafx.base/javafx.beans.property.ReadOnlyObjectWrapper.fireValueChangedEvent(ReadOnlyObjectWrapper.java:102)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.markInvalid(ObjectPropertyBase.java:113)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.set(ObjectPropertyBase.java:147)
+	at javafx.controls/javafx.scene.control.SelectionModel.setSelectedItem(SelectionModel.java:105)
+	at javafx.controls/javafx.scene.control.ComboBox$ComboBoxSelectionModel.lambda$new$0(ComboBox.java:556)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper$SingleInvalidation.fireValueChangedEvent(ExpressionHelper.java:136)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper.fireValueChangedEvent(ExpressionHelper.java:80)
+	at javafx.base/javafx.beans.property.ReadOnlyIntegerPropertyBase.fireValueChangedEvent(ReadOnlyIntegerPropertyBase.java:78)
+	at javafx.base/javafx.beans.property.ReadOnlyIntegerWrapper.fireValueChangedEvent(ReadOnlyIntegerWrapper.java:102)
+	at javafx.base/javafx.beans.property.IntegerPropertyBase.markInvalid(IntegerPropertyBase.java:114)
+	at javafx.base/javafx.beans.property.IntegerPropertyBase.set(IntegerPropertyBase.java:148)
+	at javafx.controls/javafx.scene.control.SelectionModel.setSelectedIndex(SelectionModel.java:69)
+	at javafx.controls/javafx.scene.control.SingleSelectionModel.updateSelectedIndex(SingleSelectionModel.java:215)
+	at javafx.controls/javafx.scene.control.SingleSelectionModel.select(SingleSelectionModel.java:149)
+	at javafx.controls/javafx.scene.control.skin.ComboBoxListViewSkin.lambda$createListView$10(ComboBoxListViewSkin.java:558)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper$Generic.fireValueChangedEvent(ExpressionHelper.java:348)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper.fireValueChangedEvent(ExpressionHelper.java:80)
+	at javafx.base/javafx.beans.property.ReadOnlyIntegerPropertyBase.fireValueChangedEvent(ReadOnlyIntegerPropertyBase.java:78)
+	at javafx.base/javafx.beans.property.ReadOnlyIntegerWrapper.fireValueChangedEvent(ReadOnlyIntegerWrapper.java:102)
+	at javafx.base/javafx.beans.property.IntegerPropertyBase.markInvalid(IntegerPropertyBase.java:114)
+	at javafx.base/javafx.beans.property.IntegerPropertyBase.set(IntegerPropertyBase.java:148)
+	at javafx.controls/javafx.scene.control.SelectionModel.setSelectedIndex(SelectionModel.java:69)
+	at javafx.controls/javafx.scene.control.MultipleSelectionModelBase.select(MultipleSelectionModelBase.java:413)
+	at javafx.controls/javafx.scene.control.MultipleSelectionModelBase.clearAndSelect(MultipleSelectionModelBase.java:360)
+	at javafx.controls/javafx.scene.control.ListView$ListViewBitSetSelectionModel.clearAndSelect(ListView.java:1451)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.CellBehaviorBase.simpleSelect(CellBehaviorBase.java:282)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.CellBehaviorBase.doSelect(CellBehaviorBase.java:246)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.CellBehaviorBase.mousePressed(CellBehaviorBase.java:176)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: java.lang.NullPointerException: Cannot invoke "javafx.scene.control.ListView.setItems(javafx.collections.ObservableList)" because "this.listaLogsView" is null
+	at controlador.GestionLogController.initialize(GestionLogController.java:33)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2655)
+	... 106 more
+2026-11-10 17:53:37 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-10 17:53:37 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-10 17:53:37 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-10 17:53:38 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-10 17:53:38 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-10 17:53:38 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-10 17:53:40 [INFO] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cerrarSesion: Sesión cerrada
+2026-11-10 17:53:47 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-10 17:53:47 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-10 17:53:47 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-10 17:53:47 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-10 17:53:47 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-10 17:53:49 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-11 19:14:40 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Elenamartin99
+2026-11-11 19:14:40 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-11 19:14:40 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: Elenamartin99
+2026-11-11 19:14:40 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: Elenamartin99
+2026-11-11 19:14:40 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Elenamartin99
+2026-11-11 19:14:40 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: Elenamartin99
+2026-11-11 19:14:40 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: Elenamartin99
+2026-11-11 19:14:47 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: ElenaMartin99
+2026-11-11 19:14:47 [INFO] [ElenaMartin99 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-11 19:14:48 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 6ad0fe9c3cf0fed2d9798a88
+2026-11-11 19:14:50 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TikcetDAOImpl.listarTicketsCliente: Listar tickets del cliente 6ad0fe9c3cf0fed2d9798a88
+2026-11-11 19:15:08 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TikcetDAOImpl.crearTickets: Crear ticket del cliente 6ad0fe9c3cf0fed2d9798a88, asunto: ssassas
+2026-11-11 19:15:09 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TikcetDAOImpl.listarTicketsCliente: Listar tickets del cliente 6ad0fe9c3cf0fed2d9798a88
+2026-11-11 19:15:15 [INFO] [ElenaMartin99 (Cliente)] controlador.ClienteController.cerrarSesion: Sesión cerrada
+2026-11-11 19:15:21 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez12
+2026-11-11 19:15:21 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: Aitorfernandez12
+2026-11-11 19:15:21 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: Aitorfernandez12
+2026-11-11 19:15:26 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-11 19:15:26 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-11 19:15:26 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-11 19:15:26 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-11 19:15:26 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-11 19:15:28 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado: Todos
+2026-11-11 19:15:42 [INFO] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cerrarSesion: Sesión cerrada
+2026-11-11 19:15:56 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: juleneplaza
+2026-11-11 19:15:56 [INFO] [juleneplaza (Empleado)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-11 19:15:57 [WARNING] [juleneplaza (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-11 19:15:57 [INFO] [juleneplaza (Empleado)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-11 19:15:59 [INFO] [juleneplaza (Empleado)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado: Todos
+2026-11-11 19:16:09 [INFO] [juleneplaza (Empleado)] DAO.implementacion.TikcetDAOImpl.cambiarEstadoTicket: Cambiar estado del ticket 6af4b0ace13b947ba9b7fcf8 a cerrado
+2026-11-11 19:16:11 [INFO] [juleneplaza (Empleado)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado: Todos
+2026-11-11 19:16:16 [INFO] [juleneplaza (Empleado)] controlador.EmpleadoController.cerrarSesion: Sesión cerrada
+2026-11-11 19:16:23 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-11 19:16:23 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-11 19:16:23 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-11 19:16:23 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-11 19:16:23 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-11 19:16:27 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado: Todos
+2026-11-11 19:16:33 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-11 19:16:35 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado: Todos
+2026-11-11 19:21:45 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-11 19:21:45 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-11 19:21:45 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-11 19:21:45 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-11 19:21:45 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-11 19:21:45 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-11 19:21:47 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado: Todos
+2026-11-11 19:21:59 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.asignarTicket: Asignar ticket 6af4b0ace13b947ba9b7fcf8 (ssassas) al empleado 650000000000000000000003
+2026-11-11 19:22:03 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado: Todos
+2026-11-11 19:22:06 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-11 19:22:09 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-11 19:22:09 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-11 19:22:09 [INFO] [Aitorfernandez0 (Admin)] controlador.GestionTarifasController.cargarTabla: Tarifas cargadas: 4
+2026-11-11 19:22:15 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.listarValoraciones: Listar valoraciones
+2026-11-11 19:22:15 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.mediaValoraciones: Calcular la media de las valoraciones
+2026-11-11 19:22:18 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-11 19:22:21 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-11 19:22:21 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-11 19:22:21 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-11 19:22:25 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-11 19:22:28 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-11 19:22:28 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-11 19:22:46 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado: Todos
+2026-11-11 19:24:50 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.cambiarEstadoTicket: Cambiar estado del ticket 6af4b0ace13b947ba9b7fcf8 a pendiente
+2026-11-11 19:24:51 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado: Todos
+2026-11-11 19:30:05 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: EleneMartin99
+2026-11-11 19:30:05 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-11 19:30:05 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: EleneMartin99
+2026-11-11 19:30:05 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: EleneMartin99
+2026-11-11 19:30:32 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: ElenaMartin99
+2026-11-11 19:30:32 [INFO] [ElenaMartin99 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-11 19:30:33 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 6ad0fe9c3cf0fed2d9798a88
+2026-11-11 19:30:44 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TikcetDAOImpl.listarTicketsCliente: Listar tickets del cliente 6ad0fe9c3cf0fed2d9798a88
+2026-11-11 19:31:13 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TikcetDAOImpl.crearTickets: Crear ticket del cliente 6ad0fe9c3cf0fed2d9798a88 con asunto Tema wifi
+2026-11-11 19:31:14 [INFO] [ElenaMartin99 (Cliente)] DAO.implementacion.TikcetDAOImpl.listarTicketsCliente: Listar tickets del cliente 6ad0fe9c3cf0fed2d9798a88
+2026-11-11 19:31:18 [INFO] [ElenaMartin99 (Cliente)] controlador.ClienteController.cerrarSesion: Sesión cerrada
+2026-11-11 19:31:26 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: juleneplaza
+2026-11-11 19:31:26 [INFO] [juleneplaza (Empleado)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-11 19:31:26 [WARNING] [juleneplaza (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-11 19:31:26 [INFO] [juleneplaza (Empleado)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-11 19:31:29 [INFO] [juleneplaza (Empleado)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-11 19:31:37 [INFO] [juleneplaza (Empleado)] DAO.implementacion.TikcetDAOImpl.cambiarEstadoTicket: Cambiar estado del ticket 6af4b471a10f055e92ac03e8 a en proceso
+2026-11-11 19:31:39 [INFO] [juleneplaza (Empleado)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-11 19:31:42 [WARNING] [juleneplaza (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-11 19:31:43 [INFO] [juleneplaza (Empleado)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-11 19:31:45 [INFO] [juleneplaza (Empleado)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-11 19:32:05 [INFO] [juleneplaza (Empleado)] controlador.EmpleadoController.cerrarSesion: Sesión cerrada
+2026-11-11 19:32:13 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez12
+2026-11-11 19:32:13 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: Aitorfernandez12
+2026-11-11 19:32:13 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: Aitorfernandez12
+2026-11-11 19:32:17 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-11 19:32:17 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-11 19:32:18 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-11 19:32:18 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-11 19:32:18 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-11 19:32:20 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-11 19:32:33 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.asignarTicket: Asignar ticket 6af4b471a10f055e92ac03e8 al empleado 650000000000000000000003
+2026-11-11 19:32:34 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-11 19:32:43 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.cambiarEstadoTicket: Cambiar estado del ticket 6af4b0ace13b947ba9b7fcf8 a cerrado
+2026-11-11 19:32:44 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-11 19:32:51 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-11 19:32:54 [INFO] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cerrarSesion: Sesión cerrada

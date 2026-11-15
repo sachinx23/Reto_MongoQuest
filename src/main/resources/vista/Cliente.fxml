@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="600.0" prefWidth="950.0" 
+            stylesheets="@../css/Estilos.css" 
+            styleClass="fondo-pantalla"
+            xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="controlador.ClienteController">
+   <children>
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <children>
+            
+            <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="barra-superior">
+               <children>
+                  <Label minWidth="-Infinity" styleClass="titulo-barra" text="Panel Cliente:" />
+                  
+                  <ComboBox fx:id="cmbOpciones" onAction="#cmbOpcionSeleccionada" prefWidth="250.0" promptText="Seleccionar sección..." styleClass="combo-empleado" />
+                  
+                  <Region HBox.hgrow="ALWAYS" />
+                  
+                  <Label fx:id="lblBienvenida" minWidth="-Infinity" styleClass="nombre-usuario" text="Cliente: Usuario" />
+               </children>
+            </HBox>
+
+            <AnchorPane minHeight="3.0" prefHeight="3.0" styleClass="franja-turquesa" />
+
+            <StackPane fx:id="panelContenido" styleClass="panel-contenido" VBox.vgrow="ALWAYS" />
+
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Vista principal del panel de Administrador en JavaFX.
+  Define la estructura general de la pantalla con una barra superior de navegación
+  (selector de módulos administrativos y etiqueta con el nombre del administrador activo)
+  y un contenedor central dinámico donde se cargan las distintas subvistas de gestión.
+
+  Controlador asociado: controlador.AdministradorController
+  Hoja de estilos: ../css/Estilos.css
+  @author Eneko.Plaza
+-->
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Contenedor raíz de la vista del administrador con dimensiones iniciales de 950x600 -->
+<AnchorPane prefHeight="600.0" prefWidth="950.0" 
+            stylesheets="@../css/Estilos.css" 
+            styleClass="fondo-pantalla"
+            xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="controlador.AdministradorController">
+   <children>
+      <!-- Disposición vertical principal que separa la barra superior del área de contenido -->
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <children>
+            
+            <!-- Barra superior de cabecera con selector de subvistas e identificación del administrador -->
+            <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="barra-superior">
+               <children>
+                  <!-- Título identificador de la vista de administración -->
+                  <Label styleClass="titulo-barra" text="Panel Administrador:" />
+                  
+                  <!-- Desplegable de navegación vinculado a AdministradorController#cambiarSubVista -->
+                  <ComboBox fx:id="cbOpcionesAdmin" onAction="#cambiarSubVista" prefWidth="280.0" promptText="Elegir opción..." styleClass="combo-empleado" />
+                  
+                  <!-- Espaciador flexible para alinear el nombre del usuario a la derecha -->
+                  <Region HBox.hgrow="ALWAYS" />
+                  
+                  <!-- Etiqueta dinámica que muestra el nombre del administrador con sesión iniciada -->
+                  <Label fx:id="lblNombreAdmin" text="Admin: Usuario" styleClass="nombre-usuario" />
+               </children>
+            </HBox>
+
+            <!-- Contenedor dinámico donde se incrustan las subvistas FXML seleccionadas -->
+            <StackPane fx:id="contenidoDinamico" styleClass="panel-contenido" VBox.vgrow="ALWAYS" />
+
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

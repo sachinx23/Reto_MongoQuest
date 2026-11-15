@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mapa de Sucursales</title>
+    <meta charset="UTF-8">
+    <style>
+        html, body, #mapa {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="mapa"></div>
+
+    <script>
+        var mapa;
+        var geocoder;
+        var marcadores = [];
+
+        function initMap() {
+            mapa = new google.maps.Map(document.getElementById("mapa"), {
+                center: { lat: 43.263, lng: -2.935 }, // Centro por defecto (ej. Bilbao)
+                zoom: 11
+            });
+            geocoder = new google.maps.Geocoder();
+        }
+
+        // Llamado desde JavaFX al terminar de cargar el WebView
+        function refrescarMapa() {
+            if (mapa) {
+                google.maps.event.trigger(mapa, 'resize');
+            }
+        }
+
+        // 2. Limpia todos los marcadores actuales del mapa
+        function limpiarMapa() {
+            for (var i = 0; i < marcadores.length; i++) {
+                marcadores[i].setMap(null);
+            }
+            marcadores = [];
+        }
+
+        // Añade una sucursal buscando su dirección en Google Maps
+        function agregarSucursal(id, direccion, localidad) {
+            var texto = direccion + ", " + localidad + ", España";
+
+            geocoder.geocode({ address: texto }, function (resultados, estado) {
+                if (estado === "OK") {
+                    var posicion = resultados[0].geometry.location;
+
+                    var marcador = new google.maps.Marker({
+                        position: posicion,
+                        map: mapa,
+                        title: "Sucursal " + id
+                    });
+
+                    var ventana = new google.maps.InfoWindow({
+                        content: "<b>Sucursal " + id + "</b><br>" + direccion
+                    });
+
+                    marcador.addListener("click", function () {
+                        ventana.open(mapa, marcador);
+                    });
+
+                    marcadores.push(marcador);
+                } else {
+                    console.log("No se pudo geocodificar la sucursal " + id + ": " + estado);
+                }
+            });
+        }
+
+        // Centra y hace zoom en la sucursal seleccionada desde la lista de JavaFX
+        function enfocarUbicacion(direccion, localidad) {
+            var texto = direccion + ", " + localidad + ", España";
+
+            geocoder.geocode({ address: texto }, function (resultados, estado) {
+                if (estado === "OK") {
+                    var posicion = resultados[0].geometry.location;
+                    mapa.setCenter(posicion);
+                    mapa.setZoom(15); // Zoom cercano a la calle
+                } else {
+                    console.log("No se pudo enfocar la ubicación: " + estado);
+                }
+            });
+        }
+    </script>
+
+    <!-- Reemplaza AQUI_TU_API_KEY por tu clave real de Google Maps -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AQUI_TU_API_KEY&callback=initMap" async defer></script>
+</body>
+</html>
