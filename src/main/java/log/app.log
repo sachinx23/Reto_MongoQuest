@@ -565,3 +565,1417 @@ Caused by: java.lang.NullPointerException: Cannot invoke "javafx.scene.control.L
 2026-11-11 19:32:44 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
 2026-11-11 19:32:51 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
 2026-11-11 19:32:54 [INFO] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cerrarSesion: Sesión cerrada
+2026-11-16 17:01:18 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-16 17:01:18 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 17:01:18 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 17:01:19 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 17:01:19 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 17:01:19 [SEVERE] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Error en listarClientes
+java.lang.ClassCastException: class org.bson.Document cannot be cast to class java.lang.String (org.bson.Document is in unnamed module of loader 'app'; java.lang.String is in module java.base of loader 'bootstrap')
+	at org.bson.Document.getString(Document.java:308)
+	at DAO.implementacion.ClienteDAOImplementacion.listarClientes(ClienteDAOImplementacion.java:207)
+	at controlador.GestionarPlantillaController.cargarTablas(GestionarPlantillaController.java:216)
+	at controlador.GestionarPlantillaController.initialize(GestionarPlantillaController.java:202)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2655)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2548)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3331)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3287)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3255)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3227)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3203)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:3196)
+	at controlador.AdministradorController.cargarSubvista(AdministradorController.java:162)
+	at controlador.AdministradorController.initialize(AdministradorController.java:72)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2655)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2548)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3331)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3287)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3255)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3227)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3203)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:3196)
+	at controlador.IniciarSesionController.cambiarPantalla(IniciarSesionController.java:194)
+	at controlador.IniciarSesionController.btnIniciarSesion(IniciarSesionController.java:157)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.keyReleased(ButtonBehavior.java:163)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$KeyHandler.process(Scene.java:4105)
+	at javafx.graphics/javafx.scene.Scene.processKeyEvent(Scene.java:2156)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.keyEvent(Scene.java:2630)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:218)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:150)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleKeyEvent$1(GlassViewEventHandler.java:250)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleKeyEvent(GlassViewEventHandler.java:249)
+	at javafx.graphics/com.sun.glass.ui.View.handleKeyEvent(View.java:548)
+	at javafx.graphics/com.sun.glass.ui.View.notifyKey(View.java:972)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 17:01:19 [WARNING] [Aitorfernandez0 (Admin)] controlador.GestionarPlantillaController.cargarTablas: No se pudieron cargar los clientes.
+2026-11-16 17:01:21 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 17:02:27 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 17:24:46 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfermamdez0
+2026-11-16 17:24:47 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 17:24:47 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: Aitorfermamdez0
+2026-11-16 17:24:47 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: Aitorfermamdez0
+2026-11-16 17:25:05 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-16 17:25:05 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 17:25:05 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 17:25:05 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 17:25:05 [SEVERE] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Error en listarClientes
+java.lang.ClassCastException: class org.bson.Document cannot be cast to class java.lang.String (org.bson.Document is in unnamed module of loader 'app'; java.lang.String is in module java.base of loader 'bootstrap')
+	at org.bson.Document.getString(Document.java:308)
+	at DAO.implementacion.ClienteDAOImplementacion.listarClientes(ClienteDAOImplementacion.java:207)
+	at controlador.GestionarPlantillaController.cargarTablas(GestionarPlantillaController.java:216)
+	at controlador.GestionarPlantillaController.initialize(GestionarPlantillaController.java:202)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2655)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2548)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3331)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3287)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3255)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3227)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3203)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:3196)
+	at controlador.AdministradorController.cargarSubvista(AdministradorController.java:162)
+	at controlador.AdministradorController.initialize(AdministradorController.java:72)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2655)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2548)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3331)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3287)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3255)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3227)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3203)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:3196)
+	at controlador.IniciarSesionController.cambiarPantalla(IniciarSesionController.java:194)
+	at controlador.IniciarSesionController.btnIniciarSesion(IniciarSesionController.java:157)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.keyReleased(ButtonBehavior.java:163)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$KeyHandler.process(Scene.java:4105)
+	at javafx.graphics/javafx.scene.Scene.processKeyEvent(Scene.java:2156)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.keyEvent(Scene.java:2630)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:218)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:150)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleKeyEvent$1(GlassViewEventHandler.java:250)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleKeyEvent(GlassViewEventHandler.java:249)
+	at javafx.graphics/com.sun.glass.ui.View.handleKeyEvent(View.java:548)
+	at javafx.graphics/com.sun.glass.ui.View.notifyKey(View.java:972)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 17:25:05 [WARNING] [Aitorfernandez0 (Admin)] controlador.GestionarPlantillaController.cargarTablas: No se pudieron cargar los clientes.
+2026-11-16 17:25:07 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 17:35:13 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-16 17:35:13 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 17:35:13 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 17:35:13 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 17:35:13 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 17:35:13 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 17:35:34 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 17:41:58 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-16 17:41:58 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 17:41:58 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 17:41:59 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 17:41:59 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 17:41:59 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 17:42:01 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 17:42:09 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 17:42:09 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 17:42:28 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.insertarSucursal: Insertar sucursal Tel-ONDA Bilbao, ubicación: Lonbo kalea 1,4A, teléfono: 987687654
+2026-11-16 17:42:28 [SEVERE] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.insertarSucursal: Error en insertarSucursal
+com.mongodb.MongoWriteException: Write operation error on server localhost:27017. Write error: WriteError{code=121, message='Document failed validation', details={"failingDocumentId": {"$oid": "6afb3274a2483560915dcfc4"}, "details": {"operatorName": "$jsonSchema", "schemaRulesNotSatisfied": [{"operatorName": "properties", "propertiesNotSatisfied": [{"propertyName": "telefono", "details": [{"operatorName": "bsonType", "specifiedAs": {"bsonType": "string"}, "reason": "type did not match", "consideredValue": 987687654, "consideredType": "int"}]}]}, {"operatorName": "required", "specifiedAs": {"required": ["nombre", "horario", "telefono", "Ubicacion"]}, "missingProperties": ["Ubicacion"]}]}}}.
+	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:1093)
+	at com.mongodb.client.internal.MongoCollectionImpl.executeInsertOne(MongoCollectionImpl.java:478)
+	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:461)
+	at com.mongodb.client.internal.MongoCollectionImpl.insertOne(MongoCollectionImpl.java:455)
+	at DAO.implementacion.SucursalDAOImplementacion.insertarSucursal(SucursalDAOImplementacion.java:113)
+	at controlador.GestionSucursalController.añadirSucursal(GestionSucursalController.java:261)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 17:42:28 [WARNING] [Aitorfernandez0 (Admin)] controlador.GestionSucursalController.añadirSucursal: No se pudo guardar la sucursal.
+2026-11-16 17:42:31 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.actualizarSucursal: Actualizar sucursal Tel-ONDA Bilbao, ubicación: Lonbo kalea 1,4A, teléfono: 987687654
+2026-11-16 17:42:31 [SEVERE] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.actualizarSucursal: Error en actualizarSucursal
+com.mongodb.MongoWriteException: Write operation error on server localhost:27017. Write error: WriteError{code=121, message='Plan executor error during update :: caused by :: Document failed validation', details={"failingDocumentId": {"$oid": "653f101a2b8e4c1234567804"}, "details": {"operatorName": "$jsonSchema", "schemaRulesNotSatisfied": [{"operatorName": "properties", "propertiesNotSatisfied": [{"propertyName": "telefono", "details": [{"operatorName": "bsonType", "specifiedAs": {"bsonType": "string"}, "reason": "type did not match", "consideredValue": 987687654, "consideredType": "int"}]}]}]}}}.
+	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:1093)
+	at com.mongodb.client.internal.MongoCollectionImpl.executeUpdate(MongoCollectionImpl.java:1069)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:586)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:581)
+	at DAO.implementacion.SucursalDAOImplementacion.actualizarSucursal(SucursalDAOImplementacion.java:145)
+	at controlador.GestionSucursalController.gestionarSucursal(GestionSucursalController.java:306)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 17:42:31 [WARNING] [Aitorfernandez0 (Admin)] controlador.GestionSucursalController.gestionarSucursal: No se pudo guardar la sucursal.
+2026-11-16 17:49:45 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-16 17:49:45 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 17:49:45 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 17:49:46 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 17:49:46 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 17:49:46 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 17:49:48 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 17:50:01 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 17:50:03 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.listarValoraciones: Listar valoraciones
+2026-11-16 17:50:03 [SEVERE] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.listarValoraciones: Error en listarValoraciones
+java.lang.NullPointerException: Cannot invoke "Object.toString()" because the return value of "org.bson.Document.get(Object)" is null
+	at DAO.implementacion.ValoracionDAOImplementacion.mapearValoracion(ValoracionDAOImplementacion.java:75)
+	at DAO.implementacion.ValoracionDAOImplementacion.listarValoraciones(ValoracionDAOImplementacion.java:97)
+	at controlador.ValoracionController.cargarTabla(ValoracionController.java:100)
+	at controlador.ValoracionController.initialize(ValoracionController.java:88)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2673)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2548)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3331)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3287)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3255)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3227)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3203)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:3196)
+	at controlador.AdministradorController.cargarSubvista(AdministradorController.java:162)
+	at controlador.AdministradorController.cambiarSubVista(AdministradorController.java:108)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.skin.ComboBoxListViewSkin.lambda$new$7(ComboBoxListViewSkin.java:187)
+	at java.base/java.util.function.Consumer.lambda$andThen$0(Consumer.java:65)
+	at javafx.controls/com.sun.javafx.scene.control.LambdaMultiplePropertyChangeListenerHandler.lambda$new$1(LambdaMultiplePropertyChangeListenerHandler.java:88)
+	at javafx.base/javafx.beans.value.WeakChangeListener.changed(WeakChangeListener.java:86)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper$Generic.fireValueChangedEvent(ExpressionHelper.java:360)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper.fireValueChangedEvent(ExpressionHelper.java:80)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.fireValueChangedEvent(ObjectPropertyBase.java:106)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.markInvalid(ObjectPropertyBase.java:113)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.set(ObjectPropertyBase.java:147)
+	at javafx.controls/javafx.scene.control.ComboBoxBase.setValue(ComboBoxBase.java:151)
+	at javafx.controls/javafx.scene.control.ComboBox.updateValue(ComboBox.java:516)
+	at javafx.controls/javafx.scene.control.ComboBox$3.changed(ComboBox.java:499)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper$Generic.fireValueChangedEvent(ExpressionHelper.java:360)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper.fireValueChangedEvent(ExpressionHelper.java:80)
+	at javafx.base/javafx.beans.property.ReadOnlyObjectPropertyBase.fireValueChangedEvent(ReadOnlyObjectPropertyBase.java:80)
+	at javafx.base/javafx.beans.property.ReadOnlyObjectWrapper.fireValueChangedEvent(ReadOnlyObjectWrapper.java:102)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.markInvalid(ObjectPropertyBase.java:113)
+	at javafx.base/javafx.beans.property.ObjectPropertyBase.set(ObjectPropertyBase.java:147)
+	at javafx.controls/javafx.scene.control.SelectionModel.setSelectedItem(SelectionModel.java:105)
+	at javafx.controls/javafx.scene.control.ComboBox$ComboBoxSelectionModel.lambda$new$0(ComboBox.java:556)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper$SingleInvalidation.fireValueChangedEvent(ExpressionHelper.java:136)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper.fireValueChangedEvent(ExpressionHelper.java:80)
+	at javafx.base/javafx.beans.property.ReadOnlyIntegerPropertyBase.fireValueChangedEvent(ReadOnlyIntegerPropertyBase.java:78)
+	at javafx.base/javafx.beans.property.ReadOnlyIntegerWrapper.fireValueChangedEvent(ReadOnlyIntegerWrapper.java:102)
+	at javafx.base/javafx.beans.property.IntegerPropertyBase.markInvalid(IntegerPropertyBase.java:114)
+	at javafx.base/javafx.beans.property.IntegerPropertyBase.set(IntegerPropertyBase.java:148)
+	at javafx.controls/javafx.scene.control.SelectionModel.setSelectedIndex(SelectionModel.java:69)
+	at javafx.controls/javafx.scene.control.SingleSelectionModel.updateSelectedIndex(SingleSelectionModel.java:215)
+	at javafx.controls/javafx.scene.control.SingleSelectionModel.select(SingleSelectionModel.java:149)
+	at javafx.controls/javafx.scene.control.skin.ComboBoxListViewSkin.lambda$createListView$10(ComboBoxListViewSkin.java:558)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper$Generic.fireValueChangedEvent(ExpressionHelper.java:348)
+	at javafx.base/com.sun.javafx.binding.ExpressionHelper.fireValueChangedEvent(ExpressionHelper.java:80)
+	at javafx.base/javafx.beans.property.ReadOnlyIntegerPropertyBase.fireValueChangedEvent(ReadOnlyIntegerPropertyBase.java:78)
+	at javafx.base/javafx.beans.property.ReadOnlyIntegerWrapper.fireValueChangedEvent(ReadOnlyIntegerWrapper.java:102)
+	at javafx.base/javafx.beans.property.IntegerPropertyBase.markInvalid(IntegerPropertyBase.java:114)
+	at javafx.base/javafx.beans.property.IntegerPropertyBase.set(IntegerPropertyBase.java:148)
+	at javafx.controls/javafx.scene.control.SelectionModel.setSelectedIndex(SelectionModel.java:69)
+	at javafx.controls/javafx.scene.control.MultipleSelectionModelBase.select(MultipleSelectionModelBase.java:413)
+	at javafx.controls/javafx.scene.control.MultipleSelectionModelBase.clearAndSelect(MultipleSelectionModelBase.java:360)
+	at javafx.controls/javafx.scene.control.ListView$ListViewBitSetSelectionModel.clearAndSelect(ListView.java:1451)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.CellBehaviorBase.simpleSelect(CellBehaviorBase.java:282)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.CellBehaviorBase.doSelect(CellBehaviorBase.java:246)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.CellBehaviorBase.mousePressed(CellBehaviorBase.java:176)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 17:50:03 [WARNING] [Aitorfernandez0 (Admin)] controlador.ValoracionController.cargarTabla: No se pudieron cargar las valoraciones.
+2026-11-16 18:25:30 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-16 18:25:30 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 18:25:30 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 18:25:31 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 18:25:31 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 18:25:31 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 18:25:33 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.listarValoraciones: Listar valoraciones
+2026-11-16 18:25:33 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.mediaValoraciones: Calcular la media de las valoraciones
+2026-11-16 18:25:37 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 18:25:37 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-16 18:25:37 [INFO] [Aitorfernandez0 (Admin)] controlador.GestionTarifasController.cargarTabla: Tarifas cargadas: 2
+2026-11-16 18:25:49 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 18:25:49 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 18:25:49 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 18:25:51 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 18:25:55 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 18:25:55 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 18:26:02 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-16 18:26:06 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 18:26:06 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-16 18:26:06 [INFO] [Aitorfernandez0 (Admin)] controlador.GestionTarifasController.cargarTabla: Tarifas cargadas: 2
+2026-11-16 18:26:13 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 18:26:13 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 18:26:13 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 18:26:15 [INFO] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cerrarSesion: Sesión cerrada
+2026-11-16 18:26:31 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-16 18:26:31 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 18:26:32 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 18:26:32 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 18:26:32 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 18:26:36 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-16 18:28:30 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-16 18:28:30 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 18:28:30 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 18:28:30 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 18:28:31 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 18:28:31 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 18:28:33 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-16 18:31:01 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-16 18:31:01 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 18:31:01 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 18:31:02 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 18:31:02 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 18:31:02 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 18:31:04 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-16 18:36:31 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-16 18:36:31 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 18:36:31 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 18:36:32 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 18:36:32 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 18:36:32 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 18:36:34 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-16 18:39:59 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-16 18:39:59 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 18:39:59 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 18:39:59 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 18:39:59 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 18:39:59 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 18:40:02 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-16 18:46:33 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: PedroDiaz0
+2026-11-16 18:46:33 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 18:46:33 [INFO] [PedroDiaz0 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 18:46:34 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567801
+2026-11-16 18:47:50 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: PedroDiaz0
+2026-11-16 18:47:50 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 18:47:50 [INFO] [PedroDiaz0 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 18:47:51 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567801
+2026-11-16 18:53:27 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: PedroDiaz0
+2026-11-16 18:53:27 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 18:53:27 [INFO] [PedroDiaz0 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 18:53:27 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567801
+2026-11-16 18:54:14 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: PedroDiaz0
+2026-11-16 18:54:14 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 18:54:14 [INFO] [PedroDiaz0 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 18:54:15 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567801
+2026-11-16 18:54:17 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-16 18:54:17 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-16 18:54:20 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567801
+2026-11-16 18:54:27 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TikcetDAOImpl.listarTicketsCliente: Listar tickets del cliente 653f101a2b8e4c1234567801
+2026-11-16 18:54:34 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567801
+2026-11-16 18:58:15 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: PedroDiaz0
+2026-11-16 18:58:15 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 18:58:15 [INFO] [PedroDiaz0 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 18:58:16 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567801
+2026-11-16 18:58:18 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567801
+2026-11-16 18:58:18 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567805
+2026-11-16 18:58:18 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567806
+2026-11-16 18:58:33 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-16 18:58:33 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-16 18:58:34 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567801
+2026-11-16 18:58:37 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567801
+2026-11-16 18:58:37 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567805
+2026-11-16 18:58:37 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567806
+2026-11-16 18:58:45 [INFO] [PedroDiaz0 (Cliente)] controlador.ClienteController.cerrarSesion: Sesión cerrada
+2026-11-16 18:59:07 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: pablo.diaz
+2026-11-16 18:59:07 [INFO] [pablo.diaz (Empleado)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 18:59:08 [WARNING] [pablo.diaz (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 18:59:08 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-16 18:59:16 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Aprobar contrato 6afb2d44f6250d4b32361c39 de la línea 666 666 666, gestor: 653f101a2b8e4c1234567802
+2026-11-16 18:59:16 [SEVERE] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Error en aprobarContrato
+com.mongodb.MongoWriteException: Write operation error on server localhost:27017. Write error: WriteError{code=121, message='Plan executor error during update :: caused by :: Document failed validation', details={"failingDocumentId": {"$oid": "6afb2d44f6250d4b32361c39"}, "details": {"operatorName": "$jsonSchema", "schemaRulesNotSatisfied": [{"operatorName": "properties", "propertiesNotSatisfied": [{"propertyName": "estado", "details": [{"operatorName": "enum", "specifiedAs": {"enum": ["pendiente", "activo", "baja pendiente", "cancelado", "rechazado", "rescindido"]}, "reason": "value was not found in enum", "consideredValue": "pendiente de firma"}]}]}]}}}.
+	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:1093)
+	at com.mongodb.client.internal.MongoCollectionImpl.executeUpdate(MongoCollectionImpl.java:1069)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:586)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:581)
+	at DAO.implementacion.ContratoDAOImplementacion.aprobarContrato(ContratoDAOImplementacion.java:204)
+	at controlador.GestionarContratoController.aceptarPeticion(GestionarContratoController.java:202)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 18:59:16 [WARNING] [pablo.diaz (Empleado)] controlador.GestionarContratoController.aceptarPeticion: No se pudo cambiar el estado del contrato.
+2026-11-16 18:59:19 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Aprobar contrato 6afb2d44f6250d4b32361c39 de la línea 666 666 666, gestor: 653f101a2b8e4c1234567802
+2026-11-16 18:59:19 [SEVERE] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Error en aprobarContrato
+com.mongodb.MongoWriteException: Write operation error on server localhost:27017. Write error: WriteError{code=121, message='Plan executor error during update :: caused by :: Document failed validation', details={"failingDocumentId": {"$oid": "6afb2d44f6250d4b32361c39"}, "details": {"operatorName": "$jsonSchema", "schemaRulesNotSatisfied": [{"operatorName": "properties", "propertiesNotSatisfied": [{"propertyName": "estado", "details": [{"operatorName": "enum", "specifiedAs": {"enum": ["pendiente", "activo", "baja pendiente", "cancelado", "rechazado", "rescindido"]}, "reason": "value was not found in enum", "consideredValue": "pendiente de firma"}]}]}]}}}.
+	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:1093)
+	at com.mongodb.client.internal.MongoCollectionImpl.executeUpdate(MongoCollectionImpl.java:1069)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:586)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:581)
+	at DAO.implementacion.ContratoDAOImplementacion.aprobarContrato(ContratoDAOImplementacion.java:204)
+	at controlador.GestionarContratoController.aceptarPeticion(GestionarContratoController.java:202)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 18:59:19 [WARNING] [pablo.diaz (Empleado)] controlador.GestionarContratoController.aceptarPeticion: No se pudo cambiar el estado del contrato.
+2026-11-16 19:16:07 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: PedroDiaz0
+2026-11-16 19:16:07 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 19:16:07 [INFO] [PedroDiaz0 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:16:07 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567801
+2026-11-16 19:16:11 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567801
+2026-11-16 19:16:11 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567805
+2026-11-16 19:16:11 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567806
+2026-11-16 19:16:16 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TikcetDAOImpl.listarTicketsCliente: Listar tickets del cliente 653f101a2b8e4c1234567801
+2026-11-16 19:16:23 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-16 19:16:23 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-16 19:16:26 [INFO] [PedroDiaz0 (Cliente)] controlador.ClienteController.cerrarSesion: Sesión cerrada
+2026-11-16 19:16:40 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: pablo.diaz
+2026-11-16 19:16:40 [INFO] [pablo.diaz (Empleado)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:16:40 [WARNING] [pablo.diaz (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 19:16:40 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-16 19:16:43 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-16 19:16:55 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.TikcetDAOImpl.cambiarEstadoTicket: Cambiar estado del ticket 6afb2d44f6250d4b32361c3b a en proceso
+2026-11-16 19:16:56 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-16 19:16:58 [INFO] [pablo.diaz (Empleado)] controlador.EmpleadoController.cerrarSesion: Sesión cerrada
+2026-11-16 19:17:05 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: PedroDiaz0
+2026-11-16 19:17:05 [INFO] [PedroDiaz0 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:17:05 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567801
+2026-11-16 19:17:08 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567801
+2026-11-16 19:17:08 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567805
+2026-11-16 19:17:08 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567806
+2026-11-16 19:17:09 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TikcetDAOImpl.listarTicketsCliente: Listar tickets del cliente 653f101a2b8e4c1234567801
+2026-11-16 19:17:12 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567801
+2026-11-16 19:17:12 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567805
+2026-11-16 19:17:12 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567806
+2026-11-16 19:17:22 [INFO] [PedroDiaz0 (Cliente)] controlador.ClienteController.cerrarSesion: Sesión cerrada
+2026-11-16 19:17:28 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: pedro.diaz
+2026-11-16 19:17:28 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: pedro.diaz
+2026-11-16 19:17:28 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: pedro.diaz
+2026-11-16 19:17:36 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: pablo.daiz
+2026-11-16 19:17:36 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: pablo.daiz
+2026-11-16 19:17:36 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: pablo.daiz
+2026-11-16 19:17:42 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: pablo.diaz
+2026-11-16 19:17:42 [INFO] [pablo.diaz (Empleado)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:17:42 [WARNING] [pablo.diaz (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 19:17:42 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-16 19:17:45 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Aprobar contrato 6afb2d44f6250d4b32361c39
+2026-11-16 19:17:45 [SEVERE] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Error en aprobarContrato
+com.mongodb.MongoWriteException: Write operation error on server localhost:27017. Write error: WriteError{code=121, message='Plan executor error during update :: caused by :: Document failed validation', details={"failingDocumentId": {"$oid": "6afb2d44f6250d4b32361c39"}, "details": {"operatorName": "$jsonSchema", "schemaRulesNotSatisfied": [{"operatorName": "properties", "propertiesNotSatisfied": [{"propertyName": "estado", "details": [{"operatorName": "enum", "specifiedAs": {"enum": ["pendiente", "activo", "baja pendiente", "cancelado", "rechazado", "rescindido"]}, "reason": "value was not found in enum", "consideredValue": "pendiente de firma"}]}]}]}}}.
+	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:1093)
+	at com.mongodb.client.internal.MongoCollectionImpl.executeUpdate(MongoCollectionImpl.java:1069)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:586)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:581)
+	at DAO.implementacion.ContratoDAOImplementacion.aprobarContrato(ContratoDAOImplementacion.java:187)
+	at controlador.GestionarContratoController.aceptarPeticion(GestionarContratoController.java:202)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 19:17:45 [WARNING] [pablo.diaz (Empleado)] controlador.GestionarContratoController.aceptarPeticion: No se pudo cambiar el estado del contrato.
+2026-11-16 19:17:51 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Aprobar contrato 6afb2d44f6250d4b32361c39
+2026-11-16 19:17:51 [SEVERE] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Error en aprobarContrato
+com.mongodb.MongoWriteException: Write operation error on server localhost:27017. Write error: WriteError{code=121, message='Plan executor error during update :: caused by :: Document failed validation', details={"failingDocumentId": {"$oid": "6afb2d44f6250d4b32361c39"}, "details": {"operatorName": "$jsonSchema", "schemaRulesNotSatisfied": [{"operatorName": "properties", "propertiesNotSatisfied": [{"propertyName": "estado", "details": [{"operatorName": "enum", "specifiedAs": {"enum": ["pendiente", "activo", "baja pendiente", "cancelado", "rechazado", "rescindido"]}, "reason": "value was not found in enum", "consideredValue": "pendiente de firma"}]}]}]}}}.
+	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:1093)
+	at com.mongodb.client.internal.MongoCollectionImpl.executeUpdate(MongoCollectionImpl.java:1069)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:586)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:581)
+	at DAO.implementacion.ContratoDAOImplementacion.aprobarContrato(ContratoDAOImplementacion.java:187)
+	at controlador.GestionarContratoController.aceptarPeticion(GestionarContratoController.java:202)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 19:17:51 [WARNING] [pablo.diaz (Empleado)] controlador.GestionarContratoController.aceptarPeticion: No se pudo cambiar el estado del contrato.
+2026-11-16 19:18:07 [WARNING] [pablo.diaz (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 19:18:15 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.ValoracionDAOImplementacion.listarValoraciones: Listar valoraciones
+2026-11-16 19:18:15 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.ValoracionDAOImplementacion.mediaValoraciones: Calcular la media de las valoraciones
+2026-11-16 19:20:34 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: pablo.diaz
+2026-11-16 19:20:34 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 19:20:35 [INFO] [pablo.diaz (Empleado)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:20:35 [WARNING] [pablo.diaz (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 19:20:35 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-16 19:20:37 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Aprobar contrato 6afb2d44f6250d4b32361c39 con gestor 653f101a2b8e4c1234567802
+2026-11-16 19:20:37 [SEVERE] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Error en aprobarContrato
+com.mongodb.MongoWriteException: Write operation error on server localhost:27017. Write error: WriteError{code=121, message='Plan executor error during update :: caused by :: Document failed validation', details={"failingDocumentId": {"$oid": "6afb2d44f6250d4b32361c39"}, "details": {"operatorName": "$jsonSchema", "schemaRulesNotSatisfied": [{"operatorName": "properties", "propertiesNotSatisfied": [{"propertyName": "estado", "details": [{"operatorName": "enum", "specifiedAs": {"enum": ["pendiente", "activo", "baja pendiente", "cancelado", "rechazado", "rescindido"]}, "reason": "value was not found in enum", "consideredValue": "pendiente de firma"}]}]}]}}}.
+	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:1093)
+	at com.mongodb.client.internal.MongoCollectionImpl.executeUpdate(MongoCollectionImpl.java:1069)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:586)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:581)
+	at DAO.implementacion.ContratoDAOImplementacion.aprobarContrato(ContratoDAOImplementacion.java:189)
+	at controlador.GestionarContratoController.aceptarPeticion(GestionarContratoController.java:202)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 19:20:37 [WARNING] [pablo.diaz (Empleado)] controlador.GestionarContratoController.aceptarPeticion: No se pudo cambiar el estado del contrato.
+2026-11-16 19:20:40 [INFO] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Aprobar contrato 6afb2d44f6250d4b32361c39 con gestor 653f101a2b8e4c1234567802
+2026-11-16 19:20:40 [SEVERE] [pablo.diaz (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Error en aprobarContrato
+com.mongodb.MongoWriteException: Write operation error on server localhost:27017. Write error: WriteError{code=121, message='Plan executor error during update :: caused by :: Document failed validation', details={"failingDocumentId": {"$oid": "6afb2d44f6250d4b32361c39"}, "details": {"operatorName": "$jsonSchema", "schemaRulesNotSatisfied": [{"operatorName": "properties", "propertiesNotSatisfied": [{"propertyName": "estado", "details": [{"operatorName": "enum", "specifiedAs": {"enum": ["pendiente", "activo", "baja pendiente", "cancelado", "rechazado", "rescindido"]}, "reason": "value was not found in enum", "consideredValue": "pendiente de firma"}]}]}]}}}.
+	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:1093)
+	at com.mongodb.client.internal.MongoCollectionImpl.executeUpdate(MongoCollectionImpl.java:1069)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:586)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:581)
+	at DAO.implementacion.ContratoDAOImplementacion.aprobarContrato(ContratoDAOImplementacion.java:189)
+	at controlador.GestionarContratoController.aceptarPeticion(GestionarContratoController.java:202)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 19:20:40 [WARNING] [pablo.diaz (Empleado)] controlador.GestionarContratoController.aceptarPeticion: No se pudo cambiar el estado del contrato.
+2026-11-16 19:21:47 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: marta.gomez
+2026-11-16 19:21:47 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 19:21:47 [INFO] [marta.gomez (Empleado)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:21:48 [WARNING] [marta.gomez (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 19:21:48 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-16 19:21:50 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Aprobar contrato 6afb2d44f6250d4b32361c39 con gestor 653f101a2b8e4c1234567803
+2026-11-16 19:21:50 [SEVERE] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Error en aprobarContrato
+com.mongodb.MongoWriteException: Write operation error on server localhost:27017. Write error: WriteError{code=121, message='Plan executor error during update :: caused by :: Document failed validation', details={"failingDocumentId": {"$oid": "6afb2d44f6250d4b32361c39"}, "details": {"operatorName": "$jsonSchema", "schemaRulesNotSatisfied": [{"operatorName": "properties", "propertiesNotSatisfied": [{"propertyName": "estado", "details": [{"operatorName": "enum", "specifiedAs": {"enum": ["pendiente", "activo", "baja pendiente", "cancelado", "rechazado", "rescindido"]}, "reason": "value was not found in enum", "consideredValue": "pendiente de firma"}]}]}]}}}.
+	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:1093)
+	at com.mongodb.client.internal.MongoCollectionImpl.executeUpdate(MongoCollectionImpl.java:1069)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:586)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:581)
+	at DAO.implementacion.ContratoDAOImplementacion.aprobarContrato(ContratoDAOImplementacion.java:189)
+	at controlador.GestionarContratoController.aceptarPeticion(GestionarContratoController.java:202)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 19:21:50 [WARNING] [marta.gomez (Empleado)] controlador.GestionarContratoController.aceptarPeticion: No se pudo cambiar el estado del contrato.
+2026-11-16 19:21:55 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.filtrarContratos: Filtrar contratos, teléfono: , estado: Todos
+2026-11-16 19:21:57 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.rechazarContratos: Rechazar contrato 6afb2d44f6250d4b32361c39
+2026-11-16 19:21:59 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-16 19:23:37 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: marta.diaz
+2026-11-16 19:23:38 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 19:23:38 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: marta.diaz
+2026-11-16 19:23:38 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: marta.diaz
+2026-11-16 19:23:38 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: marta.diaz
+2026-11-16 19:23:38 [INFO] [sin sesión] DAO.implementacion.EmpleadoDAOImplementacion.comprobarUsuarios: Buscar en Empleados al usuario: marta.diaz
+2026-11-16 19:23:38 [INFO] [sin sesión] DAO.implementacion.ClienteDAOImplementacion.comprobarUsuarios: Buscar en Clientes al usuario: marta.diaz
+2026-11-16 19:23:46 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: marta.gomez
+2026-11-16 19:23:46 [INFO] [marta.gomez (Empleado)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:23:47 [WARNING] [marta.gomez (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 19:23:47 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-16 19:23:53 [INFO] [marta.gomez (Empleado)] controlador.EmpleadoController.cerrarSesion: Sesión cerrada
+2026-11-16 19:24:03 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-16 19:24:03 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:24:04 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-16 19:24:04 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-16 19:24:04 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-16 19:24:07 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-16 19:24:10 [INFO] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cerrarSesion: Sesión cerrada
+2026-11-16 19:24:25 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: PedroDiaz0
+2026-11-16 19:24:25 [INFO] [PedroDiaz0 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:24:25 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567801
+2026-11-16 19:24:32 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567801
+2026-11-16 19:24:32 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567805
+2026-11-16 19:24:32 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567806
+2026-11-16 19:24:43 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-16 19:24:43 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-16 19:24:45 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567801
+2026-11-16 19:24:46 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.insertarContrato: Pedir contrato de la tarifa Onda Fibra 1G para la línea 666 666 666, cliente: 653f101a2b8e4c1234567801
+2026-11-16 19:24:51 [INFO] [PedroDiaz0 (Cliente)] controlador.ClienteController.cerrarSesion: Sesión cerrada
+2026-11-16 19:24:57 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: marta.gomez
+2026-11-16 19:24:57 [INFO] [marta.gomez (Empleado)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:24:57 [WARNING] [marta.gomez (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 19:24:57 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-16 19:25:01 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Aprobar contrato 6afb4a6efcaa04411d95b901
+2026-11-16 19:25:01 [SEVERE] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Error en aprobarContrato
+com.mongodb.MongoWriteException: Write operation error on server localhost:27017. Write error: WriteError{code=121, message='Plan executor error during update :: caused by :: Document failed validation', details={"failingDocumentId": {"$oid": "6afb4a6efcaa04411d95b901"}, "details": {"operatorName": "$jsonSchema", "schemaRulesNotSatisfied": [{"operatorName": "properties", "propertiesNotSatisfied": [{"propertyName": "estado", "details": [{"operatorName": "enum", "specifiedAs": {"enum": ["pendiente", "activo", "baja pendiente", "cancelado", "rechazado", "rescindido"]}, "reason": "value was not found in enum", "consideredValue": "pendiente de firma"}]}]}]}}}.
+	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:1093)
+	at com.mongodb.client.internal.MongoCollectionImpl.executeUpdate(MongoCollectionImpl.java:1069)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:586)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:581)
+	at DAO.implementacion.ContratoDAOImplementacion.aprobarContrato(ContratoDAOImplementacion.java:185)
+	at controlador.GestionarContratoController.aceptarPeticion(GestionarContratoController.java:202)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 19:25:01 [WARNING] [marta.gomez (Empleado)] controlador.GestionarContratoController.aceptarPeticion: No se pudo cambiar el estado del contrato.
+2026-11-16 19:25:12 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Aprobar contrato 6afb4a6efcaa04411d95b901
+2026-11-16 19:25:12 [SEVERE] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Error en aprobarContrato
+com.mongodb.MongoWriteException: Write operation error on server localhost:27017. Write error: WriteError{code=121, message='Plan executor error during update :: caused by :: Document failed validation', details={"failingDocumentId": {"$oid": "6afb4a6efcaa04411d95b901"}, "details": {"operatorName": "$jsonSchema", "schemaRulesNotSatisfied": [{"operatorName": "properties", "propertiesNotSatisfied": [{"propertyName": "estado", "details": [{"operatorName": "enum", "specifiedAs": {"enum": ["pendiente", "activo", "baja pendiente", "cancelado", "rechazado", "rescindido"]}, "reason": "value was not found in enum", "consideredValue": "pendiente de firma"}]}]}]}}}.
+	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:1093)
+	at com.mongodb.client.internal.MongoCollectionImpl.executeUpdate(MongoCollectionImpl.java:1069)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:586)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:581)
+	at DAO.implementacion.ContratoDAOImplementacion.aprobarContrato(ContratoDAOImplementacion.java:185)
+	at controlador.GestionarContratoController.aceptarPeticion(GestionarContratoController.java:202)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 19:25:12 [WARNING] [marta.gomez (Empleado)] controlador.GestionarContratoController.aceptarPeticion: No se pudo cambiar el estado del contrato.
+2026-11-16 19:26:09 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: marta.gomez
+2026-11-16 19:26:09 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 19:26:10 [INFO] [marta.gomez (Empleado)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:26:10 [WARNING] [marta.gomez (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 19:26:10 [WARNING] [marta.gomez (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 26 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 19:26:10 [SEVERE] [marta.gomez (Empleado)] controlador.EmpleadoController.cargarSubvista: Error al abrir /vista/GestionarContrato.fxml
+javafx.fxml.LoadException: Error resolving onAction='#aprobarContrato', either the event handler is not in the Namespace or there is an error in the script.
+/C:/Users/eneko/Escritorio/DAM/RetoDam/Tel-ONDA/target/classes/vista/GestionarContrato.fxml:58
+
+	at javafx.fxml/javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2703)
+	at javafx.fxml/javafx.fxml.FXMLLoader$Element.processEventHandlerAttributes(FXMLLoader.java:621)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ValueElement.processEndElement(FXMLLoader.java:781)
+	at javafx.fxml/javafx.fxml.FXMLLoader.processEndElement(FXMLLoader.java:2924)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2639)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2548)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3331)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3287)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3255)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3227)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3203)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:3196)
+	at controlador.EmpleadoController.cargarSubvista(EmpleadoController.java:152)
+	at controlador.EmpleadoController.initialize(EmpleadoController.java:70)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2655)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2548)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3331)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3287)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3255)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3227)
+	at javafx.fxml/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3203)
+	at javafx.fxml/javafx.fxml.FXMLLoader.load(FXMLLoader.java:3196)
+	at controlador.IniciarSesionController.cambiarPantalla(IniciarSesionController.java:194)
+	at controlador.IniciarSesionController.btnIniciarSesion(IniciarSesionController.java:159)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1854)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.keyReleased(ButtonBehavior.java:163)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$KeyHandler.process(Scene.java:4105)
+	at javafx.graphics/javafx.scene.Scene.processKeyEvent(Scene.java:2156)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.keyEvent(Scene.java:2630)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:218)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:150)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleKeyEvent$1(GlassViewEventHandler.java:250)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleKeyEvent(GlassViewEventHandler.java:249)
+	at javafx.graphics/com.sun.glass.ui.View.handleKeyEvent(View.java:548)
+	at javafx.graphics/com.sun.glass.ui.View.notifyKey(View.java:972)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 19:32:05 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: marta.gomez
+2026-11-16 19:32:05 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 19:32:05 [INFO] [marta.gomez (Empleado)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:32:06 [WARNING] [marta.gomez (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 19:32:06 [WARNING] [marta.gomez (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 26 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 19:32:06 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-16 19:32:08 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Aprobar contrato 6afb4a6efcaa04411d95b901
+2026-11-16 19:32:08 [SEVERE] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Error en aprobarContrato
+com.mongodb.MongoWriteException: Write operation error on server localhost:27017. Write error: WriteError{code=121, message='Plan executor error during update :: caused by :: Document failed validation', details={"failingDocumentId": {"$oid": "6afb4a6efcaa04411d95b901"}, "details": {"operatorName": "$jsonSchema", "schemaRulesNotSatisfied": [{"operatorName": "properties", "propertiesNotSatisfied": [{"propertyName": "estado", "details": [{"operatorName": "enum", "specifiedAs": {"enum": ["pendiente", "activo", "baja pendiente", "cancelado", "rechazado", "rescindido"]}, "reason": "value was not found in enum", "consideredValue": "pendiente de firma"}]}]}]}}}.
+	at com.mongodb.client.internal.MongoCollectionImpl.executeSingleWriteRequest(MongoCollectionImpl.java:1093)
+	at com.mongodb.client.internal.MongoCollectionImpl.executeUpdate(MongoCollectionImpl.java:1069)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:586)
+	at com.mongodb.client.internal.MongoCollectionImpl.updateOne(MongoCollectionImpl.java:581)
+	at DAO.implementacion.ContratoDAOImplementacion.aprobarContrato(ContratoDAOImplementacion.java:185)
+	at controlador.GestionarContratoController.aceptarPeticion(GestionarContratoController.java:259)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:84)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1852)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1724)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Node.fireEvent(Node.java:8792)
+	at javafx.controls/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:208)
+	at javafx.controls/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:234)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3897)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1878)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2623)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:138)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:557)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:943)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:184)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+2026-11-16 19:32:08 [WARNING] [marta.gomez (Empleado)] controlador.GestionarContratoController.aceptarPeticion: No se pudo cambiar el estado del contrato.
+2026-11-16 19:33:44 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: marta.gomez
+2026-11-16 19:33:44 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-16 19:33:44 [INFO] [marta.gomez (Empleado)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:33:45 [WARNING] [marta.gomez (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 19:33:45 [WARNING] [marta.gomez (Empleado)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 26 by JavaFX runtime of version 17.0.2-ea
+2026-11-16 19:33:45 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-16 19:33:46 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Aprobar contrato 6afb4a6efcaa04411d95b901
+2026-11-16 19:33:53 [INFO] [marta.gomez (Empleado)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-16 19:33:54 [INFO] [marta.gomez (Empleado)] controlador.EmpleadoController.cerrarSesion: Sesión cerrada
+2026-11-16 19:34:00 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: PedroDiaz0
+2026-11-16 19:34:00 [INFO] [PedroDiaz0 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-16 19:34:01 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567801
+2026-11-16 19:34:06 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567801
+2026-11-16 19:34:06 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567805
+2026-11-16 19:34:06 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567806
+2026-11-16 19:34:16 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-16 19:34:16 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-16 19:34:20 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TikcetDAOImpl.listarTicketsCliente: Listar tickets del cliente 653f101a2b8e4c1234567801
+2026-11-16 19:34:22 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-16 19:34:22 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-16 19:34:26 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567801
+2026-11-16 19:34:26 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567805
+2026-11-16 19:34:26 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567806
+2026-11-16 19:34:38 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-16 19:34:38 [INFO] [PedroDiaz0 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas

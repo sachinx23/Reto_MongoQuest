@@ -18,6 +18,7 @@ import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.bson.types.ObjectId;
 
 /**
  * Implementación de la interfaz {@link EmpleadoDAO} encargada de gestionar las
@@ -96,23 +97,35 @@ public class EmpleadoDAOImplementacion implements EmpleadoDAO {
         try {
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Empleados");
-            for (Document doc : col.find()) {
-                String id = doc.get("_id") != null ? doc.get("_id").toString() : "";
-                String usuario = doc.getString("nombreUsuario") != null ? doc.getString("nombreUsuario") : "";
-                String nombre = doc.getString("nombre") != null ? doc.getString("nombre") : "";
-                String apellidos = doc.getString("apellidos") != null ? doc.getString("apellidos") : "";
-                String contrasena = doc.getString("contrasena") != null ? doc.getString("contrasena") : "";
+            MongoCollection<Document> colSucursales = db.getCollection("Sucursales");
 
-                String direccion = doc.getString("direccion") != null ? doc.getString("direccion") : "";
+            List<Document> docs = col.find().into(new ArrayList<>());
+            for (int i = 0; i < docs.size(); i++) {
+                Document doc = docs.get(i);
 
-                String correo = doc.getString("correo") != null ? doc.getString("correo") : "";
-                String rol = doc.getString("rol") != null ? doc.getString("rol") : "Empleado";
-                String iban = doc.getString("cuentaBancaria") != null ? doc.getString("cuentaBancaria") : "";
+                String id = doc.getObjectId("_id").toString();
+                String usuario = doc.getString("nombreUsuario");
+                String nombre = doc.getString("nombre");
+                String apellidos = doc.getString("apellidos");
+                String contrasena = doc.getString("contrasena");
+                String direccion = doc.getString("direccion");
+                String correo = doc.getString("correo");
+                String rol = doc.getString("rol");
+                String iban = doc.getString("cuentaBancaria");
 
-                Object idSucObj = doc.get("idSucursal");
-                String idSucursal = idSucObj != null ? idSucObj.toString() : "";
+                String dirSucursal = "Sin sucursal";
+                Object sucObj = doc.get("sucursalId");
+                if (sucObj instanceof ObjectId) {
+                    Document sucDoc = colSucursales.find(Filters.eq("_id", sucObj)).first();
+                    if (sucDoc != null) {
+                        Document ubi = sucDoc.get("Ubicacion", Document.class);
+                        if (ubi != null) {
+                            dirSucursal = ubi.getString("Direccion") + ", " + ubi.getString("Localidad");
+                        }
+                    }
+                }
 
-                lista.add(new Empleado(id, usuario, nombre, apellidos, contrasena, direccion, correo, rol, iban, idSucursal));
+                lista.add(new Empleado(id, usuario, nombre, apellidos, contrasena, direccion, correo, rol, iban, dirSucursal));
             }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error en listarEmpleados", e);

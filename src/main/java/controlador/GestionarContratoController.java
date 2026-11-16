@@ -25,94 +25,143 @@ import DAO.ContratoDAO;
 import DAO.implementacion.ContratoDAOImplementacion;
 
 /**
- * Controlador de la vista de gestión de contratos para empleados y administradores en JavaFX.
- * Permite consultar y filtrar los contratos registrados por teléfono o estado, así como
- * aprobar peticiones pendientes (pasándolas a {@code "pendiente de firma"}), rechazarlas
- * o rescindir contratos actualmente activos.
+ * Controlador de la vista de gestión de contratos para empleados y
+ * administradores en JavaFX. Permite consultar y filtrar los contratos
+ * registrados por teléfono o estado, así como aprobar peticiones pendientes
+ * (pasándolas a {@code "pendiente de firma"}), rechazarlas o rescindir
+ * contratos actualmente activos.
  *
  * @author Eneko.Plaza
  */
 public class GestionarContratoController implements Initializable {
 
     /**
-     * Registrador de eventos (Logger) para trazar advertencias y operaciones del controlador.
+     * Registrador de eventos (Logger) para trazar advertencias y operaciones
+     * del controlador.
      */
     private static final Logger LOGGER = Logger.getLogger(GestionarContratoController.class.getName());
 
-    /** Campo de texto utilizado para filtrar los contratos por número de teléfono. */
+    /**
+     * Campo de texto utilizado para filtrar los contratos por número de
+     * teléfono.
+     */
     @FXML
     private TextField txtFiltroTelefono;
 
-    /** Selector desplegable utilizado para filtrar los contratos según su estado. */
+    /**
+     * Selector desplegable utilizado para filtrar los contratos según su
+     * estado.
+     */
     @FXML
     private ComboBox<String> comboFiltroEstado;
 
-    /** Tabla principal donde se muestran los contratos del sistema. */
+    /**
+     * Tabla principal donde se muestran los contratos del sistema.
+     */
     @FXML
     private TableView<Contrato> tablaContratos;
 
-    /** Columna de la tabla que muestra el identificador único del contrato. */
+    /**
+     * Columna de la tabla que muestra el identificador único del contrato.
+     */
     @FXML
     private TableColumn<Contrato, String> colIdContrato;
 
-    /** Columna de la tabla que muestra el teléfono asociado al contrato. */
+    /**
+     * Columna de la tabla que muestra el teléfono asociado al contrato.
+     */
     @FXML
     private TableColumn<Contrato, String> colTelefono;
 
-    /** Columna de la tabla que muestra el identificador del cliente titular. */
+    /**
+     * Columna de la tabla que muestra el identificador del cliente titular.
+     */
     @FXML
     private TableColumn<Contrato, String> colIdCliente;
 
-    /** Columna de la tabla que muestra el identificador de la tarifa contratada. */
+    /**
+     * Columna de la tabla que muestra el identificador de la tarifa contratada.
+     */
     @FXML
     private TableColumn<Contrato, String> colIdTarifa;
 
-    /** Columna de la tabla que muestra el identificador del empleado que gestionó el contrato. */
+    /**
+     * Columna de la tabla que muestra el identificador del empleado que
+     * gestionó el contrato.
+     */
     @FXML
     private TableColumn<Contrato, String> colIdEmpleado;
 
-    /** Columna de la tabla que refleja el estado actual del contrato. */
+    /**
+     * Columna de la tabla que refleja el estado actual del contrato.
+     */
     @FXML
     private TableColumn<Contrato, String> colEstado;
 
-    /** Columna de la tabla que muestra la fecha de inicio de vigencia del contrato. */
+    /**
+     * Columna de la tabla que muestra la fecha de inicio de vigencia del
+     * contrato.
+     */
     @FXML
     private TableColumn<Contrato, String> colFechaInicio;
 
-    /** Columna de la tabla que muestra la fecha de finalización del contrato. */
+    /**
+     * Columna de la tabla que muestra la fecha de finalización del contrato.
+     */
     @FXML
     private TableColumn<Contrato, String> colFechaFin;
 
-    /** Botón para aprobar una solicitud de contrato en estado {@code "pendiente"}. */
+    /**
+     * Botón para aprobar una solicitud de contrato en estado
+     * {@code "pendiente"}.
+     */
     @FXML
     private Button btnAceptarPeticion;
 
-    /** Botón para denegar una solicitud de contrato en estado {@code "pendiente"}. */
+    /**
+     * Botón para denegar una solicitud de contrato en estado
+     * {@code "pendiente"}.
+     */
     @FXML
     private Button btnRechazarPeticion;
 
-    /** Botón para dar de baja o rescindir un contrato que se encuentra {@code "activo"}. */
+    /**
+     * Botón para dar de baja o rescindir un contrato que se encuentra
+     * {@code "activo"}.
+     */
     @FXML
     private Button btnRescindirContrato;
 
-    /** Botón para restablecer los filtros de búsqueda y recargar la tabla completa. */
+    /**
+     * Botón para restablecer los filtros de búsqueda y recargar la tabla
+     * completa.
+     */
     @FXML
     private Button btnRefrescar;
 
-    /** Referencia al {@link Contrato} actualmente seleccionado en {@code tablaContratos}. */
+    /**
+     * Referencia al {@link Contrato} actualmente seleccionado en
+     * {@code tablaContratos}.
+     */
     private Contrato contratoSeleccionado;
 
-    /** Objeto de acceso a datos para realizar consultas y cambios de estado sobre los contratos. */
+    /**
+     * Objeto de acceso a datos para realizar consultas y cambios de estado
+     * sobre los contratos.
+     */
     private final ContratoDAO contratoDAO = new ContratoDAOImplementacion();
 
     /**
-     * Inicializa el controlador tras cargar su archivo FXML.
-     * Carga las opciones de estado en el filtro desplegable, configura las factorías
-     * de celdas de las columnas de {@code tablaContratos}, carga el listado inicial
-     * y registra un listener de selección para habilitar o deshabilitar los botones de acción.
+     * Inicializa el controlador tras cargar su archivo FXML. Carga las opciones
+     * de estado en el filtro desplegable, configura las factorías de celdas de
+     * las columnas de {@code tablaContratos}, carga el listado inicial y
+     * registra un listener de selección para habilitar o deshabilitar los
+     * botones de acción.
      *
-     * @param url Ubicación utilizada para resolver rutas relativas del objeto raíz, o {@code null} si no se conoce.
-     * @param rb  Recursos utilizados para localizar el objeto raíz, o {@code null} si no se localizó.
+     * @param url Ubicación utilizada para resolver rutas relativas del objeto
+     * raíz, o {@code null} si no se conoce.
+     * @param rb Recursos utilizados para localizar el objeto raíz, o
+     * {@code null} si no se localizó.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -149,8 +198,9 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Recupera todos los contratos desde la base de datos mediante {@link ContratoDAO#listarContratos()},
-     * los carga en {@code tablaContratos} y reinicia la selección actual.
+     * Recupera todos los contratos desde la base de datos mediante
+     * {@link ContratoDAO#listarContratos()}, los carga en
+     * {@code tablaContratos} y reinicia la selección actual.
      */
     public void cargarContratos() {
         try {
@@ -160,7 +210,7 @@ public class GestionarContratoController implements Initializable {
                 tablaContratos.setItems(datos);
             }
             limpiarSeleccion();
-    
+
         } catch (OurException e) {
             LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
@@ -168,8 +218,8 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Filtra los contratos mostrados en la tabla en función del teléfono introducido
-     * y el estado seleccionado en {@code comboFiltroEstado}.
+     * Filtra los contratos mostrados en la tabla en función del teléfono
+     * introducido y el estado seleccionado en {@code comboFiltroEstado}.
      *
      * @param event Evento de acción disparado al ejecutar el filtrado.
      */
@@ -181,7 +231,7 @@ public class GestionarContratoController implements Initializable {
             List<Contrato> filtrados = contratoDAO.filtrarContratos(tel, est);
             tablaContratos.setItems(FXCollections.observableArrayList(filtrados));
             limpiarSeleccion();
-    
+
         } catch (OurException e) {
             LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
@@ -189,16 +239,23 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Aprueba la solicitud del contrato seleccionado asignándole el identificador del usuario
-     * autenticado ({@link IniciarSesionController#idUsuarioActual}) y cambiando su estado
-     * a {@code "pendiente de firma"}.
+     * Aprueba la solicitud del contrato seleccionado asignándole el
+     * identificador del usuario autenticado
+     * ({@link IniciarSesionController#idUsuarioActual}) y cambiando su estado a
+     * {@code "pendiente de firma"}.
      *
-     * @param event Evento de acción disparado al pulsar el botón de aceptar petición.
+     * @param event Evento de acción disparado al pulsar el botón de aceptar
+     * petición.
      */
     @FXML
     private void aceptarPeticion(ActionEvent event) {
         try {
             if (contratoSeleccionado != null) {
+                if (IniciarSesionController.idUsuarioActual == null || IniciarSesionController.idUsuarioActual.isEmpty()) {
+                    mostrarAlerta(Alert.AlertType.WARNING, "Sesión no iniciada", "Debes iniciar sesión con un empleado real para aceptar peticiones.");
+                    return;
+                }
+
                 if (contratoDAO.aprobarContrato(contratoSeleccionado, IniciarSesionController.idUsuarioActual)) {
                     mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa confirmada. Contrato pendiente de firma por el cliente.");
                     cargarContratos();
@@ -206,7 +263,6 @@ public class GestionarContratoController implements Initializable {
                     mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo confirmar la tarifa.");
                 }
             }
-    
         } catch (OurException e) {
             LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
@@ -214,10 +270,12 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Rechaza la solicitud del contrato seleccionado mediante {@link ContratoDAO#rechazarContratos(Contrato)}
-     * y recarga el listado de contratos en la tabla.
+     * Rechaza la solicitud del contrato seleccionado mediante
+     * {@link ContratoDAO#rechazarContratos(Contrato)} y recarga el listado de
+     * contratos en la tabla.
      *
-     * @param event Evento de acción disparado al pulsar el botón de rechazar petición.
+     * @param event Evento de acción disparado al pulsar el botón de rechazar
+     * petición.
      */
     @FXML
     private void rechazarPeticion(ActionEvent event) {
@@ -230,7 +288,7 @@ public class GestionarContratoController implements Initializable {
                     mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rechazar el contrato.");
                 }
             }
-    
+
         } catch (OurException e) {
             LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
@@ -238,10 +296,12 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Rescinde el contrato activo seleccionado a través de {@link ContratoDAO#rescindirContrato(Contrato)}
-     * y actualiza los datos visibles en la tabla.
+     * Rescinde el contrato activo seleccionado a través de
+     * {@link ContratoDAO#rescindirContrato(Contrato)} y actualiza los datos
+     * visibles en la tabla.
      *
-     * @param event Evento de acción disparado al pulsar el botón de rescindir contrato.
+     * @param event Evento de acción disparado al pulsar el botón de rescindir
+     * contrato.
      */
     @FXML
     private void rescindirContrato(ActionEvent event) {
@@ -254,7 +314,7 @@ public class GestionarContratoController implements Initializable {
                     mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rescindir el contrato.");
                 }
             }
-    
+
         } catch (OurException e) {
             LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
@@ -262,8 +322,9 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Limpia el campo de búsqueda por teléfono, restablece el filtro de estado a {@code "Todos"}
-     * y vuelve a cargar todos los contratos desde la base de datos.
+     * Limpia el campo de búsqueda por teléfono, restablece el filtro de estado
+     * a {@code "Todos"} y vuelve a cargar todos los contratos desde la base de
+     * datos.
      *
      * @param event Evento de acción disparado al pulsar el botón de refrescar.
      */
@@ -275,8 +336,9 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Deselecciona cualquier fila marcada en {@code tablaContratos}, limpia la referencia
-     * {@code contratoSeleccionado} y actualiza la disponibilidad de los botones de acción.
+     * Deselecciona cualquier fila marcada en {@code tablaContratos}, limpia la
+     * referencia {@code contratoSeleccionado} y actualiza la disponibilidad de
+     * los botones de acción.
      */
     private void limpiarSeleccion() {
         tablaContratos.getSelectionModel().clearSelection();
@@ -285,8 +347,9 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Habilita o deshabilita los botones de aceptar, rechazar y rescindir en función
-     * de si hay un contrato seleccionado y de cuál sea su estado ({@code "pendiente"} o {@code "activo"}).
+     * Habilita o deshabilita los botones de aceptar, rechazar y rescindir en
+     * función de si hay un contrato seleccionado y de cuál sea su estado
+     * ({@code "pendiente"} o {@code "activo"}).
      */
     private void actualizarEstadoBotones() {
         boolean haySeleccion = contratoSeleccionado != null;
@@ -308,10 +371,11 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Muestra un cuadro de diálogo modal de tipo {@link Alert} con la severidad, título y mensaje indicados.
+     * Muestra un cuadro de diálogo modal de tipo {@link Alert} con la
+     * severidad, título y mensaje indicados.
      *
-     * @param tipo    Tipo de alerta JavaFX ({@link Alert.AlertType}).
-     * @param titulo  Título de la ventana de diálogo.
+     * @param tipo Tipo de alerta JavaFX ({@link Alert.AlertType}).
+     * @param titulo Título de la ventana de diálogo.
      * @param mensaje Contenido textual que se mostrará al usuario.
      */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {

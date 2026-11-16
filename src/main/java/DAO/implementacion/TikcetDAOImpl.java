@@ -86,7 +86,7 @@ public class TikcetDAOImpl implements TicketDAO {
             doc.append("empleado_id", null);
             doc.append("idContrato", null);
 
-            db.getCollection("TicketsSoporte").insertOne(doc);
+            db.getCollection("TicketSoportes").insertOne(doc);
 
             ObjectId idTicket = doc.getObjectId("_id");
             Document actualizarCliente = new Document("$push", new Document("ticketSoporte", idTicket));
@@ -113,7 +113,7 @@ public class TikcetDAOImpl implements TicketDAO {
         List<TicketSoporte> lista = new ArrayList<>();
         try {
             MongoDatabase db = MongoDBConexion.getDatabase();
-            MongoCollection<Document> col = db.getCollection("TicketsSoporte");
+            MongoCollection<Document> col = db.getCollection("TicketSoportes");
 
             Document filtro = new Document();
             if (estado != null && !estado.equalsIgnoreCase("Todos")) {
@@ -148,7 +148,7 @@ public class TikcetDAOImpl implements TicketDAO {
         List<TicketSoporte> lista = new ArrayList<>();
         try {
             MongoDatabase db = MongoDBConexion.getDatabase();
-            MongoCollection<Document> col = db.getCollection("TicketsSoporte");
+            MongoCollection<Document> col = db.getCollection("TicketSoportes");
 
             Object filterCliId = idCliente;
             if (ObjectId.isValid(idCliente)) {
@@ -191,7 +191,7 @@ public class TikcetDAOImpl implements TicketDAO {
         try {
             LOGGER.info("Asignar ticket " + t.getId() + " al empleado " + idEmpleado);
             MongoDatabase db = MongoDBConexion.getDatabase();
-            MongoCollection<Document> col = db.getCollection("TicketsSoporte");
+            MongoCollection<Document> col = db.getCollection("TicketSoportes");
 
             Object idEmpObj = idEmpleado;
             if (idEmpleado != null && ObjectId.isValid(idEmpleado)) {
@@ -227,7 +227,7 @@ public class TikcetDAOImpl implements TicketDAO {
         try {
             LOGGER.info("Cambiar estado del ticket " + t.getId() + " a " + estado);
             MongoDatabase db = MongoDBConexion.getDatabase();
-            MongoCollection<Document> col = db.getCollection("TicketsSoporte");
+            MongoCollection<Document> col = db.getCollection("TicketSoportes");
 
             Document cambios = new Document("estado", estado);
             Document sentenciaUpdate = new Document("$set", cambios);

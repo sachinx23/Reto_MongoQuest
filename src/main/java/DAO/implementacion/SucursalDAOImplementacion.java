@@ -10,7 +10,6 @@ import modelo.Sucursal;
 import modelo.Ubicacion;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -33,24 +32,25 @@ public class SucursalDAOImplementacion implements SucursalDAO {
 
     /**
      * Convierte un objeto del modelo {@link Ubicacion} en un {@link Document}
-     * BSON embebido listo para almacenarse en MongoDB, asignando valores por
-     * defecto si la ubicación es nula.
+     * BSON embebido listo para almacenarse en MongoDB, respetando las claves
+     * definidas en el esquema de validación ({@code Direccion}, {@code Localidad}
+     * y {@code CodigoPostal}).
      *
      * @param u Objeto {@link Ubicacion} que contiene dirección, localidad y
-     * código postal.
-     * @return Un {@link Document} con los campos {@code direccion},
-     * {@code localidad} y {@code codigoPostal}.
+     *          código postal.
+     * @return Un {@link Document} con los datos de la ubicación o valores por
+     *         defecto si el parámetro es nulo.
      */
     private Document ubicacionADocumento(Ubicacion u) {
         Document doc = new Document();
         if (u == null) {
-            doc.append("direccion", "");
-            doc.append("localidad", "");
-            doc.append("codigoPostal", 0);
+            doc.append("Direccion", "");
+            doc.append("Localidad", "");
+            doc.append("CodigoPostal", 0);
         } else {
-            doc.append("direccion", u.getDireccion());
-            doc.append("localidad", u.getLocalidad());
-            doc.append("codigoPostal", u.getCodigoPostal());
+            doc.append("Direccion", u.getDireccion());
+            doc.append("Localidad", u.getLocalidad());
+            doc.append("CodigoPostal", u.getCodigoPostal());
         }
         return doc;
     }
@@ -61,9 +61,9 @@ public class SucursalDAOImplementacion implements SucursalDAO {
      * {@code Sucursales} e incrementándolo en una unidad.
      *
      * @return El siguiente número entero disponible para asignar como
-     * identificador.
+     *         identificador.
      * @throws OurException Si ocurre un error al consultar la colección en
-     * MongoDB.
+     *                      MongoDB.
      */
     @Override
     public int siguienteIdSucursal() throws OurException {
@@ -91,13 +91,14 @@ public class SucursalDAOImplementacion implements SucursalDAO {
 
     /**
      * Registra una nueva sucursal en la colección {@code Sucursales},
-     * incluyendo su información de ubicación embebida como subdocumento.
+     * convirtiendo el teléfono a cadena de texto e incluyendo su ubicación
+     * embebida bajo el campo {@code Ubicacion}.
      *
      * @param s Objeto {@link Sucursal} con los datos de la nueva sucursal a
-     * insertar.
+     *          insertar.
      * @return {@code true} si la inserción se ejecutó correctamente.
      * @throws OurException Si se produce un fallo al guardar la sucursal en
-     * MongoDB.
+     *                      MongoDB.
      */
     @Override
     public boolean insertarSucursal(Sucursal s) throws OurException {
@@ -108,8 +109,8 @@ public class SucursalDAOImplementacion implements SucursalDAO {
             Document doc = new Document();
             doc.append("nombre", s.getNombre());
             doc.append("horario", s.getHorario());
-            doc.append("telefono", s.getTelefono());
-            doc.append("ubicacion", ubicacionADocumento(s.getUbicacion()));
+            doc.append("telefono", String.valueOf(s.getTelefono()));
+            doc.append("Ubicacion", ubicacionADocumento(s.getUbicacion()));
             col.insertOne(doc);
             return true;
         } catch (Exception e) {
@@ -120,14 +121,14 @@ public class SucursalDAOImplementacion implements SucursalDAO {
 
     /**
      * Actualiza el horario, el teléfono y la ubicación de una sucursal
-     * existente identificándola por su {@code nombre}.
+     * existente identificándola por su campo {@code nombre}.
      *
      * @param s Objeto {@link Sucursal} con el nombre identificador y los nuevos
-     * valores a actualizar.
-     * @return {@code true} si la operación de actualización se ejecutó sin
-     * errores.
+     *          valores a actualizar.
+     * @return {@code true} si se encontró y actualizó la sucursal;
+     *         {@code false} si no existe ninguna sucursal con ese nombre.
      * @throws OurException Si ocurre un error durante la actualización en
-     * MongoDB.
+     *                      MongoDB.
      */
     @Override
     public boolean actualizarSucursal(Sucursal s) throws OurException {
@@ -137,13 +138,17 @@ public class SucursalDAOImplementacion implements SucursalDAO {
             MongoCollection<Document> col = db.getCollection("Sucursales");
             Document cambios = new Document();
             cambios.append("horario", s.getHorario());
-            cambios.append("telefono", s.getTelefono());
-            cambios.append("ubicacion", ubicacionADocumento(s.getUbicacion()));
+            cambios.append("telefono", String.valueOf(s.getTelefono()));
+            cambios.append("Ubicacion", ubicacionADocumento(s.getUbicacion()));
 
             Document filtro = new Document("nombre", s.getNombre());
             Document actualizacion = new Document("$set", cambios);
-            col.updateOne(filtro, actualizacion);
-            return true;
+            long modificados = col.updateOne(filtro, actualizacion).getMatchedCount();
+            if (modificados > 0) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error en actualizarSucursal", e);
             throw new OurException(ErrorMessages.SAVE_SUCURSAL);
@@ -156,9 +161,9 @@ public class SucursalDAOImplementacion implements SucursalDAO {
      *
      * @param nombre Nombre de la sucursal que se desea eliminar.
      * @return {@code true} si se eliminó al menos un documento; {@code false}
-     * si no se encontró la sucursal.
+     *         si no se encontró la sucursal.
      * @throws OurException Si ocurre un error durante el borrado en la base de
-     * datos.
+     *                      datos.
      */
     @Override
     public boolean eliminarSucursal(String nombre) throws OurException {
@@ -182,13 +187,13 @@ public class SucursalDAOImplementacion implements SucursalDAO {
     /**
      * Recupera todas las sucursales registradas en la colección
      * {@code Sucursales} y las mapea a objetos del modelo {@link Sucursal},
-     * reconstruyendo también su objeto {@link Ubicacion} asociado y
-     * normalizando posibles formatos distintos en el número de teléfono.
+     * soportando tanto claves en mayúscula como en minúscula en el subdocumento
+     * de ubicación y normalizando el formato del número de teléfono.
      *
      * @return Una {@link List} con todas las instancias de {@link Sucursal}
-     * encontradas.
+     *         encontradas.
      * @throws OurException Si ocurre un error al consultar o transformar los
-     * documentos de MongoDB.
+     *                      documentos de MongoDB.
      */
     @Override
     public List<Sucursal> listarSucursales() throws OurException {
@@ -207,19 +212,31 @@ public class SucursalDAOImplementacion implements SucursalDAO {
                     nombre = d.getString("nombre");
                 }
 
-                Document u = d.get("ubicacion", Document.class);
+                Document u = d.get("Ubicacion", Document.class);
+                if (u == null) {
+                    u = d.get("ubicacion", Document.class);
+                }
+
                 String dir = "";
                 String loc = "";
                 int cp = 0;
 
                 if (u != null) {
-                    if (u.getString("direccion") != null) {
+                    if (u.getString("Direccion") != null) {
+                        dir = u.getString("Direccion");
+                    } else if (u.getString("direccion") != null) {
                         dir = u.getString("direccion");
                     }
-                    if (u.getString("localidad") != null) {
+
+                    if (u.getString("Localidad") != null) {
+                        loc = u.getString("Localidad");
+                    } else if (u.getString("localidad") != null) {
                         loc = u.getString("localidad");
                     }
-                    if (u.getInteger("codigoPostal") != null) {
+
+                    if (u.getInteger("CodigoPostal") != null) {
+                        cp = u.getInteger("CodigoPostal");
+                    } else if (u.getInteger("codigoPostal") != null) {
                         cp = u.getInteger("codigoPostal");
                     }
                 }

@@ -188,23 +188,52 @@ public class ClienteDAOImplementacion extends DAOBase implements ClienteDAO {
      * @return Una {@link List} con todos los objetos {@link Cliente} encontrados.
      * @throws OurException Si ocurre un error al consultar o mapear los documentos de MongoDB.
      */
-    @Override
+   @Override
     public List<Cliente> listarClientes() throws OurException {
         LOGGER.info("Listar clientes");
         List<Cliente> lista = new ArrayList<>();
         try {
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Clientes");
-            
-            for (Document doc : col.find()) {
+
+            List<Document> documentos = col.find().into(new ArrayList<>());
+            for (int i = 0; i < documentos.size(); i++) {
+                Document doc = documentos.get(i);
                 String usuario = doc.getString("nombreUsuario");
                 String nombre = doc.getString("nombre");
                 String apellidos = doc.getString("apellidos");
                 String correo = doc.getString("correo");
                 String dni = doc.getString("dni");
+
                 Object telObj = doc.get("telefono");
-                String telefono = telObj != null ? telObj.toString() : "";
-                String direccion = doc.getString("direccion");
+                String telefono = "";
+                if (telObj != null) {
+                    telefono = telObj.toString();
+                }
+
+                Object dirObj = doc.get("direccion");
+                String direccion = "";
+                if (dirObj instanceof Document) {
+                    Document dirDoc = (Document) dirObj;
+                    String calle = dirDoc.getString("calle");
+                    String localidad = dirDoc.getString("localidad");
+                    Integer cp = dirDoc.getInteger("codigoPostal");
+
+                    if (calle != null) {
+                        direccion = direccion + calle;
+                    }
+                    if (localidad != null) {
+                        if (!direccion.isEmpty()) {
+                            direccion = direccion + ", ";
+                        }
+                        direccion = direccion + localidad;
+                    }
+                    if (cp != null) {
+                        direccion = direccion + " (" + cp + ")";
+                    }
+                } else if (dirObj instanceof String) {
+                    direccion = (String) dirObj;
+                }
 
                 lista.add(new Cliente(usuario, nombre, apellidos, correo, dni, telefono, direccion));
             }
@@ -214,7 +243,6 @@ public class ClienteDAOImplementacion extends DAOBase implements ClienteDAO {
         }
         return lista;
     }
-
 
     /**
      * Busca y recupera un cliente específico mediante su identificador único de MongoDB ({@link ObjectId}).

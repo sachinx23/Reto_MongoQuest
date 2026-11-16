@@ -69,11 +69,33 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
     @Override
     public Valoracion mapearValoracion(Document d) {
         Valoracion v = new Valoracion();
-        v.setId(d.get("_id").toString());
-        v.setPuntuacion(d.getInteger("puntuacion"));
+
+        if (d.get("_id") != null) {
+            v.setId(d.get("_id").toString());
+        } else {
+            v.setId("");
+        }
+
+        if (d.getInteger("puntuacion") != null) {
+            v.setPuntuacion(d.getInteger("puntuacion"));
+        } else {
+            v.setPuntuacion(0);
+        }
+
         v.setTexto(d.getString("texto"));
-        v.setIdCliente(d.get("idCliente").toString());
-        v.setIdTarifa(d.get("idTarifa").toString());
+
+        if (d.get("cliente_id") != null) {
+            v.setIdCliente(d.get("cliente_id").toString());
+        } else {
+            v.setIdCliente("");
+        }
+
+        if (d.get("tarifa_id") != null) {
+            v.setIdTarifa(d.get("tarifa_id").toString());
+        } else {
+            v.setIdTarifa("");
+        }
+
         return v;
     }
 
@@ -207,7 +229,7 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
     public List<Valoracion> obtenerValoracionesCliente(String idCliente) throws OurException {
         LOGGER.info("Listar valoraciones del cliente " + idCliente);
         try {
-            List<Valoracion> valoraciones = buscarValoraciones(new Document("idCliente", new ObjectId(idCliente)));
+            List<Valoracion> valoraciones = buscarValoraciones(new Document("cliente_id", new ObjectId(idCliente)));
             return valoraciones;
         } catch (MongoException e) {
             LOGGER.log(Level.SEVERE, "Error en obtenerValoracionesCliente", e);
@@ -229,8 +251,8 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
             Document d = new Document();
             d.put("puntuacion", valoracion.getPuntuacion());
             d.put("texto", valoracion.getTexto());
-            d.put("idCliente", new ObjectId(valoracion.getIdCliente()));
-            d.put("idTarifa", aObjectId(valoracion.getIdTarifa()));
+            d.put("cliente_id", new ObjectId(valoracion.getIdCliente()));
+            d.put("tarifa_id", aObjectId(valoracion.getIdTarifa()));
             coleccion(COL_VALORACIONES).insertOne(d);
 
             valoracion.setId(idTexto(d, "_id"));
@@ -271,11 +293,13 @@ public class ValoracionDAOImplementacion extends DAOBase implements ValoracionDA
      * @throws OurException Si ocurre un error al consultar las colecciones en MongoDB.
      */
     private List<Valoracion> buscarValoraciones(Document filtro) throws OurException {
-        List<Valoracion> valoraciones = new ArrayList<>();
-        for (Document d : coleccion(COL_VALORACIONES).find(filtro)) {
+        List<Valoracion> valoraciones = new ArrayList<Valoracion>();
+        List<Document> docs = coleccion(COL_VALORACIONES).find(filtro).into(new ArrayList<Document>());
+        for (int i = 0; i < docs.size(); i++) {
+            Document d = docs.get(i);
             Valoracion v = new Valoracion(idTexto(d, "_id"), (int) numero(d, "puntuacion"), texto(d, "texto"),
-                    idTexto(d, "idCliente"), idTexto(d, "idTarifa"), "", "");
-            Document cliente = buscarPorId(COL_CLIENTES, d.get("idCliente"));
+                    idTexto(d, "cliente_id"), idTexto(d, "tarifa_id"), "", "");
+            Document cliente = buscarPorId(COL_CLIENTES, d.get("cliente_id"));
             if (cliente != null) {
                 v.setNombreCliente(texto(cliente, "nombre"));
             }

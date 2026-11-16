@@ -12,11 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="550.0" prefWidth="900.0" 
-            styleClass="fondo-pantalla" 
-            xmlns="http://javafx.com/javafx/17" 
-            xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="controlador.GestionarContratoController">
+<AnchorPane prefHeight="550.0" prefWidth="900.0" styleClass="fondo-pantalla" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.GestionarContratoController">
     <stylesheets>
         <URL value="@../css/Estilos.css" />
     </stylesheets>

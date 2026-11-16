@@ -21,11 +21,9 @@ public class Cliente {
     private List<Contrato> contrato;
     private List<Valoracion> valoraciones;
 
-    // --- Constructor Vacío (Obligatorio para el DAO) ---
     public Cliente() {
     }
 
-    // --- Constructor para el método listarClientes() ---
     public Cliente(String nombreUsuario, String nombre, String apellidos, String correo, String dni, String telefono, String direccion) {
         this.nombreUsuario = nombreUsuario;
         this.nombre = nombre;
@@ -36,7 +34,6 @@ public class Cliente {
         this.direccion = direccion;
     }
 
-    // --- Constructor Completo ---
     public Cliente(String id, String cuentaBancaria, String nombreUsuario, String nombre, String apellidos, String contrasena, String correo, String dni, String telefono, String direccion) {
         this.id = id;
         this.cuentaBancaria = cuentaBancaria;
@@ -50,7 +47,6 @@ public class Cliente {
         this.direccion = direccion;
     }
 
-    // --- Getters y Setters ---
 
     public String getId() {
         return id;
@@ -158,6 +154,6 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "Cliente{" + "nombreUsuario=" + nombreUsuario + ", nombre=" + nombre + ", correo=" + correo + '}';
+        return "nombreUsuario=" + nombreUsuario + ", nombre=" + nombre + ", correo=" + correo;
     }
 }

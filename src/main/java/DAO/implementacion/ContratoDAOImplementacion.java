@@ -44,19 +44,15 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
      * para consultar en MongoDB.
      */
     private Document getFiltroId(String idStr) {
-        if (idStr != null) {
-            if (ObjectId.isValid(idStr)) {
-                return new Document("_id", new ObjectId(idStr));
-            }
+        if (idStr != null && ObjectId.isValid(idStr)) {
+            return new Document("_id", new ObjectId(idStr));
         }
         return new Document("_id", idStr);
     }
 
     /**
      * Transforma un {@link Document} de MongoDB perteneciente a la colección
-     * {@code Contratos} en una instancia del modelo {@link Contrato},
-     * gestionando valores nulos y referencias almacenadas tanto como valores
-     * simples como listas.
+     * {@code Contratos} en una instancia del modelo {@link Contrato}.
      *
      * @param doc Documento BSON recuperado de la base de datos.
      * @return El objeto {@link Contrato} mapeado, o {@code null} si el
@@ -87,49 +83,26 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
             c.setEstado("");
         }
 
-        Object valCliente = doc.get("idCliente");
-        if (valCliente != null) {
-            if (valCliente instanceof List) {
-                List<?> listaCli = (List<?>) valCliente;
-                if (!listaCli.isEmpty() && listaCli.get(0) != null) {
-                    c.setIdCliente(listaCli.get(0).toString());
-                } else {
-                    c.setIdCliente("");
-                }
-            } else {
-                c.setIdCliente(valCliente.toString());
-            }
+        if (doc.get("cliente_id") != null) {
+            c.setIdCliente(doc.get("cliente_id").toString());
+        } else if (doc.get("idCliente") != null) {
+            c.setIdCliente(doc.get("idCliente").toString());
         } else {
             c.setIdCliente("");
         }
 
-        Object valTarifa = doc.get("idTarifa");
-        if (valTarifa != null) {
-            if (valTarifa instanceof List) {
-                List<?> listaTarifa = (List<?>) valTarifa;
-                if (!listaTarifa.isEmpty() && listaTarifa.get(0) != null) {
-                    c.setIdTarifa(listaTarifa.get(0).toString());
-                } else {
-                    c.setIdTarifa("");
-                }
-            } else {
-                c.setIdTarifa(valTarifa.toString());
-            }
+        if (doc.get("tarifa_id") != null) {
+            c.setIdTarifa(doc.get("tarifa_id").toString());
+        } else if (doc.get("idTarifa") != null) {
+            c.setIdTarifa(doc.get("idTarifa").toString());
         } else {
             c.setIdTarifa("");
         }
-        Object valEmpleado = doc.get("idEmpleado");
-        if (valEmpleado != null) {
-            if (valEmpleado instanceof List) {
-                List<?> listaEmp = (List<?>) valEmpleado;
-                if (!listaEmp.isEmpty() && listaEmp.get(0) != null) {
-                    c.setIdEmpleado(listaEmp.get(0).toString());
-                } else {
-                    c.setIdEmpleado("");
-                }
-            } else {
-                c.setIdEmpleado(valEmpleado.toString());
-            }
+
+        if (doc.get("empleado_id") != null) {
+            c.setIdEmpleado(doc.get("empleado_id").toString());
+        } else if (doc.get("idEmpleado") != null) {
+            c.setIdEmpleado(doc.get("idEmpleado").toString());
         } else {
             c.setIdEmpleado("");
         }
@@ -140,12 +113,8 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
             c.setFechaComienzo("");
         }
 
-        Object fFin = doc.get("fechaFinalizacion");
-        if (fFin == null) {
-            fFin = doc.get("fechaFinalización");
-        }
-        if (fFin != null) {
-            c.setFechaFin(fFin.toString());
+        if (doc.get("fechaFinalizacion") != null) {
+            c.setFechaFin(doc.get("fechaFinalizacion").toString());
         } else {
             c.setFechaFin("");
         }
@@ -172,8 +141,7 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
             List<Document> documentos = col.find().into(new ArrayList<>());
 
             for (int i = 0; i < documentos.size(); i++) {
-                Document doc = documentos.get(i);
-                Contrato c = mapearContrato(doc);
+                Contrato c = mapearContrato(documentos.get(i));
                 if (c != null) {
                     lista.add(c);
                 }
@@ -202,22 +170,20 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
     @Override
     public boolean aprobarContrato(Contrato c, String idGestor) throws OurException {
         try {
-            LOGGER.info("Aprobar contrato " + c.getId() + " de la línea " + c.getTelefono() + ", gestor: " + idGestor);
+            LOGGER.info("Aprobar contrato " + c.getId());
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Contratos");
 
-            Object idEmp = idGestor;
-            if (ObjectId.isValid(idGestor)) {
-                idEmp = new ObjectId(idGestor);
+            Document cambios = new Document();
+            cambios.append("estado", "activo");
+
+            if (idGestor != null && ObjectId.isValid(idGestor)) {
+                cambios.append("empleado_id", new ObjectId(idGestor));
             }
 
-            Document camposNuevos = new Document("estado", "pendiente de firma")
-                    .append("idEmpleado", idEmp);
-
-            Document sentenciaUpdate = new Document("$set", camposNuevos);
-
-            boolean ok = col.updateOne(getFiltroId(c.getId()), sentenciaUpdate).getModifiedCount() > 0;
-            return ok;
+            Document update = new Document("$set", cambios);
+            long encontrados = col.updateOne(getFiltroId(c.getId()), update).getMatchedCount();
+            return encontrados > 0;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error en aprobarContrato", e);
             throw new OurException(ErrorMessages.CAMBIAR_CONTRATO);
@@ -228,7 +194,7 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
      * Formaliza la firma del contrato por parte del cliente, actualizando su
      * estado a {@code "activo"}, estableciendo la fecha actual como fecha de
      * comienzo y generando automáticamente un ticket cerrado en la colección
-     * {@code TicketsSoporte} como comprobante de la operación.
+     * {@code TicketSoportes} como comprobante de la operación.
      *
      * @param c Objeto {@link Contrato} que el cliente procede a firmar.
      * @return {@code true} si el contrato pasó a estado activo; {@code false}
@@ -243,40 +209,35 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Contratos");
 
-            Document camposNuevos = new Document("estado", "activo")
-                    .append("fechaComienzo", LocalDate.now().toString());
+            Document cambios = new Document();
+            cambios.append("estado", "activo");
+            cambios.append("fechaComienzo", LocalDate.now().toString());
 
-            Document sentenciaUpdate = new Document("$set", camposNuevos);
-
-            boolean ok = col.updateOne(getFiltroId(c.getId()), sentenciaUpdate).getModifiedCount() > 0;
+            Document update = new Document("$set", cambios);
+            boolean ok = col.updateOne(getFiltroId(c.getId()), update).getMatchedCount() > 0;
 
             if (ok) {
                 ObjectId idCli = null;
-                if (ObjectId.isValid(c.getIdCliente())) {
+                if (c.getIdCliente() != null && ObjectId.isValid(c.getIdCliente())) {
                     idCli = new ObjectId(c.getIdCliente());
                 }
 
                 Object idEmp = c.getIdEmpleado();
-                if (ObjectId.isValid(c.getIdEmpleado())) {
+                if (c.getIdEmpleado() != null && ObjectId.isValid(c.getIdEmpleado())) {
                     idEmp = new ObjectId(c.getIdEmpleado());
                 }
 
-                ObjectId idCon = null;
-                if (ObjectId.isValid(c.getId())) {
-                    idCon = new ObjectId(c.getId());
-                }
+                Document ticket = new Document();
+                ticket.append("tipo", "contrato");
+                ticket.append("asunto", "Detalles de Compra y Firma de Contrato");
+                ticket.append("descripcion", "Su contrato para la línea " + c.getTelefono() + " ha sido firmado correctamente.");
+                ticket.append("fechaCreacion", LocalDate.now().toString());
+                ticket.append("fechaFin", null);
+                ticket.append("estado", "cerrado");
+                ticket.append("cliente_id", idCli);
+                ticket.append("empleado_id", idEmp);
 
-                Document ticket = new Document()
-                        .append("tipo", "contrato")
-                        .append("asunto", "Detalles de Compra y Firma de Contrato")
-                        .append("descripcion", "Su contrato para la línea " + c.getTelefono() + " ha sido firmado correctamente.")
-                        .append("fechaCreacion", LocalDate.now().toString())
-                        .append("estado", "cerrado")
-                        .append("idCliente", idCli)
-                        .append("idEmpleado", idEmp)
-                        .append("idContrato", idCon);
-
-                db.getCollection("TicketsSoporte").insertOne(ticket);
+                db.getCollection("TicketSoportes").insertOne(ticket);
             }
             return ok;
         } catch (Exception e) {
@@ -297,14 +258,14 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
     @Override
     public boolean rechazarContratos(Contrato c) throws OurException {
         try {
-            LOGGER.info("Rechazar contrato " + c.getId() + " de la línea " + c.getTelefono());
+            LOGGER.info("Rechazar contrato " + c.getId());
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Contratos");
 
-            Document camposNuevos = new Document("estado", "rechazado");
-            Document sentenciaUpdate = new Document("$set", camposNuevos);
-
-            return col.updateOne(getFiltroId(c.getId()), sentenciaUpdate).getModifiedCount() > 0;
+            Document cambios = new Document("estado", "rechazado");
+            Document update = new Document("$set", cambios);
+            long encontrados = col.updateOne(getFiltroId(c.getId()), update).getMatchedCount();
+            return encontrados > 0;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error en rechazarContratos", e);
             throw new OurException(ErrorMessages.CAMBIAR_CONTRATO);
@@ -325,16 +286,17 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
     @Override
     public boolean rescindirContrato(Contrato c) throws OurException {
         try {
-            LOGGER.info("Rescindir contrato " + c.getId() + " de la línea " + c.getTelefono());
+            LOGGER.info("Rescindir contrato " + c.getId());
             MongoDatabase db = MongoDBConexion.getDatabase();
             MongoCollection<Document> col = db.getCollection("Contratos");
 
-            Document camposNuevos = new Document("estado", "rescindido")
-                    .append("fechaFinalizacion", LocalDate.now().toString());
+            Document cambios = new Document();
+            cambios.append("estado", "rescindido");
+            cambios.append("fechaFinalizacion", LocalDate.now().toString());
 
-            Document sentenciaUpdate = new Document("$set", camposNuevos);
-
-            return col.updateOne(getFiltroId(c.getId()), sentenciaUpdate).getModifiedCount() > 0;
+            Document update = new Document("$set", cambios);
+            long encontrados = col.updateOne(getFiltroId(c.getId()), update).getMatchedCount();
+            return encontrados > 0;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error en rescindirContrato", e);
             throw new OurException(ErrorMessages.CAMBIAR_CONTRATO);
@@ -365,22 +327,17 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
 
             Document filtro = new Document();
 
-            if (telefono != null) {
-                if (!telefono.trim().isEmpty()) {
-                    filtro.append("telefono", java.util.regex.Pattern.compile(telefono.trim(), java.util.regex.Pattern.CASE_INSENSITIVE));
-                }
+            if (telefono != null && !telefono.trim().isEmpty()) {
+                filtro.append("telefono", java.util.regex.Pattern.compile(telefono.trim(), java.util.regex.Pattern.CASE_INSENSITIVE));
             }
 
-            if (estado != null) {
-                if (!"Todos".equalsIgnoreCase(estado)) {
-                    filtro.append("estado", estado);
-                }
+            if (estado != null && !"Todos".equalsIgnoreCase(estado)) {
+                filtro.append("estado", estado);
             }
 
             List<Document> documentos = col.find(filtro).into(new ArrayList<>());
             for (int i = 0; i < documentos.size(); i++) {
-                Document doc = documentos.get(i);
-                Contrato c = mapearContrato(doc);
+                Contrato c = mapearContrato(documentos.get(i));
                 if (c != null) {
                     lista.add(c);
                 }
@@ -407,9 +364,28 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
     @Override
     public List<Contrato> obtenerContratosCliente(String idCliente) throws OurException {
         LOGGER.info("Listar contratos del cliente " + idCliente);
+        List<Contrato> lista = new ArrayList<>();
         try {
-            List<Contrato> contratos = buscarContratos(new Document("idCliente", new ObjectId(idCliente)));
-            return contratos;
+            Object objId = idCliente;
+            if (idCliente != null && ObjectId.isValid(idCliente)) {
+                objId = new ObjectId(idCliente);
+            }
+
+            Document filtro = new Document("cliente_id", objId);
+            List<Document> documentos = coleccion(COL_CONTRATOS).find(filtro).into(new ArrayList<>());
+
+            if (documentos.isEmpty()) {
+                Document filtroAlt = new Document("idCliente", objId);
+                documentos = coleccion(COL_CONTRATOS).find(filtroAlt).into(new ArrayList<>());
+            }
+
+            for (int i = 0; i < documentos.size(); i++) {
+                Contrato c = mapearContrato(documentos.get(i));
+                if (c != null) {
+                    lista.add(c);
+                }
+            }
+            return lista;
         } catch (MongoException e) {
             LOGGER.log(Level.SEVERE, "Error en obtenerContratosCliente", e);
             throw new OurException(ErrorMessages.GET_CONTRATOS);
@@ -435,9 +411,9 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
             Document d = new Document();
             d.put("telefono", contrato.getTelefono());
             d.put("estado", contrato.getEstado());
-            d.put("idCliente", new ObjectId(contrato.getIdCliente()));
-            d.put("idTarifa", new ObjectId(contrato.getIdTarifa()));
-            d.put("idEmpleado", aObjectId(contrato.getIdEmpleado()));
+            d.put("cliente_id", new ObjectId(contrato.getIdCliente()));
+            d.put("tarifa_id", new ObjectId(contrato.getIdTarifa()));
+            d.put("empleado_id", aObjectId(contrato.getIdEmpleado()));
 
             Document datosTarifa = new Document();
             datosTarifa.put("nombreTarifa", tarifa.getNombreTarifa());
@@ -471,10 +447,20 @@ public class ContratoDAOImplementacion extends DAOBase implements ContratoDAO {
         LOGGER.info("Cancelar petición del cliente " + idCliente + " para la tarifa " + idTarifa);
         try {
             Document filtro = new Document();
-            filtro.put("idCliente", new ObjectId(idCliente));
-            filtro.put("idTarifa", new ObjectId(idTarifa));
+            filtro.put("cliente_id", new ObjectId(idCliente));
+            filtro.put("tarifa_id", new ObjectId(idTarifa));
             filtro.put("estado", "pendiente");
+
             long borrados = coleccion(COL_CONTRATOS).deleteOne(filtro).getDeletedCount();
+
+            if (borrados == 0) {
+                Document filtroAlt = new Document();
+                filtroAlt.put("idCliente", new ObjectId(idCliente));
+                filtroAlt.put("idTarifa", new ObjectId(idTarifa));
+                filtroAlt.put("estado", "pendiente");
+                borrados = coleccion(COL_CONTRATOS).deleteOne(filtroAlt).getDeletedCount();
+            }
+
             return borrados > 0;
         } catch (MongoException e) {
             LOGGER.log(Level.SEVERE, "Error en borrarPeticion", e);
