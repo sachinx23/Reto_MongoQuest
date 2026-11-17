@@ -3,6 +3,9 @@
 <head>
     <title>Mapa de Sucursales</title>
     <meta charset="UTF-8">
+    <!-- Mapa con OpenStreetMap (Leaflet): no necesita API key -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         html, body, #mapa {
             height: 100%;
@@ -15,79 +18,90 @@
     <div id="mapa"></div>
 
     <script>
-        var mapa;
-        var geocoder;
+        var mapa = null;
         var marcadores = [];
+        if (typeof L === "undefined") {
+            document.getElementById("mapa").innerHTML =
+                    "<p style='font-family:sans-serif;padding:20px'>No se ha podido cargar el mapa. Comprueba la conexión a internet.</p>";
+        } else {
+            mapa = L.map("mapa").setView([43.263, -2.935], 11);
+            // Mapa de calles de Esri (gratis, sin API key)
+            L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+                maxZoom: 19,
+                attribution: "Tiles &copy; Esri"
+            }).addTo(mapa);
+        }
+        var cola = [];
+        var ocupado = false;
 
-        function initMap() {
-            mapa = new google.maps.Map(document.getElementById("mapa"), {
-                center: { lat: 43.263, lng: -2.935 }, // Centro por defecto (ej. Bilbao)
-                zoom: 11
-            });
-            geocoder = new google.maps.Geocoder();
+        // Busca las coordenadas de una dirección (de una en una)
+        function buscar(texto, alTerminar) {
+            cola.push({ texto: texto, alTerminar: alTerminar });
+            siguiente();
+        }
+
+        function siguiente() {
+            if (mapa === null || ocupado || cola.length === 0) {
+                return;
+            }
+            ocupado = true;
+            var tarea = cola.shift();
+            var xhr = new XMLHttpRequest();
+            // Buscador de direcciones de Esri (gratis, sin API key)
+            xhr.open("GET", "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates"
+                    + "?f=json&maxLocations=1&countryCode=ESP&SingleLine=" + encodeURIComponent(tarea.texto));
+            xhr.onload = function () {
+                var datos = null;
+                try {
+                    datos = JSON.parse(xhr.responseText);
+                } catch (e) {
+                }
+                if (datos !== null && datos.candidates && datos.candidates.length > 0) {
+                    var punto = datos.candidates[0].location;
+                    tarea.alTerminar([punto.y, punto.x]);
+                } else {
+                    console.log("No se encontró: " + tarea.texto);
+                }
+                ocupado = false;
+                siguiente();
+            };
+            xhr.onerror = function () {
+                ocupado = false;
+                siguiente();
+            };
+            xhr.send();
         }
 
         // Llamado desde JavaFX al terminar de cargar el WebView
         function refrescarMapa() {
-            if (mapa) {
-                google.maps.event.trigger(mapa, 'resize');
+            if (mapa !== null) {
+                mapa.invalidateSize();
             }
         }
 
-        // 2. Limpia todos los marcadores actuales del mapa
+        // Limpia todos los marcadores actuales del mapa
         function limpiarMapa() {
             for (var i = 0; i < marcadores.length; i++) {
-                marcadores[i].setMap(null);
+                mapa.removeLayer(marcadores[i]);
             }
             marcadores = [];
         }
 
-        // Añade una sucursal buscando su dirección en Google Maps
+        // Añade una sucursal buscando su dirección
         function agregarSucursal(id, direccion, localidad) {
-            var texto = direccion + ", " + localidad + ", España";
-
-            geocoder.geocode({ address: texto }, function (resultados, estado) {
-                if (estado === "OK") {
-                    var posicion = resultados[0].geometry.location;
-
-                    var marcador = new google.maps.Marker({
-                        position: posicion,
-                        map: mapa,
-                        title: "Sucursal " + id
-                    });
-
-                    var ventana = new google.maps.InfoWindow({
-                        content: "<b>Sucursal " + id + "</b><br>" + direccion
-                    });
-
-                    marcador.addListener("click", function () {
-                        ventana.open(mapa, marcador);
-                    });
-
-                    marcadores.push(marcador);
-                } else {
-                    console.log("No se pudo geocodificar la sucursal " + id + ": " + estado);
-                }
+            buscar(direccion + ", " + localidad, function (posicion) {
+                var marcador = L.marker(posicion).addTo(mapa)
+                        .bindPopup("<b>Sucursal " + id + "</b><br>" + direccion);
+                marcadores.push(marcador);
             });
         }
 
         // Centra y hace zoom en la sucursal seleccionada desde la lista de JavaFX
         function enfocarUbicacion(direccion, localidad) {
-            var texto = direccion + ", " + localidad + ", España";
-
-            geocoder.geocode({ address: texto }, function (resultados, estado) {
-                if (estado === "OK") {
-                    var posicion = resultados[0].geometry.location;
-                    mapa.setCenter(posicion);
-                    mapa.setZoom(15); // Zoom cercano a la calle
-                } else {
-                    console.log("No se pudo enfocar la ubicación: " + estado);
-                }
+            buscar(direccion + ", " + localidad, function (posicion) {
+                mapa.setView(posicion, 16);
             });
         }
     </script>
-
-    <!-- Reemplaza AQUI_TU_API_KEY por tu clave real de Google Maps -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AQUI_TU_API_KEY&callback=initMap" async defer></script>
 </body>
 </html>
