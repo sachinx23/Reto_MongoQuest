@@ -22,7 +22,7 @@
                <children>
                   <Label minWidth="-Infinity" styleClass="titulo-barra" text="Panel Cliente:" />
                   
-                  <ComboBox fx:id="cmbOpciones" onAction="#cmbOpcionSeleccionada" prefWidth="250.0" promptText="Seleccionar sección..." styleClass="combo-empleado" />
+                  <ComboBox fx:id="cmbOpciones" onAction="#cambiarSubVista" prefWidth="250.0" promptText="Seleccionar sección..." styleClass="combo-empleado" />
                   
                   <Region HBox.hgrow="ALWAYS" />
                   

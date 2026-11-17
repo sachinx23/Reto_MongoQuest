@@ -11,8 +11,7 @@ public class MongoDBConexion {
     private static final String BBDD = "Tel-ONDA";
     private static MongoClient mongoClient = null;
 
-    // Método para obtener la base de datos de forma centralizada
-    public static MongoDatabase getDatabase() {
+   public static MongoDatabase getDatabase() {
         if (mongoClient == null) {
             mongoClient = MongoClients.create(URI);
         }

@@ -59,7 +59,10 @@
                 </HBox>
                 <VBox styleClass="card" VBox.vgrow="ALWAYS">
                     <children>
-                        <TableView fx:id="tablaValoraciones" columnResizePolicy="CONSTRAINED_RESIZE_POLICY" editable="true" onMouseClicked="#seleccionarValoracion" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="tablaValoraciones"  editable="true" onMouseClicked="#seleccionarValoracion" VBox.vgrow="ALWAYS">
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                            </columnResizePolicy>
                             <contextMenu>
                                 <ContextMenu>
                                     <items>

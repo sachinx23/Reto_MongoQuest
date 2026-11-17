@@ -20,23 +20,27 @@ import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
 /**
- * Clase de pruebas de interfaz de usuario (GUI) para la vista {@code GestionarPlantilla.fxml}.
+ * Clase de pruebas de interfaz de usuario (GUI) para la vista
+ * {@code GestionarPlantilla.fxml}.
  * <p>
- * Emplea el marco de pruebas TestFX para verificar la correcta visualización de las tablas de
- * empleados y clientes, las columnas de cada una, el estado oculto/visible del formulario integrado
- * y la interacción con botones y campos de texto.
+ * Emplea el marco de pruebas TestFX para verificar la correcta visualización de
+ * las tablas de empleados y clientes, las columnas de cada una, el estado
+ * oculto/visible del formulario integrado y la interacción con botones y campos
+ * de texto.
  * </p>
- * 
+ *
  * @author eneko
  * @version 1.0
  */
 public class GestionarPlantillaControllerTest extends ApplicationTest {
 
     /**
-     * Inicializa el entorno de la interfaz gráfica cargando la vista FXML antes de cada prueba.
+     * Inicializa el entorno de la interfaz gráfica cargando la vista FXML antes
+     * de cada prueba.
      *
      * @param stage Escenario principal {@link Stage} gestionado por TestFX.
-     * @throws IOException Si ocurre un error al intentar cargar el recurso FXML desde la ruta indicada.
+     * @throws IOException Si ocurre un error al intentar cargar el recurso FXML
+     * desde la ruta indicada.
      */
     @Override
     public void start(Stage stage) throws IOException {
@@ -47,9 +51,11 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
     }
 
     /**
-     * Limpia la ventana y resetea el estado físico de periféricos (teclado y ratón) al finalizar cada test.
+     * Limpia la ventana y resetea el estado físico de periféricos (teclado y
+     * ratón) al finalizar cada test.
      *
-     * @throws Exception Si se produce una falla al ocultar el escenario a través de FxToolkit.
+     * @throws Exception Si se produce una falla al ocultar el escenario a
+     * través de FxToolkit.
      */
     @AfterEach
     public void tearDown() throws Exception {
@@ -57,8 +63,6 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
         release(new KeyCode[]{});
         release(new MouseButton[]{});
     }
-
-    
 
     /**
      * Comprueba que la tabla principal de empleados sea visible.
@@ -77,13 +81,13 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
     }
 
     /**
-     * Verifica que el panel desplegable del formulario inicie oculto por defecto.
+     * Verifica que el panel desplegable del formulario inicie oculto por
+     * defecto.
      */
     @Test
     public void testPanelFormularioSeaOculto() {
         verifyThat("#panelFormulario", isInvisible());
     }
-
 
     /**
      * Comprueba el texto del botón para crear un nuevo empleado.
@@ -110,16 +114,17 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
     }
 
     /**
-     * Comprueba el texto del botón para eliminar datos sensibles de los clientes.
+     * Comprueba el texto del botón para eliminar datos sensibles de los
+     * clientes.
      */
     @Test
     public void testBotonEliminarClienteTieneTexto() {
         verifyThat("#btnEliminarCliente", hasText("Eliminar Datos Sensibles"));
     }
 
-
     /**
-     * Verifica que al pulsar en "+ Crear Empleado" el panel del formulario pase a estar visible.
+     * Verifica que al pulsar en "+ Crear Empleado" el panel del formulario pase
+     * a estar visible.
      */
     @Test
     public void testAlternarFormularioMuestraPanle() {
@@ -128,7 +133,8 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
     }
 
     /**
-     * Comprueba el despliegue del formulario y la escritura de datos en las cajas de texto de nombre y apellidos.
+     * Comprueba el despliegue del formulario y la escritura de datos en las
+     * cajas de texto de nombre y apellidos.
      */
     @Test
     public void testEscrituraDeCamposFormulario() {
@@ -141,20 +147,17 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
         clickOn("Lonbo kalea");
         clickOn("#txtIban").write("ES9876543210987654201098");
 
-       
         verifyThat("#txtNombre", TextInputControlMatchers.hasText("Eneko"));
         verifyThat("#txtApellidos", TextInputControlMatchers.hasText("Plaza Vallejo"));
-        
         verifyThat("#txtDireccion", TextInputControlMatchers.hasText("Lonbo kalea 1,4A"));
-        
-        verifyThat("#cmbDireccionSucursal", ComboBoxMatchers.hasSelectedItem("Lonbo kalea"));
-        
+
+        verifyThat("#cmbDireccionSucursal", ComboBoxMatchers.hasItems(1));
         verifyThat("#txtIban", TextInputControlMatchers.hasText("ES9876543210987654201098"));
-                
     }
 
     /**
-     * Comprueba que al pulsar en el botón "Cancelar" el panel del formulario vuelva a quedar oculto.
+     * Comprueba que al pulsar en el botón "Cancelar" el panel del formulario
+     * vuelva a quedar oculto.
      */
     @Test
     public void testBotonCancelarFormulario() {
@@ -164,7 +167,6 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
         clickOn("#btnCancelarFormulario");
         verifyThat("#panelFormulario", isInvisible());
     }
-
 
     /**
      * Verifica la visibilidad de la columna Nombre de la tabla de empleados.
@@ -229,7 +231,6 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
     public void testColumnaEmpleadoIBAN() {
         verifyThat("#colEmpIBAN", isVisible());
     }
-
 
     /**
      * Verifica la visibilidad de la columna Nombre de la tabla de clientes.

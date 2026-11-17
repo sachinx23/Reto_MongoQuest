@@ -21,7 +21,6 @@ public interface ContratoDAO {
     boolean rescindirContrato(Contrato c) throws OurException;
     List<Contrato> filtrarContratos(String telefono, String estado) throws OurException;
 
-    // Parte cliente
     List<Contrato> obtenerContratosCliente(String idCliente) throws OurException;
 
     void insertarContrato(Contrato contrato, Tarifa tarifa) throws OurException;

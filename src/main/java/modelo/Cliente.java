@@ -154,6 +154,6 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "nombreUsuario=" + nombreUsuario + ", nombre=" + nombre + ", correo=" + correo;
+        return direccion;
     }
 }

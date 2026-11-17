@@ -156,14 +156,15 @@ public class GestionarTarifasControllerTest extends ApplicationTest {
      * Comprueba el cambio de estado del {@code CheckBox} al hacer clic sobre él.
      * Verifica que pase de estar marcado a desmarcado tras la interacción.
      */
-    @Test
+ @Test
     public void testInteraccionCheckBox() {
         clickOn("#chkActiva");
+        
+        org.testfx.util.WaitForAsyncUtils.waitForFxEvents();
 
         CheckBox chk = lookup("#chkActiva").queryAs(CheckBox.class);
         assertFalse(chk.isSelected());
     }
-
     /**
      * Comprueba la visibilidad de todas las columnas pertenecientes a la tabla de tarifas.
      */

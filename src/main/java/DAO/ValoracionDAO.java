@@ -19,7 +19,6 @@ public interface ValoracionDAO {
     double mediaValoraciones() throws OurException;
     boolean eliminarValoracion(Valoracion v) throws OurException;
 
-    // Parte cliente
     List<Valoracion> obtenerValoracionesCliente(String idCliente) throws OurException;
 
     void insertarValoracion(Valoracion valoracion) throws OurException;

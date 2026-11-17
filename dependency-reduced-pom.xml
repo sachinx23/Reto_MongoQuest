@@ -21,7 +21,7 @@
               <shadedClassifierName>ejecutable</shadedClassifierName>
               <transformers>
                 <transformer>
-                  <mainClass>com.mycompany.reto_1.App</mainClass>
+                  <mainClass>com.mycompany.reto_1.Launcher</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -36,8 +36,79 @@
           <mainClass>${exec.mainClass}</mainClass>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+        <configuration>
+          <useModulePath>false</useModulePath>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.6.3</version>
+        <configuration>
+          <show>private</show>
+          <nohelp>true</nohelp>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit-jupiter-api</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-jupiter-params</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-jupiter-engine</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.testfx</groupId>
+      <artifactId>testfx-core</artifactId>
+      <version>4.0.18</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>assertj-core</artifactId>
+          <groupId>org.assertj</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>org.osgi.core</artifactId>
+          <groupId>org.osgi</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.testfx</groupId>
+      <artifactId>testfx-junit5</artifactId>
+      <version>4.0.18</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>assertj-core</artifactId>
+          <groupId>org.assertj</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>2.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

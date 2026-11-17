@@ -7,10 +7,15 @@ import DAO.implementacion.ClienteDAOImplementacion;
 import exception.OurException;
 import exception.ShowAlert;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
@@ -20,49 +25,33 @@ import javafx.stage.Stage;
 import modelo.Cliente;
 
 /**
- * Controlador principal del panel del Cliente en JavaFX.
- * Gestiona el estado de la sesión del cliente autenticado, el saludo de cabecera,
- * la navegación dinámica entre sus subvistas (perfil, tarifas, contratos, soporte
- * y valoraciones) y el cierre de sesión.
+ * Controlador principal de la vista del Cliente en JavaFX.
+ * Gestiona la autenticación del cliente, la actualización de bienvenida y
+ * la navegación dinámica entre las distintas subvistas (perfil, tarifas, contratos,
+ * soporte y valoraciones), además del cierre de sesión.
  *
  * @author Eneko.Plaza
  */
-public class ClienteController {
+public class ClienteController implements Initializable {
 
-    /**
-     * Registrador de eventos (Logger) para trazar las acciones y advertencias del controlador.
-     */
     private static final Logger LOGGER = Logger.getLogger(ClienteController.class.getName());
 
-    /** Instancia estática del cliente con la sesión iniciada actualmente. */
     private static Cliente cliente;
-
-    /** Referencia estática a la etiqueta de bienvenida para actualizarla desde subcontroladores. */
     private static Label bienvenida;
 
-    /** Objeto de acceso a datos para recuperar la información del cliente. */
     private final ClienteDAO clienteDAO = new ClienteDAOImplementacion();
 
-    /** Etiqueta de cabecera que muestra el saludo con el nombre del cliente. */
-    @FXML private Label lblBienvenida;
-
-    /** Selector desplegable con las secciones disponibles en el área de cliente. */
-    @FXML private ComboBox<String> cmbOpciones;
-
-    /** Contenedor central donde se cargan dinámicamente las distintas vistas FXML del cliente. */
-    @FXML private StackPane panelContenido;
-
-    /** Nombre del apartado que se encuentra cargado actualmente en pantalla. */
-    private String actual;
-
-    /**
-     * Inicializa el controlador tras cargar la vista FXML del panel de cliente.
-     * Carga los datos del cliente autenticado mediante {@link IniciarSesionController#idUsuarioActual},
-     * actualiza el mensaje de bienvenida, rellena el selector de navegación y muestra por defecto
-     * la subvista de {@code "Mi Perfil"}.
-     */
     @FXML
-    public void initialize() {
+    private ComboBox<String> cmbOpciones;
+
+    @FXML
+    private StackPane panelContenido;
+
+    @FXML 
+    private Label lblBienvenida;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
         bienvenida = lblBienvenida;
         try {
             cliente = clienteDAO.obtenerCliente(IniciarSesionController.idUsuarioActual);
@@ -74,6 +63,7 @@ public class ClienteController {
             return;
         }
         actualizarBienvenida();
+        
         cmbOpciones.setItems(FXCollections.observableArrayList(
                 "Mi Perfil",
                 "Mis Tarifas",
@@ -82,107 +72,84 @@ public class ClienteController {
                 "Mis Valoraciones",
                 "Cerrar Sesión"
         ));
-        cmbOpciones.setValue("Mi Perfil");
-        if (actual == null) {
-            cargarSubvista("Mi Perfil", "ClientePerfil");
-        }
+        
+        cmbOpciones.getSelectionModel().select("Mis Contratos");
+        cargarSubvista("/vista/ClienteContratos.fxml");
     }
 
-    /**
-     * Obtiene la instancia del cliente que tiene la sesión iniciada actualmente.
-     *
-     * @return Objeto {@link Cliente} autenticado, o {@code null} si no hay sesión activa.
-     */
     public static Cliente getCliente() {
         return cliente;
     }
 
-    /**
-     * Actualiza la referencia estática del cliente autenticado (por ejemplo, tras editar su perfil).
-     *
-     * @param nuevo Nueva instancia de {@link Cliente} con los datos actualizados.
-     */
     public static void setCliente(Cliente nuevo) {
         cliente = nuevo;
     }
 
-    /**
-     * Refresca el texto de la etiqueta de bienvenida superior utilizando el nombre actual del cliente.
-     */
     public static void actualizarBienvenida() {
-        bienvenida.setText("Cliente: " + cliente.getNombre());
+        if (bienvenida != null && cliente != null) {
+            bienvenida.setText("Cliente: " + cliente.getNombre());
+        }
     }
 
-    /**
-     * Manejador de eventos del desplegable {@code cmbOpciones} que carga la subvista
-     * correspondiente a la sección elegida o inicia el proceso de cierre de sesión.
-     *
-     * @param event Evento de acción disparado al seleccionar una opción en el {@link ComboBox}.
-     */
     @FXML
-    public void cmbOpcionSeleccionada(ActionEvent event) {
+    public void cambiarSubVista(ActionEvent event) {
         String seleccion = cmbOpciones.getValue();
-        if (seleccion == null || seleccion.equals(actual)) {
+        if (seleccion == null) {
             return;
         }
+
         switch (seleccion) {
             case "Mi Perfil":
-                cargarSubvista(seleccion, "ClientePerfil");
+                cargarSubvista("/vista/ClientePerfil.fxml");
                 break;
             case "Mis Tarifas":
-                cargarSubvista(seleccion, "ClienteTarifas");
+                cargarSubvista("/vista/ClienteTarifas.fxml");
                 break;
             case "Mis Contratos":
-                cargarSubvista(seleccion, "ClienteContratos");
+                cargarSubvista("/vista/ClienteContratos.fxml");
                 break;
             case "Soporte":
-                cargarSubvista(seleccion, "ClienteSoporte");
+                cargarSubvista("/vista/ClienteSoporte.fxml");
                 break;
             case "Mis Valoraciones":
-                cargarSubvista(seleccion, "ClienteValoraciones");
+                cargarSubvista("/vista/ClienteValoraciones.fxml");
                 break;
             case "Cerrar Sesión":
-                cerrarSesion();
+                cerrarSesion(event);
                 break;
         }
     }
 
-    /**
-     * Carga un archivo FXML ubicado en {@code /vista/} dentro del contenedor {@code panelContenido}
-     * y registra el nombre del apartado activo.
-     *
-     * @param apartado Nombre de la sección que se va a mostrar.
-     * @param fxml     Nombre base del archivo FXML (sin ruta ni extensión {@code .fxml}).
-     */
-    private void cargarSubvista(String apartado, String fxml) {
+    private void cerrarSesion(ActionEvent event) {
         try {
-            Parent vista = FXMLLoader.load(getClass().getResource("/vista/" + fxml + ".fxml"));
-            panelContenido.getChildren().setAll(vista);
-            actual = apartado;
-        } catch (IOException | RuntimeException e) {
-            ShowAlert.error("No se pudo abrir la pantalla.");
+            LOGGER.info("Sesión cerrada");
+            LogApp.setUsuario(null);
+            URL url = getClass().getResource("/vista/IniciarSesion.fxml");
+            Parent loginView = FXMLLoader.load(url);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(loginView);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error al volver al login", e);
+            ShowAlert.error("No se pudo volver a la pantalla de inicio de sesión.");
         }
     }
 
-    /**
-     * Solicita confirmación al cliente para abandonar el panel y, si acepta, limpia los datos
-     * de sesión en memoria y en {@link LogApp}, redirigiendo a la pantalla de inicio de sesión.
-     * Si cancela, restaura la selección anterior en el {@link ComboBox}.
-     */
-    private void cerrarSesion() {
-        if (!ShowAlert.confirmar("Salir", "¿Deseas salir del panel de cliente?")) {
-            cmbOpciones.setValue(actual);
-            return;
-        }
+    private void cargarSubvista(String rutaFXML) {
         try {
-            cliente = null;
-            LOGGER.info("Sesión cerrada");
-            LogApp.setUsuario(null);
-            Parent login = FXMLLoader.load(getClass().getResource("/vista/IniciarSesion.fxml"));
-            Stage stage = (Stage) panelContenido.getScene().getWindow();
-            stage.setScene(new Scene(login));
-            stage.show();
-        } catch (IOException | RuntimeException e) {
+            URL url = getClass().getResource(rutaFXML);
+            if (url != null) {
+                Parent vista = FXMLLoader.load(url);
+                panelContenido.getChildren().clear();
+                panelContenido.getChildren().add(vista);
+            } else {
+                LOGGER.severe("No existe la pantalla " + rutaFXML);
+                ShowAlert.error("No se encontró la pantalla " + rutaFXML);
+            }
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error al abrir " + rutaFXML, e);
             ShowAlert.error("No se pudo abrir la pantalla.");
         }
     }

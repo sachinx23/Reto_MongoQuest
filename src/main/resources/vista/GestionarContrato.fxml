@@ -44,7 +44,7 @@
                                 <TableColumn fx:id="colTelefono" prefWidth="110.0" text="Teléfono" />
                                 <TableColumn fx:id="colIdCliente" prefWidth="120.0" text="ID Cliente" />
                                 <TableColumn fx:id="colIdTarifa" prefWidth="120.0" text="ID Tarifa" />
-                                <TableColumn fx:id="colIdEmpleado" prefWidth="120.0" text="ID Empleado" />
+                                <TableColumn fx:id="colIdEmpleado" prefWidth="120.0" text="ID" />
                                 <TableColumn fx:id="colEstado" prefWidth="100.0" text="Estado" />
                                 <TableColumn fx:id="colFechaInicio" prefWidth="110.0" text="Fecha Inicio" />
                                 <TableColumn fx:id="colFechaFin" prefWidth="110.0" text="Fecha Fin" />

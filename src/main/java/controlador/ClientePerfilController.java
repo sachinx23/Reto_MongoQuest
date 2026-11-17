@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import modelo.Cliente;
+import org.bson.Document;
 
 /**
  * Controlador de la subvista de perfil del cliente en JavaFX.
@@ -71,9 +72,10 @@ public class ClientePerfilController {
         txtNombreUsuario.setText(cliente.getNombreUsuario());
         txtDni.setText(cliente.getDni());
         txtCorreo.setText(cliente.getCorreo());
-        txtDireccion.setText(cliente.getDireccion());
         txtTelefono.setText(cliente.getTelefono());
         txtCuentaBancaria.setText(cliente.getCuentaBancaria());
+        
+        txtDireccion.setText(cliente.toString());
     }
 
     /**

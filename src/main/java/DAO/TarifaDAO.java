@@ -22,7 +22,6 @@ public interface TarifaDAO {
 
     boolean eliminarTarifa(Tarifa t) throws OurException;
 
-    // Parte cliente
     Tarifa buscarTarifa(String idTarifa) throws OurException;
 
     List<Tarifa> tarifasActivas() throws OurException;
