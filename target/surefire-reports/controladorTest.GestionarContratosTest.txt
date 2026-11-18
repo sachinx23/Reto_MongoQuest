@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: controladorTest.GestionarContratosTest
+-------------------------------------------------------------------------------
+Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.80 s -- in controladorTest.GestionarContratosTest
