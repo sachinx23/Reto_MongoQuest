@@ -34,9 +34,6 @@
                <children>
                   <Label styleClass="label-bold" text="Mis tickets" />
                   <TableView fx:id="tablaSoporte" VBox.vgrow="ALWAYS">
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
                      <columns>
                         <TableColumn fx:id="colSoporteAsunto" text="Asunto" />
                         <TableColumn fx:id="colSoporteFecha" text="Fecha" />

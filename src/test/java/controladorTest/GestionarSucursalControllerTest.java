@@ -1,5 +1,8 @@
 package controladorTest;
 
+import DAO.SucursalDAO;
+import DAO.implementacion.SucursalDAOImplementacion;
+import exception.OurException;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
+import org.testfx.util.WaitForAsyncUtils;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
@@ -27,11 +31,21 @@ import static org.testfx.matcher.control.LabeledMatchers.hasText;
  * del formulario, los botones de acción, la lista de sucursales, el mapa web y la escritura
  * en los campos de texto.
  * </p>
+ * <p>
+ * La sucursal que crea {@link #testAnadirSucursal()} usa un nombre exclusivo de pruebas y se
+ * elimina al terminar, para no dejar datos duplicados en MongoDB tras cada ejecución.
+ * </p>
  *
  * @author eneko
- * @version 1.0
+ * @version 1.1
  */
 public class GestionarSucursalControllerTest extends ApplicationTest {
+
+    /**
+     * Nombre exclusivo de pruebas para la sucursal que se inserta, de modo que
+     * al borrarla nunca se elimine una sucursal real.
+     */
+    private static final String NOMBRE_PRUEBA = "Tel-ONDA Test Automatico";
 
     /**
      * Inicializa el entorno de la interfaz gráfica cargando la vista FXML antes de cada prueba.
@@ -57,6 +71,18 @@ public class GestionarSucursalControllerTest extends ApplicationTest {
         FxToolkit.hideStage();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
+    }
+
+    /**
+     * Elimina de la base de datos la sucursal de prueba. Si no existe, no hace nada.
+     */
+    private void eliminarSucursalDePrueba() {
+        try {
+            SucursalDAO dao = new SucursalDAOImplementacion();
+            dao.eliminarSucursal(NOMBRE_PRUEBA);
+        } catch (OurException e) {
+            // La sucursal de prueba no existía: no hay nada que limpiar.
+        }
     }
 
     /**
@@ -156,6 +182,7 @@ public class GestionarSucursalControllerTest extends ApplicationTest {
         verifyThat("#txtUbicacion", TextInputControlMatchers.hasText("Lonbo Kalea, Bilbao"));
         verifyThat("#txtCodigoPostal", TextInputControlMatchers.hasText("48480"));
     }
+
     /**
      * Comprueba que al pulsar Añadir con los campos vacíos salta la alerta de aviso.
      */
@@ -197,19 +224,25 @@ public class GestionarSucursalControllerTest extends ApplicationTest {
 
     /**
      * Comprueba que al rellenar los datos y pulsar Añadir se guarda la sucursal.
+     * La sucursal de prueba se elimina siempre al terminar, aunque el test falle.
      */
     @Test
     public void testAnadirSucursal() {
-        clickOn("#txtNombre").write("Sucursal Test");
-        clickOn("#txtHorario").write("08:00 - 20:00");
-        clickOn("#txtTelefono").write("944123456");
-        clickOn("#txtUbicacion").write("Lonbo Kalea, Bilbao");
-        clickOn("#txtCodigoPostal").write("48480");
-        clickOn("#btnAnadir");
+        try {
+            clickOn("#txtNombre").write(NOMBRE_PRUEBA);
+            clickOn("#txtHorario").write("08:00 - 20:00");
+            clickOn("#txtTelefono").write("944123456");
+            clickOn("#txtUbicacion").write("Lonbo Kalea, Bilbao");
+            clickOn("#txtCodigoPostal").write("48480");
+            clickOn("#btnAnadir");
 
-        verifyThat(".dialog-pane", isVisible());
-        DialogPane dialogo = lookup(".dialog-pane").queryAs(DialogPane.class);
-        assertEquals("Sucursal guardada correctamente.", dialogo.getContentText());
-        clickOn(dialogo.lookupButton(ButtonType.OK));
+            verifyThat(".dialog-pane", isVisible());
+            DialogPane dialogo = lookup(".dialog-pane").queryAs(DialogPane.class);
+            assertEquals("Sucursal guardada correctamente.", dialogo.getContentText());
+            clickOn(dialogo.lookupButton(ButtonType.OK));
+            WaitForAsyncUtils.waitForFxEvents();
+        } finally {
+            eliminarSucursalDePrueba();
+        }
     }
 }

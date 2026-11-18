@@ -2764,3 +2764,201 @@ Caused by: java.lang.IllegalArgumentException: Unable to coerce CONSTRAINED_RESI
 2026-11-17 13:20:27 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
 2026-11-17 13:20:27 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
 2026-11-17 13:20:27 [INFO] [Aitorfernandez0 (Admin)] controlador.GestionTarifasController.cargarTabla: Tarifas cargadas: 2
+2026-11-18 16:13:26 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 16:13:26 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-18 16:13:26 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 16:13:27 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 16:13:27 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 16:13:27 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 16:59:25 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 16:59:25 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-18 16:59:25 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 16:59:26 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 16:59:26 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 16:59:26 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 17:12:04 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 17:12:04 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-18 17:12:05 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 17:12:05 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 17:12:05 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 17:12:05 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 17:12:08 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 26 by JavaFX runtime of version 17.0.2-ea
+2026-11-18 17:12:08 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 17:12:18 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-18 17:12:22 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 26 by JavaFX runtime of version 17.0.2-ea
+2026-11-18 17:12:22 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 17:22:17 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 17:22:17 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-18 17:22:17 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 17:22:18 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 17:22:18 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 17:22:18 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 17:22:26 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 18:00:35 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 18:00:35 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-18 18:00:35 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 18:00:35 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 18:00:35 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 18:00:35 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 18:00:42 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 18:00:46 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Aprobar contrato 6afda62b77dbb766b0be739b
+2026-11-18 18:00:48 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 18:00:56 [INFO] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cerrarSesion: Sesión cerrada
+2026-11-18 18:01:14 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: LauraRuiz1
+2026-11-18 18:01:14 [INFO] [LauraRuiz1 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 18:01:15 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567807
+2026-11-18 18:01:18 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-18 18:01:18 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-18 18:01:20 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567807
+2026-11-18 18:01:24 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-18 18:01:24 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-18 18:01:24 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ValoracionDAOImplementacion.obtenerValoracionesCliente: Listar valoraciones del cliente 653f101a2b8e4c1234567807
+2026-11-18 18:01:28 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TikcetDAOImpl.listarTicketsCliente: Listar tickets del cliente 653f101a2b8e4c1234567807
+2026-11-18 18:01:30 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-18 18:01:30 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-18 18:01:30 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ValoracionDAOImplementacion.obtenerValoracionesCliente: Listar valoraciones del cliente 653f101a2b8e4c1234567807
+2026-11-18 18:01:54 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-18 18:01:54 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-18 18:01:55 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567807
+2026-11-18 18:01:57 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.insertarContrato: Pedir contrato de la tarifa Onda Fibra+Móvil 600 para la línea 655 123 456, cliente: 653f101a2b8e4c1234567807
+2026-11-18 18:02:03 [INFO] [LauraRuiz1 (Cliente)] controlador.ClienteController.cerrarSesion: Sesión cerrada
+2026-11-18 18:02:09 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 18:02:09 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 18:02:09 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 18:02:09 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 18:02:09 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 18:02:12 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 18:02:14 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.aprobarContrato: Aprobar contrato 6afdda0500f0574f9f4926b7
+2026-11-18 18:02:15 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 18:02:19 [INFO] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cerrarSesion: Sesión cerrada
+2026-11-18 18:02:27 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: LauraRuiz1
+2026-11-18 18:02:27 [INFO] [LauraRuiz1 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 18:02:28 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567807
+2026-11-18 18:02:30 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567807
+2026-11-18 18:02:30 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567805
+2026-11-18 18:02:39 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.solicitarBaja: Solicitar baja del contrato 6afdda0500f0574f9f4926b7
+2026-11-18 18:02:40 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567807
+2026-11-18 18:14:14 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 18:14:14 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-18 18:14:15 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 18:14:18 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 18:14:18 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 18:14:18 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 18:14:25 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 18:14:54 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.AdministradorDAOImpl.crearEmpleado: Crear empleado, usuario: mara.garcia, nombre: Mara Garcia Basanta, correo: mara.garcia@telonda.com, sucursal: Lonbo Kalea, Bilbao
+2026-11-18 18:14:54 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.AdministradorDAOImpl.agregarEmpleadoASucursal: Añadir el empleado mara.garcia a la sucursal Lonbo Kalea, Bilbao
+2026-11-18 18:14:56 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 18:14:56 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 18:15:18 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 18:16:41 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 18:16:41 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-18 18:16:41 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 18:16:41 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 18:16:41 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 18:16:41 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 18:17:00 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 18:30:40 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 18:30:40 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-18 18:30:40 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 18:30:40 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 18:30:40 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 18:30:40 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 18:30:45 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-18 18:30:45 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-18 18:30:45 [INFO] [Aitorfernandez0 (Admin)] controlador.GestionTarifasController.cargarTabla: Tarifas cargadas: 2
+2026-11-18 18:30:50 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 18:31:35 [INFO] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cerrarSesion: Sesión cerrada
+2026-11-18 18:31:42 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: LauraRuiz1
+2026-11-18 18:31:42 [INFO] [LauraRuiz1 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 18:31:43 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567807
+2026-11-18 18:31:45 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-18 18:31:45 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-18 18:31:47 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567807
+2026-11-18 18:31:47 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567805
+2026-11-18 18:32:00 [INFO] [LauraRuiz1 (Cliente)] controlador.ClienteController.cerrarSesion: Sesión cerrada
+2026-11-18 18:32:13 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 18:32:13 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 18:32:13 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 18:32:13 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 18:32:13 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 18:32:15 [INFO] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cerrarSesion: Sesión cerrada
+2026-11-18 18:32:22 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 18:32:22 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 18:32:23 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 18:32:23 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 18:32:23 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 18:32:34 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 22:16:07 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 22:16:07 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-18 22:16:07 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 22:16:08 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 22:16:08 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 22:16:08 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 22:16:12 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 22:16:20 [INFO] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cerrarSesion: Sesión cerrada
+2026-11-18 22:16:29 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: LauraRuiz1
+2026-11-18 22:16:29 [INFO] [LauraRuiz1 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 22:16:29 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567807
+2026-11-18 22:16:32 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567807
+2026-11-18 22:16:32 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567805
+2026-11-18 22:16:35 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-18 22:16:35 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-18 22:16:37 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567807
+2026-11-18 22:16:38 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.insertarContrato: Pedir contrato de la tarifa Onda Fibra 1G para la línea 655 123 456, cliente: 653f101a2b8e4c1234567807
+2026-11-18 22:16:42 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567807
+2026-11-18 22:16:48 [INFO] [LauraRuiz1 (Cliente)] controlador.ClienteController.cerrarSesion: Sesión cerrada
+2026-11-18 22:16:54 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 22:16:54 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 22:16:54 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 22:16:54 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 22:16:54 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 22:16:57 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 22:17:00 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.rescindirContrato: Rescindir contrato 6afda62b77dbb766b0be739a
+2026-11-18 22:17:01 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 22:17:07 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.rescindirContrato: Rescindir contrato 6afda62b77dbb766b0be739b
+2026-11-18 22:17:08 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 22:17:23 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 22:17:23 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-18 22:17:23 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 22:17:23 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 22:17:23 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 22:17:23 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 22:17:25 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 22:18:02 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 22:18:02 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-18 22:18:02 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 22:18:03 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 22:18:03 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 22:18:03 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 22:18:05 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 22:37:58 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: Aitorfernandez0
+2026-11-18 22:37:58 [WARNING] [sin sesión] com.mongodb.internal.diagnostics.logging.Loggers.shouldUseSLF4J: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+2026-11-18 22:37:59 [INFO] [Aitorfernandez0 (Admin)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 22:37:59 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.EmpleadoDAOImplementacion.listarEmpleados: Listar empleados
+2026-11-18 22:37:59 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ClienteDAOImplementacion.listarClientes: Listar clientes
+2026-11-18 22:37:59 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 22:38:04 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-18 22:38:04 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.SucursalDAOImplementacion.listarSucursales: Listar sucursales
+2026-11-18 22:38:06 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-18 22:38:06 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-18 22:38:06 [INFO] [Aitorfernandez0 (Admin)] controlador.GestionTarifasController.cargarTabla: Tarifas cargadas: 2
+2026-11-18 22:38:07 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ContratoDAOImplementacion.listarContratos: Listar contratos
+2026-11-18 22:38:09 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.TikcetDAOImpl.listarTicket: Listar tickets con estado Todos
+2026-11-18 22:38:10 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.listarValoraciones: Listar valoraciones
+2026-11-18 22:38:10 [INFO] [Aitorfernandez0 (Admin)] DAO.implementacion.ValoracionDAOImplementacion.mediaValoraciones: Calcular la media de las valoraciones
+2026-11-18 22:38:12 [WARNING] [Aitorfernandez0 (Admin)] javafx.fxml.FXMLLoader$ValueElement.processValue: Loading FXML document with JavaFX API of version 21 by JavaFX runtime of version 17.0.2-ea
+2026-11-18 22:38:15 [INFO] [Aitorfernandez0 (Admin)] controlador.AdministradorController.cerrarSesion: Sesión cerrada
+2026-11-18 22:38:22 [INFO] [sin sesión] DAO.implementacion.AdministradorDAOImpl.comprobarUsuarios: Buscar en Administradores al usuario: LauraRuiz1
+2026-11-18 22:38:22 [INFO] [LauraRuiz1 (Cliente)] controlador.IniciarSesionController.btnIniciarSesion: Sesión iniciada
+2026-11-18 22:38:23 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ClienteDAOImplementacion.obtenerCliente: Cargar cliente con id: 653f101a2b8e4c1234567807
+2026-11-18 22:38:25 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ContratoDAOImplementacion.obtenerContratosCliente: Listar contratos del cliente 653f101a2b8e4c1234567807
+2026-11-18 22:38:25 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567805
+2026-11-18 22:38:25 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.buscarTarifa: Buscar tarifa con id: 653f101a2b8e4c1234567806
+2026-11-18 22:38:27 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-18 22:38:27 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-18 22:38:29 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-18 22:38:29 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas
+2026-11-18 22:38:29 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.ValoracionDAOImplementacion.obtenerValoracionesCliente: Listar valoraciones del cliente 653f101a2b8e4c1234567807
+2026-11-18 22:38:30 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TikcetDAOImpl.listarTicketsCliente: Listar tickets del cliente 653f101a2b8e4c1234567807
+2026-11-18 22:38:33 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.tarifasActivas: Listar tarifas activas
+2026-11-18 22:38:33 [INFO] [LauraRuiz1 (Cliente)] DAO.implementacion.TarifaDAOImplementacion.listarTarifas: Listar tarifas

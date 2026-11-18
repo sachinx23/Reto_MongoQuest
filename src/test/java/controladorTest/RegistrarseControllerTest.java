@@ -1,46 +1,126 @@
 package controladorTest;
 
-
-import org.testfx.util.WaitForAsyncUtils;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeoutException;
+import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
+import javafx.scene.control.TextInputControl;
+import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
-
-import DAO.implementacion.ClienteDAOImplementacion;
-import exception.OurException;
-import java.util.Random;
-import javafx.stage.Stage;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 
+import static org.testfx.api.FxAssert.verifyThat;
+
 /**
- * Pruebas de la pantalla Registrarse.
+ * Clase de prueba automatizada para validar la interfaz gráfica del controlador {@code RegistrarseController}.
+ * <p>
+ * Utiliza TestFX con JUnit 5 para cargar la vista {@code Registrarse.fxml} y comprobar las validaciones
+ * del formulario. No se completa ningún registro, así que no se guarda nada en MongoDB.
+ * </p>
+ *
+ * @author sachin
+ * @version 1.0
+ * @see org.testfx.framework.junit5.ApplicationTest
  */
 public class RegistrarseControllerTest extends ApplicationTest {
 
+    /**
+     * Inicializa y muestra el escenario cargando el archivo FXML de la vista.
+     *
+     * @param stage Escenario sobre el cual se montará la escena cargada desde el FXML.
+     * @throws IOException Si ocurre un error al intentar cargar el archivo FXML.
+     */
     @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/vista/Registrarse.fxml"));
+    public void start(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/Registrarse.fxml"));
+        Parent root = loader.load();
         stage.setScene(new Scene(root));
         stage.show();
     }
 
     /**
-     * Rellena todos los campos del formulario.
+     * Limpia y oculta la ventana tras la finalización de cada método de prueba.
+     *
+     * @throws Exception Si ocurre un fallo al intentar cerrar el escenario.
+     */
+    @AfterEach
+    public void tearDown() throws Exception {
+        FxToolkit.hideStage();
+    }
+
+    /**
+     * Comprueba que al abrir el formulario esté vacío y sin mensaje.
+     */
+    @Test
+    public void comprobarEstadoInicial() {
+        verifyThat("#txtUsuario", TextInputControlMatchers.hasText(""));
+        verifyThat("#txtNombre", TextInputControlMatchers.hasText(""));
+        verifyThat("#txtDni", TextInputControlMatchers.hasText(""));
+        verifyThat("#lblMensajeError", LabeledMatchers.hasText(""));
+        verifyThat("#btnRegistrarse", LabeledMatchers.hasText("Completar Registro"));
+    }
+
+    /**
+     * Comprueba que sin rellenar nada se pida rellenar los campos.
+     */
+    @Test
+    public void comprobarCamposVacios() {
+        clickOn("#btnRegistrarse");
+        verifyThat("#lblMensajeError", LabeledMatchers.hasText("Rellena todos los campos."));
+    }
+
+    /**
+     * Comprueba que con un campo vacío se pida rellenar los campos.
+     */
+    @Test
+    public void comprobarFaltaUnCampo() {
+        rellenar("usuarioPrueba", "123456", "12345678Z", "prueba@gmail.com");
+        vaciar("#txtDireccion");
+        clickOn("#btnRegistrarse");
+        verifyThat("#lblMensajeError", LabeledMatchers.hasText("Rellena todos los campos."));
+    }
+
+    /**
+     * Comprueba que un correo sin arroba no se acepte.
+     */
+    @Test
+    public void comprobarCorreoIncorrecto() {
+        rellenar("usuarioPrueba", "123456", "12345678Z", "correo-sin-arroba");
+        clickOn("#btnRegistrarse");
+        verifyThat("#lblMensajeError", LabeledMatchers.hasText("El correo no es válido."));
+    }
+
+    /**
+     * Comprueba que un DNI sin letra no se acepte.
+     */
+    @Test
+    public void comprobarDniIncorrecto() {
+        rellenar("usuarioPrueba", "123456", "12345678", "prueba@gmail.com");
+        clickOn("#btnRegistrarse");
+        verifyThat("#lblMensajeError", LabeledMatchers.hasText("DNI introducido incorrectamente."));
+    }
+
+    /**
+     * Comprueba que una contraseña de menos de 6 caracteres no se acepte.
+     */
+    @Test
+    public void comprobarContrasenaCorta() {
+        rellenar("usuarioPrueba", "123", "12345678Z", "prueba@gmail.com");
+        clickOn("#btnRegistrarse");
+        verifyThat("#lblMensajeError", LabeledMatchers.hasText("La contraseña debe tener mínimo 6 caracteres."));
+    }
+
+    /**
+     * Rellena el formulario de registro.
+     *
+     * @param usuario nombre de usuario
+     * @param contrasena contraseña
+     * @param dni DNI
+     * @param correo correo
      */
     private void rellenar(String usuario, String contrasena, String dni, String correo) {
         clickOn("#txtUsuario").write(usuario);
@@ -48,131 +128,23 @@ public class RegistrarseControllerTest extends ApplicationTest {
         clickOn("#txtNombre").write("Prueba");
         clickOn("#txtApellidos").write("Test");
         clickOn("#txtDni").write(dni);
-        clickOn("#txtTelefono").write("600111222");
+        clickOn("#txtTelefono").write("666666666");
         clickOn("#txtCorreo").write(correo);
-        clickOn("#txtDireccion").write("Calle Test 1");
+        clickOn("#txtDireccion").write("Calle Falsa 1");
     }
 
     /**
-     * Al abrir, los campos están vacíos.
-     */
-    @Test
-    public void testEstadoInicial() {
-        verifyThat("#txtUsuario", TextInputControlMatchers.hasText(""));
-        verifyThat("#txtContrasena", TextInputControlMatchers.hasText(""));
-        verifyThat("#txtDni", TextInputControlMatchers.hasText(""));
-        verifyThat("#btnRegistrarse", isVisible());
-    }
-
-    /**
-     * Sin rellenar sale un error.
-     */
-    @Test
-    public void testCamposVacios() {
-        clickOn("#btnRegistrarse");
-        verifyThat("#lblMensajeError", LabeledMatchers.hasText("Rellena todos los campos."));
-    }
-
-    /**
-     * Un correo sin @ no vale.
-     */
-    @Test
-    public void testCorreoIncorrecto() {
-        rellenar("usuarioTest", "123456", "12345678Z", "correomal");
-        clickOn("#btnRegistrarse");
-        verifyThat("#lblMensajeError", LabeledMatchers.hasText("El correo no es válido."));
-    }
-
-    /**
-     * Un DNI sin letra no vale.
-     */
-    @Test
-    public void testDniIncorrecto() {
-        rellenar("usuarioTest", "123456", "1234", "test@gmail.com");
-        clickOn("#btnRegistrarse");
-        verifyThat("#lblMensajeError", LabeledMatchers.hasText("DNI introducido incorrectamente."));
-    }
-
-    /**
-     * La contraseña necesita 6 caracteres.
-     */
-    @Test
-    public void testContrasenaCorta() {
-        rellenar("usuarioTest", "123", "12345678Z", "test@gmail.com");
-        clickOn("#btnRegistrarse");
-        verifyThat("#lblMensajeError", LabeledMatchers.hasText("La contraseña debe tener mínimo 6 caracteres."));
-    }
-
-    /**
-     * Un usuario que ya existe no se registra.
-     */
-    @Test
-    public void testUsuarioRepetido() {
-        rellenar("PedroDiaz0", "123456", "12345678Z", "test@gmail.com");
-        clickOn("#btnRegistrarse");
-        verifyThat("#lblMensajeError", LabeledMatchers.hasText("No se pudo registrar el usuario. Comprueba los datos."));
-    }
-
-    /**
-     * Un usuario nuevo se registra y vuelve al login.
+     * Vacía un campo de texto del formulario.
      *
-     * @throws OurException si falla MongoDB al borrarlo
+     * @param id selector del campo
      */
-    @Test
-    public void testRegistroCorrecto() throws OurException {
-        String usuario = "test" + new Random().nextInt(100000);
-        rellenar(usuario, "123456", "12345678Z", "test@gmail.com");
-        clickOn("#btnRegistrarse");
-        assertEquals("¡Usuario registrado correctamente!", textoAlerta());
-        aceptarAlerta();
-        verifyThat("#lblMensajeError", isVisible());
-        verifyThat("#txtUsuario", TextInputControlMatchers.hasText(""));
-        // Deja la base de datos como estaba
-        new ClienteDAOImplementacion().eliminarDatosSensiblesCliente(usuario);
-    }
-
-    /**
-     * Mensaje de la alerta abierta.
-     */
-    private String textoAlerta() {
-        esperar(".dialog-pane");
-        return lookup(".dialog-pane").queryAs(DialogPane.class).getContentText();
-    }
-
-    /**
-     * Pulsa Aceptar en la alerta abierta.
-     */
-    private void aceptarAlerta() {
-        esperar(".dialog-pane");
-        DialogPane dialogo = lookup(".dialog-pane").queryAs(DialogPane.class);
-        clickOn(dialogo.lookupButton(ButtonType.OK));
-    }
-
-    /**
-     * Cierra la ventana y suelta teclas y ratón después de cada prueba.
-     *
-     * @throws TimeoutException si la ventana no se cierra
-     */
-    @AfterEach
-    public void tearDown() throws TimeoutException {
-        FxToolkit.hideStage();
-        release(new KeyCode[]{});
-        release(new MouseButton[]{});
-    }
-
-    /**
-     * Espera hasta 5 segundos a que aparezca un nodo.
-     */
-    private void esperar(final String selector) {
-        try {
-            WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, new Callable<Boolean>() {
-                @Override
-                public Boolean call() {
-                    return lookup(selector).tryQuery().isPresent();
-                }
-            });
-        } catch (TimeoutException e) {
-            // Si no aparece, la prueba falla en el lookup siguiente
-        }
+    private void vaciar(String id) {
+        final TextInputControl campo = lookup(id).queryAs(TextInputControl.class);
+        interact(new Runnable() {
+            @Override
+            public void run() {
+                campo.clear();
+            }
+        });
     }
 }

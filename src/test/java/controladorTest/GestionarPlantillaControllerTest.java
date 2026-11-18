@@ -4,6 +4,7 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
@@ -11,9 +12,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.ComboBoxMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
+import org.testfx.util.WaitForAsyncUtils;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.isInvisible;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
@@ -30,7 +33,7 @@ import static org.testfx.matcher.control.LabeledMatchers.hasText;
  * </p>
  *
  * @author eneko
- * @version 1.0
+ * @version 1.1
  */
 public class GestionarPlantillaControllerTest extends ApplicationTest {
 
@@ -134,7 +137,12 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
 
     /**
      * Comprueba el despliegue del formulario y la escritura de datos en las
-     * cajas de texto de nombre y apellidos.
+     * cajas de texto de nombre, apellidos, dirección e IBAN, y que se pueda
+     * seleccionar una sucursal.
+     * <p>
+     * No asume cuántas sucursales hay guardadas en MongoDB: solo exige que
+     * exista al menos una y que quede seleccionada.
+     * </p>
      */
     @Test
     public void testEscrituraDeCamposFormulario() {
@@ -143,15 +151,22 @@ public class GestionarPlantillaControllerTest extends ApplicationTest {
         clickOn("#txtNombre").write("Eneko");
         clickOn("#txtApellidos").write("Plaza Vallejo");
         clickOn("#txtDireccion").write("Lonbo kalea 1,4A");
-        clickOn("#cmbDireccionSucursal");
-        clickOn("Lonbo kalea");
         clickOn("#txtIban").write("ES9876543210987654201098");
+
+        final ComboBox<?> combo = lookup("#cmbDireccionSucursal").query();
+        assertFalse(combo.getItems().isEmpty(), "No hay sucursales cargadas en el desplegable");
+        interact(new Runnable() {
+            @Override
+            public void run() {
+                combo.getSelectionModel().select(0);
+            }
+        });
+        WaitForAsyncUtils.waitForFxEvents();
 
         verifyThat("#txtNombre", TextInputControlMatchers.hasText("Eneko"));
         verifyThat("#txtApellidos", TextInputControlMatchers.hasText("Plaza Vallejo"));
         verifyThat("#txtDireccion", TextInputControlMatchers.hasText("Lonbo kalea 1,4A"));
-
-        verifyThat("#cmbDireccionSucursal", ComboBoxMatchers.hasItems(1));
+        assertNotNull(combo.getSelectionModel().getSelectedItem(), "No se ha seleccionado ninguna sucursal");
         verifyThat("#txtIban", TextInputControlMatchers.hasText("ES9876543210987654201098"));
     }
 

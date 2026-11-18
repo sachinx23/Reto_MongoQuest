@@ -29,10 +29,8 @@ public class GestionLogController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Vinculamos la lista de texto al ListView
         verListaLogs.setItems(lineasLog);
         
-        // Cargamos los registros directamente
         cargarLogs();
     }
 

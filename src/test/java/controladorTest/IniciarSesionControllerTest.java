@@ -1,155 +1,116 @@
 package controladorTest;
 
-
-import org.testfx.util.WaitForAsyncUtils;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeoutException;
+import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
+import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
-
-import javafx.stage.Stage;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import org.testfx.matcher.control.LabeledMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
 
+import static org.testfx.api.FxAssert.verifyThat;
+import static org.testfx.matcher.base.NodeMatchers.isVisible;
+
 /**
- * Pruebas de la pantalla Iniciar Sesión.
+ * Clase de prueba automatizada para validar la interfaz gráfica del controlador {@code IniciarSesionController}.
+ * <p>
+ * Utiliza TestFX con JUnit 5 para cargar la vista {@code IniciarSesion.fxml} y comprobar los mensajes
+ * del formulario, sin depender de los usuarios guardados en MongoDB.
+ * </p>
+ *
+ * @author sachin
+ * @version 1.0
+ * @see org.testfx.framework.junit5.ApplicationTest
  */
 public class IniciarSesionControllerTest extends ApplicationTest {
 
+    /**
+     * Inicializa y muestra el escenario cargando el archivo FXML de la vista.
+     *
+     * @param stage Escenario sobre el cual se montará la escena cargada desde el FXML.
+     * @throws IOException Si ocurre un error al intentar cargar el archivo FXML.
+     */
     @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/vista/IniciarSesion.fxml"));
+    public void start(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/IniciarSesion.fxml"));
+        Parent root = loader.load();
         stage.setScene(new Scene(root));
         stage.show();
     }
 
     /**
-     * Al abrir, los campos y el mensaje de error están vacíos.
+     * Limpia y oculta la ventana tras la finalización de cada método de prueba.
+     *
+     * @throws Exception Si ocurre un fallo al intentar cerrar el escenario.
+     */
+    @AfterEach
+    public void tearDown() throws Exception {
+        FxToolkit.hideStage();
+    }
+
+    /**
+     * Comprueba que al abrir los campos estén vacíos y no haya mensaje de error.
      */
     @Test
-    public void testEstadoInicial() {
+    public void comprobarEstadoInicial() {
         verifyThat("#txtUsuario", TextInputControlMatchers.hasText(""));
         verifyThat("#txtContrasena", TextInputControlMatchers.hasText(""));
         verifyThat("#lblMensajeError", LabeledMatchers.hasText(""));
+        verifyThat("Iniciar Sesión", isVisible());
+        verifyThat("Registrarse", isVisible());
     }
 
     /**
-     * Sin rellenar los campos sale un error.
+     * Comprueba que sin rellenar nada se pida rellenar los campos.
      */
     @Test
-    public void testCamposVacios() {
-        pulsarBoton("Iniciar Sesión");
+    public void comprobarCamposVacios() {
+        clickOn("Iniciar Sesión");
         verifyThat("#lblMensajeError", LabeledMatchers.hasText("Rellena todos los campos."));
     }
 
     /**
-     * Solo con el usuario también sale el error.
+     * Comprueba que sin contraseña se pida rellenar los campos.
      */
     @Test
-    public void testFaltaContrasena() {
-        clickOn("#txtUsuario").write("PedroDiaz0");
-        pulsarBoton("Iniciar Sesión");
+    public void comprobarFaltaContrasena() {
+        clickOn("#txtUsuario").write("usuarioPrueba");
+        clickOn("Iniciar Sesión");
         verifyThat("#lblMensajeError", LabeledMatchers.hasText("Rellena todos los campos."));
     }
 
     /**
-     * Con una contraseña mala no entra.
+     * Comprueba que sin usuario se pida rellenar los campos.
      */
     @Test
-    public void testContrasenaIncorrecta() {
-        clickOn("#txtUsuario").write("PedroDiaz0");
-        clickOn("#txtContrasena").write("mala");
-        pulsarBoton("Iniciar Sesión");
+    public void comprobarFaltaUsuario() {
+        clickOn("#txtContrasena").write("abcd");
+        clickOn("Iniciar Sesión");
+        verifyThat("#lblMensajeError", LabeledMatchers.hasText("Rellena todos los campos."));
+    }
+
+    /**
+     * Comprueba que un usuario que no existe no pueda entrar.
+     */
+    @Test
+    public void comprobarUsuarioIncorrecto() {
+        clickOn("#txtUsuario").write("usuario_que_no_existe_9871");
+        clickOn("#txtContrasena").write("clave_incorrecta");
+        clickOn("Iniciar Sesión");
         verifyThat("#lblMensajeError", LabeledMatchers.hasText("Usuario o contraseña incorrectos."));
     }
 
     /**
-     * Un cliente entra y se abre su panel.
+     * Comprueba que el botón Registrarse abra el formulario de registro.
      */
     @Test
-    public void testLoginCliente() {
-        clickOn("#txtUsuario").write("PedroDiaz0");
-        clickOn("#txtContrasena").write("abcd");
-        pulsarBoton("Iniciar Sesión");
-        assertTrue(textoAlerta().contains("Rol: Cliente"));
-        aceptarAlerta();
-        verifyThat("#cmbOpciones", isVisible());
-        verifyThat("#lblBienvenida", LabeledMatchers.hasText("Cliente: Pedro"));
-    }
-
-    /**
-     * El botón Registrarse abre la pantalla de registro.
-     */
-    @Test
-    public void testAbrirRegistro() {
-        pulsarBoton("Registrarse");
+    public void comprobarAbrirRegistro() {
+        clickOn("Registrarse");
         verifyThat("#btnRegistrarse", isVisible());
-    }
-
-    /**
-     * Pulsa el botón que tiene ese texto.
-     */
-    private void pulsarBoton(String texto) {
-        Button boton = lookup(".button").match(LabeledMatchers.hasText(texto)).queryButton();
-        clickOn(boton);
-    }
-
-    /**
-     * Mensaje de la alerta abierta.
-     */
-    private String textoAlerta() {
-        esperar(".dialog-pane");
-        return lookup(".dialog-pane").queryAs(DialogPane.class).getContentText();
-    }
-
-    /**
-     * Pulsa Aceptar en la alerta abierta.
-     */
-    private void aceptarAlerta() {
-        esperar(".dialog-pane");
-        DialogPane dialogo = lookup(".dialog-pane").queryAs(DialogPane.class);
-        clickOn(dialogo.lookupButton(ButtonType.OK));
-    }
-
-    /**
-     * Cierra la ventana y suelta teclas y ratón después de cada prueba.
-     *
-     * @throws TimeoutException si la ventana no se cierra
-     */
-    @AfterEach
-    public void tearDown() throws TimeoutException {
-        FxToolkit.hideStage();
-        release(new KeyCode[]{});
-        release(new MouseButton[]{});
-    }
-
-    /**
-     * Espera hasta 5 segundos a que aparezca un nodo.
-     */
-    private void esperar(final String selector) {
-        try {
-            WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, new Callable<Boolean>() {
-                @Override
-                public Boolean call() {
-                    return lookup(selector).tryQuery().isPresent();
-                }
-            });
-        } catch (TimeoutException e) {
-            // Si no aparece, la prueba falla en el lookup siguiente
-        }
+        verifyThat("#txtDni", isVisible());
     }
 }

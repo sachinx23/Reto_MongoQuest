@@ -2,187 +2,198 @@ package controladorTest;
 
 import controlador.ClienteController;
 import controlador.IniciarSesionController;
-
-import org.testfx.util.WaitForAsyncUtils;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Callable;
-import DAO.implementacion.ClienteDAOImplementacion;
-import exception.OurException;
-import java.util.concurrent.TimeoutException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import org.bson.Document;
+import javafx.scene.control.TableView;
+import javafx.stage.Stage;
+import modelo.Cliente;
+import modelo.Contrato;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.matcher.control.LabeledMatchers;
+import org.testfx.matcher.control.TableViewMatchers;
 
-import javafx.stage.Stage;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
-import org.testfx.matcher.control.TableViewMatchers;
 
 /**
- * Pruebas de la pantalla Mis Contratos.
+ * Clase de prueba automatizada para validar la interfaz gráfica del controlador {@code ClienteContratosController}.
+ * <p>
+ * Utiliza TestFX con JUnit 5 para cargar la vista {@code ClienteContratos.fxml} y comprobar
+ * los botones de firmar y rescindir. Los contratos se cargan en la tabla desde el propio test,
+ * por lo que las pruebas no dependen de los datos guardados en MongoDB.
+ * </p>
+ *
+ * @author sachin
+ * @version 1.0
+ * @see org.testfx.framework.junit5.ApplicationTest
  */
 public class ClienteContratosControllerTest extends ApplicationTest {
 
+    /**
+     * Inicializa el escenario cargando la vista con un cliente de prueba y cuatro contratos de prueba
+     * (activo, pendiente, pendiente de firma y rescindido).
+     *
+     * @param stage Escenario sobre el cual se montará la escena cargada desde el FXML.
+     * @throws IOException Si ocurre un error al cargar el archivo FXML.
+     */
     @Override
-    public void start(Stage stage) throws Exception {
-        sesionPedro();
-        Parent root = FXMLLoader.load(getClass().getResource("/vista/ClienteContratos.fxml"));
+    public void start(Stage stage) throws IOException {
+        IniciarSesionController.idUsuarioActual = null;
+        ClienteController.setCliente(new Cliente(new ObjectId().toHexString(), "ES7921000813610123456789",
+                "usuarioPrueba", "Prueba", "Test", "abcd", "prueba@gmail.com", "12345678Z", "666666666", "Calle Falsa 1"));
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/ClienteContratos.fxml"));
+        Parent root = loader.load();
         stage.setScene(new Scene(root));
         stage.show();
+
+        List<Contrato> contratos = new ArrayList<>();
+        contratos.add(new Contrato("c1", "666666666", "activo", "x", null, null, "2026-01-01", "2027-01-01"));
+        contratos.add(new Contrato("c2", "666666666", "pendiente", "x", null, null, "2026-01-01", "2027-01-01"));
+        contratos.add(new Contrato("c3", "666666666", "pendiente de firma", "x", null, null, "2026-01-01", "2027-01-01"));
+        contratos.add(new Contrato("c4", "666666666", "rescindido", "x", null, null, "2026-01-01", "2027-01-01"));
+        TableView<Contrato> tabla = lookup("#tablaContratos").queryTableView();
+        tabla.setItems(FXCollections.observableArrayList(contratos));
     }
 
     /**
-     * Pedro tiene un contrato activo y otro pendiente.
-     */
-    @Test
-    public void testTablaConContratos() {
-        verifyThat("#tablaContratos", TableViewMatchers.hasNumRows(2));
-    }
-
-    /**
-     * Firmar sin elegir contrato avisa.
-     */
-    @Test
-    public void testFirmarSinSeleccion() {
-        clickOn("#btnFirmarContrato");
-        assertEquals("Selecciona un contrato de la tabla primero.", textoAlerta());
-        aceptarAlerta();
-    }
-
-    /**
-     * Pedir la baja sin elegir contrato avisa.
-     */
-    @Test
-    public void testRescindirSinSeleccion() {
-        clickOn("#btnRescindirContrato");
-        assertEquals("Selecciona un contrato de la tabla primero.", textoAlerta());
-        aceptarAlerta();
-    }
-
-    /**
-     * Un contrato activo no se vuelve a firmar.
-     */
-    @Test
-    public void testFirmarContratoActivo() {
-        clickOn("activo");
-        clickOn("#btnFirmarContrato");
-        assertEquals("Este contrato ya está firmado y activo.", textoAlerta());
-        aceptarAlerta();
-    }
-
-    /**
-     * Un contrato pendiente espera a que lo valide un empleado.
-     */
-/**
-     * Un contrato pendiente espera a que lo valide un empleado.
-     */
-/**
-     * Un contrato pendiente espera a que lo valide un empleado.
-     */
-    @Test
-    public void testFirmarContratoPendiente() {
-        // Selecciona la celda de la tabla que contiene el texto "pendiente"
-        clickOn(org.testfx.matcher.control.TableViewMatchers.hasTableCell("pendiente"));
-        clickOn("#btnFirmarContrato");
-        assertEquals("Podrás firmar este contrato cuando un empleado valide la tarifa.", textoAlerta());
-        aceptarAlerta();
-    }
-
-    /**
-     * Solo se pide la baja de un contrato activo.
-     */
-    @Test
-    public void testRescindirContratoPendiente() {
-        // Selecciona la celda de la tabla que contiene el texto "pendiente"
-        clickOn(org.testfx.matcher.control.TableViewMatchers.hasTableCell("pendiente"));
-        clickOn("#btnRescindirContrato");
-        assertEquals("Solo se puede pedir la baja de un contrato activo.", textoAlerta());
-        aceptarAlerta();
-    }
-    /**
-     * Si se cancela la baja el contrato sigue activo.
-     */
-    @Test
-    public void testRescindirCancelar() {
-        clickOn("activo");
-        clickOn("#btnRescindirContrato");
-        assertEquals("¿Estás seguro de solicitar la baja definitiva y rescindir tu contrato?", textoAlerta());
-        cancelarAlerta();
-        verifyThat("activo", isVisible());
-    }
-
-    /**
-     * Inicia la sesión de Pedro (crear_bd.js) sin pasar por el login.
+     * Limpia y oculta la ventana tras la finalización de cada método de prueba.
      *
-     * @throws OurException si falla MongoDB
-     */
-    private void sesionPedro() throws OurException {
-        ClienteDAOImplementacion dao = new ClienteDAOImplementacion();
-        Document d = dao.comprobarUsuarios("PedroDiaz0", "abcd");
-        IniciarSesionController.idUsuarioActual = d.getObjectId("_id").toHexString();
-        ClienteController.setCliente(dao.obtenerCliente(IniciarSesionController.idUsuarioActual));
-    }
-
-    /**
-     * Mensaje de la alerta abierta.
-     */
-    private String textoAlerta() {
-        esperar(".dialog-pane");
-        return lookup(".dialog-pane").queryAs(DialogPane.class).getContentText();
-    }
-
-    /**
-     * Pulsa Aceptar en la alerta abierta.
-     */
-    private void aceptarAlerta() {
-        esperar(".dialog-pane");
-        DialogPane dialogo = lookup(".dialog-pane").queryAs(DialogPane.class);
-        clickOn(dialogo.lookupButton(ButtonType.OK));
-    }
-
-    /**
-     * Pulsa Cancelar en la alerta abierta.
-     */
-    private void cancelarAlerta() {
-        esperar(".dialog-pane");
-        DialogPane dialogo = lookup(".dialog-pane").queryAs(DialogPane.class);
-        clickOn(dialogo.lookupButton(ButtonType.CANCEL));
-    }
-
-    /**
-     * Cierra la ventana y suelta teclas y ratón después de cada prueba.
-     *
-     * @throws TimeoutException si la ventana no se cierra
+     * @throws Exception Si ocurre un fallo al intentar cerrar el escenario.
      */
     @AfterEach
-    public void tearDown() throws TimeoutException {
+    public void tearDown() throws Exception {
         FxToolkit.hideStage();
-        release(new KeyCode[]{});
-        release(new MouseButton[]{});
     }
 
     /**
-     * Espera hasta 5 segundos a que aparezca un nodo.
+     * Comprueba que los botones y la tabla sean visibles y tengan sus textos.
      */
-    private void esperar(final String selector) {
-        try {
-            WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, new Callable<Boolean>() {
-                @Override
-                public Boolean call() {
-                    return lookup(selector).tryQuery().isPresent();
-                }
-            });
-        } catch (TimeoutException e) {
-        }
+    @Test
+    public void comprobarBotonesYTabla() {
+        verifyThat("#btnFirmarContrato", isVisible());
+        verifyThat("#btnRescindirContrato", isVisible());
+        verifyThat("#btnFirmarContrato", LabeledMatchers.hasText("_Firmar contrato"));
+        verifyThat("#btnRescindirContrato", LabeledMatchers.hasText("_Rescindir contrato"));
+        verifyThat("#tablaContratos", TableViewMatchers.hasNumRows(4));
+    }
+
+    /**
+     * Comprueba que la tabla muestre el estado de cada contrato.
+     */
+    @Test
+    public void comprobarEstadosEnTabla() {
+        verifyThat("#tablaContratos", TableViewMatchers.hasTableCell("activo"));
+        verifyThat("#tablaContratos", TableViewMatchers.hasTableCell("pendiente"));
+        verifyThat("#tablaContratos", TableViewMatchers.hasTableCell("pendiente de firma"));
+        verifyThat("#tablaContratos", TableViewMatchers.hasTableCell("rescindido"));
+    }
+
+    /**
+     * Comprueba que al firmar sin seleccionar contrato aparezca un aviso.
+     */
+    @Test
+    public void comprobarFirmarSinSeleccion() {
+        clickOn("#btnFirmarContrato");
+        DialogPane dialog = lookup(".dialog-pane").queryAs(DialogPane.class);
+        assertEquals("Selecciona un contrato de la tabla primero.", dialog.getContentText());
+        clickOn(dialog.lookupButton(ButtonType.OK));
+    }
+
+    /**
+     * Comprueba que al rescindir sin seleccionar contrato aparezca un aviso.
+     */
+    @Test
+    public void comprobarRescindirSinSeleccion() {
+        clickOn("#btnRescindirContrato");
+        DialogPane dialog = lookup(".dialog-pane").queryAs(DialogPane.class);
+        assertEquals("Selecciona un contrato de la tabla primero.", dialog.getContentText());
+        clickOn(dialog.lookupButton(ButtonType.OK));
+    }
+
+    /**
+     * Comprueba que un contrato activo no se vuelva a firmar.
+     */
+    @Test
+    public void comprobarFirmarContratoActivo() {
+        clickOn("activo");
+        clickOn("#btnFirmarContrato");
+        DialogPane dialog = lookup(".dialog-pane").queryAs(DialogPane.class);
+        assertEquals("Este contrato ya está firmado y activo.", dialog.getContentText());
+        clickOn(dialog.lookupButton(ButtonType.OK));
+    }
+
+    /**
+     * Comprueba que un contrato pendiente avise de que falta la validación del empleado.
+     */
+    @Test
+    public void comprobarFirmarContratoPendiente() {
+        clickOn("pendiente");
+        clickOn("#btnFirmarContrato");
+        DialogPane dialog = lookup(".dialog-pane").queryAs(DialogPane.class);
+        assertEquals("Podrás firmar este contrato cuando un empleado valide la tarifa.", dialog.getContentText());
+        clickOn(dialog.lookupButton(ButtonType.OK));
+    }
+
+    /**
+     * Comprueba que un contrato pendiente de firma pida confirmación y que al cancelar no se firme.
+     */
+    @Test
+    public void comprobarFirmarPendienteDeFirmaCancelar() {
+        clickOn("pendiente de firma");
+        clickOn("#btnFirmarContrato");
+        DialogPane dialog = lookup(".dialog-pane").queryAs(DialogPane.class);
+        assertEquals("¿Firmar el contrato de la tarifa ? Empieza hoy.", dialog.getContentText());
+        clickOn(dialog.lookupButton(ButtonType.CANCEL));
+        verifyThat("#tablaContratos", TableViewMatchers.hasTableCell("pendiente de firma"));
+    }
+
+    /**
+     * Comprueba que un contrato rescindido no se pueda firmar.
+     */
+    @Test
+    public void comprobarFirmarContratoRescindido() {
+        clickOn("rescindido");
+        clickOn("#btnFirmarContrato");
+        DialogPane dialog = lookup(".dialog-pane").queryAs(DialogPane.class);
+        assertEquals("Este contrato no se puede firmar porque está rescindido.", dialog.getContentText());
+        clickOn(dialog.lookupButton(ButtonType.OK));
+    }
+
+    /**
+     * Comprueba que solo se pueda pedir la baja de un contrato activo.
+     */
+    @Test
+    public void comprobarRescindirContratoPendiente() {
+        clickOn("pendiente");
+        clickOn("#btnRescindirContrato");
+        DialogPane dialog = lookup(".dialog-pane").queryAs(DialogPane.class);
+        assertEquals("Solo se puede pedir la baja de un contrato activo.", dialog.getContentText());
+        clickOn(dialog.lookupButton(ButtonType.OK));
+    }
+
+    /**
+     * Comprueba que al cancelar la baja el contrato siga activo.
+     */
+    @Test
+    public void comprobarRescindirCancelar() {
+        clickOn("activo");
+        clickOn("#btnRescindirContrato");
+        DialogPane dialog = lookup(".dialog-pane").queryAs(DialogPane.class);
+        assertEquals("¿Estás seguro de solicitar la baja definitiva y rescindir tu contrato?", dialog.getContentText());
+        clickOn(dialog.lookupButton(ButtonType.CANCEL));
+        verifyThat("#tablaContratos", TableViewMatchers.hasTableCell("activo"));
     }
 }

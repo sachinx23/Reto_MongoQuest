@@ -157,6 +157,8 @@
                 <configuration>
                     <show>private</show>
                     <nohelp>true</nohelp>
+                    <doclint>none</doclint>
+                    <detectJavaApiLink>false</detectJavaApiLink>
                 </configuration>
             </plugin>
 

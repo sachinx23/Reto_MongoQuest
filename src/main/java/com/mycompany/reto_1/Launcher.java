@@ -9,7 +9,6 @@ package com.mycompany.reto_1;
 public class Launcher {
     
     public static void main(String[] args) {
-        // Llama al main estándar de tu clase JavaFX principal
         App.main(args);
     }
-}
+} 

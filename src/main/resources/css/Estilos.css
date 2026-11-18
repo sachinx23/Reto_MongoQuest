@@ -1,26 +1,37 @@
 /* =====================================================
    Tel-ONDA - UI Enterprise Professional Edition (JavaFX)
+   VERSION RESPONSIVE
+
+   Idea: todas las medidas estan en "em" (relativas al tamano de
+   letra). La clase util.Responsive cambia el tamano de letra de la
+   raiz segun el tamano de la ventana, y con ello escala toda la
+   interfaz. Ademas anade a la raiz una de estas clases:
+       pantalla-compacta  (ancho menor de 900)
+       pantalla-media     (de 900 a 1400)
+       pantalla-amplia    (1400 o mas)
+   que se usan al final de este archivo como "media queries".
    ===================================================== */
 
 /* ---------- PALETA ELEGANTE Y SUAVE ---------- */
 .root {
     /* Colores Marca Nobles */
-    -azul-marino:    #093B7B; /* Color corporativo principal */
-    -azul-oceano:    #0052A3; /* Color secundario para botones de acción */
-    -azul-seleccion: #E0F2FE; /* Selección suave en tablas y listas */
-    -turquesa-foco:  #00A38F; /* Borde discreto al enfocar inputs */
-    
+    -azul-marino:    #093B7B;
+    -azul-oceano:    #0052A3;
+    -azul-seleccion: #E0F2FE;
+    -turquesa-foco:  #00A38F;
+
     /* Superficies Neutras */
-    -bg-app:         #F4F7FA; /* Fondo ártico claro */
+    -bg-app:         #F4F7FA;
     -bg-card:        #FFFFFF;
     -border-card:    #E2E8F0;
-    
+
     /* Textos */
     -text-title:     #0F172A;
     -text-body:      #334155;
     -text-muted:     #64748B;
 
     -fx-font-family: "Segoe UI", "Inter", -apple-system, sans-serif;
+    /* Valor por defecto; Responsive.java lo sustituye segun la ventana */
     -fx-font-size: 13px;
     -fx-background-color: -bg-app;
 }
@@ -40,19 +51,19 @@
 /* ---------- BARRA SUPERIOR (HEADER SOBRIO) ---------- */
 .barra-superior {
     -fx-background-color: -azul-marino;
-    -fx-padding: 12px 20px;
-    -fx-background-radius: 10px;
+    -fx-padding: 0.9em 1.5em;
+    -fx-background-radius: 0.75em;
     -fx-effect: dropshadow(three-pass-box, rgba(9, 59, 123, 0.15), 8, 0, 0, 2);
 }
 
 .titulo-barra {
-    -fx-font-size: 15px;
+    -fx-font-size: 1.15em;
     -fx-font-weight: bold;
     -fx-text-fill: #FFFFFF;
 }
 
 .nombre-usuario {
-    -fx-font-size: 14px;
+    -fx-font-size: 1.1em;
     -fx-font-weight: bold;
     -fx-text-fill: #E2E8F0;
 }
@@ -68,9 +79,9 @@
 #cbOpcionesEmpleado,
 #cmbOpciones {
     -fx-background-color: #FFFFFF;
-    -fx-background-radius: 6px;
+    -fx-background-radius: 0.45em;
     -fx-border-color: transparent;
-    -fx-padding: 2px 8px;
+    -fx-padding: 0.15em 0.6em;
     -fx-font-weight: 600;
 }
 
@@ -87,15 +98,15 @@
 /* ---------- COMBOBOX GENERALES Y FORMULARIOS ---------- */
 .combo-box {
     -fx-background-color: #FFFFFF;
-    -fx-background-radius: 6px;
+    -fx-background-radius: 0.45em;
     -fx-border-color: #CBD5E1;
-    -fx-border-radius: 6px;
+    -fx-border-radius: 0.45em;
     -fx-border-width: 1px;
-    -fx-padding: 2px 6px;
+    -fx-padding: 0.15em 0.45em;
     -fx-cursor: hand;
 }
 
-/* Quita el fondo interno en los ComboBox estándar */
+/* Quita el fondo interno en los ComboBox estandar */
 .combo-box .list-cell {
     -fx-background-color: transparent !important;
     -fx-text-fill: -text-title;
@@ -106,12 +117,12 @@
     -fx-border-color: -azul-oceano;
 }
 
-/* Menú desplegable emergente al hacer clic */
+/* Menu desplegable emergente al hacer clic */
 .combo-box-popup .list-view {
     -fx-background-color: #FFFFFF;
     -fx-border-color: -border-card;
-    -fx-background-radius: 6px;
-    -fx-border-radius: 6px;
+    -fx-background-radius: 0.45em;
+    -fx-border-radius: 0.45em;
     -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.1), 8, 0, 0, 2);
 }
 
@@ -120,7 +131,7 @@
     -fx-text-fill: -text-title;
 }
 
-.combo-box-popup .list-cell:hover, 
+.combo-box-popup .list-cell:hover,
 .combo-box-popup .list-cell:filled:selected {
     -fx-background-color: -azul-seleccion !important;
     -fx-text-fill: -azul-marino !important;
@@ -130,28 +141,28 @@
 /* ---------- TARJETAS ESTRUCTURALES ---------- */
 .card {
     -fx-background-color: -bg-card;
-    -fx-background-radius: 10px;
+    -fx-background-radius: 0.75em;
     -fx-border-color: -border-card;
-    -fx-border-radius: 10px;
+    -fx-border-radius: 0.75em;
     -fx-border-width: 1px;
-    -fx-padding: 18px;
-    -fx-spacing: 12px;
+    -fx-padding: 1.4em;
+    -fx-spacing: 0.9em;
     -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 10, 0, 0, 2);
 }
 
 .form-box {
-    -fx-spacing: 10px;
+    -fx-spacing: 0.75em;
 }
 
-/* ---------- TÍTULOS Y ETIQUETAS ---------- */
+/* ---------- TITULOS Y ETIQUETAS ---------- */
 .titulo-principal, .titulo-vista {
-    -fx-font-size: 18px;
+    -fx-font-size: 1.4em;
     -fx-font-weight: bold;
     -fx-text-fill: -azul-marino;
 }
 
 .label-bold, .form-label {
-    -fx-font-size: 13px;
+    -fx-font-size: 1em;
     -fx-font-weight: 700;
     -fx-text-fill: -text-title;
 }
@@ -159,11 +170,11 @@
 /* ---------- CAMPOS DE ENTRADA ---------- */
 .text-field, .password-field, .text-area {
     -fx-background-color: #FFFFFF;
-    -fx-background-radius: 6px;
+    -fx-background-radius: 0.45em;
     -fx-border-color: #CBD5E1;
-    -fx-border-radius: 6px;
+    -fx-border-radius: 0.45em;
     -fx-border-width: 1px;
-    -fx-padding: 8px 12px;
+    -fx-padding: 0.6em 0.9em;
     -fx-prompt-text-fill: -text-muted;
     -fx-text-fill: -text-title;
 }
@@ -172,76 +183,110 @@
     -fx-border-color: -azul-oceano;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 82, 163, 0.15), 4, 0, 0, 0);
 }
-
-/* ---------- TABLAS LIMPIAS Y SUAVES ---------- */
+/* ---------- TABLAS ---------- */
 .table-view {
     -fx-background-color: #FFFFFF;
-    -fx-background-radius: 8px;
+    -fx-background-radius: 0.6em;
     -fx-border-color: -border-card;
-    -fx-border-radius: 8px;
+    -fx-border-radius: 0.6em;
+    -fx-padding: 0;
 }
 
-/* Cabecera Azul Marino Nobre */
+.table-view:focused {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: -azul-oceano;
+}
+
+/* Cabecera Azul Marino Noble */
 .table-view .column-header-background {
     -fx-background-color: -azul-marino;
-    -fx-background-radius: 7px 7px 0 0;
+    -fx-background-radius: 0.55em 0.55em 0 0;
+    -fx-padding: 0;
 }
 
-.table-view .column-header, .table-view .filler {
+.table-view .column-header-background .filler,
+.table-view .show-hide-columns-button {
+    -fx-background-color: -azul-marino;
+    -fx-border-color: transparent;
+}
+
+.table-view .column-header {
     -fx-background-color: transparent;
-    -fx-size: 38px;
-    -fx-border-color: transparent transparent #CBD5E1 transparent;
+    -fx-size: 2.9em;
+    -fx-border-color: transparent rgba(255, 255, 255, 0.15) transparent transparent;
+    -fx-border-width: 0 1px 0 0;
 }
 
 .table-view .column-header .label {
     -fx-text-fill: #FFFFFF !important;
-    -fx-font-size: 13px;
+    -fx-font-size: 0.98em;
     -fx-font-weight: 700;
     -fx-alignment: center-left;
-    -fx-padding: 0 12px;
+    -fx-padding: 0 0.7em;
+    -fx-text-overrun: ellipsis;
+}
+
+.table-view .column-header .arrow {
+    -fx-background-color: #FFFFFF;
 }
 
 /* Filas de la Tabla */
 .table-row-cell {
-    -fx-cell-size: 36px;
+    -fx-background-color: #FFFFFF;
+    -fx-cell-size: 2.8em;
     -fx-border-color: transparent transparent #F1F5F9 transparent;
+    -fx-border-width: 0 0 1px 0;
 }
 
 .table-row-cell:odd {
     -fx-background-color: #F8FAFC;
 }
 
-.table-row-cell:hover {
+.table-row-cell:filled:hover {
     -fx-background-color: #F1F5F9;
     -fx-cursor: hand;
 }
 
-/* Selección Suave en Azul Claro */
-.table-row-cell:selected, .table-row-cell:odd:selected {
+/* Evita efectos hover o bordes raros en filas vacias */
+.table-row-cell:empty {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent;
+}
+
+.table-row-cell:empty .table-cell {
+    -fx-border-color: transparent;
+}
+
+/* Seleccion Suave en Azul Claro */
+.table-row-cell:filled:selected,
+.table-row-cell:odd:filled:selected {
     -fx-background-color: -azul-seleccion;
 }
 
-.table-row-cell:selected .table-cell {
+.table-row-cell:filled:selected .table-cell {
     -fx-text-fill: -azul-marino !important;
     -fx-font-weight: bold;
 }
 
 .table-cell {
     -fx-alignment: center-left;
-    -fx-padding: 0 12px;
+    -fx-padding: 0 0.7em;
     -fx-text-fill: -text-body;
+    -fx-border-color: transparent #F1F5F9 transparent transparent;
+    -fx-border-width: 0 1px 0 0;
+    -fx-text-overrun: ellipsis;
 }
 
 /* ---------- LISTVIEW ---------- */
 .list-view {
     -fx-background-color: #FFFFFF;
-    -fx-background-radius: 6px;
+    -fx-background-radius: 0.45em;
     -fx-border-color: #CBD5E1;
-    -fx-border-radius: 6px;
+    -fx-border-radius: 0.45em;
 }
 
 .list-cell {
-    -fx-padding: 8px 12px;
+    -fx-padding: 0.6em 0.9em;
     -fx-text-fill: -text-body;
 }
 
@@ -260,14 +305,14 @@
     -fx-font-weight: bold;
 }
 
-/* ---------- BOTONES ELEGANTES Y MÁS MATE ---------- */
+/* ---------- BOTONES ELEGANTES Y MAS MATE ---------- */
 .button {
-    -fx-padding: 8px 18px;
-    -fx-min-height: 36px;
-    -fx-font-size: 13px;
+    -fx-padding: 0.6em 1.4em;
+    -fx-min-height: 2.8em;
+    -fx-font-size: 1em;
     -fx-font-weight: 700;
     -fx-cursor: hand;
-    -fx-background-radius: 6px;
+    -fx-background-radius: 0.45em;
     -fx-text-fill: #FFFFFF;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 4, 0, 0, 1);
 }
@@ -331,27 +376,37 @@
 }
 .scroll-bar .thumb {
     -fx-background-color: #CBD5E1;
-    -fx-background-radius: 8px;
+    -fx-background-radius: 0.6em;
 }
 .scroll-bar .thumb:hover {
     -fx-background-color: #94A3B8;
 }
+
 /* =====================================================
-   TARJETAS DE TARIFAS FLOTANTES (DIVS DINÁMICOS)
+   TARJETAS DE TARIFAS FLOTANTES (DIVS DINAMICOS)
    ===================================================== */
+
+/* Contenedor de las tarjetas: poner este estilo al FlowPane.
+   El FlowPane reparte las tarjetas en tantas columnas como quepan. */
+.flow-tarifas {
+    -fx-hgap: 1em;
+    -fx-vgap: 1em;
+    -fx-padding: 0.5em;
+    -fx-alignment: top-left;
+}
 
 /* Contenedor tipo div flotante para cada tarifa */
 .tarjeta-tarifa {
     -fx-background-color: #FFFFFF;
-    -fx-background-radius: 12px;
+    -fx-background-radius: 0.9em;
     -fx-border-color: -border-card;
-    -fx-border-radius: 12px;
+    -fx-border-radius: 0.9em;
     -fx-border-width: 1.5px;
-    -fx-padding: 18px;
-    -fx-spacing: 10px;
-    -fx-min-width: 250px;
-    -fx-pref-width: 280px;
-    -fx-max-width: 310px;
+    -fx-padding: 1.4em;
+    -fx-spacing: 0.75em;
+    -fx-min-width: 19em;
+    -fx-pref-width: 21.5em;
+    -fx-max-width: 24em;
     -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.05), 8, 0, 0, 2);
     -fx-cursor: hand;
 }
@@ -373,34 +428,85 @@
 .badge-tipo-tarifa {
     -fx-background-color: #E0F2FE;
     -fx-text-fill: -azul-marino;
-    -fx-font-size: 11px;
+    -fx-font-size: 0.85em;
     -fx-font-weight: bold;
-    -fx-padding: 3px 8px;
-    -fx-background-radius: 12px;
+    -fx-padding: 0.25em 0.6em;
+    -fx-background-radius: 0.9em;
 }
 
-/* Título de la tarifa */
+/* Titulo de la tarifa */
 .titulo-tarifa-card {
-    -fx-font-size: 15px;
+    -fx-font-size: 1.15em;
     -fx-font-weight: bold;
     -fx-text-fill: -text-title;
 }
 
 /* Bloque del precio */
 .precio-tarifa-card {
-    -fx-font-size: 22px;
+    -fx-font-size: 1.7em;
     -fx-font-weight: 800;
     -fx-text-fill: -azul-marino;
 }
 
 .precio-periodo {
-    -fx-font-size: 12px;
+    -fx-font-size: 0.9em;
     -fx-text-fill: -text-muted;
 }
 
 /* Detalles */
 .detalles-tarifa-card {
-    -fx-font-size: 12px;
+    -fx-font-size: 0.9em;
     -fx-text-fill: -text-body;
     -fx-wrap-text: true;
+}
+
+/* =====================================================
+   RESPONSIVE: "media queries" a base de clases en la raiz
+   (las pone util.Responsive segun el ancho de la ventana)
+   ===================================================== */
+
+/* ---- Ventana estrecha (movil, ventana pequena) ---- */
+.pantalla-compacta .card {
+    -fx-padding: 0.8em;
+    -fx-spacing: 0.6em;
+}
+
+.pantalla-compacta .barra-superior {
+    -fx-padding: 0.5em 0.8em;
+}
+
+.pantalla-compacta .titulo-principal,
+.pantalla-compacta .titulo-vista {
+    -fx-font-size: 1.2em;
+}
+
+.pantalla-compacta .button {
+    -fx-padding: 0.45em 0.9em;
+    -fx-min-height: 2.2em;
+}
+
+.pantalla-compacta .table-row-cell {
+    -fx-cell-size: 2.4em;
+}
+
+.pantalla-compacta .table-cell {
+    -fx-padding: 0 0.5em;
+}
+
+.pantalla-compacta .tarjeta-tarifa {
+    -fx-padding: 0.9em;
+    -fx-min-width: 14em;
+    -fx-pref-width: 16em;
+    -fx-max-width: 20em;
+}
+
+/* ---- Ventana grande (monitor ancho) ---- */
+.pantalla-amplia .card {
+    -fx-padding: 1.6em;
+    -fx-spacing: 1em;
+}
+
+.pantalla-amplia .tarjeta-tarifa {
+    -fx-pref-width: 22em;
+    -fx-max-width: 26em;
 }

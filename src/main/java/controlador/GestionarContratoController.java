@@ -22,150 +22,101 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import modelo.Contrato;
 import DAO.ContratoDAO;
+import DAO.MongoDBConexion;
 import DAO.implementacion.ContratoDAOImplementacion;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 /**
- * Controlador de la vista de gestión de contratos para empleados y
- * administradores en JavaFX. Permite consultar y filtrar los contratos
- * registrados por teléfono o estado, así como aprobar peticiones pendientes
- * (pasándolas a {@code "pendiente de firma"}), rechazarlas o rescindir
- * contratos actualmente activos.
+ * Controlador de la vista de gestión de contratos en JavaFX.
+ * Permite listar, filtrar, aceptar, rechazar y rescindir contratos,
+ * mostrando los nombres de clientes, tarifas y gestores en lugar de sus IDs.
  *
  * @author Eneko.Plaza
  */
 public class GestionarContratoController implements Initializable {
 
-    /**
-     * Registrador de eventos (Logger) para trazar advertencias y operaciones
-     * del controlador.
-     */
+    /** Registrador de eventos para trazas y errores. */
     private static final Logger LOGGER = Logger.getLogger(GestionarContratoController.class.getName());
 
-    /**
-     * Campo de texto utilizado para filtrar los contratos por número de
-     * teléfono.
-     */
+    /** Campo de texto para filtrar por teléfono. */
     @FXML
     private TextField txtFiltroTelefono;
 
-    /**
-     * Selector desplegable utilizado para filtrar los contratos según su
-     * estado.
-     */
+    /** Desplegable para filtrar por estado del contrato. */
     @FXML
     private ComboBox<String> comboFiltroEstado;
 
-    /**
-     * Tabla principal donde se muestran los contratos del sistema.
-     */
+    /** Tabla principal de contratos. */
     @FXML
     private TableView<Contrato> tablaContratos;
 
-    /**
-     * Columna de la tabla que muestra el identificador único del contrato.
-     */
+    /** Columna con el ID del contrato. */
     @FXML
     private TableColumn<Contrato, String> colIdContrato;
 
-    /**
-     * Columna de la tabla que muestra el teléfono asociado al contrato.
-     */
+    /** Columna con el teléfono del contrato. */
     @FXML
     private TableColumn<Contrato, String> colTelefono;
 
-    /**
-     * Columna de la tabla que muestra el identificador del cliente titular.
-     */
+    /** Columna con el nombre del cliente. */
     @FXML
     private TableColumn<Contrato, String> colIdCliente;
 
-    /**
-     * Columna de la tabla que muestra el identificador de la tarifa contratada.
-     */
+    /** Columna con el nombre/tipo de la tarifa. */
     @FXML
     private TableColumn<Contrato, String> colIdTarifa;
 
-    /**
-     * Columna de la tabla que muestra el identificador del empleado que
-     * gestionó el contrato.
-     */
+    /** Columna con el empleado o admin que aceptó el contrato. */
     @FXML
     private TableColumn<Contrato, String> colIdEmpleado;
 
-    /**
-     * Columna de la tabla que refleja el estado actual del contrato.
-     */
+    /** Columna con el estado del contrato. */
     @FXML
     private TableColumn<Contrato, String> colEstado;
 
-    /**
-     * Columna de la tabla que muestra la fecha de inicio de vigencia del
-     * contrato.
-     */
+    /** Columna con la fecha de inicio. */
     @FXML
     private TableColumn<Contrato, String> colFechaInicio;
 
-    /**
-     * Columna de la tabla que muestra la fecha de finalización del contrato.
-     */
+    /** Columna con la fecha de fin. */
     @FXML
     private TableColumn<Contrato, String> colFechaFin;
 
-    /**
-     * Botón para aprobar una solicitud de contrato en estado
-     * {@code "pendiente"}.
-     */
+    /** Botón para aceptar una petición pendiente. */
     @FXML
     private Button btnAceptarPeticion;
 
-    /**
-     * Botón para denegar una solicitud de contrato en estado
-     * {@code "pendiente"}.
-     */
+    /** Botón para rechazar una petición pendiente. */
     @FXML
     private Button btnRechazarPeticion;
 
-    /**
-     * Botón para dar de baja o rescindir un contrato que se encuentra
-     * {@code "activo"}.
-     */
+    /** Botón para rescindir un contrato activo. */
     @FXML
     private Button btnRescindirContrato;
 
-    /**
-     * Botón para restablecer los filtros de búsqueda y recargar la tabla
-     * completa.
-     */
+    /** Botón para limpiar los filtros y recargar la tabla. */
     @FXML
     private Button btnRefrescar;
 
-    /**
-     * Referencia al {@link Contrato} actualmente seleccionado en
-     * {@code tablaContratos}.
-     */
+    /** Contrato seleccionado actualmente en la tabla. */
     private Contrato contratoSeleccionado;
 
-    /**
-     * Objeto de acceso a datos para realizar consultas y cambios de estado
-     * sobre los contratos.
-     */
+    /** DAO para acceder a los contratos en MongoDB. */
     private final ContratoDAO contratoDAO = new ContratoDAOImplementacion();
 
     /**
-     * Inicializa el controlador tras cargar su archivo FXML. Carga las opciones
-     * de estado en el filtro desplegable, configura las factorías de celdas de
-     * las columnas de {@code tablaContratos}, carga el listado inicial y
-     * registra un listener de selección para habilitar o deshabilitar los
-     * botones de acción.
+     * Inicializa la vista, rellena el desplegable de estados, enlaza las
+     * columnas de la tabla y carga los contratos iniciales.
      *
-     * @param url Ubicación utilizada para resolver rutas relativas del objeto
-     * raíz, o {@code null} si no se conoce.
-     * @param rb Recursos utilizados para localizar el objeto raíz, o
-     * {@code null} si no se localizó.
+     * @param url Ubicación del FXML.
+     * @param rb Recursos de internacionalización.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ObservableList<String> estados = FXCollections.observableArrayList(
+        ObservableList<String> listaEstados = FXCollections.observableArrayList(
                 "Todos",
                 "pendiente",
                 "pendiente de firma",
@@ -174,7 +125,7 @@ public class GestionarContratoController implements Initializable {
                 "caducado",
                 "rechazado"
         );
-        comboFiltroEstado.setItems(estados);
+        comboFiltroEstado.setItems(listaEstados);
         comboFiltroEstado.setValue("Todos");
 
         colIdContrato.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -190,24 +141,157 @@ public class GestionarContratoController implements Initializable {
 
         tablaContratos.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Contrato>() {
             @Override
-            public void changed(ObservableValue<? extends Contrato> obs, Contrato oldSel, Contrato newSel) {
-                contratoSeleccionado = newSel;
+            public void changed(ObservableValue<? extends Contrato> obs, Contrato anterior, Contrato nuevo) {
+                contratoSeleccionado = nuevo;
                 actualizarEstadoBotones();
             }
         });
     }
 
     /**
-     * Recupera todos los contratos desde la base de datos mediante
-     * {@link ContratoDAO#listarContratos()}, los carga en
-     * {@code tablaContratos} y reinicia la selección actual.
+     * Recorre la lista de contratos y sustituye los IDs de cliente, tarifa y
+     * empleado/admin por sus nombres reales obtenidos de MongoDB.
+     *
+     * @param listaContratos Lista de contratos a traducir.
+     */
+    private void nombresVisibles(List<Contrato> listaContratos) {
+        if (listaContratos == null) {
+            return;
+        }
+
+        try {
+            MongoDatabase baseDatos = MongoDBConexion.getDatabase();
+
+            for (int i = 0; i < listaContratos.size(); i++) {
+                Contrato contrato = listaContratos.get(i);
+
+                String nombreCliente = buscarNombreCliente(baseDatos, contrato.getIdCliente(), contrato.getTelefono());
+                contrato.setIdCliente(nombreCliente);
+
+                String nombreTarifa = buscarNombreTarifa(baseDatos, contrato.getIdTarifa());
+                contrato.setIdTarifa(nombreTarifa);
+
+                String nombreGestor = buscarNombreGestor(baseDatos, contrato.getIdEmpleado());
+                contrato.setIdEmpleado(nombreGestor);
+            }
+        } catch (Exception e) {
+            LOGGER.warning("Error al traducir los nombres de los contratos: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Busca el nombre de un cliente en la colección Clientes por su ID o, si
+     * no lo encuentra, por su número de teléfono.
+     *
+     * @param baseDatos Conexión a la base de datos MongoDB.
+     * @param idCliente ID del cliente en el contrato.
+     * @param telefono Teléfono del contrato por si el ID no existe.
+     * @return Nombre completo del cliente o "Cliente no encontrado".
+     */
+    private String buscarNombreCliente(MongoDatabase baseDatos, String idCliente, String telefono) {
+        MongoCollection<Document> coleccionClientes = baseDatos.getCollection("Clientes");
+        Document clienteDoc = null;
+
+        if (idCliente != null && ObjectId.isValid(idCliente)) {
+            Document filtroId = new Document("_id", new ObjectId(idCliente));
+            clienteDoc = coleccionClientes.find(filtroId).first();
+        }
+
+        if (clienteDoc == null && telefono != null && !telefono.trim().isEmpty()) {
+            Document filtroTel = new Document("telefono", telefono.trim());
+            clienteDoc = coleccionClientes.find(filtroTel).first();
+        }
+
+        if (clienteDoc != null) {
+            String nombre = clienteDoc.getString("nombre");
+            String apellidos = clienteDoc.getString("apellidos");
+            if (nombre != null && apellidos != null) {
+                return nombre + " " + apellidos;
+            } else if (nombre != null) {
+                return nombre;
+            }
+        }
+
+        return "Cliente no encontrado";
+    }
+
+    /**
+     * Busca el tipo y nombre de una tarifa en la colección Tarifas.
+     *
+     * @param baseDatos Conexión a la base de datos MongoDB.
+     * @param idTarifa ID de la tarifa.
+     * @return Tipo o nombre de la tarifa.
+     */
+    private String buscarNombreTarifa(MongoDatabase baseDatos, String idTarifa) {
+        if (idTarifa == null || !ObjectId.isValid(idTarifa)) {
+            return "Sin tarifa";
+        }
+
+        MongoCollection<Document> coleccionTarifas = baseDatos.getCollection("Tarifas");
+        Document filtro = new Document("_id", new ObjectId(idTarifa));
+        Document tarifaDoc = coleccionTarifas.find(filtro).first();
+
+        if (tarifaDoc != null) {
+            String tipo = tarifaDoc.getString("tipo");
+            String nombreTarifa = tarifaDoc.getString("nombreTarifa");
+
+            if (tipo != null && nombreTarifa != null) {
+                return tipo + " - " + nombreTarifa;
+            } else if (tipo != null) {
+                return tipo;
+            } else if (nombreTarifa != null) {
+                return nombreTarifa;
+            }
+        }
+
+        return idTarifa;
+    }
+
+    /**
+     * Busca quién aceptó el contrato mirando primero en Empleados y luego en
+     * Administradores.
+     *
+     * @param baseDatos Conexión a la base de datos MongoDB.
+     * @param idGestor ID del empleado o administrador.
+     * @return Nombre y rol del gestor, o "Sin asignar" si está vacío.
+     */
+    private String buscarNombreGestor(MongoDatabase baseDatos, String idGestor) {
+        if (idGestor == null || idGestor.trim().isEmpty()) {
+            return "Sin asignar";
+        }
+
+        if (ObjectId.isValid(idGestor)) {
+            Document filtro = new Document("_id", new ObjectId(idGestor));
+
+            Document empleadoDoc = baseDatos.getCollection("Empleados").find(filtro).first();
+            if (empleadoDoc != null) {
+                String nombre = empleadoDoc.getString("nombre");
+                String apellidos = empleadoDoc.getString("apellidos");
+                return nombre + " " + apellidos + " (Empleado)";
+            }
+
+            Document adminDoc = baseDatos.getCollection("Administradores").find(filtro).first();
+            if (adminDoc != null) {
+                String nombre = adminDoc.getString("nombre");
+                String apellidos = adminDoc.getString("apellidos");
+                return nombre + " " + apellidos + " (Admin)";
+            }
+        }
+
+        return idGestor;
+    }
+
+    /**
+     * Carga todos los contratos desde MongoDB, traduce sus IDs a nombres y los
+     * muestra en la tabla.
      */
     public void cargarContratos() {
         try {
             List<Contrato> lista = contratoDAO.listarContratos();
             if (lista != null) {
-                ObservableList<Contrato> datos = FXCollections.observableArrayList(lista);
-                tablaContratos.setItems(datos);
+                nombresVisibles(lista);
+                ObservableList<Contrato> datosTabla = FXCollections.observableArrayList(lista);
+                tablaContratos.setItems(datosTabla);
             }
             limpiarSeleccion();
 
@@ -218,18 +302,18 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Filtra los contratos mostrados en la tabla en función del teléfono
-     * introducido y el estado seleccionado en {@code comboFiltroEstado}.
+     * Filtra los contratos por teléfono y estado, y traduce los IDs a nombres.
      *
-     * @param event Evento de acción disparado al ejecutar el filtrado.
+     * @param event Evento del botón Filtrar.
      */
     @FXML
     private void filtrarContratos(ActionEvent event) {
         try {
-            String tel = txtFiltroTelefono.getText();
-            String est = comboFiltroEstado.getValue();
-            List<Contrato> filtrados = contratoDAO.filtrarContratos(tel, est);
-            tablaContratos.setItems(FXCollections.observableArrayList(filtrados));
+            String telefono = txtFiltroTelefono.getText();
+            String estado = comboFiltroEstado.getValue();
+            List<Contrato> listaFiltrada = contratoDAO.filtrarContratos(telefono, estado);
+            nombresVisibles(listaFiltrada);
+            tablaContratos.setItems(FXCollections.observableArrayList(listaFiltrada));
             limpiarSeleccion();
 
         } catch (OurException e) {
@@ -239,25 +323,22 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Aprueba la solicitud del contrato seleccionado asignándole el
-     * identificador del usuario autenticado
-     * ({@link IniciarSesionController#idUsuarioActual}) y cambiando su estado a
-     * {@code "pendiente de firma"}.
+     * Aprueba la petición seleccionada guardando el ID del admin o empleado
+     * que tiene la sesión iniciada.
      *
-     * @param event Evento de acción disparado al pulsar el botón de aceptar
-     * petición.
+     * @param event Evento del botón Aceptar Petición.
      */
     @FXML
     private void aceptarPeticion(ActionEvent event) {
         try {
             if (contratoSeleccionado != null) {
                 if (IniciarSesionController.idUsuarioActual == null || IniciarSesionController.idUsuarioActual.isEmpty()) {
-                    mostrarAlerta(Alert.AlertType.WARNING, "Sesión no iniciada", "Debes iniciar sesión con un empleado real para aceptar peticiones.");
+                    mostrarAlerta(Alert.AlertType.WARNING, "Sesión no iniciada", "Debes iniciar sesión con un empleado o administrador real para aceptar peticiones.");
                     return;
                 }
 
                 if (contratoDAO.aprobarContrato(contratoSeleccionado, IniciarSesionController.idUsuarioActual)) {
-                    mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa confirmada. Contrato pendiente de firma por el cliente.");
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Tarifa confirmada. Contrato actualizado.");
                     cargarContratos();
                 } else {
                     mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo confirmar la tarifa.");
@@ -270,12 +351,9 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Rechaza la solicitud del contrato seleccionado mediante
-     * {@link ContratoDAO#rechazarContratos(Contrato)} y recarga el listado de
-     * contratos en la tabla.
+     * Rechaza la petición seleccionada y recarga la tabla.
      *
-     * @param event Evento de acción disparado al pulsar el botón de rechazar
-     * petición.
+     * @param event Evento del botón Rechazar Petición.
      */
     @FXML
     private void rechazarPeticion(ActionEvent event) {
@@ -288,7 +366,6 @@ public class GestionarContratoController implements Initializable {
                     mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rechazar el contrato.");
                 }
             }
-
         } catch (OurException e) {
             LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
@@ -296,12 +373,9 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Rescinde el contrato activo seleccionado a través de
-     * {@link ContratoDAO#rescindirContrato(Contrato)} y actualiza los datos
-     * visibles en la tabla.
+     * Rescinde el contrato activo seleccionado y recarga la tabla.
      *
-     * @param event Evento de acción disparado al pulsar el botón de rescindir
-     * contrato.
+     * @param event Evento del botón Rescindir Contrato.
      */
     @FXML
     private void rescindirContrato(ActionEvent event) {
@@ -314,7 +388,6 @@ public class GestionarContratoController implements Initializable {
                     mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo rescindir el contrato.");
                 }
             }
-
         } catch (OurException e) {
             LOGGER.warning(e.getMessage());
             ShowAlert.error(e.getMessage());
@@ -322,11 +395,9 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Limpia el campo de búsqueda por teléfono, restablece el filtro de estado
-     * a {@code "Todos"} y vuelve a cargar todos los contratos desde la base de
-     * datos.
+     * Limpia los filtros de búsqueda y vuelve a cargar todos los contratos.
      *
-     * @param event Evento de acción disparado al pulsar el botón de refrescar.
+     * @param event Evento del botón Refrescar.
      */
     @FXML
     private void refrescarFiltro(ActionEvent event) {
@@ -336,9 +407,7 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Deselecciona cualquier fila marcada en {@code tablaContratos}, limpia la
-     * referencia {@code contratoSeleccionado} y actualiza la disponibilidad de
-     * los botones de acción.
+     * Quita la selección actual de la tabla y desactiva los botones de acción.
      */
     private void limpiarSeleccion() {
         tablaContratos.getSelectionModel().clearSelection();
@@ -347,42 +416,39 @@ public class GestionarContratoController implements Initializable {
     }
 
     /**
-     * Habilita o deshabilita los botones de aceptar, rechazar y rescindir en
-     * función de si hay un contrato seleccionado y de cuál sea su estado
-     * ({@code "pendiente"} o {@code "activo"}).
+     * Activa o desactiva los botones según el estado del contrato seleccionado.
      */
     private void actualizarEstadoBotones() {
         boolean haySeleccion = contratoSeleccionado != null;
-        boolean pendiente = false;
-        boolean activo = false;
+        boolean esPendiente = false;
+        boolean esActivo = false;
 
         if (haySeleccion) {
             if ("pendiente".equalsIgnoreCase(contratoSeleccionado.getEstado())) {
-                pendiente = true;
+                esPendiente = true;
             }
             if ("activo".equalsIgnoreCase(contratoSeleccionado.getEstado())) {
-                activo = true;
+                esActivo = true;
             }
         }
 
-        btnAceptarPeticion.setDisable(!pendiente);
-        btnRechazarPeticion.setDisable(!pendiente);
-        btnRescindirContrato.setDisable(!activo);
+        btnAceptarPeticion.setDisable(!esPendiente);
+        btnRechazarPeticion.setDisable(!esPendiente);
+        btnRescindirContrato.setDisable(!esActivo);
     }
 
     /**
-     * Muestra un cuadro de diálogo modal de tipo {@link Alert} con la
-     * severidad, título y mensaje indicados.
+     * Muestra una ventana emergente con un mensaje al usuario.
      *
-     * @param tipo Tipo de alerta JavaFX ({@link Alert.AlertType}).
-     * @param titulo Título de la ventana de diálogo.
-     * @param mensaje Contenido textual que se mostrará al usuario.
+     * @param tipo Tipo de alerta (información, aviso o error).
+     * @param titulo Título de la ventana.
+     * @param mensaje Texto que se mostrará en la alerta.
      */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
     }
 }

@@ -93,8 +93,8 @@ public class ClienteValoracionesController {
         try {
             tarifas = tarifaDAO.tarifasActivas();
             List<String> nombres = new ArrayList<>();
-            for (Tarifa t : tarifas) {
-                nombres.add(t.getNombreTarifa());
+            for (int i = 0; i < tarifas.size(); i++) {
+                nombres.add(tarifas.get(i).getNombreTarifa());
             }
             cmbTarifa.setItems(FXCollections.observableArrayList(nombres));
         } catch (OurException e) {

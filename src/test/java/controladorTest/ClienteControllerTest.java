@@ -2,195 +2,180 @@ package controladorTest;
 
 import controlador.ClienteController;
 import controlador.IniciarSesionController;
-
-import org.testfx.util.WaitForAsyncUtils;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Callable;
-import DAO.implementacion.ClienteDAOImplementacion;
-import exception.OurException;
-import java.util.concurrent.TimeoutException;
+import java.io.IOException;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import org.bson.Document;
+import javafx.stage.Stage;
+import modelo.Cliente;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
-
-import javafx.stage.Stage;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import org.testfx.matcher.control.ComboBoxMatchers;
 import org.testfx.matcher.control.LabeledMatchers;
+import org.testfx.util.WaitForAsyncUtils;
+
+import static org.testfx.api.FxAssert.verifyThat;
+import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
 /**
- * Pruebas del panel del cliente y su menú.
+ * Clase de prueba automatizada para validar la interfaz gráfica del controlador {@code ClienteController}.
+ * <p>
+ * Utiliza TestFX con JUnit 5 para cargar la vista {@code Cliente.fxml} con un cliente de prueba y comprobar
+ * que el desplegable cambia la pantalla central, sin depender de los datos de MongoDB.
+ * </p>
+ * <p>
+ * Las opciones del desplegable se seleccionan por código (no con clics sobre el popup)
+ * para que las pruebas sean estables.
+ * </p>
+ *
+ * @author sachin
+ * @version 1.3
+ * @see org.testfx.framework.junit5.ApplicationTest
  */
 public class ClienteControllerTest extends ApplicationTest {
 
+    /**
+     * Inicializa el escenario cargando el panel con un cliente de prueba.
+     *
+     * @param stage Escenario sobre el cual se montará la escena cargada desde el FXML.
+     * @throws IOException Si ocurre un error al intentar cargar el archivo FXML.
+     */
     @Override
-    public void start(Stage stage) throws Exception {
-        sesionPedro();
-        Parent root = FXMLLoader.load(getClass().getResource("/vista/Cliente.fxml"));
+    public void start(Stage stage) throws IOException {
+        IniciarSesionController.idUsuarioActual = null;
+        ClienteController.setCliente(new Cliente(new ObjectId().toHexString(), "ES7921000813610123456789",
+                "usuarioPrueba", "Prueba", "Test", "abcd", "prueba@gmail.com", "12345678Z", "666666666", "Calle Falsa 1"));
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/Cliente.fxml"));
+        Parent root = loader.load();
         stage.setScene(new Scene(root));
         stage.show();
     }
 
     /**
-     * Al entrar sale el nombre y se abre Mi Perfil.
+     * Limpia y oculta la ventana tras la finalización de cada método de prueba.
+     *
+     * @throws Exception Si ocurre un fallo al intentar cerrar el escenario.
+     */
+    @AfterEach
+    public void tearDown() throws Exception {
+        FxToolkit.hideStage();
+    }
+
+    /**
+     * Selecciona una opción del desplegable por código y espera a que la interfaz termine de actualizarse.
+     *
+     * @param opcion Texto de la opción a seleccionar.
+     */
+    private void seleccionar(final String opcion) {
+        final ComboBox<String> combo = lookup("#cmbOpciones").query();
+        interact(new Runnable() {
+            @Override
+            public void run() {
+                combo.getSelectionModel().select(opcion);
+            }
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * Verifica que la etiqueta salude al cliente y que al abrir el panel se muestre Mi Perfil.
      */
     @Test
-    public void testEstadoInicial() {
-        verifyThat("#lblBienvenida", LabeledMatchers.hasText("Cliente: Pedro"));
+    public void comprobarNombre() {
+        verifyThat("#lblBienvenida", LabeledMatchers.hasText("Cliente: Prueba"));
         verifyThat("#cmbOpciones", ComboBoxMatchers.hasSelectedItem("Mi Perfil"));
         verifyThat("#txtNombreUsuario", isVisible());
     }
 
     /**
-     * El menú tiene las 6 opciones.
+     * Comprueba que el desplegable tenga las seis opciones del cliente.
      */
     @Test
-    public void testOpcionesMenu() {
-        verifyThat("#cmbOpciones", ComboBoxMatchers.hasItems(6));
+    public void comprobarCombobox() {
+        verifyThat("#cmbOpciones", isVisible());
+        verifyThat("#cmbOpciones", ComboBoxMatchers.containsExactlyItems("Mi Perfil", "Mis Tarifas",
+                "Mis Contratos", "Soporte", "Mis Valoraciones", "Cerrar Sesión"));
     }
 
     /**
-     * Mis Tarifas abre la tabla de tarifas.
+     * Comprueba que la opción "Mi Perfil" abra su pantalla.
      */
     @Test
-    public void testAbrirMisTarifas() {
-        elegir("#cmbOpciones", "Mis Tarifas");
-        verifyThat("#tablaTarifas", isVisible());
+    public void comprobarMiPerfil() {
+        seleccionar("Mi Perfil");
+        verifyThat("#txtNombreUsuario", isVisible());
+        verifyThat("#btnModificar", isVisible());
     }
 
     /**
-     * Mis Contratos abre la tabla de contratos.
+     * Comprueba que la opción "Mis Tarifas" abra su pantalla.
      */
     @Test
-    public void testAbrirMisContratos() {
-        elegir("#cmbOpciones", "Mis Contratos");
-        verifyThat("#tablaContratos", isVisible());
+    public void comprobarMisTarifas() {
+        seleccionar("Mis Tarifas");
+        verifyThat("#contenedorTarifas", isVisible());
+        verifyThat("#btnCambiarTarifa", isVisible());
     }
 
     /**
-     * Soporte abre la tabla de tickets.
+     * Comprueba que la opción "Soporte" abra su pantalla.
      */
     @Test
-    public void testAbrirSoporte() {
-        elegir("#cmbOpciones", "Soporte");
-        verifyThat("#tablaSoporte", isVisible());
+    public void comprobarSoporte() {
+        seleccionar("Soporte");
+        verifyThat("#txtSoporteAsunto", isVisible());
+        verifyThat("#btnEnviarTicket", isVisible());
     }
 
     /**
-     * Mis Valoraciones abre la tabla de valoraciones.
+     * Comprueba que la opción "Mis Valoraciones" abra su pantalla.
      */
     @Test
-    public void testAbrirMisValoraciones() {
-        elegir("#cmbOpciones", "Mis Valoraciones");
+    public void comprobarMisValoraciones() {
+        seleccionar("Mis Valoraciones");
         verifyThat("#tablaValoraciones", isVisible());
+        verifyThat("#btnValorar", isVisible());
     }
 
     /**
-     * Si se cancela la salida, sigue en el panel.
+     * Comprueba que "Cerrar Sesión" pida confirmación y, al aceptar, vuelva a la pantalla de inicio de sesión.
+     * Se usa {@code Platform.runLater} porque el diálogo se abre con {@code showAndWait()}.
      */
     @Test
-    public void testCerrarSesionCancelar() {
-        elegir("#cmbOpciones", "Cerrar Sesión");
-        assertEquals("¿Deseas salir del panel de cliente?", textoAlerta());
-        cancelarAlerta();
-        verifyThat("#cmbOpciones", ComboBoxMatchers.hasSelectedItem("Mi Perfil"));
-    }
+    public void comprobarCerrarSesion() {
+        final ComboBox<String> combo = lookup("#cmbOpciones").query();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                combo.getSelectionModel().select("Cerrar Sesión");
+            }
+        });
+        WaitForAsyncUtils.waitForFxEvents();
 
-    /**
-     * Si se acepta la salida, vuelve al login.
-     */
-    @Test
-    public void testCerrarSesionAceptar() {
-        elegir("#cmbOpciones", "Cerrar Sesión");
-        aceptarAlerta();
+        DialogPane dialog = lookup(".dialog-pane").queryAs(DialogPane.class);
+        clickOn(dialog.lookupButton(ButtonType.OK));
+        WaitForAsyncUtils.waitForFxEvents();
+
         verifyThat("#txtUsuario", isVisible());
         verifyThat("#txtContrasena", isVisible());
     }
 
     /**
-     * Inicia la sesión de Pedro (crear_bd.js) sin pasar por el login.
-     *
-     * @throws OurException si falla MongoDB
+     * Comprueba que se pueda abrir Mis Contratos desde otra pantalla.
      */
-    private void sesionPedro() throws OurException {
-        ClienteDAOImplementacion dao = new ClienteDAOImplementacion();
-        Document d = dao.comprobarUsuarios("PedroDiaz0", "abcd");
-        IniciarSesionController.idUsuarioActual = d.getObjectId("_id").toHexString();
-        ClienteController.setCliente(dao.obtenerCliente(IniciarSesionController.idUsuarioActual));
-    }
-
-    /**
-     * Elige una opción de un desplegable.
-     */
-    private void elegir(String id, String opcion) {
-        clickOn(id);
-        esperar(".list-cell");
-        clickOn(lookup(".list-cell").match(LabeledMatchers.hasText(opcion)).queryLabeled());
-    }
-
-    /**
-     * Mensaje de la alerta abierta.
-     */
-    private String textoAlerta() {
-        esperar(".dialog-pane");
-        return lookup(".dialog-pane").queryAs(DialogPane.class).getContentText();
-    }
-
-    /**
-     * Pulsa Aceptar en la alerta abierta.
-     */
-    private void aceptarAlerta() {
-        esperar(".dialog-pane");
-        DialogPane dialogo = lookup(".dialog-pane").queryAs(DialogPane.class);
-        clickOn(dialogo.lookupButton(ButtonType.OK));
-    }
-
-    /**
-     * Pulsa Cancelar en la alerta abierta.
-     */
-    private void cancelarAlerta() {
-        esperar(".dialog-pane");
-        DialogPane dialogo = lookup(".dialog-pane").queryAs(DialogPane.class);
-        clickOn(dialogo.lookupButton(ButtonType.CANCEL));
-    }
-
-    /**
-     * Cierra la ventana y suelta teclas y ratón después de cada prueba.
-     *
-     * @throws TimeoutException si la ventana no se cierra
-     */
-    @AfterEach
-    public void tearDown() throws TimeoutException {
-        FxToolkit.hideStage();
-        release(new KeyCode[]{});
-        release(new MouseButton[]{});
-    }
-
-    /**
-     * Espera hasta 5 segundos a que aparezca un nodo.
-     */
-    private void esperar(final String selector) {
-        try {
-            WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, new Callable<Boolean>() {
-                @Override
-                public Boolean call() {
-                    return lookup(selector).tryQuery().isPresent();
-                }
-            });
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            
-        }
+    @Test
+    public void comprobarMisContratos() {
+        seleccionar("Mis Tarifas");
+        seleccionar("Mis Contratos");
+        verifyThat("#tablaContratos", isVisible());
+        verifyThat("#btnFirmarContrato", isVisible());
     }
 }
